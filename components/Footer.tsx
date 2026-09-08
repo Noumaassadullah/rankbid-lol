@@ -4,66 +4,109 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+    <footer className="bg-white border-t-8 border-orange-600">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          {/* Brand */}
           <div>
-            <h3 className="font-bold mb-4">rankbid</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
-              Pure pay-to-play leaderboard. List your product and bid for the top rank.
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-600 to-purple-600 rounded-lg font-black text-white flex items-center justify-center text-xl">
+                ⚡
+              </div>
+              <span className="text-2xl font-black text-gray-900">outbid.lol</span>
+            </div>
+            <p className="text-lg font-bold text-gray-700">
+              Pure pay-to-rank leaderboard. No algorithms. No politics. Just merit.
             </p>
           </div>
 
+          {/* Leaderboards */}
           <div>
-            <h4 className="font-semibold mb-3 text-sm">Product</h4>
-            <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <h4 className="text-lg font-black text-gray-900 mb-6 uppercase">Leaderboards</h4>
+            <ul className="space-y-4">
               <li>
-                <Link href="/" className="hover:text-slate-900 dark:hover:text-slate-200">
-                  Home
+                <Link href="/" className="font-black text-gray-700 hover:text-orange-600 transition-colors">
+                  🏆 All-Time
                 </Link>
               </li>
               <li>
-                <Link href="/categories" className="hover:text-slate-900 dark:hover:text-slate-200">
-                  Categories
+                <Link href="/today" className="font-black text-gray-700 hover:text-orange-600 transition-colors">
+                  🔥 Today (24h)
                 </Link>
               </li>
               <li>
-                <Link href="/daily" className="hover:text-slate-900 dark:hover:text-slate-200">
-                  Daily
+                <Link href="/daily" className="font-black text-gray-700 hover:text-orange-600 transition-colors">
+                  📅 Daily (UTC)
+                </Link>
+              </li>
+              <li>
+                <Link href="/categories" className="font-black text-gray-700 hover:text-orange-600 transition-colors">
+                  🎯 Categories
                 </Link>
               </li>
             </ul>
           </div>
 
+          {/* Resources */}
           <div>
-            <h4 className="font-semibold mb-3 text-sm">Legal</h4>
-            <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <h4 className="text-lg font-black text-gray-900 mb-6 uppercase">Resources</h4>
+            <ul className="space-y-4">
               <li>
-                <Link href="/rules" className="hover:text-slate-900 dark:hover:text-slate-200">
-                  Rules
+                <Link href="/about" className="font-black text-gray-700 hover:text-orange-600 transition-colors">
+                  About Us
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-slate-900 dark:hover:text-slate-200">
-                  About
+                <Link href="/rules" className="font-black text-gray-700 hover:text-orange-600 transition-colors">
+                  Rules & Terms
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="font-black text-gray-700 hover:text-orange-600 transition-colors">
+                  How It Works
                 </Link>
               </li>
             </ul>
           </div>
 
+          {/* Payment & Contact */}
           <div>
-            <h4 className="font-semibold mb-3 text-sm">Payment Methods</h4>
-            <ul className="space-y-1 text-sm text-slate-600 dark:text-slate-400">
-              <li>🎫 JazzCash</li>
-              <li>📱 EasyPaisa</li>
-              <li>💳 Stripe (Coming)</li>
+            <h4 className="text-lg font-black text-gray-900 mb-6 uppercase">Payments</h4>
+            <ul className="space-y-3 font-black text-gray-700 mb-8">
+              <li>✓ Stripe</li>
+              <li>✓ JazzCash</li>
+              <li>✓ EasyPaisa</li>
             </ul>
+            <a
+              href="mailto:support@outbid.lol"
+              className="font-black text-orange-600 hover:text-orange-700 transition-colors"
+            >
+              support@outbid.lol →
+            </a>
           </div>
         </div>
 
-        <div className="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-600 dark:text-slate-400">
-          <p>&copy; {currentYear} rankbid. All rights reserved.</p>
-          <p>Built for Pakistani market</p>
+        {/* Divider */}
+        <div className="border-t-4 border-orange-600 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="text-center md:text-left">
+            <p className="font-black text-gray-900 mb-1">
+              &copy; {currentYear} outbid.lol
+            </p>
+            <p className="font-bold text-gray-600">
+              The transparent leaderboard where merit matters.
+            </p>
+          </div>
+          <div className="flex gap-6">
+            <a href="https://twitter.com" className="font-black text-orange-600 hover:text-orange-700">
+              Twitter
+            </a>
+            <a href="https://github.com" className="font-black text-orange-600 hover:text-orange-700">
+              GitHub
+            </a>
+            <a href="https://discord.com" className="font-black text-orange-600 hover:text-orange-700">
+              Discord
+            </a>
+          </div>
         </div>
       </div>
     </footer>

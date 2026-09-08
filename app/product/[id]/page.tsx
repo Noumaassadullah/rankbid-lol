@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 interface Listing {
   id: string;
@@ -79,7 +81,9 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
   const categoryRank = categoryListings.findIndex(l => l.id === product.id) + 1 || 999;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <>
+      <Navbar />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 mb-8">
         <Link href="/" className="hover:text-slate-900 dark:hover:text-slate-200">
@@ -217,6 +221,8 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
           <p>Related products loading...</p>
         </div>
       </div>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }

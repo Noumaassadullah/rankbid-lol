@@ -1,5 +1,8 @@
 'use client';
 
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
@@ -120,7 +123,9 @@ export default function Home() {
   const claimPosition = currentRank === 1 ? '🏆 #1' : `#${currentRank}`;
 
   return (
-    <div className="bg-white min-h-screen text-gray-900">
+    <>
+      <Navbar />
+      <div className="bg-white min-h-screen text-gray-900">
       {/* Claim Section */}
       <section className="bg-white px-4 sm:px-6 py-12 md:py-16 border-b-4 border-orange-300">
         <div className="max-w-7xl mx-auto">
@@ -537,6 +542,8 @@ export default function Home() {
           </Link>
         </div>
       </section>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }

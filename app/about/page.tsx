@@ -1,8 +1,13 @@
 'use client';
 
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+
 export default function AboutPage() {
   return (
-    <div className="bg-white min-h-screen text-gray-900">
+    <>
+      <Navbar />
+      <div className="bg-white min-h-screen text-gray-900">
       {/* Header */}
       <section className="bg-white px-4 sm:px-6 py-16 md:py-32 border-b-8 border-purple-600">
         <div className="max-w-4xl mx-auto">
@@ -98,6 +103,8 @@ export default function AboutPage() {
           </a>
         </div>
       </section>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }

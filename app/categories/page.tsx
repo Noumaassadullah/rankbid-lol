@@ -1,59 +1,137 @@
 'use client';
 
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const categories = [
-  { name: 'AI', label: 'ARTIFICIAL INTELLIGENCE' },
-  { name: 'SaaS', label: 'SOFTWARE AS A SERVICE' },
-  { name: 'Developer', label: 'DEVELOPER TOOLS' },
-  { name: 'Marketing', label: 'MARKETING & GROWTH' },
-  { name: 'Productivity', label: 'PRODUCTIVITY' },
-  { name: 'Analytics', label: 'DATA & ANALYTICS' },
-  { name: 'Design', label: 'DESIGN & CREATIVE' },
-  { name: 'Crypto', label: 'CRYPTO & BLOCKCHAIN' },
+  { name: 'AI', emoji: '🤖', label: 'ARTIFICIAL INTELLIGENCE' },
+  { name: 'SaaS', emoji: '💼', label: 'SOFTWARE AS A SERVICE' },
+  { name: 'Developer', emoji: '👨‍💻', label: 'DEVELOPER TOOLS' },
+  { name: 'Marketing', emoji: '📢', label: 'MARKETING & GROWTH' },
+  { name: 'Productivity', emoji: '⚡', label: 'PRODUCTIVITY' },
+  { name: 'Analytics', emoji: '📊', label: 'DATA & ANALYTICS' },
+  { name: 'Design', emoji: '🎨', label: 'DESIGN & CREATIVE' },
+  { name: 'Crypto', emoji: '₿', label: 'CRYPTO & BLOCKCHAIN' },
+  { name: 'Business', emoji: '📈', label: 'BUSINESS TOOLS' },
+  { name: 'Health', emoji: '❤️', label: 'HEALTH & FITNESS' },
+  { name: 'Education', emoji: '📚', label: 'EDUCATION' },
+  { name: 'Social', emoji: '👥', label: 'SOCIAL MEDIA' },
 ];
 
 export default function CategoriesPage() {
   return (
-    <div className="bg-white dark:bg-black min-h-screen">
-      <div className="bg-black dark:bg-white px-4 sm:px-6 py-20 md:py-32">
+    <>
+      <Navbar />
+      <div className="bg-white min-h-screen">
+      {/* Header */}
+      <section className="bg-white px-4 sm:px-6 py-16 md:py-32 border-b-8 border-purple-600">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-6xl md:text-8xl font-black text-white dark:text-black mb-8 leading-none">ALL CATEGORIES</h1>
-          <p className="text-lg md:text-2xl font-bold text-white dark:text-black max-w-2xl">Find your niche. Dominate your category. Compete for visibility.</p>
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black mb-8 leading-tight">
+            <span className="bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent">ALL</span><br />
+            <span className="text-gray-900">CATEGORIES</span>
+          </h1>
+          <p className="text-xl md:text-2xl font-bold text-gray-700 max-w-2xl">
+            Find your niche. Dominate your category. Compete for the #1 spot in your market.
+          </p>
         </div>
-      </div>
+      </section>
 
-      <div className="bg-white dark:bg-black px-4 sm:px-6 py-20">
+      {/* Categories Grid */}
+      <section className="bg-white px-4 sm:px-6 py-20 md:py-32 border-b-8 border-orange-600">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {categories.map((cat) => (
-              <Link key={cat.name} href={`/categories/${cat.name.toLowerCase()}`} className="group">
-                <div className="card-neobrutalism shadow-neobrutalism h-full asymmetric-offset group-hover:asymmetric-offset-right">
-                  <div className="text-sm font-black uppercase tracking-wider text-black dark:text-white mb-4 border-b-4 border-black dark:border-white pb-4">
-                    CATEGORY
+              <Link
+                key={cat.name}
+                href={`/categories/${cat.name.toLowerCase()}`}
+                className="group"
+              >
+                <div className="bg-white border-8 border-purple-600 p-8 h-full hover:shadow-xl hover:shadow-purple-600/40 transition-all transform hover:-translate-y-1">
+                  <div className="text-6xl mb-4">{cat.emoji}</div>
+                  <h2 className="text-4xl font-black text-gray-900 mb-2">{cat.name}</h2>
+                  <p className="text-sm font-bold text-gray-600 mb-6 uppercase">{cat.label}</p>
+                  <div className="flex items-center gap-2 font-black text-orange-600 group-hover:text-orange-700">
+                    View Rankings →
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white mb-4">{cat.name}</h2>
-                  <p className="text-lg font-bold text-black dark:text-white">{cat.label}</p>
-                  <p className="text-sm font-bold text-gray-600 dark:text-gray-400 mt-6">VIEW RANKINGS →</p>
                 </div>
               </Link>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="bg-black dark:bg-white px-4 sm:px-6 py-20">
+      {/* Stats Section */}
+      <section className="bg-white px-4 sm:px-6 py-20 md:py-32 border-b-8 border-purple-600">
         <div className="max-w-7xl mx-auto">
-          <div className="border-8 border-white dark:border-black p-12 text-center">
-            <h2 className="text-5xl md:text-6xl font-black text-white dark:text-black mb-4 leading-none">8 CATEGORIES</h2>
-            <p className="text-lg font-bold text-white dark:text-black mb-8">Each with its own independent leaderboard.</p>
-            <div className="text-3xl font-black text-white dark:text-black mb-8">50K+ ACTIVE BIDS</div>
-            <Link href="/claim" className="btn-neobrutalism shadow-neobrutalism inline-block">
-              START RANKING
+          <div className="bg-gradient-to-br from-purple-50 to-orange-50 border-8 border-orange-600 rounded-3xl p-12 md:p-16 text-center">
+            <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-purple-600 to-orange-600 bg-clip-text text-transparent">12 CATEGORIES</span>
+            </h2>
+            <p className="text-2xl font-black text-gray-700 mb-4">Each with its own independent leaderboard.</p>
+            <p className="text-xl font-bold text-gray-600 mb-12">
+              Thousands of products competing for the top spot in every category.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+              <div className="bg-white border-4 border-purple-600 p-6 rounded-xl">
+                <p className="text-4xl font-black bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent">10K+</p>
+                <p className="font-black text-gray-700 text-sm mt-2">Products Listed</p>
+              </div>
+              <div className="bg-white border-4 border-orange-600 p-6 rounded-xl">
+                <p className="text-4xl font-black bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent">50K+</p>
+                <p className="font-black text-gray-700 text-sm mt-2">Active Bids</p>
+              </div>
+              <div className="bg-white border-4 border-purple-600 p-6 rounded-xl">
+                <p className="text-4xl font-black bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent">$5M+</p>
+                <p className="font-black text-gray-700 text-sm mt-2">Total Bids</p>
+              </div>
+            </div>
+            <Link
+              href="/#claim"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 text-white font-black rounded-2xl hover:shadow-lg hover:shadow-orange-600/50 transition-all hover:scale-105 text-lg border-4 border-orange-600"
+            >
+              Start Ranking Now
             </Link>
           </div>
         </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="bg-white px-4 sm:px-6 py-20 md:py-32">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-16 text-center">
+            Category Ranking <span className="bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent">101</span>
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white border-8 border-purple-600 p-8 hover:shadow-xl hover:shadow-purple-600/40 transition-all">
+              <div className="text-5xl font-black text-purple-600 mb-4">1️⃣</div>
+              <h3 className="text-2xl font-black text-gray-900 mb-4 uppercase">Choose Your Category</h3>
+              <p className="text-lg font-bold text-gray-700">
+                Select from 12 competitive categories. Each has its own independent ranking.
+              </p>
+            </div>
+
+            <div className="bg-white border-8 border-orange-600 p-8 hover:shadow-xl hover:shadow-orange-600/40 transition-all">
+              <div className="text-5xl font-black text-orange-600 mb-4">2️⃣</div>
+              <h3 className="text-2xl font-black text-gray-900 mb-4 uppercase">Place Your Bid</h3>
+              <p className="text-lg font-bold text-gray-700">
+                Pay as little as $1. Your rank is determined by your total dollar amount paid.
+              </p>
+            </div>
+
+            <div className="bg-white border-8 border-purple-600 p-8 hover:shadow-xl hover:shadow-purple-600/40 transition-all">
+              <div className="text-5xl font-black text-purple-600 mb-4">3️⃣</div>
+              <h3 className="text-2xl font-black text-gray-900 mb-4 uppercase">Dominate Your Niche</h3>
+              <p className="text-lg font-bold text-gray-700">
+                Get discovered by makers searching your category. Track clicks and ROI.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
