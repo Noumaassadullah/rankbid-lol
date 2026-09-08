@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
 :root {
+  /* Neobrutalism + Creem Color Fusion */
+  --primary-purple: #9D7FD9;
+  --primary-peach: #F5C5A8;
+  --primary-green: #6FD77C;
+  --primary-blue: #7B9FFF;
+
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  @apply antialiased;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  @apply scroll-smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-white dark:bg-black text-black dark:text-white transition-colors;
+  background: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #0a0a0a;
+  }
+}
+
+/* Bold Neobrutalism Typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-black tracking-tight;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  @apply text-7xl md:text-8xl;
+}
+
+h2 {
+  @apply text-5xl md:text-6xl;
+}
+
+h3 {
+  @apply text-3xl md:text-4xl;
+}
+
+/* Neobrutalism Borders & Structure */
+.card-neo {
+  @apply border-4 border-black dark:border-white rounded-none p-8 bg-white dark:bg-black shadow-[-8px_8px_0px_0px_rgba(0,0,0,0.3)] dark:shadow-[-8px_8px_0px_0px_rgba(255,255,255,0.1)] hover:translate-x-1 hover:translate-y-1 transition-transform;
+}
+
+.card-neo-rounded {
+  @apply border-4 border-black dark:border-white rounded-2xl p-8 bg-white dark:bg-black shadow-[-8px_8px_0px_0px_rgba(0,0,0,0.3)] dark:shadow-[-8px_8px_0px_0px_rgba(255,255,255,0.1)];
+}
+
+/* Colored Neobrutalism Cards */
+.card-purple {
+  @apply border-4 border-black dark:border-white bg-purple-300 dark:bg-purple-900/40 text-black dark:text-white;
+}
+
+.card-peach {
+  @apply border-4 border-black dark:border-white bg-orange-300 dark:bg-orange-900/40 text-black dark:text-white;
+}
+
+.card-green {
+  @apply border-4 border-black dark:border-white bg-green-300 dark:bg-green-900/40 text-black dark:text-white;
+}
+
+.card-blue {
+  @apply border-4 border-black dark:border-white bg-blue-300 dark:bg-blue-900/40 text-black dark:text-white;
+}
+
+/* Neobrutalism Buttons */
+.btn-neo {
+  @apply px-8 py-4 bg-black dark:bg-white text-white dark:text-black font-black border-4 border-black dark:border-white hover:scale-95 transition-transform active:scale-90 shadow-[-6px_6px_0px_0px_rgba(0,0,0,0.4)] dark:shadow-[-6px_6px_0px_0px_rgba(255,255,255,0.2)];
+}
+
+.btn-neo-outline {
+  @apply px-8 py-4 bg-white dark:bg-black text-black dark:text-white font-black border-4 border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all shadow-[-6px_6px_0px_0px_rgba(0,0,0,0.4)] dark:shadow-[-6px_6px_0px_0px_rgba(255,255,255,0.2)];
+}
+
+.btn-neo-colored {
+  @apply px-8 py-4 font-black border-4 border-black dark:border-white hover:scale-95 transition-transform shadow-[-6px_6px_0px_0px_rgba(0,0,0,0.4)] dark:shadow-[-6px_6px_0px_0px_rgba(255,255,255,0.2)];
+}
+
+/* Section Dividers */
+.divider-thick {
+  @apply border-t-8 border-b-4 border-black dark:border-white;
+}
+
+/* Asymmetrical Elements */
+.asymmetric-1 {
+  @apply -rotate-1 hover:rotate-0 transition-transform;
+}
+
+.asymmetric-2 {
+  @apply rotate-2 hover:rotate-0 transition-transform;
+}
+
+/* Grid with Gaps */
+.gap-neo {
+  @apply gap-6;
 }

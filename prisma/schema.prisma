@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Listing {
+  id            String    @id @default(cuid())
+
+  title         String
+  description   String
+  url           String    @unique
+  handle        String?   // For @handles like Twitter
+  category      Category  @default(Other)
+
+  totalPaid     Int       @default(0)  // All-time sum in cents
+  dayPaid       Int       @default(0)  // Today (rolling 24h) in cents
+  clickCount    Int       @default(0)
+
+  createdAt     DateTime  @default(now())
+  lastRaisedAt  DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  payments      Payment[]
+  dailyRanks    DailyRank[]
+
+  @@index([category])
+  @@index([totalPaid])
+  @@index([dayPaid])
+  @@index([createdAt])
+  @@map("listings")
+}
+
+model Payment {
+  id                String   @id @default(cuid())
+  listingId         String
+  listing           Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  amount            Int      // in cents
+  method            String   @default("stripe") // "stripe"
+  status            String   @default("pending") // "pending" | "completed" | "failed"
+
+  stripeSessionId   String?  @unique
+  stripePaymentId   String?  @unique
+
+  paidAt            DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([listingId])
+  @@index([status])
+  @@index([stripeSessionId])
+  @@map("payments")
+}
+
+model DailyRank {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  date      DateTime // UTC date (midnight)
+  amount    Int      // Amount paid that day in cents
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([listingId, date])
+  @@index([date])
+  @@map("daily_ranks")
+}
+
+model DailySnapshot {
+  id        String   @id @default(cuid())
+  date      DateTime @unique // UTC date (midnight)
+
+  // Snapshot of top 10 for that day (for archiving/historical pages)
+  data      Json     // Array of { listing, rank, amount }
+
+  frozen    Boolean  @default(false) // Once midnight passes, snapshot freezes
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+  @@map("daily_snapshots")
+}
+
+enum Category {
+  All
+  Leaderboards
+  SEO
+  Marketing
+  Productivity
+  Agents
+  Crypto
+  Other
+  Developer
+  AI
+  SaaS
+  Analytics
+  Tools
+  Education
+  Entertainment
+  Finance
+  Health
+  Lifestyle
+  News
+  Shopping
+  Social
+  Travel
+  Video
+  Business
+}
