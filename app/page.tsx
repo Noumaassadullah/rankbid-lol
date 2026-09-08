@@ -1,7 +1,6 @@
 'use client';
 
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
@@ -149,28 +148,6 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      {dbWarning && (
-        <div className="bg-yellow-50 border-b-4 border-yellow-500 px-4 sm:px-6 py-4">
-          <div className="max-w-7xl mx-auto flex items-start gap-4">
-            <div className="text-2xl flex-shrink-0">⚠️</div>
-            <div className="flex-1">
-              <h3 className="font-black text-gray-900 text-lg mb-2">Database Not Configured</h3>
-              <p className="font-bold text-gray-700 mb-3">
-                To see live leaderboard data, you need to set up PostgreSQL. See the setup steps below:
-              </p>
-              <div className="space-y-2 text-sm font-bold text-gray-600 mb-4">
-                <p>1. Create database: <code className="bg-gray-100 px-2 py-1 rounded">createdb rankbid</code></p>
-                <p>2. Set DATABASE_URL in .env.local</p>
-                <p>3. Run migrations: <code className="bg-gray-100 px-2 py-1 rounded">npx prisma migrate dev</code></p>
-                <p>4. Restart dev server: <code className="bg-gray-100 px-2 py-1 rounded">npm run dev</code></p>
-              </div>
-              <p className="text-xs text-gray-500">
-                📖 See <strong>QUICK_FIX.md</strong> for detailed instructions or use Neon/Railway for cloud database.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
       <div className="bg-white min-h-screen text-gray-900">
       {/* Claim Section */}
       <section className="bg-white px-4 sm:px-6 py-12 md:py-16 border-b-4 border-orange-300">
@@ -463,21 +440,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="bg-white px-4 sm:px-6 py-20 md:py-32 border-b-4 border-orange-600">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-6xl md:text-7xl font-black mb-12 text-gray-900">CATEGORIES</h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {['AI', 'SaaS', 'Developer', 'Marketing', 'Productivity', 'Analytics', 'Design', 'Crypto'].map((cat) => (
-              <div key={cat} className="bg-white border-4 border-purple-600 p-8 text-center hover:shadow-lg hover:shadow-purple-600/30 transition-all">
-                <h3 className="text-2xl font-black text-gray-900">{cat}</h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Rankings */}
       <section className="bg-white px-4 sm:px-6 py-20 md:py-32 border-b-4 border-purple-600">
         <div className="max-w-7xl mx-auto">
@@ -560,7 +522,6 @@ export default function Home() {
         </div>
       </section>
       </div>
-      <Footer />
     </>
   );
 }
