@@ -2,7 +2,12 @@ import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+let stripe: Stripe;
+try {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+} catch (e) {
+  // Stripe not configured - will fail at runtime if called
+}
 const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN || 'http://localhost:3000';
 
 export async function POST(req: NextRequest) {
