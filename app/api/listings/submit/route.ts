@@ -65,6 +65,15 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '100');
     const sort = searchParams.get('sort') || 'totalPaid';
 
+    // Check if DATABASE_URL is set
+    if (!process.env.DATABASE_URL) {
+      console.warn('DATABASE_URL not configured - returning empty listings');
+      return NextResponse.json(
+        { listings: [], listing: null, warning: 'Database not configured' },
+        { status: 200 }
+      );
+    }
+
     if (url) {
       try {
         const listing = await prisma.listing.findUnique({
@@ -77,7 +86,8 @@ export async function GET(req: NextRequest) {
           },
         });
         return NextResponse.json({ listing, listings: [] });
-      } catch (error) {
+      } catch (dbError) {
+        console.error('Database error fetching listing by URL:', dbError);
         return NextResponse.json({ listing: null, listings: [] });
       }
     }
@@ -105,12 +115,21 @@ export async function GET(req: NextRequest) {
       });
 
       return NextResponse.json({ listings, listing: null });
-    } catch (error) {
-      console.error('Database query error:', error);
-      return NextResponse.json({ listings: [], listing: null });
+    } catch (dbError) {
+      console.error('Database query error:', dbError);
+      console.error('Database URL configured:', !!process.env.DATABASE_URL);
+
+      // Return success with empty array to prevent UI errors
+      return NextResponse.json(
+        { listings: [], listing: null, error: 'Database connection failed' },
+        { status: 200 }
+      );
     }
   } catch (error) {
     console.error('Error fetching listings:', error);
-    return NextResponse.json({ listings: [], listing: null });
+    return NextResponse.json(
+      { listings: [], listing: null, error: 'Server error' },
+      { status: 200 }
+    );
   }
 }

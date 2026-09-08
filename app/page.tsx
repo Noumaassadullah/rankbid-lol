@@ -40,6 +40,7 @@ export default function Home() {
 
   const [currentBid, setCurrentBid] = useState(10000);
   const [activeLeaderboard, setActiveLeaderboard] = useState<'alltime' | 'today'>('alltime');
+  const [dbWarning, setDbWarning] = useState(false);
 
   useEffect(() => {
     fetchListings();
@@ -66,6 +67,14 @@ export default function Home() {
 
       const data = JSON.parse(text);
       setListings(data.listings || []);
+
+      // Check if database is configured
+      if (data.warning === 'Database not configured') {
+        setDbWarning(true);
+        console.warn('Database not configured - showing empty leaderboard');
+      } else {
+        setDbWarning(false);
+      }
     } catch (error) {
       console.error('Failed to fetch listings:', error);
       setListings([]);
@@ -140,6 +149,28 @@ export default function Home() {
   return (
     <>
       <Navbar />
+      {dbWarning && (
+        <div className="bg-yellow-50 border-b-4 border-yellow-500 px-4 sm:px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-start gap-4">
+            <div className="text-2xl flex-shrink-0">⚠️</div>
+            <div className="flex-1">
+              <h3 className="font-black text-gray-900 text-lg mb-2">Database Not Configured</h3>
+              <p className="font-bold text-gray-700 mb-3">
+                To see live leaderboard data, you need to set up PostgreSQL. See the setup steps below:
+              </p>
+              <div className="space-y-2 text-sm font-bold text-gray-600 mb-4">
+                <p>1. Create database: <code className="bg-gray-100 px-2 py-1 rounded">createdb rankbid</code></p>
+                <p>2. Set DATABASE_URL in .env.local</p>
+                <p>3. Run migrations: <code className="bg-gray-100 px-2 py-1 rounded">npx prisma migrate dev</code></p>
+                <p>4. Restart dev server: <code className="bg-gray-100 px-2 py-1 rounded">npm run dev</code></p>
+              </div>
+              <p className="text-xs text-gray-500">
+                📖 See <strong>QUICK_FIX.md</strong> for detailed instructions or use Neon/Railway for cloud database.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="bg-white min-h-screen text-gray-900">
       {/* Claim Section */}
       <section className="bg-white px-4 sm:px-6 py-12 md:py-16 border-b-4 border-orange-300">
