@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+// Mock historical data - will be replaced with real data from DailySnapshot
 const previousDays = [
   {
     date: 'September 8, 2024',

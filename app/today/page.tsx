@@ -25,10 +25,25 @@ export default function TodayPage() {
     const fetchListings = async () => {
       try {
         const res = await fetch('/api/listings/submit?sort=dayPaid&limit=100');
-        const data = await res.json();
+
+        if (!res.ok) {
+          console.error('API error:', res.status);
+          setListings([]);
+          return;
+        }
+
+        const text = await res.text();
+        if (!text) {
+          console.error('Empty response from API');
+          setListings([]);
+          return;
+        }
+
+        const data = JSON.parse(text);
         setListings(data.listings || []);
       } catch (error) {
         console.error('Failed to fetch listings:', error);
+        setListings([]);
       } finally {
         setLoading(false);
       }

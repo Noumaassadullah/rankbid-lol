@@ -7,14 +7,14 @@ export async function POST(req: NextRequest) {
 
     if (!url && !handle) {
       return NextResponse.json(
-        { error: 'URL or handle required' },
+        { error: 'URL or handle required', listings: [] },
         { status: 400 }
       );
     }
 
     if (!description || !category) {
       return NextResponse.json(
-        { error: 'Description and category required' },
+        { error: 'Description and category required', listings: [] },
         { status: 400 }
       );
     }
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     if (listing) {
       return NextResponse.json(
-        { listing, isNew: false }
+        { listing, isNew: false, listings: [] }
       );
     }
 
@@ -45,13 +45,13 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { listing, isNew: true },
+      { listing, isNew: true, listings: [] },
       { status: 201 }
     );
   } catch (error) {
     console.error('Error submitting listing:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', listings: [] },
       { status: 500 }
     );
   }
@@ -66,45 +66,51 @@ export async function GET(req: NextRequest) {
     const sort = searchParams.get('sort') || 'totalPaid';
 
     if (url) {
-      const listing = await prisma.listing.findUnique({
-        where: { url },
+      try {
+        const listing = await prisma.listing.findUnique({
+          where: { url },
+          include: {
+            payments: {
+              where: { status: 'completed' },
+              orderBy: { paidAt: 'desc' },
+            },
+          },
+        });
+        return NextResponse.json({ listing, listings: [] });
+      } catch (error) {
+        return NextResponse.json({ listing: null, listings: [] });
+      }
+    }
+
+    try {
+      const where: any = {};
+      if (category && category !== 'All') {
+        where.category = category;
+      }
+
+      const listings = await prisma.listing.findMany({
+        where,
+        orderBy: sort === 'dayPaid'
+          ? { dayPaid: 'desc' }
+          : { totalPaid: 'desc' },
+        take: limit,
         include: {
           payments: {
             where: { status: 'completed' },
+            select: { amount: true, paidAt: true },
             orderBy: { paidAt: 'desc' },
+            take: 5,
           },
         },
       });
-      return NextResponse.json({ listing });
+
+      return NextResponse.json({ listings, listing: null });
+    } catch (error) {
+      console.error('Database query error:', error);
+      return NextResponse.json({ listings: [], listing: null });
     }
-
-    const where: any = {};
-    if (category && category !== 'All') {
-      where.category = category;
-    }
-
-    const listings = await prisma.listing.findMany({
-      where,
-      orderBy: sort === 'dayPaid'
-        ? { dayPaid: 'desc' }
-        : { totalPaid: 'desc' },
-      take: limit,
-      include: {
-        payments: {
-          where: { status: 'completed' },
-          select: { amount: true, paidAt: true },
-          orderBy: { paidAt: 'desc' },
-          take: 5,
-        },
-      },
-    });
-
-    return NextResponse.json({ listings });
   } catch (error) {
     console.error('Error fetching listings:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ listings: [], listing: null });
   }
 }
