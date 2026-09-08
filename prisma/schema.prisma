@@ -43,11 +43,14 @@ model Payment {
   listing           Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
   amount            Int      // in cents
-  method            String   @default("stripe") // "stripe"
+  provider          String   @default("jazzcash") // "jazzcash" | "stripe"
   status            String   @default("pending") // "pending" | "completed" | "failed"
 
-  stripeSessionId   String?  @unique
-  stripePaymentId   String?  @unique
+  transactionId     String?  @unique // JazzCash pp_txn_ref or Stripe transaction ID
+  stripeSessionId   String?  @unique // Legacy Stripe field
+  stripePaymentId   String?  @unique // Legacy Stripe field
+
+  metadata          Json?    // Provider-specific data (response codes, auth codes, etc.)
 
   paidAt            DateTime?
   createdAt         DateTime @default(now())
@@ -55,7 +58,8 @@ model Payment {
 
   @@index([listingId])
   @@index([status])
-  @@index([stripeSessionId])
+  @@index([transactionId])
+  @@index([provider])
   @@map("payments")
 }
 

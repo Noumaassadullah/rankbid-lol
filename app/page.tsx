@@ -112,7 +112,7 @@ export default function Home() {
       const listing = data.listing;
       const amountInCents = currentBid * 100;
 
-      const checkoutRes = await fetch('/api/payment/checkout', {
+      const checkoutRes = await fetch('/api/payment/jazzcash-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -391,35 +391,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative bg-white px-4 sm:px-6 py-16 md:py-32 border-b-8 border-purple-600">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-5xl sm:text-6xl md:text-7xl font-black mb-6 md:mb-8 leading-tight">
-            <span className="bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent">READY TO</span><br />
-            <span className="text-gray-900">COMPETE?</span>
-          </h2>
-          <p className="text-lg md:text-xl font-black text-gray-700 mb-12">List your product today and start competing for the top rank.</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-8">
-            <input
-              type="text"
-              placeholder="example.com or @yourproduct"
-              className="px-4 md:px-6 py-3 md:py-4 bg-white text-gray-900 placeholder-gray-500 border-8 border-purple-600 font-bold focus:outline-none focus:border-orange-600 transition-colors text-sm md:text-base"
-            />
-            <select className="px-4 md:px-6 py-3 md:py-4 bg-white text-gray-900 border-8 border-purple-600 font-bold focus:outline-none focus:border-orange-600 transition-colors text-sm md:text-base">
-              <option>SELECT CATEGORY</option>
-              <option>AI</option>
-              <option>SaaS</option>
-              <option>Developer</option>
-              <option>Crypto</option>
-              <option>Productivity</option>
-            </select>
-            <button className="px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-orange-600 to-orange-500 text-white border-8 border-orange-600 font-black hover:shadow-xl hover:shadow-orange-600/50 transition-all hover:scale-105 text-sm md:text-base uppercase">
-              CLAIM RANK
-            </button>
-          </div>
-        </div>
-      </section>
 
       {/* Features Deep Dive */}
       <section className="bg-white px-4 sm:px-6 py-16 md:py-32 border-b-8 border-orange-600">
