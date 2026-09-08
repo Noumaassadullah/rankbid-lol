@@ -5,10 +5,10 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { listingId, amount, method, userId } = body;
+    const { listingId, amount, method } = body;
 
     // Validation
-    if (!listingId || !amount || !method || !userId) {
+    if (!listingId || !amount || !method) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -43,10 +43,9 @@ export async function POST(request: NextRequest) {
     // Create payment record
     const payment = await prisma.payment.create({
       data: {
-        userId,
         listingId,
         amount: amountCents,
-        method,
+        provider: method,
         status: 'pending',
       },
     });

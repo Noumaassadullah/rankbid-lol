@@ -121,18 +121,14 @@ export async function POST(req: NextRequest) {
         });
 
         if (payment && session.payment_intent) {
-          const paymentIntent = await stripe.paymentIntents.retrieve(
-            session.payment_intent as string
-          );
-
-          if (paymentIntent.charges.data[0]) {
-            await prisma.payment.update({
-              where: { id: payment.id },
-              data: {
-                stripePaymentId: paymentIntent.charges.data[0].id,
-              },
-            });
-          }
+          await prisma.payment.update({
+            where: { id: payment.id },
+            data: {
+              status: 'completed',
+              paidAt: new Date(),
+              transactionId: session.payment_intent as string,
+            },
+          });
         }
         break;
       }

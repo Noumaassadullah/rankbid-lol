@@ -1,12 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function CancelPage() {
-  const searchParams = useSearchParams();
-  const listingId = searchParams.get('listing_id');
-
+function CancelContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-white flex items-center justify-center px-4">
       <div className="max-w-2xl w-full text-center">
@@ -50,5 +47,13 @@ export default function CancelPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CancelPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CancelContent />
+    </Suspense>
   );
 }

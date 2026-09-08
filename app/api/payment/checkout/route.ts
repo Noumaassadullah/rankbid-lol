@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         listingId,
         amount,
         status: 'pending',
-        method: 'stripe',
+        provider: 'stripe',
       },
     });
 

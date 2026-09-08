@@ -34,6 +34,7 @@ export async function getRankedListings(
 
     return listings.map((listing, index) => ({
       ...listing,
+      handle: listing.handle || undefined,
       rank: index + 1,
       amountToOutrank: listing.totalPaid + 500, // $5 in cents
     }));
@@ -47,6 +48,7 @@ export async function getRankedListings(
 
     return listings.map((listing, index) => ({
       ...listing,
+      handle: listing.handle || undefined,
       rank: index + 1,
       amountToOutrank: listing.dayPaid + 500,
     }));
@@ -69,6 +71,7 @@ export async function getRankedListings(
 
     return dailyRanks.map((dr, index) => ({
       ...dr.listing,
+      handle: dr.listing.handle || undefined,
       rank: index + 1,
       amountToOutrank: dr.amount + 500,
       dayPaid: dr.amount,

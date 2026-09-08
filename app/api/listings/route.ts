@@ -46,10 +46,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, description, url, category, userId } = body;
+    const { title, description, url, category } = body;
 
     // Validation
-    if (!title || !url || !category || !userId) {
+    if (!title || !url || !category) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -72,7 +72,6 @@ export async function POST(request: NextRequest) {
         description: description || '',
         url: normalizedURL,
         category,
-        userId,
       },
     });
 

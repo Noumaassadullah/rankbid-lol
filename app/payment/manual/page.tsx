@@ -1,9 +1,9 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 
-export default function ManualPaymentPage() {
+function ManualPaymentContent() {
   const searchParams = useSearchParams();
   const [copied, setCopied] = useState('');
 
@@ -207,5 +207,13 @@ export default function ManualPaymentPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ManualPaymentPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ManualPaymentContent />
+    </Suspense>
   );
 }

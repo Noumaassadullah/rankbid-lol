@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function JazzCashReturn() {
+function JazzCashReturnContent() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'failed'>('loading');
 
@@ -69,5 +69,13 @@ export default function JazzCashReturn() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function JazzCashReturn() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <JazzCashReturnContent />
+    </Suspense>
   );
 }
