@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateJazzCashCheckout } from '@/lib/jazzcash';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,22 +19,17 @@ export async function POST(req: NextRequest) {
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const orderId = `${listingId}-${Date.now()}`;
+    const reference = `REF-${listingId}-${Date.now()}`;
 
-    const { url, payload } = generateJazzCashCheckout(
-      amount,
-      orderId,
-      `${baseUrl}/payment/jazzcash-return`,
-      `${baseUrl}/api/payment/jazzcash-notify`
-    );
+    // Redirect to manual payment page showing account details
+    const paymentUrl = `${baseUrl}/payment/manual?amount=${amount}&listingId=${listingId}&ref=${reference}`;
 
     return NextResponse.json({
-      url,
-      orderId,
-      payload,
+      url: paymentUrl,
+      reference,
     });
   } catch (error) {
-    console.error('JazzCash checkout error:', error);
+    console.error('Payment checkout error:', error);
     return NextResponse.json(
       { error: 'Failed to create checkout' },
       { status: 500 }
