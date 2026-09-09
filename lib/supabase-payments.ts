@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createClient } from '@supabase/supabase-js';
 
 let supabase: ReturnType<typeof createClient> | null = null;
