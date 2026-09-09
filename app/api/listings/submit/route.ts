@@ -31,6 +31,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Count existing listings
+    const totalListings = await prisma.listing.count();
+    const isFreeUser = totalListings < 10;
+
     listing = await prisma.listing.create({
       data: {
         url: normalizedUrl,
@@ -39,14 +43,39 @@ export async function POST(req: NextRequest) {
         description: description || normalizedUrl,
         category: (category as any) || 'Other',
         platform: platform || 'website',
-        totalPaid: 0,
-        dayPaid: 0,
+        totalPaid: isFreeUser ? 100 : 0, // $1 for free users so they appear ranked
+        dayPaid: isFreeUser ? 100 : 0,
         clickCount: 0,
       },
     });
 
+    // If free user, create a payment record to mark it as completed
+    if (isFreeUser) {
+      await prisma.payment.create({
+        data: {
+          listingId: listing.id,
+          amount: 100, // $1
+          status: 'completed',
+          provider: 'free',
+          transactionId: `free-user-${listing.id}`,
+          paidAt: new Date(),
+        },
+      });
+
+      // Create daily rank for today
+      const today = new Date();
+      today.setUTCHours(0, 0, 0, 0);
+      await prisma.dailyRank.create({
+        data: {
+          listingId: listing.id,
+          date: today,
+          amount: 100,
+        },
+      });
+    }
+
     return NextResponse.json(
-      { listing, isNew: true, listings: [] },
+      { listing, isNew: true, isFreeUser, listings: [] },
       { status: 201 }
     );
   } catch (error) {

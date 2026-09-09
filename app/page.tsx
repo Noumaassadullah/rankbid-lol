@@ -56,10 +56,26 @@ export default function Home() {
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
   const [currentBid, setCurrentBid] = useState(10000);
+  const [freeSpotAvailable, setFreeSpotAvailable] = useState(false);
+  const [spotsRemaining, setSpotsRemaining] = useState(0);
 
   useEffect(() => {
     fetchListings();
+    checkFreeSpots();
   }, [activeLeaderboard]);
+
+  const checkFreeSpots = useCallback(async () => {
+    try {
+      const res = await fetch('/api/listings/submit?limit=100');
+      const data = await res.json();
+      const listingCount = data.listings?.length || 0;
+      const remaining = Math.max(0, 10 - listingCount);
+      setSpotsRemaining(remaining);
+      setFreeSpotAvailable(remaining > 0);
+    } catch (error) {
+      console.error('Error checking free spots:', error);
+    }
+  }, []);
 
   const fetchListings = useCallback(async () => {
     setLoading(true);
@@ -114,6 +130,20 @@ export default function Home() {
       if (!res.ok) throw new Error(data.error);
 
       const listing = data.listing;
+      const isFreeUser = data.isFreeUser;
+
+      // If free user, skip payment and show success
+      if (isFreeUser) {
+        setFormError('');
+        setFormData({ url: '', description: '', category: '', platform: 'website' });
+        // Show success message
+        alert('🎉 Congratulations! You are in the first 10 users!\n\nYour listing is now live and ranked #1 for FREE!');
+        // Refresh listings
+        fetchListings();
+        return;
+      }
+
+      // Otherwise proceed to payment
       const amountInCents = currentBid * 100;
 
       const checkoutRes = await fetch('/api/payment/jazzcash-checkout', {
@@ -193,6 +223,14 @@ export default function Home() {
         {/* FORM SECTION */}
         <section className="bg-white py-20">
           <div className="max-w-6xl mx-auto px-6">
+            {/* Free Spots Banner */}
+            {freeSpotAvailable && (
+              <div className="mb-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg">
+                <p className="text-center text-lg font-bold text-green-700">
+                  🎁 {spotsRemaining} Free Spot{spotsRemaining !== 1 ? 's' : ''} Left - First 10 Users Get FREE Listing!
+                </p>
+              </div>
+            )}
             {/* Ranking Tabs */}
             <div className="flex justify-center mb-12">
               <div className="flex gap-3 bg-gray-100 p-1.5 rounded-full">
