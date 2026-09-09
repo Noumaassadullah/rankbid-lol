@@ -34,15 +34,25 @@ CREATE TABLE IF NOT EXISTS listings (
 );
 
 -- Create indexes for better query performance
-CREATE INDEX idx_listings_user_id ON listings(user_id);
-CREATE INDEX idx_listings_category ON listings(category);
-CREATE INDEX idx_listings_status ON listings(status);
-CREATE INDEX idx_listings_created_at ON listings(created_at DESC);
-CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_listings_user_id ON listings(user_id);
+CREATE INDEX IF NOT EXISTS idx_listings_category ON listings(category);
+CREATE INDEX IF NOT EXISTS idx_listings_status ON listings(status);
+CREATE INDEX IF NOT EXISTS idx_listings_created_at ON listings(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE listings ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies if they exist (to avoid conflicts)
+DROP POLICY IF EXISTS "Users can view all profiles" ON users;
+DROP POLICY IF EXISTS "Users can update their own profile" ON users;
+DROP POLICY IF EXISTS "Users can insert their own profile" ON users;
+DROP POLICY IF EXISTS "Anyone can view active listings" ON listings;
+DROP POLICY IF EXISTS "Users can view their own listings" ON listings;
+DROP POLICY IF EXISTS "Users can create listings" ON listings;
+DROP POLICY IF EXISTS "Users can update their own listings" ON listings;
+DROP POLICY IF EXISTS "Users can delete their own listings" ON listings;
 
 -- RLS Policies for users table
 CREATE POLICY "Users can view all profiles" ON users FOR SELECT USING (true);
