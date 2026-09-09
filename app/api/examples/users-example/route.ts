@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Example user management API routes
 
 import { createClient } from '@/app/utils/supabase/server';

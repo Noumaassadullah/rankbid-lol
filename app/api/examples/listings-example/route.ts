@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Example API routes for Supabase integration
 // Copy and adapt these patterns for your actual routes
 

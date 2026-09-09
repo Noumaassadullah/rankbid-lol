@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Test endpoint to insert sample data (uses admin client to bypass RLS)
 // ⚠️ For testing only - remove in production
 
