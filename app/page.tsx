@@ -184,38 +184,38 @@ export default function Home() {
         </section>
 
         {/* FORM SECTION */}
-        <section className="bg-white py-24">
-          <div className="max-w-4xl mx-auto px-6">
-            <h1 className="text-5xl md:text-6xl font-black text-gray-900 mb-16 text-center">Claim Your Rank</h1>
+        <section className="bg-white py-32">
+          <div className="max-w-2xl mx-auto px-6">
+            <h1 className="text-6xl md:text-7xl font-black text-gray-900 mb-20 text-center leading-tight">Claim Your Rank</h1>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-gray-200 p-10 mb-12 shadow-sm hover:shadow-md transition-shadow">
+            <form onSubmit={handleSubmit} className="bg-white rounded-3xl border-2 border-gray-200 p-12 shadow-lg mb-16">
               {formError && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium">
+                <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium">
                   {formError}
                 </div>
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div>
-                  <label className="block text-lg font-bold text-gray-900 mb-4">Product URL</label>
+                  <label className="block text-base font-bold text-gray-900 mb-3">Product URL</label>
                   <input
                     type="text"
                     name="url"
                     placeholder="https://example.com"
                     value={formData.url}
                     onChange={handleInputChange}
-                    className="w-full px-6 py-4 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-base"
+                    className="w-full px-5 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-lg font-bold text-gray-900 mb-4">Category</label>
+                  <label className="block text-base font-bold text-gray-900 mb-3">Category</label>
                   <select
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="w-full px-6 py-4 border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-base"
+                    className="w-full px-5 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     required
                   >
                     <option value="">Choose category</option>
@@ -226,15 +226,15 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="mb-8">
-                <label className="block text-lg font-bold text-gray-900 mb-4">Description</label>
+              <div className="mb-10">
+                <label className="block text-base font-bold text-gray-900 mb-3">Description</label>
                 <textarea
                   name="description"
                   placeholder="Brief description"
                   value={formData.description}
                   onChange={handleInputChange}
                   rows={4}
-                  className="w-full px-6 py-4 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none text-base"
+                  className="w-full px-5 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
                   required
                 />
               </div>
@@ -242,32 +242,30 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={formLoading}
-                className="w-full px-8 py-4 bg-orange-600 text-white text-lg font-bold rounded-2xl hover:bg-orange-700 transition-colors disabled:opacity-50 shadow-sm hover:shadow-md"
+                className="w-full px-8 py-4 bg-orange-600 text-white text-lg font-bold rounded-xl hover:bg-orange-700 transition-colors disabled:opacity-50"
               >
                 {formLoading ? 'Processing...' : 'Claim Rank'}
               </button>
             </form>
 
             {/* Bid Adjuster */}
-            <div className="flex flex-col items-center gap-8">
-              <div className="flex items-center justify-center gap-12">
-                <button
-                  onClick={() => setCurrentBid(Math.max(500, currentBid - 500))}
-                  className="w-16 h-16 rounded-full border-2 border-gray-300 text-gray-700 text-3xl font-bold hover:border-orange-500 hover:text-orange-600 hover:bg-orange-50 transition-all"
-                >
-                  −
-                </button>
-                <div className="text-center">
-                  <p className="text-6xl font-black text-orange-600">${(currentBid/100).toFixed(0)}</p>
-                  <p className="text-lg text-gray-600 font-semibold mt-2">Rank #{calculateRank(currentBid)}</p>
-                </div>
-                <button
-                  onClick={() => setCurrentBid(currentBid + 500)}
-                  className="w-16 h-16 rounded-full border-2 border-gray-300 text-gray-700 text-3xl font-bold hover:border-orange-500 hover:text-orange-600 hover:bg-orange-50 transition-all"
-                >
-                  +
-                </button>
+            <div className="flex justify-center items-center gap-10">
+              <button
+                onClick={() => setCurrentBid(Math.max(500, currentBid - 500))}
+                className="w-14 h-14 rounded-full border-2 border-gray-300 bg-white text-gray-600 text-2xl font-bold hover:border-orange-500 hover:text-orange-600 transition-all"
+              >
+                −
+              </button>
+              <div className="text-center">
+                <p className="text-5xl md:text-6xl font-black text-orange-600">${(currentBid/100).toFixed(0)}</p>
+                <p className="text-base text-gray-700 font-semibold mt-3">Rank #{calculateRank(currentBid)}</p>
               </div>
+              <button
+                onClick={() => setCurrentBid(currentBid + 500)}
+                className="w-14 h-14 rounded-full border-2 border-gray-300 bg-white text-gray-600 text-2xl font-bold hover:border-orange-500 hover:text-orange-600 transition-all"
+              >
+                +
+              </button>
             </div>
           </div>
         </section>
