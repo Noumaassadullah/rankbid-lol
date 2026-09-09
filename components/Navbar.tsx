@@ -8,32 +8,32 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b-4 border-orange-600">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-        <div className="flex items-center justify-between">
+    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-600 to-purple-600 rounded-lg font-black text-white flex items-center justify-center text-lg">
+          <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
+            <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg font-black text-white flex items-center justify-center text-lg">
               ⚡
             </div>
-            <span className="text-2xl font-black text-gray-900 hidden sm:block">outbid.lol</span>
+            <span className="text-xl font-bold text-gray-900 hidden sm:block">rankbid</span>
           </Link>
 
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-8">
-            <Link href="/" className="font-black text-gray-900 hover:text-orange-600 transition-colors">
+            <Link href="/" className="text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors">
               Home
             </Link>
-            <Link href="/today" className="font-black text-gray-900 hover:text-orange-600 transition-colors">
-              🔥 Today
+            <Link href="/today" className="text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors flex items-center gap-1">
+              <span>🔥</span> Today
             </Link>
-            <Link href="/categories" className="font-black text-gray-900 hover:text-orange-600 transition-colors">
+            <Link href="/categories" className="text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors">
               Categories
             </Link>
-            <Link href="/about" className="font-black text-gray-900 hover:text-orange-600 transition-colors">
+            <Link href="/about" className="text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors">
               About
             </Link>
-            <Link href="/rules" className="font-black text-gray-900 hover:text-orange-600 transition-colors">
+            <Link href="/rules" className="text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors">
               Rules
             </Link>
           </div>
@@ -42,7 +42,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <Link
               href="/#claim"
-              className="px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-500 text-white font-black rounded-xl hover:shadow-lg hover:shadow-orange-600/50 transition-all hover:scale-105"
+              className="px-6 py-2 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors text-sm"
             >
               Claim Rank
             </Link>
@@ -59,25 +59,25 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="lg:hidden pt-4 pb-4 space-y-3 border-t-4 border-orange-600 mt-4">
-            <Link href="/" className="block font-black text-gray-900 hover:text-orange-600 transition-colors py-2">
+          <div className="lg:hidden pt-4 pb-4 space-y-2 border-t border-gray-200 mt-4">
+            <Link href="/" className="block text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors py-2">
               Home
             </Link>
-            <Link href="/today" className="block font-black text-gray-900 hover:text-orange-600 transition-colors py-2">
-              🔥 Today
+            <Link href="/today" className="block text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors py-2 flex items-center gap-1">
+              <span>🔥</span> Today
             </Link>
-            <Link href="/categories" className="block font-black text-gray-900 hover:text-orange-600 transition-colors py-2">
+            <Link href="/categories" className="block text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors py-2">
               Categories
             </Link>
-            <Link href="/about" className="block font-black text-gray-900 hover:text-orange-600 transition-colors py-2">
+            <Link href="/about" className="block text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors py-2">
               About
             </Link>
-            <Link href="/rules" className="block font-black text-gray-900 hover:text-orange-600 transition-colors py-2">
+            <Link href="/rules" className="block text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors py-2">
               Rules
             </Link>
             <Link
               href="/#claim"
-              className="block px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-500 text-white font-black rounded-xl text-center hover:shadow-lg hover:shadow-orange-600/50 transition-all mt-4"
+              className="block px-6 py-2 bg-orange-600 text-white font-semibold rounded-lg text-center hover:bg-orange-700 transition-colors mt-4 text-sm"
             >
               Claim Rank
             </Link>
