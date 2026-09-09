@@ -132,52 +132,51 @@ export default function Home() {
       <div className="bg-white min-h-screen">
 
         {/* HERO */}
-        <section className="relative bg-white overflow-hidden pt-20 pb-32 md:py-40">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-50/50 via-white to-white pointer-events-none"></div>
+        <section className="bg-white pt-24 pb-20 md:pt-32 md:pb-28">
+          <div className="max-w-5xl mx-auto px-6">
+            {/* Main Content */}
+            <div className="mb-20">
+              <p className="text-lg font-semibold text-gray-500 mb-6 uppercase tracking-wider">The Transparent Leaderboard</p>
 
-          <div className="max-w-6xl mx-auto px-6 relative z-10">
-            <div className="text-center mb-16">
-              <div className="inline-block px-4 py-2 bg-orange-100 rounded-full mb-6 border border-orange-200">
-                <p className="text-sm font-semibold text-orange-700">The Transparent Leaderboard</p>
-              </div>
-
-              <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className="text-6xl md:text-8xl font-black text-gray-900 mb-8 leading-tight">
                 Rank Your<br />Product
               </h1>
 
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-medium">
-                Pure pay-to-rank competition. No algorithms. No politics. Just merit.
-              </p>
+              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+                <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-xl font-medium">
+                  Pure pay-to-rank competition. No algorithms. No politics. Just merit.
+                </p>
 
-              <div className="flex gap-4 justify-center flex-wrap">
-                <button
-                  onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-8 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors shadow-lg hover:shadow-xl"
-                >
-                  Start Ranking
-                </button>
-                <button
-                  onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-8 py-3 bg-gray-100 text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  View Leaderboard
-                </button>
+                <div className="flex gap-3 flex-col sm:flex-row">
+                  <button
+                    onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="px-8 py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-colors"
+                  >
+                    Start Ranking
+                  </button>
+                  <button
+                    onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="px-8 py-3 bg-white text-gray-900 font-bold border-2 border-gray-300 rounded-xl hover:border-orange-500 hover:text-orange-600 transition-colors"
+                  >
+                    View Leaderboard
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-8 pt-12 border-t border-gray-200">
-              <div className="text-center">
-                <p className="text-4xl font-bold text-orange-600 mb-2">10K+</p>
-                <p className="text-sm text-gray-600 font-medium">Products Listed</p>
+            {/* Stats - Horizontal Layout */}
+            <div className="grid grid-cols-3 gap-6 pt-8 border-t-2 border-gray-200">
+              <div>
+                <p className="text-5xl font-black text-orange-600 mb-1">10K+</p>
+                <p className="text-sm text-gray-600 font-semibold">Products Listed</p>
               </div>
-              <div className="text-center">
-                <p className="text-4xl font-bold text-orange-600 mb-2">50K+</p>
-                <p className="text-sm text-gray-600 font-medium">Active Bids</p>
+              <div>
+                <p className="text-5xl font-black text-orange-600 mb-1">50K+</p>
+                <p className="text-sm text-gray-600 font-semibold">Active Bids</p>
               </div>
-              <div className="text-center">
-                <p className="text-4xl font-bold text-orange-600 mb-2">$5M+</p>
-                <p className="text-sm text-gray-600 font-medium">Total Bids</p>
+              <div>
+                <p className="text-5xl font-black text-orange-600 mb-1">$5M+</p>
+                <p className="text-sm text-gray-600 font-semibold">Total Bids</p>
               </div>
             </div>
           </div>
