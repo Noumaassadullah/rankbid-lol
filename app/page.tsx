@@ -459,56 +459,45 @@ export default function Home() {
         </section>
 
         {/* PROFESSIONAL FOOTER */}
-        <footer className="bg-gray-900 text-gray-300 pt-20 pb-8">
+        <footer className="bg-white pt-16 pb-8 border-t-4 border-orange-500">
           <div className="max-w-7xl mx-auto px-6">
-            {/* Footer Content */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-12">
+            {/* Top Section - Main Content */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
               {/* Brand Section */}
               <div className="md:col-span-1">
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-3xl">⚡</span>
-                  <h3 className="text-2xl font-black text-white">RankBid</h3>
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-600 rounded-lg flex items-center justify-center">
+                    <span className="text-xl">⚡</span>
+                  </div>
+                  <h3 className="text-xl font-black text-gray-900">RankBid</h3>
                 </div>
-                <p className="text-sm text-gray-400 mb-6">
+                <p className="text-sm text-gray-700 font-medium leading-relaxed">
                   Pure pay-to-rank leaderboard. No algorithms. No politics. Just merit.
                 </p>
-                <div className="flex gap-4">
-                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-orange-500 transition-colors text-xl">
-                    𝕏
-                  </a>
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-orange-500 transition-colors text-xl">
-                    🔗
-                  </a>
-                  <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-orange-500 transition-colors text-xl">
-                    💬
-                  </a>
-                </div>
               </div>
 
               {/* Leaderboards */}
               <div>
-                <h4 className="text-white font-bold mb-6 flex items-center gap-2">
-                  <span>🏆</span> Leaderboards
-                </h4>
-                <ul className="space-y-3">
+                <h4 className="text-gray-900 font-black text-sm mb-4 uppercase tracking-wider">Leaderboards</h4>
+                <ul className="space-y-2">
                   <li>
-                    <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors text-sm">
-                      All-Time Rankings
+                    <a href="#" className="text-gray-700 hover:text-orange-600 transition-colors text-sm flex items-center gap-2">
+                      <span>🏆</span> All-Time
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors text-sm flex items-center gap-2">
+                    <a href="#" className="text-gray-700 hover:text-orange-600 transition-colors text-sm flex items-center gap-2">
                       <span>🔥</span> Today (24h)
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors text-sm flex items-center gap-2">
+                    <a href="#" className="text-gray-700 hover:text-orange-600 transition-colors text-sm flex items-center gap-2">
                       <span>📅</span> Daily (UTC)
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors text-sm flex items-center gap-2">
-                      <span>🎯</span> By Categories
+                    <a href="#" className="text-gray-700 hover:text-orange-600 transition-colors text-sm flex items-center gap-2">
+                      <span>🎯</span> Categories
                     </a>
                   </li>
                 </ul>
@@ -516,26 +505,21 @@ export default function Home() {
 
               {/* Resources */}
               <div>
-                <h4 className="text-white font-bold mb-6">📚 Resources</h4>
-                <ul className="space-y-3">
+                <h4 className="text-gray-900 font-black text-sm mb-4 uppercase tracking-wider">Resources</h4>
+                <ul className="space-y-2">
                   <li>
-                    <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors text-sm">
-                      How It Works
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors text-sm">
-                      Rules & Terms
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors text-sm">
+                    <a href="#" className="text-gray-700 hover:text-orange-600 transition-colors text-sm">
                       About Us
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors text-sm">
-                      Blog
+                    <a href="#" className="text-gray-700 hover:text-orange-600 transition-colors text-sm">
+                      Rules & Terms
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-gray-700 hover:text-orange-600 transition-colors text-sm">
+                      How It Works
                     </a>
                   </li>
                 </ul>
@@ -543,32 +527,25 @@ export default function Home() {
 
               {/* Payments */}
               <div>
-                <h4 className="text-white font-bold mb-6">💳 Payments</h4>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-2 text-gray-400">
+                <h4 className="text-gray-900 font-black text-sm mb-4 uppercase tracking-wider">Payments</h4>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2 text-gray-700 text-sm">
                     <span>✓</span> Stripe
                   </li>
-                  <li className="flex items-center gap-2 text-gray-400">
+                  <li className="flex items-center gap-2 text-gray-700 text-sm">
                     <span>✓</span> JazzCash
                   </li>
-                  <li className="flex items-center gap-2 text-gray-400">
+                  <li className="flex items-center gap-2 text-gray-700 text-sm">
                     <span>✓</span> EasyPaisa
-                  </li>
-                  <li className="flex items-center gap-2 text-orange-500 font-semibold mt-4">
-                    <span>🚀</span> More Coming
                   </li>
                 </ul>
               </div>
 
               {/* Contact */}
-              <div>
-                <h4 className="text-white font-bold mb-6">📧 Support</h4>
-                <p className="text-gray-400 text-sm mb-4">
-                  Have questions? We're here to help.
-                </p>
+              <div className="text-right">
                 <a
                   href="mailto:support@rankbid.lol"
-                  className="inline-flex items-center gap-2 text-orange-500 hover:text-orange-400 transition-colors font-semibold text-sm"
+                  className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 transition-colors font-bold text-sm"
                 >
                   support@rankbid.lol
                   <span>→</span>
@@ -577,24 +554,27 @@ export default function Home() {
             </div>
 
             {/* Divider */}
-            <div className="h-px bg-gray-800 mb-8"></div>
+            <div className="h-px bg-gray-200 mb-8"></div>
 
             {/* Bottom Footer */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-6">
               <div>
-                <p className="text-gray-500 text-sm">
-                  © 2026 RankBid. The transparent leaderboard where merit matters.
+                <p className="text-gray-600 text-sm font-medium">
+                  © 2026 RankBid
+                </p>
+                <p className="text-gray-600 text-sm">
+                  The transparent leaderboard where merit matters.
                 </p>
               </div>
               <div className="flex gap-6 text-sm">
-                <a href="#" className="text-gray-500 hover:text-orange-500 transition-colors">
-                  Privacy Policy
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:text-orange-700 transition-colors font-semibold">
+                  Twitter
                 </a>
-                <a href="#" className="text-gray-500 hover:text-orange-500 transition-colors">
-                  Terms of Service
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:text-orange-700 transition-colors font-semibold">
+                  GitHub
                 </a>
-                <a href="#" className="text-gray-500 hover:text-orange-500 transition-colors">
-                  Status Page
+                <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:text-orange-700 transition-colors font-semibold">
+                  Discord
                 </a>
               </div>
             </div>
