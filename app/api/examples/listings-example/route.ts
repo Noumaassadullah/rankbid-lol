@@ -88,6 +88,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // @ts-expect-error - Supabase type inference issue
     const { data: listing, error } = await supabase
       .from('listings')
       .insert([
@@ -99,7 +100,7 @@ export async function POST(request: Request) {
           price: parseFloat(body.price),
           location: body.location || 'Pakistan',
           status: 'active',
-        } as any,
+        },
       ])
       .select()
       .single();
@@ -135,6 +136,7 @@ export async function PATCH(request: Request) {
       );
     }
 
+    // @ts-expect-error - Supabase type inference issue
     const { data: listing, error } = await supabase
       .from('listings')
       .update({
@@ -146,7 +148,7 @@ export async function PATCH(request: Request) {
         location: body.location,
         is_featured: body.is_featured,
         updated_at: new Date().toISOString(),
-      } as any)
+      })
       .eq('id', id)
       .select()
       .single();

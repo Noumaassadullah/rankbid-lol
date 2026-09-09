@@ -67,7 +67,7 @@ export function useUser(userId?: string) {
         const { data, error: err } = await supabase
           .from('users')
           .select('*')
-          .eq('id', userId)
+          .eq('id', userId!)
           .single();
 
         if (err) throw err;
@@ -129,9 +129,10 @@ export function useCreateListing() {
       setLoading(true);
       setError(null);
       try {
+        // @ts-expect-error - Supabase type inference issue
         const { data: listing, error: err } = await supabase
           .from('listings')
-          .insert([data as any])
+          .insert([data])
           .select()
           .single();
 
@@ -161,9 +162,10 @@ export function useUpdateListing() {
       setLoading(true);
       setError(null);
       try {
+        // @ts-expect-error - Supabase type inference issue
         const { data: listing, error: err } = await supabase
           .from('listings')
-          .update(data as any)
+          .update(data)
           .eq('id', id)
           .select()
           .single();

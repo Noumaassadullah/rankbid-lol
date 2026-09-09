@@ -62,6 +62,7 @@ export async function PUT(request: Request) {
       );
     }
 
+    // @ts-expect-error - Supabase type inference issue
     const { data: user, error } = await supabase
       .from('users')
       .update({
@@ -72,7 +73,7 @@ export async function PUT(request: Request) {
         country: body.country || 'Pakistan',
         bio: body.bio,
         updated_at: new Date().toISOString(),
-      } as any)
+      })
       .eq('id', body.id)
       .select()
       .single();
