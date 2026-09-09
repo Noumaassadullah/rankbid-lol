@@ -215,11 +215,8 @@ export default function Home() {
 
             {/* Main Heading with Price */}
             <div className="text-center mb-12">
-              <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-2">
-                Claim #1 for
-                <span className="text-orange-500 ml-4">
-                  − ${(currentBid/100).toFixed(0)} +
-                </span>
+              <h2 className="text-5xl md:text-6xl font-black text-gray-900">
+                Claim #1 for <span className="text-orange-500">${(currentBid/100).toFixed(0)}</span>
               </h2>
             </div>
 
