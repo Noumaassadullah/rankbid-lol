@@ -48,15 +48,53 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        // Update listing with total paid
+        // Get current listing data
+        const listing = await prisma.listing.findUnique({
+          where: { id: listingId },
+        });
+
+        if (!listing) {
+          console.error('Listing not found:', listingId);
+          return NextResponse.json({ error: 'Listing not found' }, { status: 404 });
+        }
+
+        // Update listing with total and day paid
         await prisma.listing.update({
           where: { id: listingId },
           data: {
-            totalPaid: {
-              increment: amount,
+            totalPaid: listing.totalPaid + amount,
+            dayPaid: listing.dayPaid + amount,
+            lastRaisedAt: new Date(),
+          },
+        });
+
+        // Create or update daily rank
+        const today = new Date();
+        today.setUTCHours(0, 0, 0, 0);
+
+        const existingDailyRank = await prisma.dailyRank.findUnique({
+          where: {
+            listingId_date: {
+              listingId,
+              date: today,
             },
           },
         });
+
+        if (existingDailyRank) {
+          await prisma.dailyRank.update({
+            where: { id: existingDailyRank.id },
+            data: { amount: existingDailyRank.amount + amount },
+          });
+        } else {
+          await prisma.dailyRank.create({
+            data: {
+              listingId,
+              date: today,
+              amount,
+            },
+          });
+        }
       } else {
         // Payment failed
         await prisma.payment.create({
