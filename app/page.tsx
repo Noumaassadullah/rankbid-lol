@@ -17,24 +17,24 @@ interface Listing {
 }
 
 const CATEGORIES = [
-  { value: 'Technology', label: 'ٹیکنالوجی' },
-  { value: 'ECommerce', label: 'ای کامرس' },
-  { value: 'DigitalMarketing', label: 'ڈیجیٹل مارکیٹنگ' },
-  { value: 'Education', label: 'تعلیم' },
-  { value: 'Health', label: 'صحت' },
-  { value: 'Fashion', label: 'فیشن' },
-  { value: 'Food', label: 'کھانا' },
-  { value: 'Travel', label: 'سفر' },
-  { value: 'Business', label: 'بزنس' },
-  { value: 'Other', label: 'دیگر' }
+  { value: 'Technology', label: 'Technology' },
+  { value: 'ECommerce', label: 'E-Commerce' },
+  { value: 'DigitalMarketing', label: 'Digital Marketing' },
+  { value: 'Education', label: 'Education' },
+  { value: 'Health', label: 'Health' },
+  { value: 'Fashion', label: 'Fashion' },
+  { value: 'Food', label: 'Food' },
+  { value: 'Travel', label: 'Travel' },
+  { value: 'Business', label: 'Business' },
+  { value: 'Other', label: 'Other' }
 ];
 
 const PLATFORMS = [
-  { id: 'website', label: 'ویب سائٹ', icon: '🌐' },
-  { id: 'twitter', label: 'ٹویٹر/X', icon: '𝕏' },
-  { id: 'facebook', label: 'فیس بک', icon: 'f' },
-  { id: 'instagram', label: 'انسٹاگرام', icon: '📷' },
-  { id: 'tiktok', label: 'ٹک ٹاک', icon: '🎵' }
+  { id: 'website', label: 'Website', icon: '🌐' },
+  { id: 'twitter', label: 'Twitter/X', icon: '𝕏' },
+  { id: 'facebook', label: 'Facebook', icon: 'f' },
+  { id: 'instagram', label: 'Instagram', icon: '📷' },
+  { id: 'tiktok', label: 'TikTok', icon: '🎵' }
 ];
 
 const getCategoryLabel = (categoryValue: string): string => {
@@ -159,15 +159,15 @@ export default function Home() {
           <div className="max-w-5xl mx-auto px-6">
             {/* Main Content */}
             <div className="mb-20">
-              <p className="text-lg font-semibold text-gray-500 mb-6 uppercase tracking-wider">شفاف درجہ بندی کا نظام</p>
+              <p className="text-lg font-semibold text-gray-500 mb-6 uppercase tracking-wider">The Transparent Leaderboard</p>
 
               <h1 className="text-6xl md:text-8xl font-black text-gray-900 mb-8 leading-tight">
-                اپنا برند<br />نمایاں کریں
+                Rank Your<br />Product
               </h1>
 
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
                 <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-xl font-medium">
-                  سادہ بولی خریدو ری درجہ بندی۔ کوئی الگورتھم نہیں۔ کوئی سیاست نہیں۔ صرف قابلیت۔
+                  Pure pay-to-rank competition. No algorithms. No politics. Just merit.
                 </p>
 
                 <div className="flex gap-3 flex-col sm:flex-row">
@@ -175,13 +175,13 @@ export default function Home() {
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
                     className="px-8 py-3 bg-orange-600 text-white font-bold rounded-xl hover:bg-orange-700 transition-colors"
                   >
-                    شروعات کریں
+                    Start Ranking
                   </button>
                   <button
                     onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
                     className="px-8 py-3 bg-white text-gray-900 font-bold border-2 border-gray-300 rounded-xl hover:border-orange-500 hover:text-orange-600 transition-colors"
                   >
-                    درجہ بندی دیکھیں
+                    View Leaderboard
                   </button>
                 </div>
               </div>
@@ -204,7 +204,7 @@ export default function Home() {
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  <span>🏆</span> ہمیشہ
+                  <span>🏆</span> All-time
                 </button>
                 <button
                   onClick={() => setActiveLeaderboard('today')}
@@ -215,7 +215,7 @@ export default function Home() {
                   }`}
                 >
                   <span className="w-2 h-2 bg-orange-500 rounded-full inline-block mr-2"></span>
-                  آج
+                  Today
                 </button>
               </div>
             </div>
@@ -223,7 +223,7 @@ export default function Home() {
             {/* Main Heading with Price */}
             <div className="text-center mb-12">
               <h2 className="text-5xl md:text-6xl font-black text-gray-900">
-                #۱ درجہ بندی کے لیے <span className="text-orange-500">₨{(currentBid/100).toFixed(0)}</span>
+                Claim #1 for <span className="text-orange-500">${(currentBid/100).toFixed(0)}</span>
               </h2>
             </div>
 
@@ -258,7 +258,7 @@ export default function Home() {
                 <input
                   type="text"
                   name="url"
-                  placeholder={formData.platform === 'website' ? 'آپ کی ویب سائٹ کا URL' : 'آپ کا @ہینڈل یا صفحہ لنک'}
+                  placeholder={formData.platform === 'website' ? 'Your product URL' : 'Your @handle or page link'}
                   value={formData.url}
                   onChange={handleInputChange}
                   className="flex-1 px-6 py-4 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
@@ -273,7 +273,7 @@ export default function Home() {
                   className="flex-1 px-6 py-4 border border-gray-300 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   required
                 >
-                  <option value="">زمرہ منتخب کریں</option>
+                  <option value="">Choose a category</option>
                   {CATEGORIES.map(cat => (
                     <option key={cat.value} value={cat.value}>{cat.label}</option>
                   ))}
@@ -285,7 +285,7 @@ export default function Home() {
                   disabled={formLoading}
                   className="px-8 py-4 bg-orange-500 text-white font-bold rounded-full hover:bg-orange-600 transition-colors disabled:opacity-50 whitespace-nowrap shadow-md hover:shadow-lg"
                 >
-                  {formLoading ? 'پروسیس ہو رہا ہے...' : 'درجہ بندی حاصل کریں'}
+                  {formLoading ? 'Processing...' : 'Claim rank'}
                 </button>
               </div>
 
@@ -310,7 +310,7 @@ export default function Home() {
                 −
               </button>
               <p className="text-3xl md:text-4xl font-black text-orange-500">
-                ₨{(currentBid/100).toFixed(0)}
+                ${(currentBid/100).toFixed(0)}
               </p>
               <button
                 type="button"
@@ -326,33 +326,33 @@ export default function Home() {
         {/* LEADERBOARD */}
         <section id="leaderboard" className="bg-white py-20">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">اہم درجہ بندی</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Top Rankings</h2>
 
             <div className="flex gap-4 justify-center mb-8 border-b border-gray-200 pb-4">
               <button
                 onClick={() => setActiveLeaderboard('alltime')}
                 className={`px-6 py-2 font-semibold transition-colors ${activeLeaderboard === 'alltime' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-gray-600 hover:text-gray-900'}`}
               >
-                ہمیشہ
+                All Time
               </button>
               <button
                 onClick={() => setActiveLeaderboard('today')}
                 className={`px-6 py-2 font-semibold transition-colors ${activeLeaderboard === 'today' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-gray-600 hover:text-gray-900'}`}
               >
-                آج
+                Today
               </button>
             </div>
 
             {loading ? (
-              <div className="text-center py-12 text-gray-600">درجہ بندی لوڈ ہو رہی ہے...</div>
+              <div className="text-center py-12 text-gray-600">Loading rankings...</div>
             ) : topListings.length === 0 ? (
               <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <p className="text-lg font-semibold text-gray-900 mb-4">ابھی کوئی درج فہرست نہیں</p>
+                <p className="text-lg font-semibold text-gray-900 mb-4">No listings yet</p>
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
                   className="px-6 py-2 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors"
                 >
-                  پہلے درج کریں
+                  Be First to List
                 </button>
               </div>
             ) : (
@@ -372,8 +372,8 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-bold text-orange-600">₨{(amount / 100).toFixed(0)}</p>
-                        <p className="text-sm text-gray-500">{listing.clickCount} کلکس</p>
+                        <p className="text-2xl font-bold text-orange-600">${(amount / 100).toFixed(0)}</p>
+                        <p className="text-sm text-gray-500">{listing.clickCount} clicks</p>
                       </div>
                     </div>
                   );
@@ -386,13 +386,13 @@ export default function Home() {
         {/* HOW IT WORKS */}
         <section className="py-20 bg-white">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">یہ کیسے کام کرتا ہے</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">How It Works</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
-                { num: '1', title: 'درج کریں', desc: 'اپنی ویب سائٹ یا سوشل میڈیا اکاؤنٹ شامل کریں' },
-                { num: '2', title: 'بولی لگائیں', desc: 'اپنی درجہ بندی حاصل کرنے کے لیے بولی لگائیں' },
-                { num: '3', title: 'نمایاں ہوں', desc: 'حقیقی ارد دانشوروں کی طرف سے دریافت ہوں' }
+                { num: '1', title: 'Submit', desc: 'Add your product URL or social media handle' },
+                { num: '2', title: 'Bid', desc: 'Place your bid to claim your rank' },
+                { num: '3', title: 'Dominate', desc: 'Get discovered by real makers' }
               ].map((step, i) => (
                 <div key={i} className="text-center">
                   <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mx-auto mb-4">
@@ -409,13 +409,13 @@ export default function Home() {
         {/* FOOTER CTA */}
         <section className="bg-orange-600 text-white py-16 px-6 rounded-[20px] mb-6 border-b-2 border-b-white">
           <div className="max-w-4xl mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-4">مقابلہ کے لیے تیار ہیں؟</h2>
-            <p className="text-lg text-orange-100 mb-8">اپنے برندز کو درجہ بندی کے لیے ہزاروں کاروباری لوگوں میں شامل ہوں۔</p>
+            <h2 className="text-3xl font-bold mb-4">Ready to compete?</h2>
+            <p className="text-lg text-orange-100 mb-8">Join thousands of makers ranking their products.</p>
             <button
               onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
               className="px-8 py-3 bg-white text-orange-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
             >
-              شروعات کریں ←
+              Start Ranking →
             </button>
           </div>
         </section>
