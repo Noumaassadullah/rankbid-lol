@@ -1,6 +1,6 @@
 'use client';
 
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import { useState, useEffect, useCallback } from 'react';
 
 interface Listing {
@@ -128,7 +128,7 @@ export default function Home() {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="bg-white min-h-screen">
 
         {/* HERO */}
