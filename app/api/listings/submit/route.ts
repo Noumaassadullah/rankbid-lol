@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!description || !category) {
+    if (!category) {
       return NextResponse.json(
-        { error: 'Description and category required', listings: [] },
+        { error: 'Category required', listings: [] },
         { status: 400 }
       );
     }
@@ -35,8 +35,8 @@ export async function POST(req: NextRequest) {
       data: {
         url: normalizedUrl,
         handle: handle || undefined,
-        title: description.split('\n')[0].slice(0, 100),
-        description,
+        title: description || normalizedUrl,
+        description: description || normalizedUrl,
         category: (category as any) || 'Other',
         totalPaid: 0,
         dayPaid: 0,
