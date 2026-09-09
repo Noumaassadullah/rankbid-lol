@@ -184,85 +184,115 @@ export default function Home() {
         </section>
 
         {/* FORM SECTION */}
-        <section className="bg-white py-32">
-          <div className="max-w-2xl mx-auto px-6">
-            <h1 className="text-6xl md:text-7xl font-black text-gray-900 mb-20 text-center leading-tight">Claim Your Rank</h1>
+        <section className="bg-white py-20">
+          <div className="max-w-6xl mx-auto px-6">
+            {/* Ranking Tabs */}
+            <div className="flex justify-center mb-12">
+              <div className="flex gap-3 bg-gray-100 p-1.5 rounded-full">
+                <button
+                  onClick={() => setActiveLeaderboard('alltime')}
+                  className={`px-6 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
+                    activeLeaderboard === 'alltime'
+                      ? 'bg-orange-500 text-white shadow-md'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <span>🏆</span> All-time
+                </button>
+                <button
+                  onClick={() => setActiveLeaderboard('today')}
+                  className={`px-6 py-2 rounded-full font-semibold text-sm transition-all ${
+                    activeLeaderboard === 'today'
+                      ? 'bg-white text-orange-500'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <span className="w-2 h-2 bg-orange-500 rounded-full inline-block mr-2"></span>
+                  Today
+                </button>
+              </div>
+            </div>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-3xl border-2 border-gray-200 p-12 shadow-lg mb-16">
+            {/* Main Heading with Price */}
+            <div className="text-center mb-12">
+              <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-2">
+                Claim #1 for
+                <span className="text-orange-500 ml-4">
+                  − ${(currentBid/100).toFixed(0)} +
+                </span>
+              </h2>
+            </div>
+
+            {/* Compact Form */}
+            <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center mb-12">
               {formError && (
-                <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium">
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium w-full">
                   {formError}
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <div>
-                  <label className="block text-base font-bold text-gray-900 mb-3">Product URL</label>
-                  <input
-                    type="text"
-                    name="url"
-                    placeholder="https://example.com"
-                    value={formData.url}
-                    onChange={handleInputChange}
-                    className="w-full px-5 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-base font-bold text-gray-900 mb-3">Category</label>
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className="w-full px-5 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    required
-                  >
-                    <option value="">Choose category</option>
-                    {CATEGORIES.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="mb-10">
-                <label className="block text-base font-bold text-gray-900 mb-3">Description</label>
-                <textarea
-                  name="description"
-                  placeholder="Brief description"
-                  value={formData.description}
+              <div className="flex-1 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+                {/* URL Input */}
+                <input
+                  type="text"
+                  name="url"
+                  placeholder="Your product URL or @handle"
+                  value={formData.url}
                   onChange={handleInputChange}
-                  rows={4}
-                  className="w-full px-5 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+                  className="flex-1 px-6 py-4 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   required
                 />
-              </div>
 
-              <button
-                type="submit"
-                disabled={formLoading}
-                className="w-full px-8 py-4 bg-orange-600 text-white text-lg font-bold rounded-xl hover:bg-orange-700 transition-colors disabled:opacity-50"
-              >
-                {formLoading ? 'Processing...' : 'Claim Rank'}
-              </button>
+                {/* Category Select */}
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  className="flex-1 px-6 py-4 border border-gray-300 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  required
+                >
+                  <option value="">Choose a category</option>
+                  {CATEGORIES.map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={formLoading}
+                  className="px-8 py-4 bg-orange-500 text-white font-bold rounded-full hover:bg-orange-600 transition-colors disabled:opacity-50 whitespace-nowrap shadow-md hover:shadow-lg"
+                >
+                  {formLoading ? 'Processing...' : 'Claim rank'}
+                </button>
+              </div>
             </form>
 
-            {/* Bid Adjuster */}
-            <div className="flex justify-center items-center gap-10">
+            {/* Hidden Description Field - still in form but not displayed */}
+            <textarea
+              name="description"
+              placeholder="Brief description"
+              value={formData.description}
+              onChange={handleInputChange}
+              rows={4}
+              className="hidden"
+              required
+            />
+
+            {/* Bid Adjuster - Inline */}
+            <div className="flex justify-center items-center gap-6 pt-8">
               <button
                 onClick={() => setCurrentBid(Math.max(500, currentBid - 500))}
-                className="w-14 h-14 rounded-full border-2 border-gray-300 bg-white text-gray-600 text-2xl font-bold hover:border-orange-500 hover:text-orange-600 transition-all"
+                className="text-orange-500 text-2xl font-bold hover:text-orange-600 transition-colors p-2"
               >
                 −
               </button>
-              <div className="text-center">
-                <p className="text-5xl md:text-6xl font-black text-orange-600">${(currentBid/100).toFixed(0)}</p>
-                <p className="text-base text-gray-700 font-semibold mt-3">Rank #{calculateRank(currentBid)}</p>
-              </div>
+              <p className="text-3xl md:text-4xl font-black text-orange-500">
+                ${(currentBid/100).toFixed(0)}
+              </p>
               <button
                 onClick={() => setCurrentBid(currentBid + 500)}
-                className="w-14 h-14 rounded-full border-2 border-gray-300 bg-white text-gray-600 text-2xl font-bold hover:border-orange-500 hover:text-orange-600 transition-all"
+                className="text-orange-500 text-2xl font-bold hover:text-orange-600 transition-colors p-2"
               >
                 +
               </button>
