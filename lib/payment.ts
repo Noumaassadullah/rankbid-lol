@@ -152,6 +152,19 @@ export function verifyEasypaisaSignature(
   return signature === expectedSignature;
 }
 
+// RapidGateway Payment Integration
+export function verifyRapidGatewaySignature(
+  payload: string,
+  signature: string,
+  salt: string
+): boolean {
+  const expectedSignature = crypto
+    .createHmac('sha256', salt)
+    .update(payload)
+    .digest('hex');
+  return signature === expectedSignature;
+}
+
 // Amount formatting
 export function formatAmount(cents: number): string {
   return (cents / 100).toFixed(2);
