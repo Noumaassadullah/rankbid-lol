@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { url, handle, description, category } = await req.json();
+    const { url, handle, description, category, platform } = await req.json();
 
     if (!url && !handle) {
       return NextResponse.json(
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const normalizedUrl = url || `https://twitter.com/${handle}`;
+    const normalizedUrl = url || getPlatformUrl(platform, handle);
 
     let listing = await prisma.listing.findUnique({
       where: { url: normalizedUrl },
@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
         title: description || normalizedUrl,
         description: description || normalizedUrl,
         category: (category as any) || 'Other',
+        platform: platform || 'website',
         totalPaid: 0,
         dayPaid: 0,
         clickCount: 0,
@@ -55,6 +56,21 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+function getPlatformUrl(platform: string, handle: string | undefined): string {
+  const baseUrls: { [key: string]: (handle: string) => string } = {
+    twitter: (h) => `https://twitter.com/${h}`,
+    facebook: (h) => `https://facebook.com/${h}`,
+    instagram: (h) => `https://instagram.com/${h}`,
+    tiktok: (h) => `https://tiktok.com/@${h}`,
+  };
+
+  if (platform && handle && baseUrls[platform]) {
+    return baseUrls[platform](handle);
+  }
+
+  return handle ? `https://twitter.com/${handle}` : 'https://example.com';
 }
 
 export async function GET(req: NextRequest) {
