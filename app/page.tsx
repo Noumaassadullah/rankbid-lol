@@ -444,20 +444,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FOOTER CTA */}
-        <section className="bg-orange-600 text-white py-16 px-6 rounded-[20px] mb-[30px] border-b-2 border-b-white mx-5">
-          <div className="max-w-4xl mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-4">Ready to compete?</h2>
-            <p className="text-lg text-orange-100 mb-8">Join thousands of makers ranking their products.</p>
-            <button
-              onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-              className="px-8 py-3 bg-white text-orange-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
-            >
-              Start Ranking →
-            </button>
-          </div>
-        </section>
-
         {/* PROFESSIONAL FOOTER */}
         <footer className="bg-white pt-16 pb-8 border-t-4 border-orange-500">
           <div className="max-w-7xl mx-auto px-6">
