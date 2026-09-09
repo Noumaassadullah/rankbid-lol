@@ -2,18 +2,18 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Search, Moon, Sun, Menu, X } from 'lucide-react';
+import { Search, Moon, Sun, Menu, X, BarChart3, Trophy, Brain, Cloud, Megaphone, Code2, Bitcoin, Palette, Compass } from 'lucide-react';
 
 const CATEGORIES = [
-  { name: 'All', icon: '📊' },
-  { name: 'Leaderboards', icon: '🏆' },
-  { name: 'AI', icon: '🤖' },
-  { name: 'SaaS', icon: '☁️' },
-  { name: 'Marketing', icon: '📢' },
-  { name: 'Developer', icon: '👨‍💻' },
-  { name: 'Crypto', icon: '₿' },
-  { name: 'Design', icon: '🎨' },
-  { name: 'Explore', icon: '🔍' }
+  { name: 'All', Icon: BarChart3 },
+  { name: 'Leaderboards', Icon: Trophy },
+  { name: 'AI', Icon: Brain },
+  { name: 'SaaS', Icon: Cloud },
+  { name: 'Marketing', Icon: Megaphone },
+  { name: 'Developer', Icon: Code2 },
+  { name: 'Crypto', Icon: Bitcoin },
+  { name: 'Design', Icon: Palette },
+  { name: 'Explore', Icon: Compass }
 ];
 
 export default function Header() {
@@ -32,7 +32,7 @@ export default function Header() {
   return (
     <>
       {/* Top Header */}
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-40">
+      <header className="bg-gradient-to-r from-white to-orange-50 dark:from-gray-900 dark:to-gray-800 border-b border-orange-200 dark:border-orange-900/30 sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-6">
           {/* Main Header */}
           <div className="flex items-center justify-between h-16">
@@ -108,7 +108,7 @@ export default function Header() {
 
           {/* Mobile Menu */}
           {mobileOpen && (
-            <div className="lg:hidden py-4 border-t border-gray-200 dark:border-gray-800 space-y-4">
+            <div className="lg:hidden py-4 border-t border-orange-200 dark:border-orange-900/30 space-y-4 bg-orange-50 dark:bg-gray-800">
               <Link href="/daily" className="block text-sm font-semibold text-gray-900 dark:text-white hover:text-orange-600">
                 Daily
               </Link>
@@ -133,22 +133,25 @@ export default function Header() {
       </header>
 
       {/* Category Filter */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-16 z-30 overflow-x-auto">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex gap-2 items-center">
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat.name}
-              href="/categories"
-              className={`flex-shrink-0 px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all flex items-center gap-2 border ${
-                cat.name === 'All'
-                  ? 'bg-orange-500 text-white border-orange-600 hover:bg-orange-600'
-                  : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-700 hover:border-orange-500 dark:hover:border-orange-500'
-              }`}
-            >
-              <span>{cat.icon}</span>
-              {cat.name}
-            </Link>
-          ))}
+      <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 dark:from-gray-800 dark:to-gray-800/50 border-b border-orange-200 dark:border-orange-900/30 sticky top-16 z-30 overflow-x-auto shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex gap-3 items-center">
+          {CATEGORIES.map((cat) => {
+            const Icon = cat.Icon;
+            return (
+              <Link
+                key={cat.name}
+                href="/categories"
+                className={`flex-shrink-0 px-5 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all flex items-center gap-2 border backdrop-blur-sm ${
+                  cat.name === 'All'
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white border-orange-700 hover:from-orange-600 hover:to-orange-700 shadow-md hover:shadow-lg'
+                    : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-orange-300 dark:border-orange-800 hover:bg-orange-50 dark:hover:bg-gray-600 hover:border-orange-500 dark:hover:border-orange-600 shadow-sm'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {cat.name}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </>
