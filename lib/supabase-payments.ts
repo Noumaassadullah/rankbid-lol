@@ -1,14 +1,26 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+let supabase: ReturnType<typeof createClient> | null = null;
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
+function getSupabaseClient() {
+  if (supabase) return supabase;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+
+  supabase = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+
+  return supabase;
+}
 
 export interface PaymentRecord {
   id?: string;
@@ -29,6 +41,7 @@ export async function createPaymentRecord(
   payment: Omit<PaymentRecord, 'id' | 'created_at' | 'updated_at'>
 ) {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('payments')
       .insert([
@@ -61,6 +74,7 @@ export async function updatePaymentStatus(
   metadata?: Record<string, any>
 ) {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('payments')
       .update({
@@ -82,6 +96,7 @@ export async function updatePaymentStatus(
 
 export async function getPaymentByReference(reference: string) {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('payments')
       .select('*')
@@ -98,6 +113,7 @@ export async function getPaymentByReference(reference: string) {
 
 export async function getPaymentByTransactionId(transactionId: string) {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('payments')
       .select('*')
