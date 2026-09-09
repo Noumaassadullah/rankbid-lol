@@ -2,18 +2,18 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Search, Moon, Sun, Menu, X } from 'lucide-react';
+import { Search, Moon, Sun, Menu, X, BarChart3, Brain, Cloud, Code2, Megaphone, Zap, Palette, Bitcoin, Compass } from 'lucide-react';
 
 const CATEGORIES = [
-  { name: 'All', icon: '📊' },
-  { name: 'AI', icon: '🤖' },
-  { name: 'SaaS', icon: '☁️' },
-  { name: 'Developer', icon: '👨‍💻' },
-  { name: 'Marketing', icon: '📢' },
-  { name: 'Productivity', icon: '⚡' },
-  { name: 'Design', icon: '🎨' },
-  { name: 'Crypto', icon: '₿' },
-  { name: 'Explore', icon: '🔍' }
+  { name: 'All', Icon: BarChart3 },
+  { name: 'AI', Icon: Brain },
+  { name: 'SaaS', Icon: Cloud },
+  { name: 'Developer', Icon: Code2 },
+  { name: 'Marketing', Icon: Megaphone },
+  { name: 'Productivity', Icon: Zap },
+  { name: 'Design', Icon: Palette },
+  { name: 'Crypto', Icon: Bitcoin },
+  { name: 'Explore', Icon: Compass }
 ];
 
 export default function Header() {
@@ -40,7 +40,7 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
               <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded font-bold text-white flex items-center justify-center">
-                ⚡
+                <Zap className="w-5 h-5" />
               </div>
               <span className="text-lg font-bold text-gray-900 dark:text-white hidden sm:block">rankbid</span>
             </Link>
@@ -150,20 +150,23 @@ export default function Header() {
       {/* Category Filter */}
       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-16 z-30 overflow-x-auto">
         <div className="max-w-7xl mx-auto px-6 py-3 flex gap-3">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.name}
-              onClick={() => setActiveCategory(cat.name)}
-              className={`flex-shrink-0 px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all ${
-                activeCategory === cat.name
-                  ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-              }`}
-            >
-              <span className="mr-2">{cat.icon}</span>
-              {cat.name}
-            </button>
-          ))}
+          {CATEGORIES.map((cat) => {
+            const Icon = cat.Icon;
+            return (
+              <button
+                key={cat.name}
+                onClick={() => setActiveCategory(cat.name)}
+                className={`flex-shrink-0 px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all flex items-center gap-2 ${
+                  activeCategory === cat.name
+                    ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {cat.name}
+              </button>
+            );
+          })}
         </div>
       </div>
     </>
