@@ -224,14 +224,14 @@ export default function Home() {
             </div>
 
             {/* Compact Form */}
-            <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center mb-12">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-12">
               {formError && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium w-full">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium w-full">
                   {formError}
                 </div>
               )}
 
-              <div className="flex-1 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+              <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
                 {/* URL Input */}
                 <input
                   type="text"
@@ -266,24 +266,24 @@ export default function Home() {
                   {formLoading ? 'Processing...' : 'Claim rank'}
                 </button>
               </div>
+
+              {/* Hidden Description Field */}
+              <textarea
+                name="description"
+                placeholder="Brief description"
+                value={formData.description}
+                onChange={handleInputChange}
+                rows={1}
+                className="hidden"
+              />
             </form>
 
-            {/* Hidden Description Field - still in form but not displayed */}
-            <textarea
-              name="description"
-              placeholder="Brief description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={4}
-              className="hidden"
-              required
-            />
-
-            {/* Bid Adjuster - Inline */}
+            {/* Bid Adjuster - Separate from form */}
             <div className="flex justify-center items-center gap-6 pt-8">
               <button
+                type="button"
                 onClick={() => setCurrentBid(Math.max(500, currentBid - 500))}
-                className="text-orange-500 text-2xl font-bold hover:text-orange-600 transition-colors p-2"
+                className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
               >
                 −
               </button>
@@ -291,8 +291,9 @@ export default function Home() {
                 ${(currentBid/100).toFixed(0)}
               </p>
               <button
+                type="button"
                 onClick={() => setCurrentBid(currentBid + 500)}
-                className="text-orange-500 text-2xl font-bold hover:text-orange-600 transition-colors p-2"
+                className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
               >
                 +
               </button>
