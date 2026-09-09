@@ -19,6 +19,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json(
+        { error: 'Database not configured', listings: [] },
+        { status: 500 }
+      );
+    }
+
     const normalizedUrl = url || getPlatformUrl(platform, handle);
 
     let listing = await prisma.listing.findUnique({
@@ -27,13 +34,19 @@ export async function POST(req: NextRequest) {
 
     if (listing) {
       return NextResponse.json(
-        { listing, isNew: false, listings: [] }
+        { listing, isNew: false, listings: [], isFreeUser: false }
       );
     }
 
-    // Count existing listings
-    const totalListings = await prisma.listing.count();
-    const isFreeUser = totalListings < 10;
+    // Count existing listings for free tier check
+    let isFreeUser = false;
+    try {
+      const totalListings = await prisma.listing.count();
+      isFreeUser = totalListings < 10;
+    } catch (countError) {
+      console.warn('Could not count listings:', countError);
+      isFreeUser = false;
+    }
 
     listing = await prisma.listing.create({
       data: {
@@ -51,27 +64,32 @@ export async function POST(req: NextRequest) {
 
     // If free user, create a payment record to mark it as completed
     if (isFreeUser) {
-      await prisma.payment.create({
-        data: {
-          listingId: listing.id,
-          amount: 100, // $1
-          status: 'completed',
-          provider: 'free',
-          transactionId: `free-user-${listing.id}`,
-          paidAt: new Date(),
-        },
-      });
+      try {
+        await prisma.payment.create({
+          data: {
+            listingId: listing.id,
+            amount: 100, // $1
+            status: 'completed',
+            provider: 'free',
+            transactionId: `free-user-${listing.id}`,
+            paidAt: new Date(),
+          },
+        });
 
-      // Create daily rank for today
-      const today = new Date();
-      today.setUTCHours(0, 0, 0, 0);
-      await prisma.dailyRank.create({
-        data: {
-          listingId: listing.id,
-          date: today,
-          amount: 100,
-        },
-      });
+        // Create daily rank for today
+        const today = new Date();
+        today.setUTCHours(0, 0, 0, 0);
+        await prisma.dailyRank.create({
+          data: {
+            listingId: listing.id,
+            date: today,
+            amount: 100,
+          },
+        });
+      } catch (freeUserError) {
+        console.warn('Error creating payment for free user:', freeUserError);
+        // Still return success even if payment creation fails
+      }
     }
 
     return NextResponse.json(
