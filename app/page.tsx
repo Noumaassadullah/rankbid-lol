@@ -164,21 +164,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Stats - Horizontal Layout */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t-2 border-gray-200">
-              <div>
-                <p className="text-5xl font-black text-orange-600 mb-1">10K+</p>
-                <p className="text-sm text-gray-600 font-semibold">Products Listed</p>
-              </div>
-              <div>
-                <p className="text-5xl font-black text-orange-600 mb-1">50K+</p>
-                <p className="text-sm text-gray-600 font-semibold">Active Bids</p>
-              </div>
-              <div>
-                <p className="text-5xl font-black text-orange-600 mb-1">$5M+</p>
-                <p className="text-sm text-gray-600 font-semibold">Total Bids</p>
-              </div>
-            </div>
           </div>
         </section>
 
