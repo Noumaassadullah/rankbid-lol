@@ -131,7 +131,7 @@ export function useCreateListing() {
       try {
         const { data: listing, error: err } = await supabase
           .from('listings')
-          .insert([data])
+          .insert([data as any])
           .select()
           .single();
 
@@ -163,7 +163,7 @@ export function useUpdateListing() {
       try {
         const { data: listing, error: err } = await supabase
           .from('listings')
-          .update(data)
+          .update(data as any)
           .eq('id', id)
           .select()
           .single();

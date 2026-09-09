@@ -21,7 +21,7 @@ export async function POST() {
           rating: 4.5,
           is_verified: true,
           listings_count: 0,
-        },
+        } as any,
       ])
       .select();
 
@@ -42,7 +42,7 @@ export async function POST() {
           location: 'Karachi',
           status: 'active',
           views: 0,
-        },
+        } as any,
         {
           user_id: '550e8400-e29b-41d4-a716-446655440000',
           title: 'Gaming Laptop - RTX 4060',
@@ -52,7 +52,7 @@ export async function POST() {
           location: 'Lahore',
           status: 'active',
           views: 0,
-        },
+        } as any,
         {
           user_id: '550e8400-e29b-41d4-a716-446655440000',
           title: 'Mountain Bike - Trek Marlin',
@@ -62,7 +62,7 @@ export async function POST() {
           location: 'Islamabad',
           status: 'active',
           views: 0,
-        },
+        } as any,
       ])
       .select();
 

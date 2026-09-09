@@ -72,7 +72,7 @@ export async function PUT(request: Request) {
         country: body.country || 'Pakistan',
         bio: body.bio,
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq('id', body.id)
       .select()
       .single();

@@ -98,6 +98,53 @@ export interface Database {
           listings_count?: number;
         };
       };
+      payments: {
+        Row: {
+          id: string;
+          created_at: string;
+          updated_at: string;
+          transaction_id: string;
+          reference: string;
+          amount: number;
+          currency: string;
+          status: 'pending' | 'completed' | 'failed' | 'refunded';
+          payment_method: 'rapid-gateway' | 'jazzcash' | 'easypaisa' | 'stripe';
+          user_id: string | null;
+          listing_id: string | null;
+          metadata: Record<string, any> | null;
+          error_message: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+          transaction_id: string;
+          reference: string;
+          amount: number;
+          currency?: string;
+          status?: 'pending' | 'completed' | 'failed' | 'refunded';
+          payment_method: 'rapid-gateway' | 'jazzcash' | 'easypaisa' | 'stripe';
+          user_id?: string | null;
+          listing_id?: string | null;
+          metadata?: Record<string, any> | null;
+          error_message?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+          transaction_id?: string;
+          reference?: string;
+          amount?: number;
+          currency?: string;
+          status?: 'pending' | 'completed' | 'failed' | 'refunded';
+          payment_method?: 'rapid-gateway' | 'jazzcash' | 'easypaisa' | 'stripe';
+          user_id?: string | null;
+          listing_id?: string | null;
+          metadata?: Record<string, any> | null;
+          error_message?: string | null;
+        };
+      };
     };
     Views: {
       [_ in never]: never;

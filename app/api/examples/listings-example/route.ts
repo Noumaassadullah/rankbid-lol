@@ -99,7 +99,7 @@ export async function POST(request: Request) {
           price: parseFloat(body.price),
           location: body.location || 'Pakistan',
           status: 'active',
-        },
+        } as any,
       ])
       .select()
       .single();
@@ -146,7 +146,7 @@ export async function PATCH(request: Request) {
         location: body.location,
         is_featured: body.is_featured,
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq('id', id)
       .select()
       .single();
