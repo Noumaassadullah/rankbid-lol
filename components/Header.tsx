@@ -20,6 +20,11 @@ export default function Header() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [isOnCategoriesPage, setIsOnCategoriesPage] = useState(false);
+
+  useEffect(() => {
+    setIsOnCategoriesPage(typeof window !== 'undefined' && window.location.pathname === '/categories');
+  }, []);
   const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
@@ -104,6 +109,9 @@ export default function Header() {
                 <Link href="/rules" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                   Rules
                 </Link>
+                <Link href="/stats" className="text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 transition-colors">
+                  stats →
+                </Link>
               </nav>
 
               {/* Mobile Menu */}
@@ -142,6 +150,9 @@ export default function Header() {
               <Link href="/rules" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
                 Rules
               </Link>
+              <Link href="/stats" className="block text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700">
+                stats →
+              </Link>
             </div>
           )}
         </div>
@@ -153,18 +164,19 @@ export default function Header() {
           {CATEGORIES.map((cat) => {
             const Icon = cat.Icon;
             return (
-              <button
+              <Link
                 key={cat.name}
-                onClick={() => setActiveCategory(cat.name)}
+                href="/categories"
                 className={`flex-shrink-0 px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all flex items-center gap-2 ${
                   activeCategory === cat.name
                     ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                 }`}
+                onClick={() => setActiveCategory(cat.name)}
               >
                 <Icon className="w-4 h-4" />
                 {cat.name}
-              </button>
+              </Link>
             );
           })}
         </div>
