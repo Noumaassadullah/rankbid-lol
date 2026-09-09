@@ -20,11 +20,7 @@ export default function Header() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
-  const [isOnCategoriesPage, setIsOnCategoriesPage] = useState(false);
-
-  useEffect(() => {
-    setIsOnCategoriesPage(typeof window !== 'undefined' && window.location.pathname === '/categories');
-  }, []);
+  const [searchQuery, setSearchQuery] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
@@ -73,9 +69,25 @@ export default function Header() {
                   <input
                     type="text"
                     placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && searchQuery.trim()) {
+                        window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+                      }
+                    }}
                     className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 placeholder-gray-500 dark:placeholder-gray-400 w-48"
                   />
-                  <Search className="w-4 h-4 text-gray-400 absolute right-3 top-2.5" />
+                  <button
+                    onClick={() => {
+                      if (searchQuery.trim()) {
+                        window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+                      }
+                    }}
+                    className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  >
+                    <Search className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
 
@@ -100,17 +112,17 @@ export default function Header() {
                 <Link href="/daily" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                   Daily
                 </Link>
+                <Link href="/leaderboard" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                  Leaderboard
+                </Link>
                 <Link href="/categories" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                   Categories
                 </Link>
                 <Link href="/about" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                   About
                 </Link>
-                <Link href="/rules" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
-                  Rules
-                </Link>
-                <Link href="/stats" className="text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700 dark:hover:text-orange-300 transition-colors">
-                  stats →
+                <Link href="/dashboard" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                  Dashboard
                 </Link>
               </nav>
 
@@ -130,6 +142,13 @@ export default function Header() {
               <input
                 type="text"
                 placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+                  }
+                }}
                 className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
@@ -141,17 +160,17 @@ export default function Header() {
               <Link href="/daily" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
                 Daily
               </Link>
+              <Link href="/leaderboard" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
+                Leaderboard
+              </Link>
               <Link href="/categories" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
                 Categories
               </Link>
               <Link href="/about" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
                 About
               </Link>
-              <Link href="/rules" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
-                Rules
-              </Link>
-              <Link href="/stats" className="block text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700">
-                stats →
+              <Link href="/dashboard" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
+                Dashboard
               </Link>
             </div>
           )}
