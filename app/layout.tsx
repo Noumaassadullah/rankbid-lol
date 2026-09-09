@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 export const dynamic = 'force-dynamic';
@@ -20,7 +19,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} bg-white dark:bg-black text-black dark:text-white`}>
         <ThemeProvider>
-          <Navbar />
           <main className="min-h-screen">{children}</main>
           <Footer />
         </ThemeProvider>
