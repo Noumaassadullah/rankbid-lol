@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Footer from '@/components/Footer';
 
 export const dynamic = 'force-dynamic';
 import { ThemeProvider } from '@/components/ThemeProvider';
@@ -20,7 +19,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.className} bg-white dark:bg-black text-black dark:text-white`}>
         <ThemeProvider>
           <main className="min-h-screen">{children}</main>
-          <Footer />
         </ThemeProvider>
       </body>
     </html>
