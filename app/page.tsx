@@ -321,29 +321,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FEATURES */}
-        <section className="bg-gray-50 py-20">
-          <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Why Makers Choose RankBid</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                { title: 'Real-Time Rankings', desc: 'Watch live competition 24/7' },
-                { title: 'Category Dominance', desc: 'Own your niche and get discovered' },
-                { title: 'Flexible Bidding', desc: 'Adjust bids anytime' },
-                { title: 'Mobile Optimized', desc: 'Manage everything on your phone' },
-                { title: 'No Hidden Fees', desc: 'Complete transparency' },
-                { title: 'Instant Results', desc: 'See your ranking update live' }
-              ].map((feature, i) => (
-                <div key={i} className="bg-white rounded-xl p-6 border border-gray-200 hover:border-orange-200 hover:shadow-lg transition-all">
-                  <h3 className="font-bold text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm">{feature.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* LEADERBOARD */}
         <section id="leaderboard" className="bg-white py-20">
           <div className="max-w-6xl mx-auto px-6">
