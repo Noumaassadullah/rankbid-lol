@@ -1,4 +1,21 @@
+'use client';
+
 import Link from 'next/link';
+import {
+  Crown,
+  Flame,
+  Calendar,
+  Grid3x3,
+  Info,
+  BookOpen,
+  Briefcase,
+  CreditCard,
+  Mail,
+  Twitter,
+  Github,
+  MessageCircle,
+  Gem,
+} from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,8 +27,8 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded font-black text-white flex items-center justify-center text-lg">
-                💎
+              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded font-black text-white flex items-center justify-center">
+                <Gem size={18} />
               </div>
               <span className="text-xl font-black text-black dark:text-white">RankBid</span>
             </div>
@@ -22,40 +39,45 @@ export default function Footer() {
 
           {/* Leaderboards */}
           <div>
-            <h4 className="text-sm font-black text-black dark:text-white mb-4 uppercase tracking-wide">
+            <h4 className="text-sm font-black text-black dark:text-white mb-4 uppercase tracking-wide flex items-center gap-2">
+              <Crown size={16} />
               Leaderboards
             </h4>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/"
-                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm"
+                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm flex items-center gap-2"
                 >
-                  🏆 All-Time
+                  <Crown size={14} />
+                  All-Time
                 </Link>
               </li>
               <li>
                 <Link
                   href="/today"
-                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm"
+                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm flex items-center gap-2"
                 >
-                  🔥 Today (24h)
+                  <Flame size={14} />
+                  Today (24h)
                 </Link>
               </li>
               <li>
                 <Link
                   href="/daily"
-                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm"
+                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm flex items-center gap-2"
                 >
-                  📅 Daily
+                  <Calendar size={14} />
+                  Daily
                 </Link>
               </li>
               <li>
                 <Link
                   href="/categories"
-                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm"
+                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm flex items-center gap-2"
                 >
-                  🎯 Categories
+                  <Grid3x3 size={14} />
+                  Categories
                 </Link>
               </li>
             </ul>
@@ -63,31 +85,35 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-sm font-black text-black dark:text-white mb-4 uppercase tracking-wide">
+            <h4 className="text-sm font-black text-black dark:text-white mb-4 uppercase tracking-wide flex items-center gap-2">
+              <BookOpen size={16} />
               Resources
             </h4>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/about"
-                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm"
+                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm flex items-center gap-2"
                 >
+                  <Info size={14} />
                   About Us
                 </Link>
               </li>
               <li>
                 <Link
                   href="/rules"
-                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm"
+                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm flex items-center gap-2"
                 >
+                  <BookOpen size={14} />
                   Rules & Terms
                 </Link>
               </li>
               <li>
                 <Link
                   href="/claim"
-                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm"
+                  className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors text-sm flex items-center gap-2"
                 >
+                  <Briefcase size={14} />
                   Claim Listing
                 </Link>
               </li>
@@ -96,19 +122,30 @@ export default function Footer() {
 
           {/* Payments & Support */}
           <div>
-            <h4 className="text-sm font-black text-black dark:text-white mb-4 uppercase tracking-wide">
+            <h4 className="text-sm font-black text-black dark:text-white mb-4 uppercase tracking-wide flex items-center gap-2">
+              <CreditCard size={16} />
               Payments
             </h4>
             <ul className="space-y-2 font-bold text-gray-700 dark:text-gray-300 text-sm mb-6">
-              <li>✓ RapidGateway</li>
-              <li>✓ JazzCash</li>
-              <li>✓ EasyPaisa</li>
+              <li className="flex items-center gap-2">
+                <span className="text-orange-600 dark:text-orange-500">✓</span>
+                RapidGateway
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-orange-600 dark:text-orange-500">✓</span>
+                JazzCash
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-orange-600 dark:text-orange-500">✓</span>
+                EasyPaisa
+              </li>
             </ul>
             <a
               href="mailto:support@rankbid.pk"
-              className="inline-block font-bold text-orange-600 dark:text-orange-500 hover:text-orange-700 dark:hover:text-orange-400 transition-colors text-sm"
+              className="inline-flex items-center gap-2 font-bold text-orange-600 dark:text-orange-500 hover:text-orange-700 dark:hover:text-orange-400 transition-colors text-sm"
             >
-              support@rankbid.pk →
+              <Mail size={14} />
+              support@rankbid.pk
             </a>
           </div>
         </div>
@@ -125,30 +162,33 @@ export default function Footer() {
           </div>
 
           {/* Social Links */}
-          <div className="flex gap-6 text-sm">
+          <div className="flex gap-6">
             <a
               href="https://twitter.com"
-              className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors"
+              className="p-2 text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950 rounded-lg transition-colors"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Twitter"
             >
-              Twitter
+              <Twitter size={18} />
             </a>
             <a
               href="https://github.com"
-              className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors"
+              className="p-2 text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950 rounded-lg transition-colors"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="GitHub"
             >
-              GitHub
+              <Github size={18} />
             </a>
             <a
               href="https://discord.com"
-              className="font-bold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 transition-colors"
+              className="p-2 text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950 rounded-lg transition-colors"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Discord"
             >
-              Discord
+              <MessageCircle size={18} />
             </a>
           </div>
         </div>
