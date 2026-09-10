@@ -4,6 +4,7 @@ import './globals.css';
 
 export const dynamic = 'force-dynamic';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import Footer from '@/components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,9 +17,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-white dark:bg-black text-black dark:text-white`}>
+      <body className={`${inter.className} bg-white dark:bg-black text-black dark:text-white flex flex-col min-h-screen`}>
         <ThemeProvider>
-          <main className="min-h-screen">{children}</main>
+          <main className="flex-1">{children}</main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
