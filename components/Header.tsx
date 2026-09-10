@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal } from 'lucide-react';
+import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp } from 'lucide-react';
 
 const CATEGORIES = [
   { name: 'All', Icon: Grid3x3 },
@@ -49,18 +49,37 @@ export default function Header() {
               </Link>
             </div>
 
-            {/* Stats Pill - Desktop */}
-            <div className="hidden sm:flex items-center gap-4">
-              <div className="flex items-center gap-3 text-sm">
-                <span className="flex items-center gap-2 text-gray-700 dark:text-gray-300 font-medium">
-                  <span className="w-2.5 h-2.5 bg-green-500 rounded-full"></span>
-                  73 online
-                </span>
-                <span className="text-gray-400">·</span>
-                <span className="text-gray-700 dark:text-gray-300 font-medium">1,528,484 visitors</span>
-                <span className="text-gray-400">·</span>
-                <Link href="/stats" className="text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 font-semibold">
-                  stats→
+            {/* Stats Pill */}
+            <div className="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900 rounded-full border border-orange-200 dark:border-orange-800">
+              <div className="flex items-center gap-4 text-sm">
+                {/* Live Users */}
+                <div className="flex items-center gap-2">
+                  <div className="relative flex items-center">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span className="absolute inset-0 w-2 h-2 bg-green-400 rounded-full animate-ping"></span>
+                  </div>
+                  <span className="font-bold text-gray-900 dark:text-orange-100">73 online</span>
+                </div>
+
+                {/* Divider */}
+                <span className="text-gray-300 dark:text-orange-700">·</span>
+
+                {/* Total Visitors */}
+                <div className="hidden sm:flex items-center gap-2">
+                  <Eye size={14} className="text-orange-600 dark:text-orange-400" />
+                  <span className="font-bold text-gray-900 dark:text-orange-100">1.5M visitors</span>
+                </div>
+
+                {/* Divider */}
+                <span className="hidden sm:block text-gray-300 dark:text-orange-700">·</span>
+
+                {/* Stats Link */}
+                <Link
+                  href="/stats"
+                  className="hidden sm:flex items-center gap-1 text-orange-600 dark:text-orange-300 hover:text-orange-700 dark:hover:text-orange-200 font-bold transition-colors whitespace-nowrap"
+                >
+                  <TrendingUp size={14} />
+                  stats
                 </Link>
               </div>
             </div>
@@ -108,7 +127,20 @@ export default function Header() {
 
           {/* Mobile Menu */}
           {mobileOpen && (
-            <div className="lg:hidden py-4 border-t border-gray-200 dark:border-gray-800 space-y-3">
+            <div className="sm:hidden py-4 border-t border-gray-200 dark:border-gray-800 space-y-3">
+              {/* Mobile Stats */}
+              <div className="flex items-center gap-2 px-2 py-2 bg-orange-50 dark:bg-orange-950 rounded-lg border border-orange-200 dark:border-orange-800 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="relative flex items-center">
+                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                    <span className="absolute inset-0 w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span>
+                  </span>
+                  <span className="font-bold text-gray-900 dark:text-orange-100">73 online</span>
+                </div>
+                <span className="text-gray-300">·</span>
+                <span className="font-bold text-gray-900 dark:text-orange-100">1.5M visits</span>
+              </div>
+
               <Link href="/daily" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
                 Daily
               </Link>
@@ -121,8 +153,8 @@ export default function Header() {
               <Link href="/rules" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
                 Rules
               </Link>
-              <Link href="/leaderboard" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
-                Leaderboard
+              <Link href="/stats" className="block text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700">
+                Stats
               </Link>
             </div>
           )}
