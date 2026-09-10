@@ -1,19 +1,32 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+let supabase: ReturnType<typeof createClient> | null = null;
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: { autoRefreshToken: false, persistSession: false },
-});
+function getSupabase() {
+  if (supabase) return supabase;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase credentials');
+  }
+
+  supabase = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+
+  return supabase;
+}
 
 export async function GET() {
   try {
+    const sb = getSupabase();
     // Get online users (active sessions in last 5 minutes)
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
 
-    const { data: onlineSessions, error: onlineError } = await supabase
+    const { data: onlineSessions, error: onlineError } = await sb
       .from('visitor_sessions')
       .select('id', { count: 'exact', head: false })
       .eq('is_active', true)
@@ -23,7 +36,7 @@ export async function GET() {
 
     // Get total visitors (count distinct sessions from today)
     const today = new Date().toISOString().split('T')[0];
-    const { data: todaySessions, error: todayError } = await supabase
+    const { data: todaySessions, error: todayError } = await sb
       .from('visitor_sessions')
       .select('id', { count: 'exact', head: false })
       .gte('created_at', `${today}T00:00:00`);
@@ -31,7 +44,7 @@ export async function GET() {
     if (todayError) throw todayError;
 
     // Get all-time visitors
-    const { data: allSessions, error: allError } = await supabase
+    const { data: allSessions, error: allError } = await sb
       .from('visitor_sessions')
       .select('id', { count: 'exact', head: false });
 
@@ -54,12 +67,13 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const sb = getSupabase();
     const { sessionId, pageUrl } = await request.json();
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
     // Try to insert or update session
-    const { data, error } = await supabase
+    const { data, error } = await sb
       .from('visitor_sessions')
       .upsert(
         {
