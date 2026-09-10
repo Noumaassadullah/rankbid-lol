@@ -11,9 +11,9 @@ import {
   Briefcase,
   CreditCard,
   Mail,
-  Twitter,
-  Github,
-  MessageCircle,
+  Share2,
+  GitBranch,
+  MessageSquare,
   Gem,
 } from 'lucide-react';
 
@@ -170,7 +170,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               aria-label="Twitter"
             >
-              <Twitter size={18} />
+              <Share2 size={18} />
             </a>
             <a
               href="https://github.com"
@@ -179,7 +179,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               aria-label="GitHub"
             >
-              <Github size={18} />
+              <GitBranch size={18} />
             </a>
             <a
               href="https://discord.com"
@@ -188,7 +188,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               aria-label="Discord"
             >
-              <MessageCircle size={18} />
+              <MessageSquare size={18} />
             </a>
           </div>
         </div>
