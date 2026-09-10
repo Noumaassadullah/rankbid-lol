@@ -33,6 +33,30 @@ CREATE TABLE IF NOT EXISTS listings (
   is_featured boolean DEFAULT false
 );
 
+-- Create visitor_sessions table for tracking online users
+CREATE TABLE IF NOT EXISTS visitor_sessions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  session_id text UNIQUE NOT NULL,
+  ip_address text,
+  user_agent text,
+  last_activity timestamp with time zone DEFAULT now(),
+  page_url text,
+  is_active boolean DEFAULT true
+);
+
+-- Create visitor_analytics table for daily stats
+CREATE TABLE IF NOT EXISTS visitor_analytics (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  date date DEFAULT CURRENT_DATE,
+  total_visitors integer DEFAULT 0,
+  unique_visitors integer DEFAULT 0,
+  page_views integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  UNIQUE(date)
+);
+
 -- Create payments table
 CREATE TABLE IF NOT EXISTS payments (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -61,6 +85,10 @@ CREATE INDEX IF NOT EXISTS idx_payments_reference ON payments(reference);
 CREATE INDEX IF NOT EXISTS idx_payments_user_id ON payments(user_id);
 CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
 CREATE INDEX IF NOT EXISTS idx_payments_created_at ON payments(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_visitor_sessions_session_id ON visitor_sessions(session_id);
+CREATE INDEX IF NOT EXISTS idx_visitor_sessions_is_active ON visitor_sessions(is_active);
+CREATE INDEX IF NOT EXISTS idx_visitor_sessions_last_activity ON visitor_sessions(last_activity DESC);
+CREATE INDEX IF NOT EXISTS idx_visitor_analytics_date ON visitor_analytics(date DESC);
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;

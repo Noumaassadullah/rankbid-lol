@@ -20,6 +20,7 @@ const CATEGORIES = [
 export default function Header() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [stats, setStats] = useState({ onlineNow: 0, allTimeVisitors: 0 });
 
   useEffect(() => {
     if (darkMode) {
@@ -28,6 +29,41 @@ export default function Header() {
       document.documentElement.classList.remove('dark');
     }
   }, [darkMode]);
+
+  // Fetch stats and track visitor
+  useEffect(() => {
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    sessionStorage.setItem('rankbid_session_id', sessionId);
+
+    const trackVisitor = async () => {
+      try {
+        // Track this visit
+        await fetch('/api/stats', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId,
+            pageUrl: window.location.pathname,
+          }),
+        });
+
+        // Fetch real-time stats
+        const res = await fetch('/api/stats');
+        if (res.ok) {
+          const data = await res.json();
+          setStats(data);
+        }
+      } catch (error) {
+        console.error('Failed to track visitor:', error);
+      }
+    };
+
+    trackVisitor();
+
+    // Update stats every 30 seconds
+    const interval = setInterval(trackVisitor, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -58,7 +94,9 @@ export default function Header() {
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                     <span className="absolute inset-0 w-2 h-2 bg-green-400 rounded-full animate-ping"></span>
                   </div>
-                  <span className="font-bold text-gray-900 dark:text-orange-100">73 online</span>
+                  <span className="font-bold text-gray-900 dark:text-orange-100">
+                    {stats.onlineNow} online
+                  </span>
                 </div>
 
                 {/* Divider */}
@@ -67,7 +105,13 @@ export default function Header() {
                 {/* Total Visitors */}
                 <div className="hidden sm:flex items-center gap-2">
                   <Eye size={14} className="text-orange-600 dark:text-orange-400" />
-                  <span className="font-bold text-gray-900 dark:text-orange-100">1.5M visitors</span>
+                  <span className="font-bold text-gray-900 dark:text-orange-100">
+                    {stats.allTimeVisitors > 0
+                      ? stats.allTimeVisitors > 1000
+                        ? `${(stats.allTimeVisitors / 1000).toFixed(1)}K visitors`
+                        : `${stats.allTimeVisitors} visitors`
+                      : '0 visitors'}
+                  </span>
                 </div>
 
                 {/* Divider */}
@@ -135,10 +179,14 @@ export default function Header() {
                     <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                     <span className="absolute inset-0 w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span>
                   </span>
-                  <span className="font-bold text-gray-900 dark:text-orange-100">73 online</span>
+                  <span className="font-bold text-gray-900 dark:text-orange-100">{stats.onlineNow} online</span>
                 </div>
                 <span className="text-gray-300">·</span>
-                <span className="font-bold text-gray-900 dark:text-orange-100">1.5M visits</span>
+                <span className="font-bold text-gray-900 dark:text-orange-100">
+                  {stats.allTimeVisitors > 1000
+                    ? `${(stats.allTimeVisitors / 1000).toFixed(1)}K visits`
+                    : `${stats.allTimeVisitors} visits`}
+                </span>
               </div>
 
               <Link href="/daily" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
