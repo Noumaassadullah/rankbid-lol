@@ -98,8 +98,22 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error('Error submitting listing:', error);
+
+    // Check if it's a database connection error
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json(
+        { error: 'Database not configured. Please set DATABASE_URL in environment variables.', listings: [] },
+        { status: 503 }
+      );
+    }
+
+    // For other errors, return a generic message
     return NextResponse.json(
-      { error: 'Internal server error', listings: [] },
+      {
+        error: 'Failed to submit listing. Please try again later.',
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+        listings: []
+      },
       { status: 500 }
     );
   }
