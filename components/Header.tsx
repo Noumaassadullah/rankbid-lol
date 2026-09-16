@@ -25,13 +25,18 @@ export default function Header() {
 
   // Initialize dark mode from localStorage
   useEffect(() => {
+    setMounted(true);
     const savedTheme = localStorage.getItem('theme');
     const isDark = savedTheme === 'dark' || (savedTheme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     setDarkMode(isDark);
-    setMounted(true);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, []);
 
-  // Update dark mode class and localStorage
+  // Update dark mode class and localStorage when darkMode changes
   useEffect(() => {
     if (!mounted) return;
     if (darkMode) {
