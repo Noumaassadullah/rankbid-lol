@@ -336,17 +336,9 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Metadata Preview */}
-            {metadataImage && (
+            {/* Detected Platform Info */}
+            {detectedPlatform && detectedCategory && (
               <div className="mb-8 p-4 bg-gray-50 rounded-lg flex items-center gap-4 max-w-2xl mx-auto">
-                <img
-                  src={metadataImage}
-                  alt="Preview"
-                  className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
                 <div className="flex-1">
                   <p className="text-sm text-gray-600">
                     <span className="font-semibold">Detected:</span> {detectedPlatform === 'website' ? '🌐' : ''}{detectedPlatform === 'linkedin' ? '🔗' : ''}{detectedPlatform === 'twitter' ? '𝕏' : ''}{detectedPlatform === 'facebook' ? 'f' : ''} {detectedPlatform.charAt(0).toUpperCase() + detectedPlatform.slice(1)} • {getCategoryLabel(detectedCategory)}
@@ -479,32 +471,6 @@ export default function Home() {
                     >
                       <div className="flex-1 flex items-center gap-3">
                         <span className="text-lg font-bold text-gray-400 w-6">#{idx + 1}</span>
-                        <div className="w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-                          {listing.imageUrl ? (
-                            <img
-                              src={listing.imageUrl}
-                              alt={listing.title}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                                if (e.currentTarget.nextSibling) {
-                                  (e.currentTarget.nextSibling as HTMLElement).style.display = 'flex';
-                                }
-                              }}
-                            />
-                          ) : listing.platform === 'linkedin' || listing.title.includes('LinkedIn') ? (
-                            <img
-                              src={`https://www.google.com/s2/favicons?domain=linkedin.com&sz=64`}
-                              alt={listing.title}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="%23FF9500" opacity="0.2"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="12" font-weight="bold" fill="%23FF9500">in</text></svg>';
-                              }}
-                            />
-                          ) : (
-                            <span className="text-xl font-bold text-orange-500">📦</span>
-                          )}
-                        </div>
                         <div className="min-w-0">
                           <h3 className="font-semibold text-gray-900 text-sm group-hover:text-orange-600 transition-colors truncate">{listing.title}</h3>
                           <p className="text-xs text-gray-500">{getCategoryLabel(listing.category)} • {PLATFORMS.find(p => p.id === listing.platform)?.label || listing.platform}</p>
