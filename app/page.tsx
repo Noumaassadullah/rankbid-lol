@@ -57,13 +57,15 @@ export default function Home() {
   });
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
-  const [currentBid, setCurrentBid] = useState(10000);
+  const [currentBid, setCurrentBid] = useState(20);
   const [freeSpotAvailable, setFreeSpotAvailable] = useState(false);
   const [spotsRemaining, setSpotsRemaining] = useState(0);
   const [metadataLoading, setMetadataLoading] = useState(false);
   const [metadataImage, setMetadataImage] = useState<string | null>(null);
   const [detectedPlatform, setDetectedPlatform] = useState('website');
   const [detectedCategory, setDetectedCategory] = useState('');
+
+  const PKR_RATE = 280; // 1 USD = 280 PKR
 
   useEffect(() => {
     fetchListings();
@@ -197,7 +199,8 @@ export default function Home() {
       }
 
       // Otherwise proceed to payment
-      const amountInCents = currentBid * 100;
+      // Convert PKR to USD cents: PKR / 280 (rate) * 100 (to cents)
+      const amountInCents = Math.round((currentBid / PKR_RATE) * 100);
 
       const checkoutRes = await fetch('/api/payment/jazzcash-checkout', {
         method: 'POST',
@@ -222,10 +225,16 @@ export default function Home() {
     ? listings.slice(0, 10).sort((a, b) => b.dayPaid - a.dayPaid)
     : listings.slice(0, 10).sort((a, b) => b.totalPaid - a.totalPaid);
 
+  const minBidForFirst = topListings.length > 0
+    ? Math.ceil((topListings[0].totalPaid / 100) / PKR_RATE) + 1
+    : 20;
+
   const calculateRank = (bid: number) => {
+    // Convert PKR bid to cents for comparison
+    const bidInCents = Math.round((bid / PKR_RATE) * 100);
     const higherBids = topListings.filter(l => {
       const amount = activeLeaderboard === 'today' ? l.dayPaid : l.totalPaid;
-      return amount > bid * 100;
+      return amount > bidInCents;
     }).length;
     return higherBids + 1;
   };
@@ -314,8 +323,13 @@ export default function Home() {
             {/* Main Heading with Price */}
             <div className="text-center mb-12">
               <h2 className="text-5xl md:text-6xl font-black text-gray-900">
-                Claim #1 for <span className="text-orange-500">${(currentBid/100).toFixed(0)}</span>
+                Claim #1 for <span className="text-orange-500">₨{(currentBid * PKR_RATE).toLocaleString()}</span>
               </h2>
+              {topListings.length > 0 && (
+                <p className="text-sm text-gray-600 mt-2">
+                  Top listing: ₨{(topListings[0].totalPaid / 100 * PKR_RATE).toLocaleString()} • Bid more to rank #1
+                </p>
+              )}
             </div>
 
             {/* Platform Selection */}
@@ -403,24 +417,31 @@ export default function Home() {
             </form>
 
             {/* Bid Adjuster - Separate from form */}
-            <div className="flex justify-center items-center gap-6 pt-8">
-              <button
-                type="button"
-                onClick={() => setCurrentBid(Math.max(500, currentBid - 500))}
-                className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
-              >
-                −
-              </button>
-              <p className="text-3xl md:text-4xl font-black text-orange-500">
-                ${(currentBid/100).toFixed(0)}
-              </p>
-              <button
-                type="button"
-                onClick={() => setCurrentBid(currentBid + 500)}
-                className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
-              >
-                +
-              </button>
+            <div className="flex justify-center items-center gap-6 pt-8 flex-col">
+              <div className="flex items-center gap-6">
+                <button
+                  type="button"
+                  onClick={() => setCurrentBid(Math.max(20, currentBid - 1))}
+                  className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
+                >
+                  −
+                </button>
+                <p className="text-3xl md:text-4xl font-black text-orange-500 min-w-fit">
+                  ₨{(currentBid * PKR_RATE).toLocaleString()}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setCurrentBid(currentBid + 1)}
+                  className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
+                >
+                  +
+                </button>
+              </div>
+              {currentBid < minBidForFirst && topListings.length > 0 && (
+                <p className="text-sm text-orange-600 font-semibold">
+                  Bid at least ₨{(minBidForFirst * PKR_RATE).toLocaleString()} to rank #1
+                </p>
+              )}
             </div>
           </div>
         </section>
