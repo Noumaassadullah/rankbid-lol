@@ -142,51 +142,48 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '100');
     const sort = searchParams.get('sort') || 'totalPaid';
 
-    if (!process.env.DATABASE_URL) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { listings: [], listing: null, warning: 'Database not configured' },
         { status: 200 }
       );
     }
 
-    if (url) {
-      try {
-        const listing = await prisma.listing.findUnique({
-          where: { url },
-          include: {
-            payments: {
-              where: { status: 'completed' },
-              orderBy: { paidAt: 'desc' },
-            },
-          },
-        });
-        return NextResponse.json({ listing, listings: [] });
-      } catch (dbError) {
-        console.error('Database error:', dbError);
-        return NextResponse.json({ listing: null, listings: [] });
-      }
-    }
+    // Fetch from Supabase REST API instead of Prisma
+    const orderBy = sort === 'dayPaid' ? 'price.desc' : 'price.desc';
+    const query = `select=id,title,description,url,category,platform,price,views,created_at,location&order=${orderBy}&limit=${limit}`;
 
-    const where: any = {};
-    if (category && category !== 'All') {
-      where.category = category;
-    }
-
-    const listings = await prisma.listing.findMany({
-      where,
-      orderBy: sort === 'dayPaid'
-        ? { dayPaid: 'desc' }
-        : { totalPaid: 'desc' },
-      take: limit,
-      include: {
-        payments: {
-          where: { status: 'completed' },
-          select: { amount: true, paidAt: true },
-          orderBy: { paidAt: 'desc' },
-          take: 5,
-        },
+    const response = await fetch(`${supabaseUrl}/rest/v1/listings?${query}`, {
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
       },
     });
+
+    if (!response.ok) {
+      return NextResponse.json({ listings: [], listing: null });
+    }
+
+    let supabaseListings = await response.json();
+
+    // Map Supabase schema to expected schema
+    const listings = supabaseListings.map((item: any) => ({
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      url: item.url,
+      category: item.category,
+      platform: item.platform || 'website',
+      totalPaid: item.price || 0,
+      dayPaid: item.price || 0,
+      clickCount: item.views || 0,
+      createdAt: item.created_at,
+      lastRaisedAt: item.created_at,
+      updatedAt: item.created_at,
+    }));
 
     return NextResponse.json({ listings, listing: null });
   } catch (error) {
