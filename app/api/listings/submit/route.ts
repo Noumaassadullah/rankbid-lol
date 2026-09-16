@@ -28,7 +28,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const normalizedUrl = url || getPlatformUrl(platform, handle);
+    let normalizedUrl = url || getPlatformUrl(platform, handle);
+
+    // Ensure URL has protocol
+    if (normalizedUrl && !normalizedUrl.startsWith('http')) {
+      normalizedUrl = `https://${normalizedUrl}`;
+    }
 
     // Check if listing already exists
     const checkResponse = await fetch(
