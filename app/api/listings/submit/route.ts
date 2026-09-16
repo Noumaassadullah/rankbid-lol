@@ -170,20 +170,29 @@ export async function GET(req: NextRequest) {
     let supabaseListings = await response.json();
 
     // Map Supabase schema to expected schema
-    const listings = supabaseListings.map((item: any) => ({
-      id: item.id,
-      title: item.title,
-      description: item.description,
-      url: `https://rankbid.pk/listing/${item.id}`,
-      category: item.category || 'Other',
-      platform: item.platform || 'website',
-      totalPaid: item.price || 0,
-      dayPaid: item.price || 0,
-      clickCount: item.views || 0,
-      createdAt: item.created_at,
-      lastRaisedAt: item.created_at,
-      updatedAt: item.updated_at || item.created_at,
-    }));
+    const listings = supabaseListings.map((item: any) => {
+      // For LinkedIn profiles, use location field as URL; for others use title or create listing link
+      let url = item.location;
+      if (!url || url === 'LinkedIn' || !url.startsWith('http')) {
+        // Generate listing detail page URL for marketplace items
+        url = `${process.env.NEXT_PUBLIC_APP_URL || 'https://rankbid-lol.vercel.app'}/listing/${item.id}`;
+      }
+
+      return {
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        url: url,
+        category: item.category || 'Other',
+        platform: item.platform || 'website',
+        totalPaid: item.price || 0,
+        dayPaid: item.price || 0,
+        clickCount: item.views || 0,
+        createdAt: item.created_at,
+        lastRaisedAt: item.created_at,
+        updatedAt: item.updated_at || item.created_at,
+      };
+    });
 
     return NextResponse.json({ listings, listing: null });
   } catch (error) {

@@ -423,15 +423,19 @@ export default function Home() {
                     >
                       <div className="flex-1 flex items-center gap-3">
                         <span className="text-lg font-bold text-gray-400 w-6">#{idx + 1}</span>
-                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-                          <img
-                            src={`https://www.google.com/s2/favicons?domain=${new URL(listing.url).hostname}&sz=64`}
-                            alt={listing.title}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" font-weight="bold" fill="%23999">•</text></svg>';
-                            }}
-                          />
+                        <div className="w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          {listing.platform === 'linkedin' || listing.title.includes('LinkedIn') ? (
+                            <img
+                              src={`https://www.google.com/s2/favicons?domain=linkedin.com&sz=64`}
+                              alt={listing.title}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="%23FF9500" opacity="0.2"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="12" font-weight="bold" fill="%23FF9500">in</text></svg>';
+                              }}
+                            />
+                          ) : (
+                            <span className="text-xl font-bold text-orange-500">📦</span>
+                          )}
                         </div>
                         <div className="min-w-0">
                           <h3 className="font-semibold text-gray-900 text-sm group-hover:text-orange-600 transition-colors truncate">{listing.title}</h3>
