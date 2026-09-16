@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
               description: 'LinkedIn Profile',
               category: 'Technology',
               platform: 'linkedin',
-              ...profile,
+              totalPaid: profile.totalPaid,
+              dayPaid: profile.dayPaid,
             },
           });
           results.push({ url: profile.url, status: 'created', title: created.title });
