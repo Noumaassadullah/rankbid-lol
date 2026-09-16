@@ -154,7 +154,7 @@ export async function GET(req: NextRequest) {
 
     // Fetch from Supabase REST API instead of Prisma
     const orderBy = sort === 'dayPaid' ? 'price.desc' : 'price.desc';
-    const query = `select=id,title,description,url,category,platform,price,views,created_at,location&order=${orderBy}&limit=${limit}`;
+    const query = `order=${orderBy}&limit=${limit}`;
 
     const response = await fetch(`${supabaseUrl}/rest/v1/listings?${query}`, {
       headers: {
@@ -174,15 +174,15 @@ export async function GET(req: NextRequest) {
       id: item.id,
       title: item.title,
       description: item.description,
-      url: item.url,
-      category: item.category,
+      url: `https://rankbid.pk/listing/${item.id}`,
+      category: item.category || 'Other',
       platform: item.platform || 'website',
       totalPaid: item.price || 0,
       dayPaid: item.price || 0,
       clickCount: item.views || 0,
       createdAt: item.created_at,
       lastRaisedAt: item.created_at,
-      updatedAt: item.created_at,
+      updatedAt: item.updated_at || item.created_at,
     }));
 
     return NextResponse.json({ listings, listing: null });
