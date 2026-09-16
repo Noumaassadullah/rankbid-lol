@@ -185,6 +185,10 @@ export default function Home() {
       if (isFreeUser) {
         setFormError('');
         setFormData({ url: '', handle: '', description: '', category: '', platform: 'website' });
+        setMetadataImage(null);
+        setDetectedPlatform('website');
+        setDetectedCategory('');
+        setFormLoading(false);
         // Show success message
         alert('🎉 Congratulations! You are in the first 10 users!\n\nYour listing is now live and ranked #1 for FREE!');
         // Refresh listings
