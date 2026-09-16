@@ -59,11 +59,43 @@ export default function Home() {
   const [currentBid, setCurrentBid] = useState(10000);
   const [freeSpotAvailable, setFreeSpotAvailable] = useState(false);
   const [spotsRemaining, setSpotsRemaining] = useState(0);
+  const [metadataLoading, setMetadataLoading] = useState(false);
+  const [metadataImage, setMetadataImage] = useState<string | null>(null);
+  const [detectedPlatform, setDetectedPlatform] = useState('website');
+  const [detectedCategory, setDetectedCategory] = useState('');
 
   useEffect(() => {
     fetchListings();
     checkFreeSpots();
   }, [activeLeaderboard]);
+
+  // Auto-detect platform and category from URL
+  useEffect(() => {
+    const debounceTimer = setTimeout(async () => {
+      if (formData.url && formData.url.startsWith('http')) {
+        setMetadataLoading(true);
+        try {
+          const res = await fetch(`/api/metadata?url=${encodeURIComponent(formData.url)}`);
+          if (res.ok) {
+            const data = await res.json();
+            setDetectedPlatform(data.platform);
+            setDetectedCategory(data.category);
+            setMetadataImage(data.image);
+            // Auto-update form if not manually set
+            if (!formData.category) {
+              setFormData(prev => ({ ...prev, category: data.category, platform: data.platform }));
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching metadata:', error);
+        } finally {
+          setMetadataLoading(false);
+        }
+      }
+    }, 1000);
+
+    return () => clearTimeout(debounceTimer);
+  }, [formData.url]);
 
   const checkFreeSpots = useCallback(async () => {
     try {
@@ -299,6 +331,25 @@ export default function Home() {
               ))}
             </div>
 
+            {/* Metadata Preview */}
+            {metadataImage && (
+              <div className="mb-8 p-4 bg-gray-50 rounded-lg flex items-center gap-4 max-w-2xl mx-auto">
+                <img
+                  src={metadataImage}
+                  alt="Preview"
+                  className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="text-sm text-gray-600">
+                    <span className="font-semibold">Detected:</span> {detectedPlatform === 'website' ? '🌐' : ''}{detectedPlatform === 'linkedin' ? '🔗' : ''}{detectedPlatform === 'twitter' ? '𝕏' : ''}{detectedPlatform === 'facebook' ? 'f' : ''} {detectedPlatform.charAt(0).toUpperCase() + detectedPlatform.slice(1)} • {getCategoryLabel(detectedCategory)}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Compact Form */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-12">
               {formError && (
@@ -336,10 +387,10 @@ export default function Home() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={formLoading}
+                  disabled={formLoading || metadataLoading}
                   className="px-8 py-4 bg-orange-500 text-white font-bold rounded-full hover:bg-orange-600 transition-colors disabled:opacity-50 whitespace-nowrap shadow-md hover:shadow-lg"
                 >
-                  {formLoading ? 'Processing...' : 'Claim rank'}
+                  {formLoading ? 'Processing...' : metadataLoading ? 'Loading...' : 'Claim rank'}
                 </button>
               </div>
 
