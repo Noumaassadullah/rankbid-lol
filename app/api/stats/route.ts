@@ -27,9 +27,9 @@ export async function GET() {
     // Get online users (active sessions in last 5 minutes)
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
 
-    const { data: onlineSessions, error: onlineError } = await sb
+    const { count: onlineCount, error: onlineError } = await sb
       .from('visitor_sessions')
-      .select('id', { count: 'exact', head: false })
+      .select('id', { count: 'exact', head: true })
       .eq('is_active', true)
       .gt('last_activity', fiveMinutesAgo);
 
@@ -37,24 +37,24 @@ export async function GET() {
 
     // Get total visitors (count distinct sessions from today)
     const today = new Date().toISOString().split('T')[0];
-    const { data: todaySessions, error: todayError } = await sb
+    const { count: todayCount, error: todayError } = await sb
       .from('visitor_sessions')
-      .select('id', { count: 'exact', head: false })
+      .select('id', { count: 'exact', head: true })
       .gte('created_at', `${today}T00:00:00`);
 
     if (todayError) throw todayError;
 
     // Get all-time visitors
-    const { data: allSessions, error: allError } = await sb
+    const { count: allCount, error: allError } = await sb
       .from('visitor_sessions')
-      .select('id', { count: 'exact', head: false });
+      .select('id', { count: 'exact', head: true });
 
     if (allError) throw allError;
 
     return NextResponse.json({
-      onlineNow: onlineSessions?.length || 0,
-      todayVisitors: todaySessions?.length || 0,
-      allTimeVisitors: allSessions?.length || 0,
+      onlineNow: onlineCount || 0,
+      todayVisitors: todayCount || 0,
+      allTimeVisitors: allCount || 0,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

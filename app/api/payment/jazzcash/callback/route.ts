@@ -41,11 +41,13 @@ export async function GET(request: NextRequest) {
       _sum: { amount: true },
     });
 
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
     const dayPaid = await prisma.payment.aggregate({
       where: {
         listingId: payment.listingId,
         status: 'completed',
-        paidAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        paidAt: { gte: today },
       },
       _sum: { amount: true },
     });
