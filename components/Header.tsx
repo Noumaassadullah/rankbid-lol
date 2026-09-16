@@ -21,14 +21,27 @@ export default function Header() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [stats, setStats] = useState({ onlineNow: 12, allTimeVisitors: 847 }); // Fallback values
+  const [mounted, setMounted] = useState(false);
 
+  // Initialize dark mode from localStorage
   useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const isDark = savedTheme === 'dark' || (savedTheme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setDarkMode(isDark);
+    setMounted(true);
+  }, []);
+
+  // Update dark mode class and localStorage
+  useEffect(() => {
+    if (!mounted) return;
     if (darkMode) {
       document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
-  }, [darkMode]);
+  }, [darkMode, mounted]);
 
   // Fetch stats and track visitor
   useEffect(() => {

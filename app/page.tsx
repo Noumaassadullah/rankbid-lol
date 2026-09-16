@@ -49,6 +49,7 @@ export default function Home() {
 
   const [formData, setFormData] = useState({
     url: '',
+    handle: '',
     description: '',
     category: '',
     platform: 'website',
@@ -120,10 +121,25 @@ export default function Home() {
         return;
       }
 
+      if (!formData.url && !formData.handle) {
+        setFormError('Please enter a URL or handle');
+        setFormLoading(false);
+        return;
+      }
+
+      // Prepare data for submission
+      const submitData = {
+        url: formData.platform === 'website' ? formData.url : undefined,
+        handle: formData.platform !== 'website' ? (formData.url || formData.handle) : undefined,
+        description: formData.description,
+        category: formData.category,
+        platform: formData.platform,
+      };
+
       const res = await fetch('/api/listings/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submitData),
       });
 
       const data = await res.json();
@@ -135,7 +151,7 @@ export default function Home() {
       // If free user, skip payment and show success
       if (isFreeUser) {
         setFormError('');
-        setFormData({ url: '', description: '', category: '', platform: 'website' });
+        setFormData({ url: '', handle: '', description: '', category: '', platform: 'website' });
         // Show success message
         alert('🎉 Congratulations! You are in the first 10 users!\n\nYour listing is now live and ranked #1 for FREE!');
         // Refresh listings
