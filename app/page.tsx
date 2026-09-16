@@ -14,6 +14,7 @@ interface Listing {
   dayPaid: number;
   clickCount: number;
   createdAt: string;
+  imageUrl?: string;
 }
 
 const CATEGORIES = [
@@ -475,7 +476,19 @@ export default function Home() {
                       <div className="flex-1 flex items-center gap-3">
                         <span className="text-lg font-bold text-gray-400 w-6">#{idx + 1}</span>
                         <div className="w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-                          {listing.platform === 'linkedin' || listing.title.includes('LinkedIn') ? (
+                          {listing.imageUrl ? (
+                            <img
+                              src={listing.imageUrl}
+                              alt={listing.title}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                if (e.currentTarget.nextSibling) {
+                                  (e.currentTarget.nextSibling as HTMLElement).style.display = 'flex';
+                                }
+                              }}
+                            />
+                          ) : listing.platform === 'linkedin' || listing.title.includes('LinkedIn') ? (
                             <img
                               src={`https://www.google.com/s2/favicons?domain=linkedin.com&sz=64`}
                               alt={listing.title}

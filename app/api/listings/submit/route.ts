@@ -191,6 +191,7 @@ export async function GET(req: NextRequest) {
         createdAt: item.created_at,
         lastRaisedAt: item.created_at,
         updatedAt: item.updated_at || item.created_at,
+        imageUrl: item.image_url || null,
       };
     });
 
