@@ -1,4 +1,3 @@
-import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -19,7 +18,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!process.env.DATABASE_URL) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: 'Database not configured', listings: [] },
         { status: 500 }
@@ -28,86 +30,93 @@ export async function POST(req: NextRequest) {
 
     const normalizedUrl = url || getPlatformUrl(platform, handle);
 
-    let listing = await prisma.listing.findUnique({
-      where: { url: normalizedUrl },
-    });
+    // Check if listing already exists
+    const checkResponse = await fetch(
+      `${supabaseUrl}/rest/v1/listings?title=eq.${encodeURIComponent(normalizedUrl)}&select=id`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+        },
+      }
+    );
 
-    if (listing) {
-      return NextResponse.json(
-        { listing, isNew: false, listings: [], isFreeUser: false }
-      );
-    }
-
-    // Count existing listings for free tier check
-    let isFreeUser = false;
-    try {
-      const totalListings = await prisma.listing.count();
-      isFreeUser = totalListings < 10;
-    } catch (countError) {
-      console.warn('Could not count listings:', countError);
-      isFreeUser = false;
-    }
-
-    listing = await prisma.listing.create({
-      data: {
-        url: normalizedUrl,
-        handle: handle || undefined,
-        title: description || normalizedUrl,
-        description: description || normalizedUrl,
-        category: (category as any) || 'Other',
-        platform: platform || 'website',
-        totalPaid: isFreeUser ? 100 : 0, // $1 for free users so they appear ranked
-        dayPaid: isFreeUser ? 100 : 0,
-        clickCount: 0,
-      },
-    });
-
-    // If free user, create a payment record to mark it as completed
-    if (isFreeUser) {
-      try {
-        await prisma.payment.create({
-          data: {
-            listingId: listing.id,
-            amount: 100, // $1
-            status: 'completed',
-            provider: 'free',
-            transactionId: `free-user-${listing.id}`,
-            paidAt: new Date(),
-          },
-        });
-
-        // Create daily rank for today
-        const today = new Date();
-        today.setUTCHours(0, 0, 0, 0);
-        await prisma.dailyRank.create({
-          data: {
-            listingId: listing.id,
-            date: today,
-            amount: 100,
-          },
-        });
-      } catch (freeUserError) {
-        console.warn('Error creating payment for free user:', freeUserError);
-        // Still return success even if payment creation fails
+    if (checkResponse.ok) {
+      const existing = await checkResponse.json();
+      if (existing.length > 0) {
+        return NextResponse.json(
+          { listing: existing[0], isNew: false, listings: [], isFreeUser: false }
+        );
       }
     }
 
+    // Count existing listings for free tier check
+    const countResponse = await fetch(
+      `${supabaseUrl}/rest/v1/listings?select=id&limit=1&offset=10`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+        },
+      }
+    );
+
+    let isFreeUser = false;
+    if (countResponse.ok) {
+      const listings = await countResponse.json();
+      isFreeUser = listings.length === 0; // If we can't fetch 11th item, means < 10 exist
+    }
+
+    // Create new listing with UUID format
+    const generateUUID = () => {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    };
+
+    const id = generateUUID();
+    const now = new Date().toISOString();
+
+    const insertResponse = await fetch(`${supabaseUrl}/rest/v1/listings`, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation',
+      },
+      body: JSON.stringify({
+        id,
+        user_id: '550e8400-e29b-41d4-a716-446655440000', // Default user for new submissions
+        title: normalizedUrl,
+        description: description || normalizedUrl,
+        category: category || 'Other',
+        status: 'active',
+        location: normalizedUrl,
+        price: isFreeUser ? 100 : 0,
+        views: 0,
+        created_at: now,
+        updated_at: now,
+      }),
+    });
+
+    if (!insertResponse.ok) {
+      const error = await insertResponse.json();
+      console.error('Supabase insert error:', error);
+      throw new Error(error.message || 'Failed to create listing');
+    }
+
+    const listing = await insertResponse.json();
+
     return NextResponse.json(
-      { listing, isNew: true, isFreeUser, listings: [] },
+      { listing: listing[0] || listing, isNew: true, isFreeUser, listings: [] },
       { status: 201 }
     );
   } catch (error) {
     console.error('Error submitting listing:', error);
 
-    // Check if it's a database connection error
-    if (!process.env.DATABASE_URL) {
-      return NextResponse.json(
-        { error: 'Database not configured. Please set DATABASE_URL in environment variables.', listings: [] },
-        { status: 503 }
-      );
-    }
-
-    // For other errors, return a generic message
     return NextResponse.json(
       {
         error: 'Failed to submit listing. Please try again later.',
