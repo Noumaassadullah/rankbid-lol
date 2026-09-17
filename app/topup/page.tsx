@@ -24,6 +24,7 @@ const CURRENCY_RATES: { [key: string]: number } = {
 export default function TopupPage() {
   const [selectedCurrency, setSelectedCurrency] = useState<'PKR' | 'USD' | 'GBP' | 'INR'>('PKR');
   const [topupAmount, setTopupAmount] = useState(10); // In selected currency units
+  const [bidType, setBidType] = useState<'alltime' | 'daily'>('alltime');
   const [listings, setListings] = useState<Listing[]>([]);
   const [filteredListings, setFilteredListings] = useState<Listing[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -90,6 +91,7 @@ export default function TopupPage() {
         body: JSON.stringify({
           listingId,
           additionalAmount: amountInCents,
+          bidType,
         }),
       });
 
@@ -118,7 +120,42 @@ export default function TopupPage() {
 
           {/* Top-up Amount Selector */}
           <div className="mb-12 bg-gradient-to-r from-orange-50 to-orange-100/50 border border-orange-200 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Step 1: Choose Amount to Add</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Step 1: Choose Amount & Type</h2>
+
+            {/* Bid Type Selector */}
+            <div className="flex gap-2 mb-6">
+              <button
+                type="button"
+                onClick={() => setBidType('alltime')}
+                className={`px-6 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
+                  bidType === 'alltime'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <span>🏆</span> All-time Ranking
+              </button>
+              <button
+                type="button"
+                onClick={() => setBidType('daily')}
+                className={`px-6 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
+                  bidType === 'daily'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <span className="w-2 h-2 bg-blue-600 rounded-full inline-block"></span> Today Only
+              </button>
+            </div>
+
+            {/* Bid Type Info */}
+            <div className="p-3 bg-white border border-orange-200 rounded-lg mb-6">
+              <p className="text-sm text-gray-600">
+                {bidType === 'alltime'
+                  ? "💰 All-time bid: Your payment adds to your permanent ranking and stays counted forever"
+                  : "⏰ Today-only bid: Your payment counts only for today's rankings, resets at UTC midnight"}
+              </p>
+            </div>
 
             {/* Currency Selector */}
             <div className="flex gap-2 mb-6">
