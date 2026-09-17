@@ -235,7 +235,13 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    return NextResponse.json({ listings, listing: null });
+    return NextResponse.json({ listings, listing: null }, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error) {
     console.error('GET error:', error);
     return NextResponse.json(
