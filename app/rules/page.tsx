@@ -38,11 +38,11 @@ export default function RulesPage() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold">•</span>
-                  <span>Minimum bid is PKR 100</span>
+                  <span>Minimum bid is PKR 2,800 (~$10 USD)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold">•</span>
-                  <span>You can adjust your bid anytime</span>
+                  <span>Use the "Boost" feature to add funds to your existing listing without creating a new one</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold">•</span>
@@ -50,7 +50,38 @@ export default function RulesPage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold">•</span>
-                  <span>Daily rankings reset at midnight UTC</span>
+                  <span>Daily rankings reset at midnight UTC - view historical rankings in Archive</span>
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Banned Content</h2>
+              <p className="text-gray-700 mb-4">The following types of content are strictly prohibited and will result in immediate removal:</p>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">×</span>
+                  <span>Chat/messaging links (Discord, Telegram, WhatsApp groups, etc.)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">×</span>
+                  <span>Adult or NSFW content</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">×</span>
+                  <span>URL shorteners (bit.ly, TinyURL, etc.) - use direct links only</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">×</span>
+                  <span>Affiliate links without proper disclosure</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">×</span>
+                  <span>Phishing or malicious content</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">×</span>
+                  <span>Spam or cryptocurrency schemes</span>
                 </li>
               </ul>
             </section>

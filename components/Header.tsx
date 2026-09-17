@@ -169,6 +169,9 @@ export default function Header() {
                 <Link href="/rules" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                   Rules
                 </Link>
+                <Link href="/tos" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                  Terms
+                </Link>
               </nav>
 
               {/* Search */}
@@ -231,6 +234,9 @@ export default function Header() {
               </Link>
               <Link href="/rules" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
                 Rules
+              </Link>
+              <Link href="/tos" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
+                Terms
               </Link>
               <Link href="/stats" className="block text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700">
                 Stats
