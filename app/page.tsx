@@ -54,6 +54,7 @@ export default function Home() {
     description: '',
     category: '',
     platform: 'website',
+    bidType: 'alltime' as 'alltime' | 'daily',
   });
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
@@ -243,8 +244,9 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          formData: submitData,
+          formData: { ...submitData, bidType: formData.bidType },
           amount: amountInCents,
+          bidType: formData.bidType,
         }),
       });
 
@@ -263,7 +265,7 @@ export default function Home() {
     : listings.slice(0, 10).sort((a, b) => b.totalPaid - a.totalPaid);
 
   const minBidForFirst = topListings.length > 0
-    ? Math.ceil((topListings[0].totalPaid / 100) / PKR_RATE) + 1
+    ? Math.ceil(((activeLeaderboard === 'today' ? topListings[0].dayPaid : topListings[0].totalPaid) / 100) / PKR_RATE) + 1
     : 20;
 
   const calculateRank = (bid: number) => {
@@ -357,6 +359,41 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Bid Type Selector */}
+            <div className="flex justify-center gap-2 mb-8">
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, bidType: 'alltime' }))}
+                className={`px-6 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
+                  formData.bidType === 'alltime'
+                    ? 'bg-purple-600 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <span>🏆</span> All-time Ranking
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, bidType: 'daily' }))}
+                className={`px-6 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
+                  formData.bidType === 'daily'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <span className="w-2 h-2 bg-blue-600 rounded-full inline-block"></span> Today Only
+              </button>
+            </div>
+
+            {/* Bid Type Info */}
+            <div className="text-center mb-8 p-4 bg-gray-50 rounded-lg max-w-2xl mx-auto">
+              <p className="text-sm text-gray-600">
+                {formData.bidType === 'alltime'
+                  ? "💰 All-time bid: Your payment adds to your permanent ranking and stays counted forever"
+                  : "⏰ Today-only bid: Your payment counts only for today's rankings, resets at UTC midnight"}
+              </p>
+            </div>
+
             {/* Currency Selector */}
             <div className="flex justify-center gap-2 mb-8">
               {(['PKR', 'USD', 'GBP', 'INR'] as const).map(currency => (
@@ -378,11 +415,11 @@ export default function Home() {
             {/* Main Heading with Price */}
             <div className="text-center mb-12">
               <h2 className="text-5xl md:text-6xl font-black text-gray-900">
-                Claim #1 for <span className="text-orange-500">{formatPrice(currentBid * 100)}</span>
+                Claim #1 {formData.bidType === 'daily' ? 'Today' : ''} for <span className="text-orange-500">{formatPrice(currentBid * 100)}</span>
               </h2>
               {topListings.length > 0 && (
                 <p className="text-sm text-gray-600 mt-2">
-                  Top listing: {formatPrice(topListings[0].totalPaid)} • Bid more to rank #1
+                  Top listing: {formatPrice(activeLeaderboard === 'today' ? topListings[0].dayPaid : topListings[0].totalPaid)} • Bid more to rank #1
                 </p>
               )}
             </div>
