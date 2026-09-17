@@ -620,7 +620,7 @@ export default function Home() {
                       rel="noopener noreferrer"
                       className="relative group"
                     >
-                      <div className="bg-white rounded-lg p-3 flex items-start justify-between hover:shadow-lg hover:scale-[1.01] transition-all cursor-pointer border border-gray-100 hover:border-orange-300 gap-3">
+                      <div className="bg-white rounded-lg px-3 py-[5px] flex items-start justify-between hover:shadow-lg hover:scale-[1.01] transition-all cursor-pointer border border-gray-100 hover:border-orange-300 gap-3">
                         {/* Rank Number */}
                         <div className="text-base font-black text-orange-500 flex-shrink-0 pt-1 min-w-fit">#{idx + 1}</div>
 
