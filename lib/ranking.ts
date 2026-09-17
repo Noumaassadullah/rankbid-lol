@@ -81,15 +81,17 @@ export async function getRankedListings(
   return [];
 }
 
-export async function calculateDayPaid(listingId: string, hours = 24): Promise<number> {
-  const cutoff = new Date();
-  cutoff.setHours(cutoff.getHours() - hours);
+export async function calculateDayPaid(listingId: string): Promise<number> {
+  // Calculate dayPaid as the sum of all 'daily' bids from today (UTC midnight to now)
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
 
   const result = await prisma.payment.aggregate({
     where: {
       listingId,
       status: 'completed',
-      paidAt: { gte: cutoff },
+      bidType: 'daily',
+      paidAt: { gte: today },
     },
     _sum: { amount: true },
   });
@@ -98,6 +100,20 @@ export async function calculateDayPaid(listingId: string, hours = 24): Promise<n
 }
 
 export async function getTotalPaid(listingId: string): Promise<number> {
+  const result = await prisma.payment.aggregate({
+    where: {
+      listingId,
+      status: 'completed',
+      bidType: 'alltime',
+    },
+    _sum: { amount: true },
+  });
+
+  return result._sum.amount || 0;
+}
+
+export async function getAllPayments(listingId: string): Promise<number> {
+  // Get total of all payments regardless of bidType (for Supabase sync)
   const result = await prisma.payment.aggregate({
     where: {
       listingId,
