@@ -171,34 +171,35 @@ export default function Home() {
         platform: formData.platform,
       };
 
-      const res = await fetch('/api/listings/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(submitData),
-      });
+      // First check if this would be a free user listing
+      const checkRes = await fetch('/api/listings/submit?limit=100');
+      const checkData = await checkRes.json();
+      const listingCount = checkData.listings?.length || 0;
+      const isFreeUser = listingCount < 10;
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
-      const listing = data.listing;
-      const isFreeUser = data.isFreeUser;
-
-      // If free user, skip payment and show success
+      // If free user, create listing immediately
       if (isFreeUser) {
+        const res = await fetch('/api/listings/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(submitData),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
         setFormError('');
         setFormData({ url: '', handle: '', description: '', category: '', platform: 'website' });
         setMetadataImage(null);
         setDetectedPlatform('website');
         setDetectedCategory('');
         setFormLoading(false);
-        // Show success message
         alert('🎉 Congratulations! You are in the first 10 users!\n\nYour listing is now live and ranked #1 for FREE!');
-        // Refresh listings
         fetchListings();
         return;
       }
 
-      // Otherwise proceed to payment
+      // For paid users: skip listing creation and go directly to payment
       // Convert PKR to USD cents: PKR / 280 (rate) * 100 (to cents)
       const amountInCents = Math.round((currentBid / PKR_RATE) * 100);
 
@@ -206,7 +207,7 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          listingId: listing.id,
+          formData: submitData,
           amount: amountInCents,
         }),
       });

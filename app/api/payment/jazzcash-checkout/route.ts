@@ -1,12 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+interface FormData {
+  url?: string;
+  handle?: string;
+  description?: string;
+  category: string;
+  platform: string;
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { listingId, amount } = await req.json();
+    const { formData, listingId, amount } = await req.json();
 
-    if (!listingId || !amount) {
+    // Support both old (listingId) and new (formData) formats for backward compatibility
+    if (!amount) {
       return NextResponse.json(
-        { error: 'Missing listingId or amount' },
+        { error: 'Missing amount' },
+        { status: 400 }
+      );
+    }
+
+    if (!formData && !listingId) {
+      return NextResponse.json(
+        { error: 'Missing formData or listingId' },
         { status: 400 }
       );
     }
@@ -19,10 +35,19 @@ export async function POST(req: NextRequest) {
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const reference = `REF-${listingId}-${Date.now()}`;
+
+    // If formData is provided (new flow), encode it in the reference
+    let reference: string;
+    if (formData) {
+      const formDataStr = Buffer.from(JSON.stringify(formData)).toString('base64');
+      reference = `FRM-${formDataStr}-${Date.now()}`;
+    } else {
+      // Old flow: use listingId
+      reference = `REF-${listingId}-${Date.now()}`;
+    }
 
     // Redirect to manual payment page showing account details
-    const paymentUrl = `${baseUrl}/payment/manual?amount=${amount}&listingId=${listingId}&ref=${reference}`;
+    const paymentUrl = `${baseUrl}/payment/manual?amount=${amount}&ref=${reference}${listingId ? `&listingId=${listingId}` : ''}`;
 
     return NextResponse.json({
       url: paymentUrl,
