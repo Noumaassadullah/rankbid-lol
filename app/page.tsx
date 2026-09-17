@@ -502,7 +502,7 @@ export default function Home() {
                   disabled={formLoading || metadataLoading}
                   className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 disabled:opacity-50 whitespace-nowrap shadow-lg hover:shadow-2xl hover:scale-105"
                 >
-                  {formLoading ? '⏳ Processing...' : metadataLoading ? '📸 Loading...' : '🚀 Claim Rank'}
+                  {formLoading ? 'Processing...' : metadataLoading ? 'Loading...' : 'Claim Rank'}
                 </button>
               </div>
 
