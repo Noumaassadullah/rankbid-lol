@@ -498,7 +498,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4">
-                        <p className="text-lg font-bold text-orange-600">${(amount / 100).toFixed(0)}</p>
+                        <p className="text-lg font-bold text-orange-600">₨{((amount / 100) * PKR_RATE).toLocaleString()}</p>
                       </div>
                     </a>
                   );
