@@ -84,9 +84,20 @@ export default function Home() {
             setDetectedPlatform(data.platform);
             setDetectedCategory(data.category);
             setMetadataImage(data.image);
-            // Auto-update form if not manually set
-            if (!formData.category) {
-              setFormData(prev => ({ ...prev, category: data.category, platform: data.platform }));
+            // Auto-update platform based on detected URL
+            // For LinkedIn, Twitter, Facebook, Instagram, TikTok - set to 'website' since they handle full URLs
+            // This ensures the URL is used as-is, not reconstructed
+            const detectedUrl = formData.url;
+            const isFullUrl = detectedUrl.startsWith('http');
+            if (isFullUrl) {
+              setFormData(prev => ({
+                ...prev,
+                category: prev.category || data.category,
+                platform: 'website' // Use 'website' platform for full URLs to preserve them as-is
+              }));
+            } else {
+              // Handle is just a username, use detected platform
+              setFormData(prev => ({ ...prev, category: prev.category || data.category, platform: data.platform }));
             }
           }
         } catch (error) {

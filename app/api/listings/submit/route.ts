@@ -145,6 +145,11 @@ export async function POST(req: NextRequest) {
 }
 
 function getPlatformUrl(platform: string, handle: string | undefined): string {
+  // If handle is already a full URL, return it as-is
+  if (handle && (handle.startsWith('http://') || handle.startsWith('https://'))) {
+    return handle;
+  }
+
   const baseUrls: { [key: string]: (handle: string) => string } = {
     twitter: (h) => `https://twitter.com/${h}`,
     facebook: (h) => `https://facebook.com/${h}`,
