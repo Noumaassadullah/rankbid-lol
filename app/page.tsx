@@ -343,7 +343,7 @@ export default function Home() {
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  <span>🏆</span> All-time
+                  All-time
                 </button>
                 <button
                   onClick={() => setActiveLeaderboard('today')}
