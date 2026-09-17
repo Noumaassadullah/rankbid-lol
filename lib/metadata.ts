@@ -78,11 +78,11 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
 
         if (ogImageMatch?.[1]) image = ogImageMatch[1];
 
-        // Extract platform-specific data
-        if (platform === 'instagram') {
-          // Try to extract followers and posts from Instagram profile
-          const followersMatch = html.match(/([0-9.,]+)\s*(?:follower|followers)/i);
-          const postsMatch = html.match(/([0-9.,]+)\s*(?:post|posts)/i);
+        // Extract platform-specific data for Instagram and LinkedIn
+        if (platform === 'instagram' || platform === 'linkedin') {
+          // Try to extract followers and posts from profile
+          const followersMatch = html.match(/([0-9.,K]+)\s*(?:follower|followers)/i);
+          const postsMatch = html.match(/([0-9.,K]+)\s*(?:post|posts|publication)/i);
           if (followersMatch?.[1]) followers = followersMatch[1];
           if (postsMatch?.[1]) posts = postsMatch[1];
         }
@@ -106,6 +106,16 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
     // Clean up title and description
     title = title.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').substring(0, 100);
     description = description.replace(/&amp;/g, '&').replace(/&quot;/g, '"').substring(0, 160);
+
+    // Append followers and posts info for Instagram and LinkedIn
+    if ((platform === 'instagram' || platform === 'linkedin') && (followers || posts)) {
+      const metaInfo = [];
+      if (followers) metaInfo.push(`👥 ${followers} followers`);
+      if (posts) metaInfo.push(`📝 ${posts} posts`);
+      if (metaInfo.length > 0) {
+        description = metaInfo.join(' • ');
+      }
+    }
 
     return {
       title,
