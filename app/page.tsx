@@ -596,49 +596,58 @@ export default function Home() {
                       rel="noopener noreferrer"
                       className="relative group"
                     >
-                      <div className="bg-white rounded-lg p-3 flex items-center justify-between hover:shadow-md hover:scale-[1.01] transition-all cursor-pointer border border-gray-100 hover:border-orange-300">
-                        {/* Left Section - Icon, Title, Description */}
-                        <div className="flex items-start gap-3 flex-1 min-w-0">
-                          {/* Rank Number */}
-                          <div className="text-lg font-black text-orange-500 flex-shrink-0 w-6">#{idx + 1}</div>
+                      <div className="bg-white rounded-lg p-4 flex items-start justify-between hover:shadow-lg hover:scale-[1.01] transition-all cursor-pointer border border-gray-100 hover:border-orange-300 gap-4">
+                        {/* Rank Number */}
+                        <div className="text-base font-black text-orange-500 flex-shrink-0 pt-1 min-w-fit">#{idx + 1}</div>
 
-                          {/* Icon */}
-                          <div className="flex-shrink-0">
-                            {listing.imageUrl ? (
-                              <img
-                                src={listing.imageUrl}
-                                alt={displayName}
-                                className="w-12 h-12 rounded-lg object-cover"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                  e.currentTarget.parentElement?.classList.add('hidden');
-                                }}
-                              />
-                            ) : (
-                              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-base">
-                                {displayName.charAt(0)}
-                              </div>
-                            )}
-                          </div>
+                        {/* Icon */}
+                        <div className="flex-shrink-0">
+                          {listing.imageUrl ? (
+                            <img
+                              src={listing.imageUrl}
+                              alt={displayName}
+                              className="w-14 h-14 rounded-lg object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                e.currentTarget.parentElement?.classList.add('hidden');
+                              }}
+                            />
+                          ) : (
+                            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg">
+                              {displayName.charAt(0)}
+                            </div>
+                          )}
+                        </div>
 
-                          {/* Title & Description */}
-                          <div className="flex-1 min-w-0 py-0.5">
-                            <h3 className="font-bold text-gray-900 text-sm group-hover:text-orange-600 transition-colors line-clamp-1">
-                              {platform === 'instagram' ? `@${displayName}` : displayName}
-                            </h3>
-                            {listing.description && (
-                              <p className="text-xs text-gray-600 line-clamp-1 mt-0.5">
-                                {listing.description.length > 60
-                                  ? listing.description.substring(0, 60) + '...'
-                                  : listing.description}
-                              </p>
+                        {/* Left Section - Title, Description, Meta */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-gray-900 text-base group-hover:text-orange-600 transition-colors line-clamp-1 mb-1">
+                            {platform === 'instagram' ? `@${displayName}` : displayName}
+                          </h3>
+                          {listing.description && (
+                            <p className="text-sm text-gray-600 line-clamp-2 mb-2">
+                              {listing.description.length > 80
+                                ? listing.description.substring(0, 80) + '...'
+                                : listing.description}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {listing.category && (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                                {getCategoryLabel(listing.category)}
+                              </span>
                             )}
+                            <span className="text-xs text-gray-500">
+                              {new Date(listing.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            </span>
+                            <span className="text-xs text-gray-500">•</span>
+                            <span className="text-xs text-gray-500">{listing.clickCount.toLocaleString()} clicks</span>
                           </div>
                         </div>
 
                         {/* Right Section - Price */}
-                        <div className="text-right flex-shrink-0 ml-3">
-                          <p className="text-lg font-black text-orange-600">
+                        <div className="text-right flex-shrink-0 pt-1">
+                          <p className="text-xl font-black text-orange-600">
                             {formatPrice(amount)}
                           </p>
                         </div>
