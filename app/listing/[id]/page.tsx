@@ -2,7 +2,7 @@
 
 import Header from '@/components/Header';
 import { useState, useEffect } from 'react';
-import { Eye, TrendingUp, Calendar, DollarSign, Click } from 'lucide-react';
+import { Eye, TrendingUp, Calendar, DollarSign, MousePointerClick } from 'lucide-react';
 
 interface Listing {
   id: string;
