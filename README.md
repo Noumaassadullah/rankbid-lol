@@ -1,26 +1,36 @@
-# outbid.lol
+# RankBid
 
-A dynamic, reverse-auction public leaderboard where visibility is entirely dictated by the amount of money a user bids.
+A transparent, pay-to-rank leaderboard platform where product creators and makers compete fairly to gain visibility. The more you bid, the higher your rank. No algorithms, no politics, just pure merit-based competition.
 
 ## Core Mechanics
 
 ### 1. **Frictionless Submission**
 Users do not need to create an account, log in, or wait for editorial approval. They simply paste their product URL or X (Twitter) handle, write a short description, and select a category directly on the homepage.
 
-### 2. **The Initial Bid & Payment**
-To claim a spot, the user enters a dollar amount they are willing to pay. The entry fee starts as low as $1 (or $5 for higher visibility). The checkout is handled instantly via Stripe; once the payment is verified, the listing goes live immediately.
+### 2. **Minimum Bid Requirement**
+To claim a spot on the leaderboard, users must pay at least ₨2,800 (~$10 USD). This ensures quality and commitment from product creators. Multi-currency support (PKR, USD, GBP, INR) makes it accessible globally.
 
 ### 3. **Rank by Cumulative Dollar Value**
-The entire leaderboard is strictly ordered by the total verified dollar amount paid. There are no hidden quality scores, SEO algorithms, or complex bidding systems. If a user pays $10,000, they rank above someone who paid $9,999. If two listings have the exact same total, the older bid retains the higher rank.
+The entire leaderboard is strictly ordered by the total verified amount paid. There are no hidden quality scores, SEO algorithms, or complex bidding systems. If you pay more, you rank higher. If two listings have the same total, the older bid retains the higher rank.
 
 ### 4. **The Outbid Mechanic (King-of-the-Hill)**
-Positions are never permanently locked. To claim the #1 spot (or any specific rank), a new buyer must outbid the current placeholder by at least $1 (or $5 depending on the tier). The displaced listing is pushed down the board.
+Positions are never permanently locked. To claim the #1 spot (or any specific rank), a new buyer must outbid the current placeholder by at least 1 cent. The displaced listing is pushed down the board.
 
-### 5. **Incremental Upgrades (Paying the Difference)**
-If a founder's project gets pushed down the rankings, they do not have to pay the full price to reclaim their spot. They can submit the exact same URL, and the system adds the new payment to their existing total. They only need to pay the difference required to outbid the person above them.
+### 5. **Boost Feature (Incremental Upgrades)**
+If a listing gets pushed down the rankings, creators do not have to pay the full price to reclaim their spot. They can use the "Boost" feature to add funds to their existing listing without creating a new one. They only pay the difference required to outbid the person above them.
 
-### 6. **Transparent ROI & Traffic**
-Once a listing is live, outbid.lol publicly tracks and displays the total amount paid and the number of direct outbound clicks the website has received. This turns a paid bid into an auditable marketing expense with visible real-time performance metrics.
+### 6. **Transparent ROI & Click Tracking**
+Once a listing is live, RankBid publicly tracks and displays the total amount paid and the number of direct clicks the website has received. This turns a paid bid into an auditable marketing expense with visible real-time performance metrics. Each listing has a detailed stats page showing:
+- All-time rank and daily rank
+- Total clicks received
+- Payment history
+- Average bid amount
+
+### 7. **Daily Rankings & Archive**
+RankBid maintains separate daily and all-time leaderboards. The daily board resets every day at UTC midnight, giving new products a fresh chance to compete. Historical daily rankings can be viewed in the Archive page, showing past snapshots of the leaderboard.
+
+### 8. **Countdown Timer**
+The daily page displays a countdown timer showing when the daily leaderboard will reset, so users know exactly when the competition resets.
 
 ## Tech Stack
 
@@ -84,16 +94,40 @@ rankbid-lol/
 
 ## Key Features
 
+### Pages
+- **/** - Homepage with leaderboard, submission form, and bid adjuster
+- **/daily** - Daily rankings with countdown timer to next reset
+- **/archive** - Historical daily rankings archive
+- **/topup** - Boost feature to add funds to existing listings
+- **/listing/[id]** - Detailed listing page with stats and click tracking
+- **/stats** - Platform statistics and analytics
+- **/rules** - Rules, guidelines, and banned content policy
+- **/tos** - Terms of Service explaining the pay-to-rank model
+- **/about** - About page describing the platform
+
 ### Listings API
 - **POST** `/api/listings/submit` - Create or fetch a listing
 - **GET** `/api/listings/submit?category=AI&sort=totalPaid` - Get ranked listings
+- **GET** `/api/listing?id={listingId}` - Get detailed listing stats
+- **GET** `/api/listing?url={url}` - Get listing by URL
+
+### Top-up / Boost API
+- **POST** `/api/listing/topup` - Initiate top-up for existing listing
+- **GET** `/api/listing/topup?id={listingId}` - Check top-up eligibility
+
+### Daily Snapshots API
+- **GET** `/api/daily-snapshots?daysBack=30` - Get historical daily rankings
+- **POST** `/api/daily-snapshots` - Create daily snapshot (cron job)
 
 ### Payment API
-- **POST** `/api/payment/checkout` - Initiate Stripe checkout
-- **POST** `/api/payment/webhook` - Handle Stripe webhooks
+- **POST** `/api/payment/jazzcash-checkout` - Initiate JazzCash checkout
+- **POST** `/api/payment/jazzcash/callback` - Handle JazzCash callback
+- **POST** `/api/payment/webhook` - Handle payment webhooks
 
-### Click Tracking
+### Click Tracking & Stats
 - **GET** `/api/click?id={listingId}` - Track click and redirect to listing URL
+- **GET** `/api/stats` - Get platform statistics
+- **POST** `/api/stats` - Track visitor session
 
 ## Database Schema
 
@@ -116,19 +150,51 @@ rankbid-lol/
 - `stripePaymentId` - Stripe payment intent ID
 - `paidAt` - Timestamp of payment completion
 
+## Configuration Constants
+
+Key constants are defined in `lib/constants.ts`:
+
+```typescript
+// Minimum and maximum amounts
+export const MIN_LISTING_AMOUNT_CENTS = 280000; // ₨2,800 (~$10 USD)
+export const MIN_OUTRANK_AMOUNT_CENTS = 100;    // 1 cent more to outrank
+export const MAX_LISTING_AMOUNT_CENTS = 99999900; // ₨999,999
+
+// Multi-currency rates (PKR = base)
+const CURRENCY_RATES = {
+  PKR: 1,
+  USD: 280,    // 1 USD = ₨280
+  GBP: 352,    // 1 GBP = ₨352
+  INR: 3.36,   // 1 INR = ₨3.36
+};
+
+// Blocked domains (cannot be listed)
+export const BLOCKED_DOMAINS = [
+  'pornhub.com', 'xvideos.com', 'onlyfans.com', // Adult content
+  't.me', 'telegram.me', 'discord.gg', 'discord.com/invite', // Chat links
+  'whatsapp.com/invite', 'wa.me', // Messaging apps
+];
+```
+
 ## Environment Variables
 
 ```env
 # Database
 DATABASE_URL="postgresql://..."
 
-# Stripe (Required)
+# Stripe (for legacy support)
 STRIPE_PUBLIC_KEY="pk_test_..."
 STRIPE_SECRET_KEY="sk_test_..."
 STRIPE_WEBHOOK_SECRET="whsec_..."
 
-# Domain
-NEXT_PUBLIC_DOMAIN="http://localhost:3000"
+# JazzCash (Pakistan payment)
+JAZZCASH_MERCHANT_ID="..."
+JAZZCASH_PASSWORD="..."
+
+# App Configuration
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+NEXT_PUBLIC_SUPABASE_URL="..."
+SUPABASE_SERVICE_ROLE_KEY="..."
 ```
 
 ## Development
