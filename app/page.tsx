@@ -495,11 +495,8 @@ export default function Home() {
                 {topListings.map((listing, idx) => {
                   const amount = activeLeaderboard === 'today' ? listing.dayPaid : listing.totalPaid;
                   const amountInPKR = (amount / 100) * PKR_RATE;
-                  const nextAmount = idx < topListings.length - 1
-                    ? (activeLeaderboard === 'today' ? topListings[idx + 1].dayPaid : topListings[idx + 1].totalPaid)
-                    : amount;
-                  const nextAmountPKR = (nextAmount / 100) * PKR_RATE;
-                  const bidToRank = Math.ceil(nextAmountPKR) + 1;
+                  // To rank at this position, you need to bid more than this listing's current amount
+                  const bidToRank = Math.ceil(amountInPKR) + 1;
 
                   // Extract clean name from URL/title
                   const extractCleanName = (url: string): string => {
