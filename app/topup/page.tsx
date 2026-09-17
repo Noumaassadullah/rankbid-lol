@@ -225,7 +225,7 @@ export default function TopupPage() {
 
                           <p className="text-sm text-gray-600 mt-4">After Top-up</p>
                           <p className="text-xl font-bold text-green-600">
-                            {formatPrice((listing.totalPaid + topupAmount * rate * PKR_RATE / 100).toFixed(0))}
+                            {formatPrice(Math.round(listing.totalPaid + topupAmount * rate * PKR_RATE / 100))}
                           </p>
                         </div>
                       </div>

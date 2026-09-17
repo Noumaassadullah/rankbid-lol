@@ -185,7 +185,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
             <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-6">
               <div className="flex items-start justify-between mb-2">
                 <p className="text-sm text-gray-600">Total Clicks</p>
-                <Click className="w-5 h-5 text-purple-600" />
+                <MousePointerClick className="w-5 h-5 text-purple-600" />
               </div>
               <p className="text-2xl font-bold text-purple-600">
                 {listing.clickCount.toLocaleString()}
