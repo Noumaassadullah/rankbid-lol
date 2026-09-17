@@ -154,6 +154,12 @@ export default function Header() {
                 <Link href="/daily" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                   Daily
                 </Link>
+                <Link href="/archive" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                  Archive
+                </Link>
+                <Link href="/topup" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                  Boost
+                </Link>
                 <Link href="/categories" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
                   Categories
                 </Link>
@@ -210,6 +216,12 @@ export default function Header() {
 
               <Link href="/daily" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
                 Daily
+              </Link>
+              <Link href="/archive" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
+                Archive
+              </Link>
+              <Link href="/topup" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
+                Boost
               </Link>
               <Link href="/categories" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
                 Categories

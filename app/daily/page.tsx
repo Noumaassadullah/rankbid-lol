@@ -14,12 +14,40 @@ interface Listing {
   clickCount: number;
 }
 
+interface CountdownTime {
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
 export default function DailyPage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [countdown, setCountdown] = useState<CountdownTime>({ hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     fetchListings();
+
+    // Calculate countdown to next UTC midnight
+    const calculateCountdown = () => {
+      const now = new Date();
+      const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+      const tomorrow = new Date(utcNow);
+      tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+      tomorrow.setUTCHours(0, 0, 0, 0);
+
+      const diff = tomorrow.getTime() - utcNow.getTime();
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      setCountdown({ hours, minutes, seconds });
+    };
+
+    calculateCountdown();
+    const timer = setInterval(calculateCountdown, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   const fetchListings = async () => {
@@ -43,8 +71,31 @@ export default function DailyPage() {
       <Header />
       <div className="min-h-screen bg-white">
         <div className="max-w-6xl mx-auto px-6 py-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Daily Rankings</h1>
-          <p className="text-gray-600 mb-12">Top ranked products for today</p>
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Daily Rankings</h1>
+            <p className="text-gray-600 mb-4">Top ranked products for today</p>
+
+            {/* Countdown Timer */}
+            <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-lg inline-flex">
+              <span className="text-sm font-semibold text-orange-900">Resets in:</span>
+              <div className="flex gap-2">
+                <div className="flex flex-col items-center">
+                  <span className="text-lg font-bold text-orange-600">{String(countdown.hours).padStart(2, '0')}</span>
+                  <span className="text-xs text-orange-700">h</span>
+                </div>
+                <span className="text-orange-600 font-bold">:</span>
+                <div className="flex flex-col items-center">
+                  <span className="text-lg font-bold text-orange-600">{String(countdown.minutes).padStart(2, '0')}</span>
+                  <span className="text-xs text-orange-700">m</span>
+                </div>
+                <span className="text-orange-600 font-bold">:</span>
+                <div className="flex flex-col items-center">
+                  <span className="text-lg font-bold text-orange-600">{String(countdown.seconds).padStart(2, '0')}</span>
+                  <span className="text-xs text-orange-700">s</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {loading ? (
             <div className="text-center py-12 text-gray-600">Loading rankings...</div>

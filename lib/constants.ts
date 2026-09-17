@@ -1,6 +1,6 @@
 // Minimum and maximum amounts
-export const MIN_LISTING_AMOUNT_CENTS = 50000; // Rs. 500
-export const MIN_OUTRANK_AMOUNT_CENTS = 50000; // Rs. 500 more required
+export const MIN_LISTING_AMOUNT_CENTS = 280000; // Rs. 2,800 ($10 USD equivalent)
+export const MIN_OUTRANK_AMOUNT_CENTS = 100; // 1 cent more required to outrank
 export const MAX_LISTING_AMOUNT_CENTS = 99999900; // Rs. 999,999
 
 // Time windows

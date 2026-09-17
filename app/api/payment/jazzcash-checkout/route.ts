@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { MIN_LISTING_AMOUNT_CENTS } from '@/lib/constants';
 
 interface FormData {
   url?: string;
@@ -27,9 +28,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (amount < 10000) {
+    if (amount < MIN_LISTING_AMOUNT_CENTS) {
+      const minAmountPKR = MIN_LISTING_AMOUNT_CENTS / 100;
       return NextResponse.json(
-        { error: 'Minimum amount is PKR 100' },
+        { error: `Minimum amount is PKR ${minAmountPKR.toLocaleString()}` },
         { status: 400 }
       );
     }
