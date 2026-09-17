@@ -7,11 +7,12 @@ interface FormData {
   description?: string;
   category: string;
   platform: string;
+  bidType?: string; // "alltime" | "daily"
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { formData, listingId, amount } = await req.json();
+    const { formData, listingId, amount, bidType = 'alltime' } = await req.json();
 
     // Support both old (listingId) and new (formData) formats for backward compatibility
     if (!amount) {
@@ -42,10 +43,12 @@ export async function POST(req: NextRequest) {
     let reference: string;
     if (formData) {
       const formDataStr = Buffer.from(JSON.stringify(formData)).toString('base64');
-      reference = `FRM-${formDataStr}-${Date.now()}`;
+      const bidTypeStr = (bidType === 'daily' ? 'DAILY' : 'ALLTIME');
+      reference = `FRM-${formDataStr}-${bidTypeStr}-${Date.now()}`;
     } else {
       // Old flow: use listingId
-      reference = `REF-${listingId}-${Date.now()}`;
+      const bidTypeStr = (bidType === 'daily' ? 'DAILY' : 'ALLTIME');
+      reference = `REF-${listingId}-${bidTypeStr}-${Date.now()}`;
     }
 
     // Redirect to manual payment page showing account details

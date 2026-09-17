@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJazzCashResponse } from '@/lib/jazzcash';
 import { extractMetadata } from '@/lib/metadata';
+import { prisma } from '@/lib/prisma';
 
 interface FormData {
   url?: string;
@@ -39,23 +40,34 @@ export async function POST(req: NextRequest) {
     const orderRef = body.pp_order_ref;
     const amount = parseInt(body.pp_amount || '0') * 100; // Convert to cents
 
-    // Extract listing ID or form data from order ref
+    // Extract listing ID or form data from order ref, and extract bidType
     let listingId = '';
     let formData: FormData | null = null;
+    let bidType = 'alltime'; // Default to alltime for backward compatibility
 
     if (orderRef.startsWith('FRM-')) {
       // New flow: form data encoded in reference
-      const [, formDataB64] = orderRef.split('-FRM-'.length > 0 ? 'FRM-' : 'FRM-');
+      // Format: FRM-{base64FormData}-{BIDTYPE}-{timestamp}
+      const parts = orderRef.split('-');
       try {
-        const formDataStr = Buffer.from(formDataB64.split('-')[0], 'base64').toString();
+        const formDataB64 = parts[1];
+        const bidTypeStr = parts[2]; // Should be ALLTIME or DAILY
+        bidType = (bidTypeStr === 'DAILY') ? 'daily' : 'alltime';
+
+        const formDataStr = Buffer.from(formDataB64, 'base64').toString();
         formData = JSON.parse(formDataStr);
       } catch (e) {
         console.error('Failed to decode form data from reference:', e);
       }
-    } else {
+    } else if (orderRef.startsWith('REF-')) {
       // Old flow: listing ID in reference
+      // Format: REF-{listingId}-{BIDTYPE}-{timestamp}
       const parts = orderRef.split('-');
-      listingId = parts[0];
+      listingId = parts[1];
+      const bidTypeStr = parts[2]; // Should be ALLTIME or DAILY
+      if (bidTypeStr) {
+        bidType = (bidTypeStr === 'DAILY') ? 'daily' : 'alltime';
+      }
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -69,6 +81,83 @@ export async function POST(req: NextRequest) {
     try {
       if (responseCode === '000') {
         // Payment successful
+        // Create a Prisma Payment record to track the bid type
+        try {
+          if (listingId) {
+            // Try to create payment record in Prisma
+            const payment = await prisma.payment.create({
+              data: {
+                listingId,
+                amount,
+                bidType,
+                status: 'completed',
+                provider: 'jazzcash',
+                transactionId: txnRef,
+                paidAt: new Date(),
+              },
+            });
+
+            // Update the Prisma Listing based on bidType
+            const listing = await prisma.listing.findUnique({
+              where: { id: listingId },
+            });
+
+            if (listing) {
+              const updateData: any = {
+                lastRaisedAt: new Date(),
+              };
+
+              if (bidType === 'alltime') {
+                updateData.totalPaid = listing.totalPaid + amount;
+              } else if (bidType === 'daily') {
+                updateData.dayPaid = listing.dayPaid + amount;
+              } else {
+                // Fallback to old behavior
+                updateData.totalPaid = listing.totalPaid + amount;
+                updateData.dayPaid = listing.dayPaid + amount;
+              }
+
+              await prisma.listing.update({
+                where: { id: listingId },
+                data: updateData,
+              });
+
+              // Create or update daily rank
+              const today = new Date();
+              today.setUTCHours(0, 0, 0, 0);
+
+              const existingDailyRank = await prisma.dailyRank.findUnique({
+                where: {
+                  listingId_date: {
+                    listingId: listingId,
+                    date: today,
+                  },
+                },
+              });
+
+              if (bidType === 'daily') {
+                if (existingDailyRank) {
+                  await prisma.dailyRank.update({
+                    where: { id: existingDailyRank.id },
+                    data: { amount: existingDailyRank.amount + amount },
+                  });
+                } else {
+                  await prisma.dailyRank.create({
+                    data: {
+                      listingId,
+                      date: today,
+                      amount,
+                    },
+                  });
+                }
+              }
+            }
+          }
+        } catch (prismaError) {
+          console.warn('Failed to create Prisma payment record:', prismaError);
+          // Continue with Supabase update anyway
+        }
+
         if (formData) {
           // Create listing after payment (new flow)
           const normalizedUrl = formData.url ||
