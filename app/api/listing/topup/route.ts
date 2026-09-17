@@ -5,11 +5,12 @@ import { MIN_LISTING_AMOUNT_CENTS } from '@/lib/constants';
 interface TopupRequest {
   listingId: string;
   additionalAmount: number; // Amount to add in cents
+  bidType?: string; // "alltime" | "daily"
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { listingId, additionalAmount } = await req.json() as TopupRequest;
+    const { listingId, additionalAmount, bidType = 'alltime' } = await req.json() as TopupRequest;
 
     if (!listingId) {
       return NextResponse.json(
@@ -42,6 +43,7 @@ export async function POST(req: NextRequest) {
       data: {
         listingId,
         amount: additionalAmount,
+        bidType: bidType === 'daily' ? 'daily' : 'alltime',
         status: 'pending',
         provider: 'jazzcash',
       },
