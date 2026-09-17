@@ -4,6 +4,8 @@ export interface URLMetadata {
   image: string | null;
   platform: string;
   category: string;
+  followers?: string;
+  posts?: string;
 }
 
 export async function extractMetadata(url: string): Promise<URLMetadata> {
@@ -42,6 +44,8 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
     let title = url.split('/').pop() || 'Listing';
     let description = '';
     let image: string | null = null;
+    let followers: string | undefined;
+    let posts: string | undefined;
 
     try {
       const response = await fetch(url, {
@@ -74,6 +78,15 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
 
         if (ogImageMatch?.[1]) image = ogImageMatch[1];
 
+        // Extract platform-specific data
+        if (platform === 'instagram') {
+          // Try to extract followers and posts from Instagram profile
+          const followersMatch = html.match(/([0-9.,]+)\s*(?:follower|followers)/i);
+          const postsMatch = html.match(/([0-9.,]+)\s*(?:post|posts)/i);
+          if (followersMatch?.[1]) followers = followersMatch[1];
+          if (postsMatch?.[1]) posts = postsMatch[1];
+        }
+
         // Make relative image URLs absolute
         if (image && !image.startsWith('http')) {
           const protocol = urlObj.protocol;
@@ -100,6 +113,8 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
       image,
       platform,
       category,
+      followers,
+      posts,
     };
   } catch (error) {
     console.error('Error in extractMetadata:', error);

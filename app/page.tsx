@@ -552,26 +552,37 @@ export default function Home() {
                   // To rank at this position, you need to bid ₨1 more than current amount (in PKR)
                   const bidToRank = Math.ceil(amountInPKR) + 1;
 
-                  // Extract clean name from URL/title
-                  const extractCleanName = (url: string): string => {
+                  // Extract platform and format display
+                  const getPlatformInfo = (url: string): { platform: string; displayName: string } => {
                     try {
-                      // If it's a full URL, extract domain
-                      if (url.startsWith('http')) {
-                        const urlObj = new URL(url);
-                        const hostname = urlObj.hostname;
-                        // Remove www. and get first part
+                      const urlObj = new URL(listing.url || url);
+                      const hostname = urlObj.hostname.toLowerCase();
+
+                      if (hostname.includes('instagram.com')) {
+                        const username = listing.title.match(/@?(\w+)/)?.[1] || listing.title;
+                        return { platform: 'instagram', displayName: username };
+                      } else if (hostname.includes('linkedin.com')) {
+                        const parts = listing.title.split(' ');
+                        return { platform: 'linkedin', displayName: parts[0] };
+                      } else if (hostname.includes('twitter.com') || hostname.includes('x.com')) {
+                        const username = listing.title.match(/@?(\w+)/)?.[1] || listing.title;
+                        return { platform: 'twitter', displayName: username };
+                      } else if (hostname.includes('facebook.com')) {
+                        return { platform: 'facebook', displayName: listing.title.split(' ')[0] };
+                      } else if (hostname.includes('tiktok.com')) {
+                        const username = listing.title.match(/@?(\w+)/)?.[1] || listing.title;
+                        return { platform: 'tiktok', displayName: username };
+                      } else {
                         const parts = hostname.replace('www.', '').split('.');
                         const name = parts[0];
-                        return name.charAt(0).toUpperCase() + name.slice(1);
+                        return { platform: 'website', displayName: name.charAt(0).toUpperCase() + name.slice(1) };
                       }
-                      // Otherwise use the title as-is (first word if it has spaces)
-                      return url.split(' ')[0];
                     } catch {
-                      return url.split(' ')[0];
+                      return { platform: 'website', displayName: listing.title.split(' ')[0] };
                     }
                   };
 
-                  const displayName = extractCleanName(listing.title);
+                  const { platform, displayName } = getPlatformInfo(listing.url || listing.title);
 
                   return (
                     <a
@@ -609,14 +620,12 @@ export default function Home() {
                           {/* Title & Description */}
                           <div className="flex-1 min-w-0 py-0.5">
                             <h3 className="font-bold text-gray-900 text-sm group-hover:text-orange-600 transition-colors line-clamp-1">
-                              {(listing.title || displayName).length > 40
-                                ? (listing.title || displayName).substring(0, 40) + '...'
-                                : (listing.title || displayName)}
+                              {platform === 'instagram' ? `@${displayName}` : displayName}
                             </h3>
                             {listing.description && (
                               <p className="text-xs text-gray-600 line-clamp-1 mt-0.5">
-                                {listing.description.length > 50
-                                  ? listing.description.substring(0, 50) + '...'
+                                {listing.description.length > 60
+                                  ? listing.description.substring(0, 60) + '...'
                                   : listing.description}
                               </p>
                             )}

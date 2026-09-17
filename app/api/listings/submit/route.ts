@@ -85,15 +85,21 @@ export async function POST(req: NextRequest) {
     const id = generateUUID();
     const now = new Date().toISOString();
 
-    // Fetch metadata to get website title, description, and image
+    // Fetch metadata to get website title, description, image, and platform-specific data
     let imageUrl: string | null = null;
     let metaTitle = normalizedUrl;
     let metaDescription = description || normalizedUrl;
+    let metaPlatform = platform || 'website';
+    let metaFollowers: string | null = null;
+    let metaPosts: string | null = null;
     try {
       const metadata = await extractMetadata(normalizedUrl);
       imageUrl = metadata.image;
       metaTitle = metadata.title || normalizedUrl;
       metaDescription = metadata.description || metaDescription;
+      metaPlatform = metadata.platform || platform || 'website';
+      metaFollowers = metadata.followers || null;
+      metaPosts = metadata.posts || null;
     } catch (err) {
       console.warn('Could not fetch metadata:', err);
     }
