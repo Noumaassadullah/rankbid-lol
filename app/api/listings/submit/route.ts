@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { extractMetadata } from '@/lib/metadata';
 
 export async function POST(req: NextRequest) {
   try {
@@ -84,6 +85,15 @@ export async function POST(req: NextRequest) {
     const id = generateUUID();
     const now = new Date().toISOString();
 
+    // Fetch metadata to get the website image/favicon
+    let imageUrl: string | null = null;
+    try {
+      const metadata = await extractMetadata(normalizedUrl);
+      imageUrl = metadata.image;
+    } catch (err) {
+      console.warn('Could not fetch metadata for image:', err);
+    }
+
     const insertResponse = await fetch(`${supabaseUrl}/rest/v1/listings`, {
       method: 'POST',
       headers: {
@@ -102,6 +112,7 @@ export async function POST(req: NextRequest) {
         location: normalizedUrl,
         price: isFreeUser ? 100 : 0,
         views: 0,
+        image_url: imageUrl || null,
         created_at: now,
         updated_at: now,
       }),

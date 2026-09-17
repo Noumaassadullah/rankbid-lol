@@ -492,6 +492,14 @@ export default function Home() {
                     >
                       <div className="flex-1 flex items-center gap-3">
                         <span className="text-lg font-bold text-gray-400 w-6">#{idx + 1}</span>
+                        {listing.imageUrl && (
+                          <img
+                            src={listing.imageUrl}
+                            alt={listing.title}
+                            className="w-10 h-10 rounded object-cover flex-shrink-0"
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                          />
+                        )}
                         <div className="min-w-0">
                           <h3 className="font-semibold text-gray-900 text-sm group-hover:text-orange-600 transition-colors truncate">{listing.title}</h3>
                           <p className="text-xs text-gray-500">{getCategoryLabel(listing.category)} • {PLATFORMS.find(p => p.id === listing.platform)?.label || listing.platform}</p>
