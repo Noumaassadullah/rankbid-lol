@@ -224,7 +224,7 @@ export default function Home() {
         if (!res.ok) throw new Error(data.error);
 
         setFormError('');
-        setFormData({ url: '', handle: '', description: '', category: '', platform: 'website' });
+        setFormData({ url: '', handle: '', description: '', category: '', platform: 'website', bidType: 'alltime' });
         setMetadataImage(null);
         setDetectedPlatform('website');
         setDetectedCategory('');
