@@ -576,7 +576,7 @@ export default function Home() {
                   const amount = activeLeaderboard === 'today' ? listing.dayPaid : listing.totalPaid;
                   const amountInPKR = (amount / 100) * PKR_RATE;
                   // To rank at this position, you need to bid ₨1 more than current amount (in PKR)
-                  const bidToRank = Math.ceil(amount / 100) + 1;
+                  const bidToRank = Math.ceil(amountInPKR) + 1;
 
                   // Extract clean name from URL/title
                   const extractCleanName = (url: string): string => {
