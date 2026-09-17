@@ -653,7 +653,12 @@ export default function Home() {
 
                       {/* Hover Tooltip - Amount to Rank */}
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-xs font-semibold rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        Pay {formatPrice(Math.ceil(bidToRank * (CURRENCY_RATES[selectedCurrency] / PKR_RATE)) * 100)} to rank here
+                        {(() => {
+                          const symbols: { [key: string]: string } = { PKR: '₨', USD: '$', GBP: '£', INR: '₹' };
+                          const symbol = symbols[selectedCurrency] || '₨';
+                          const bidInCurrency = bidToRank / CURRENCY_RATES[selectedCurrency];
+                          return `Pay ${symbol}${Math.ceil(bidInCurrency).toLocaleString()} to rank here`;
+                        })()}
                         <div className="absolute top-full left-1/2 -translate-x-1/2 border-3 border-transparent border-t-gray-900"></div>
                       </div>
                     </a>
