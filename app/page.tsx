@@ -608,9 +608,14 @@ export default function Home() {
 
                           {/* Title & Description */}
                           <div className="flex-1 min-w-0 py-0.5">
-                            <h3 className="font-bold text-gray-900 text-sm group-hover:text-orange-600 transition-colors line-clamp-2">
-                              {listing.description || listing.title || displayName}
+                            <h3 className="font-bold text-gray-900 text-sm group-hover:text-orange-600 transition-colors line-clamp-1">
+                              {listing.title || displayName}
                             </h3>
+                            {listing.description && (
+                              <p className="text-xs text-gray-600 line-clamp-1 mt-0.5">
+                                {listing.description}
+                              </p>
+                            )}
                           </div>
                         </div>
 

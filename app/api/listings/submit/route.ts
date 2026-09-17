@@ -85,13 +85,17 @@ export async function POST(req: NextRequest) {
     const id = generateUUID();
     const now = new Date().toISOString();
 
-    // Fetch metadata to get the website image/favicon
+    // Fetch metadata to get website title, description, and image
     let imageUrl: string | null = null;
+    let metaTitle = normalizedUrl;
+    let metaDescription = description || normalizedUrl;
     try {
       const metadata = await extractMetadata(normalizedUrl);
       imageUrl = metadata.image;
+      metaTitle = metadata.title || normalizedUrl;
+      metaDescription = metadata.description || metaDescription;
     } catch (err) {
-      console.warn('Could not fetch metadata for image:', err);
+      console.warn('Could not fetch metadata:', err);
     }
 
     const insertResponse = await fetch(`${supabaseUrl}/rest/v1/listings`, {
@@ -105,8 +109,8 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         id,
         user_id: '550e8400-e29b-41d4-a716-446655440000', // Default user for new submissions
-        title: normalizedUrl,
-        description: description || normalizedUrl,
+        title: metaTitle,
+        description: metaDescription,
         category: category || 'Other',
         status: 'active',
         location: normalizedUrl,
