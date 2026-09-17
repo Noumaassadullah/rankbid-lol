@@ -260,19 +260,19 @@ export default function Home() {
     }
   };
 
-  const topListings = activeLeaderboard === 'today'
+  const topListings = formData.bidType === 'daily'
     ? listings.slice(0, 10).sort((a, b) => b.dayPaid - a.dayPaid)
     : listings.slice(0, 10).sort((a, b) => b.totalPaid - a.totalPaid);
 
   const minBidForFirst = topListings.length > 0
-    ? Math.ceil(((activeLeaderboard === 'today' ? topListings[0].dayPaid : topListings[0].totalPaid) / 100) / PKR_RATE) + 1
+    ? Math.ceil(((formData.bidType === 'daily' ? topListings[0].dayPaid : topListings[0].totalPaid) / 100) / PKR_RATE) + 1
     : 20;
 
   const calculateRank = (bid: number) => {
     // Convert PKR bid to cents for comparison
     const bidInCents = Math.round((bid / PKR_RATE) * 100);
     const higherBids = topListings.filter(l => {
-      const amount = activeLeaderboard === 'today' ? l.dayPaid : l.totalPaid;
+      const amount = formData.bidType === 'daily' ? l.dayPaid : l.totalPaid;
       return amount > bidInCents;
     }).length;
     return higherBids + 1;
@@ -332,32 +332,6 @@ export default function Home() {
                 </p>
               </div>
             )}
-            {/* Ranking Tabs */}
-            <div className="flex justify-center mb-12">
-              <div className="flex gap-3 bg-gray-100 p-1.5 rounded-full">
-                <button
-                  onClick={() => setActiveLeaderboard('alltime')}
-                  className={`px-6 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
-                    activeLeaderboard === 'alltime'
-                      ? 'bg-orange-500 text-white shadow-md'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  All-time
-                </button>
-                <button
-                  onClick={() => setActiveLeaderboard('today')}
-                  className={`px-6 py-2 rounded-full font-semibold text-sm transition-all ${
-                    activeLeaderboard === 'today'
-                      ? 'bg-white text-orange-500'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <span className="w-2 h-2 bg-orange-500 rounded-full inline-block mr-2"></span>
-                  Today
-                </button>
-              </div>
-            </div>
 
             {/* Bid Type Selector */}
             <div className="flex justify-center gap-2 mb-8">
@@ -419,7 +393,7 @@ export default function Home() {
               </h2>
               {topListings.length > 0 && (
                 <p className="text-sm text-gray-600 mt-2">
-                  Top listing: {formatPrice(activeLeaderboard === 'today' ? topListings[0].dayPaid : topListings[0].totalPaid)} • Bid more to rank #1
+                  Top listing: {formatPrice(formData.bidType === 'daily' ? topListings[0].dayPaid : topListings[0].totalPaid)} • Bid more to rank #1
                 </p>
               )}
             </div>
