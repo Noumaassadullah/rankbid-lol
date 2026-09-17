@@ -44,6 +44,7 @@ model Payment {
   listing           Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
   amount            Int      // in cents
+  bidType           String   @default("alltime") // "alltime" | "daily"
   provider          String   @default("jazzcash") // "jazzcash" | "stripe"
   status            String   @default("pending") // "pending" | "completed" | "failed"
 
@@ -61,6 +62,7 @@ model Payment {
   @@index([status])
   @@index([transactionId])
   @@index([provider])
+  @@index([bidType])
   @@map("payments")
 }
 
