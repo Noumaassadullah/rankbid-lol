@@ -517,37 +517,32 @@ export default function Home() {
               />
             </form>
 
-            {/* Bid Adjuster - Separate from form */}
+            {/* Bid Adjuster - Show only during paid tier */}
             {spotsRemaining <= 0 && (
-            <div className="flex justify-center items-center gap-6 pt-8 flex-col">
-              <p className="text-sm text-gray-600 font-semibold">Bid Amount (Adjust to rank higher)</p>
-              <div className="flex items-center gap-6">
-                <button
-                  type="button"
-                  onClick={() => setCurrentBid(Math.max(minBidForFirst, currentBid - 1))}
-                  className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
-                >
-                  −
-                </button>
-                <p className="text-3xl md:text-4xl font-black text-orange-500 min-w-fit">
-                  {formatPrice(currentBid * 100)}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setCurrentBid(currentBid + 1)}
-                  className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
-                >
-                  +
-                </button>
+              <div className="flex justify-center items-center gap-6 pt-8 flex-col">
+                <p className="text-sm text-gray-600 font-semibold">Bid Amount (Adjust to rank higher)</p>
+                <div className="flex items-center gap-6">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentBid(Math.max(minBidForFirst, currentBid - 1))}
+                    className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
+                  >
+                    −
+                  </button>
+                  <p className="text-3xl md:text-4xl font-black text-orange-500 min-w-fit">
+                    {formatPrice(currentBid * 100)}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setCurrentBid(currentBid + 1)}
+                    className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
+                  >
+                    +
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500">Minimum: {formatPrice(minBidForFirst * 100)}</p>
               </div>
-              <p className="text-xs text-gray-500">Minimum: {formatPrice(minBidForFirst * 100)}</p>
-            </div>
             )}
-              {currentBid < minBidForFirst && topListings.length > 0 && (
-                <p className="text-sm text-orange-600 font-semibold">
-                  Bid at least {formatPrice(minBidForFirst * 100)} to rank #1
-                </p>
-              )}
             </div>
           </div>
         </section>
