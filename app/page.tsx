@@ -264,9 +264,23 @@ export default function Home() {
     ? listings.slice(0, 10).sort((a, b) => b.dayPaid - a.dayPaid)
     : listings.slice(0, 10).sort((a, b) => b.totalPaid - a.totalPaid);
 
-  const minBidForFirst = topListings.length > 0
-    ? Math.ceil(((formData.bidType === 'daily' ? topListings[0].dayPaid : topListings[0].totalPaid) / 100) / PKR_RATE) + 1
-    : 20;
+  const minBidForFirst = (() => {
+    // Find first PAID user (not free user with bid=0)
+    const paidListing = topListings.find(l => {
+      const amount = formData.bidType === 'daily' ? l.dayPaid : l.totalPaid;
+      return amount > 0;
+    });
+
+    if (paidListing) {
+      // Show amount needed to beat current top paid user
+      const topAmount = formData.bidType === 'daily' ? paidListing.dayPaid : paidListing.totalPaid;
+      return Math.ceil(((topAmount / 100) / PKR_RATE) + 1);
+    } else if (spotsRemaining <= 0) {
+      // If no paid users yet but free spots are full, show minimum paid bid (₨100 / 280 cents)
+      return Math.ceil((28000 / 100) / PKR_RATE);  // Minimum ₨100 to start paid bidding
+    }
+    return 20;
+  })();
 
   const calculateRank = (bid: number) => {
     // Convert PKR bid to cents for comparison
@@ -395,11 +409,28 @@ export default function Home() {
                 <p className="text-sm text-gray-600 mt-2">
                   {spotsRemaining} free spot{spotsRemaining !== 1 ? 's' : ''} left! No payment needed for first 20 users
                 </p>
-              ) : topListings.length > 0 ? (
-                <p className="text-sm text-gray-600 mt-2">
-                  Top listing: {formatPrice(formData.bidType === 'daily' ? topListings[0].dayPaid : topListings[0].totalPaid)} • Bid more to rank #1
-                </p>
-              ) : null}
+              ) : (() => {
+                const paidListing = topListings.find(l => {
+                  const amount = formData.bidType === 'daily' ? l.dayPaid : l.totalPaid;
+                  return amount > 0;
+                });
+
+                if (paidListing) {
+                  const topAmount = formData.bidType === 'daily' ? paidListing.dayPaid : paidListing.totalPaid;
+                  return (
+                    <p className="text-sm text-gray-600 mt-2">
+                      Top paid: {formatPrice(topAmount)} • Pay to rank higher
+                    </p>
+                  );
+                } else if (topListings.length > 0) {
+                  return (
+                    <p className="text-sm text-gray-600 mt-2">
+                      All current spots filled with free users • Pay any amount to rank at top
+                    </p>
+                  );
+                }
+                return null;
+              })()}
             </div>
 
             {/* Platform Selection */}

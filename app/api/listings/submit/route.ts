@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
         category: category || 'Other',
         status: 'active',
         location: normalizedUrl,
-        price: isFreeUser ? 100 : 0,
+        price: isFreeUser ? 0 : 0,  // Free users (first 20) get 0, paid users get their bid amount later
         views: 0,
         image_url: imageUrl || null,
         created_at: now,
