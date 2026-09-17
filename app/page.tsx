@@ -517,29 +517,17 @@ export default function Home() {
               />
             </form>
 
-            {/* Bid Adjuster - Show only during paid tier */}
+            {/* Bid Amount Input - Show only during paid tier */}
             {spotsRemaining <= 0 && (
               <div className="flex justify-center items-center gap-6 pt-8 flex-col">
-                <p className="text-sm text-gray-600 font-semibold">Bid Amount (Adjust to rank higher)</p>
-                <div className="flex items-center gap-6">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentBid(Math.max(minBidForFirst, currentBid - 1))}
-                    className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
-                  >
-                    −
-                  </button>
-                  <p className="text-3xl md:text-4xl font-black text-orange-500 min-w-fit">
-                    {formatPrice(currentBid * 100)}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setCurrentBid(currentBid + 1)}
-                    className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
-                  >
-                    +
-                  </button>
-                </div>
+                <label className="text-sm text-gray-600 font-semibold">Bid Amount (in PKR)</label>
+                <input
+                  type="number"
+                  value={currentBid}
+                  onChange={(e) => setCurrentBid(Math.max(minBidForFirst, parseInt(e.target.value) || minBidForFirst))}
+                  min={minBidForFirst}
+                  className="px-6 py-3 border-2 border-orange-300 rounded-lg text-center text-2xl font-bold text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 w-48"
+                />
                 <p className="text-xs text-gray-500">Minimum: {formatPrice(minBidForFirst * 100)}</p>
               </div>
             )}
@@ -695,16 +683,18 @@ export default function Home() {
                         )}
                       </div>
 
-                      {/* Hover Tooltip - Amount to Rank */}
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-xs font-semibold rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        {(() => {
-                          const symbols: { [key: string]: string } = { PKR: '₨', USD: '$', GBP: '£', INR: '₹' };
-                          const symbol = symbols[selectedCurrency] || '₨';
-                          const bidInCurrency = bidToRank / CURRENCY_RATES[selectedCurrency];
-                          return `Pay ${symbol}${Math.ceil(bidInCurrency).toLocaleString()} to rank here`;
-                        })()}
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-3 border-transparent border-t-gray-900"></div>
-                      </div>
+                      {/* Hover Tooltip - Show bid amount only for paid listings (position 21+) */}
+                      {idx >= 20 && (
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-xs font-semibold rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                          {(() => {
+                            const symbols: { [key: string]: string } = { PKR: '₨', USD: '$', GBP: '£', INR: '₹' };
+                            const symbol = symbols[selectedCurrency] || '₨';
+                            const bidInCurrency = bidToRank / CURRENCY_RATES[selectedCurrency];
+                            return `Pay ${symbol}${Math.ceil(bidInCurrency).toLocaleString()} to rank here`;
+                          })()}
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-3 border-transparent border-t-gray-900"></div>
+                        </div>
+                      )}
                     </a>
                   );
                 })}
