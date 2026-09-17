@@ -543,7 +543,6 @@ export default function Home() {
                 <p className="text-xs text-gray-500">Minimum: {formatPrice(minBidForFirst * 100)}</p>
               </div>
             )}
-            </div>
           </div>
         </section>
 
