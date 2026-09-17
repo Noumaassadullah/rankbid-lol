@@ -61,13 +61,24 @@ export async function POST(req: NextRequest) {
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
 
+        // Only update the appropriate field based on bid type
+        const updateData: any = {
+          lastRaisedAt: new Date(),
+        };
+
+        if (payment.bidType === 'alltime') {
+          updateData.totalPaid = listing.totalPaid + payment.amount;
+        } else if (payment.bidType === 'daily') {
+          updateData.dayPaid = listing.dayPaid + payment.amount;
+        } else {
+          // Fallback to old behavior for backward compatibility
+          updateData.totalPaid = listing.totalPaid + payment.amount;
+          updateData.dayPaid = listing.dayPaid + payment.amount;
+        }
+
         await prisma.listing.update({
           where: { id: payment.listingId },
-          data: {
-            totalPaid: listing.totalPaid + payment.amount,
-            dayPaid: listing.dayPaid + payment.amount,
-            lastRaisedAt: new Date(),
-          },
+          data: updateData,
         });
 
         const existingDailyRank = await prisma.dailyRank.findUnique({
