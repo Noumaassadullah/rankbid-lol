@@ -389,13 +389,17 @@ export default function Home() {
             {/* Main Heading with Price */}
             <div className="text-center mb-12">
               <h2 className="text-5xl md:text-6xl font-black text-gray-900">
-                Claim #1 {formData.bidType === 'daily' ? 'Today' : ''} for <span className="text-orange-500">{formatPrice(currentBid * 100)}</span>
+                Claim #1 {formData.bidType === 'daily' ? 'Today' : ''} for <span className="text-green-500">{spotsRemaining > 0 ? 'FREE 🎁' : formatPrice(currentBid * 100)}</span>
               </h2>
-              {topListings.length > 0 && (
+              {spotsRemaining > 0 ? (
+                <p className="text-sm text-gray-600 mt-2">
+                  {spotsRemaining} free spot{spotsRemaining !== 1 ? 's' : ''} left! No payment needed for first 20 users
+                </p>
+              ) : topListings.length > 0 ? (
                 <p className="text-sm text-gray-600 mt-2">
                   Top listing: {formatPrice(formData.bidType === 'daily' ? topListings[0].dayPaid : topListings[0].totalPaid)} • Bid more to rank #1
                 </p>
-              )}
+              ) : null}
             </div>
 
             {/* Platform Selection */}
