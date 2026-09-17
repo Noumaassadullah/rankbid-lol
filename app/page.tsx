@@ -66,7 +66,6 @@ export default function Home() {
   const [detectedPlatform, setDetectedPlatform] = useState('website');
   const [detectedCategory, setDetectedCategory] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState<'PKR' | 'USD' | 'GBP' | 'INR'>('PKR');
-  const [selectedCategory, setSelectedCategory] = useState('All');
 
   const PKR_RATE = 280; // 1 USD = 280 PKR
   const CURRENCY_RATES: { [key: string]: number } = {
@@ -264,15 +263,6 @@ export default function Home() {
   const topListings = formData.bidType === 'daily'
     ? listings.slice(0, 10).sort((a, b) => b.dayPaid - a.dayPaid)
     : listings.slice(0, 10).sort((a, b) => b.totalPaid - a.totalPaid);
-
-  // Filter listings by selected category for leaderboard
-  const filteredListings = selectedCategory === 'All'
-    ? (activeLeaderboard === 'today'
-        ? listings.slice(0, 10).sort((a, b) => b.dayPaid - a.dayPaid)
-        : listings.slice(0, 10).sort((a, b) => b.totalPaid - a.totalPaid))
-    : (activeLeaderboard === 'today'
-        ? listings.filter(l => l.category === selectedCategory).slice(0, 10).sort((a, b) => b.dayPaid - a.dayPaid)
-        : listings.filter(l => l.category === selectedCategory).slice(0, 10).sort((a, b) => b.totalPaid - a.totalPaid));
 
   const minBidForFirst = (() => {
     // Find first PAID user (not free user with bid=0)
@@ -565,38 +555,12 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Category Filter Tabs */}
-            <div className="flex gap-2 justify-center mb-8 flex-wrap">
-              <button
-                onClick={() => setSelectedCategory('All')}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                  selectedCategory === 'All'
-                    ? 'bg-orange-500 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                All
-              </button>
-              {CATEGORIES.map(cat => (
-                <button
-                  key={cat.value}
-                  onClick={() => setSelectedCategory(cat.value)}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                    selectedCategory === cat.value
-                      ? 'bg-orange-500 text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
 
             {loading ? (
               <div className="text-center py-12 text-gray-600">Loading rankings...</div>
-            ) : filteredListings.length === 0 ? (
+            ) : topListings.length === 0 ? (
               <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <p className="text-lg font-semibold text-gray-900 mb-4">No listings in {selectedCategory} category yet</p>
+                <p className="text-lg font-semibold text-gray-900 mb-4">No listings yet</p>
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
                   className="px-6 py-2 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors"
@@ -606,7 +570,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="space-y-3">
-                {filteredListings.map((listing, idx) => {
+                {topListings.map((listing, idx) => {
                   const amount = activeLeaderboard === 'today' ? listing.dayPaid : listing.totalPaid;
                   const amountInPKR = (amount / 100) * PKR_RATE;
                   // To rank at this position, you need to bid ₨1 more than current amount (in PKR)
