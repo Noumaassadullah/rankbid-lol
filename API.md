@@ -87,6 +87,46 @@ Create a new product listing.
 
 ---
 
+## Bidding System
+
+### Overview
+
+RankBid supports two types of bids:
+
+1. **All-time Bids** (`bidType='alltime'`)
+   - Permanent ranking contribution
+   - Added to `totalPaid` field
+   - Cumulative and never resets
+   - For targeting the all-time leaderboard
+
+2. **Daily Bids** (`bidType='daily'`)
+   - Counts only for current UTC day
+   - Added to `dayPaid` field
+   - Resets at UTC midnight each day
+   - For targeting the daily leaderboard
+
+### Minimum Bid to Rank #1
+
+- All-time: Must bid **₨1 more** than current #1's totalPaid
+- Daily: Must bid **₨1 more** than current daily #1's dayPaid
+
+### Example Scenarios
+
+**Scenario 1:**
+- User A bids ₨200 (all-time) → ranks #1 all-time
+- User B bids ₨201 (all-time) → ranks #1 all-time (beats User A)
+- User C bids ₨50 (daily-only) → ranks #1 daily
+- At UTC midnight: User C's daily rank is not carried forward; goes back to their all-time rank
+
+**Scenario 2:**
+- User D has ₨500 total (all-time)
+- User D adds ₨100 (daily-only)
+- User D's totalPaid remains ₨500
+- User D's dayPaid is now ₨100
+- User D's daily rank depends on ₨100; all-time rank depends on ₨500
+
+---
+
 ## Payment Endpoints
 
 ### POST /payment/initiate
@@ -99,6 +139,7 @@ Start a new payment to claim/increase rank.
   "listingId": "clp1a2b3c4d5e6f7g8h9",
   "amount": "1000",
   "method": "jazzcash",
+  "bidType": "alltime",
   "userId": "user_123"
 }
 ```
@@ -107,6 +148,7 @@ Start a new payment to claim/increase rank.
 - `listingId` (string, required) - ID of listing to rank up
 - `amount` (string, required) - Amount in PKR (e.g., "500", "2000")
 - `method` (string, required) - "jazzcash" or "easypaisa"
+- `bidType` (string, optional) - "alltime" or "daily" (default: "alltime")
 - `userId` (string, required) - Current user ID
 
 **Response:**
@@ -199,6 +241,46 @@ EasyPaisa webhook (server-to-server).
 
 ---
 
+### POST /listing/topup
+
+Add funds to an existing listing to boost its ranking.
+
+**Request Body:**
+```json
+{
+  "listingId": "clp1a2b3c4d5e6f7g8h9",
+  "additionalAmount": 1000,
+  "bidType": "alltime"
+}
+```
+
+**Parameters:**
+- `listingId` (string, required) - ID of listing to add funds to
+- `additionalAmount` (number, required) - Amount to add in cents (minimum: 100)
+- `bidType` (string, optional) - "alltime" or "daily" (default: "alltime")
+
+**Response:**
+```json
+{
+  "payment": {
+    "id": "pay_xyz123",
+    "listingId": "clp1a2b3c4d5e6f7g8h9",
+    "amount": 1000,
+    "currentAmount": 5000,
+    "newTotalAmount": 6000
+  },
+  "checkoutUrl": "https://rankbid.com/payment/manual?...",
+  "reference": "TOP-clp1a2b3c4d5e6f7g8h9-pay_xyz123-..."
+}
+```
+
+**Status Codes:**
+- `200` - Top-up initiated, redirect user to `checkoutUrl`
+- `400` - Invalid amount (less than 100 cents)
+- `404` - Listing not found
+
+---
+
 ## Data Models
 
 ### Listing
@@ -214,14 +296,21 @@ EasyPaisa webhook (server-to-server).
   category: Category;
   favicon?: string;
   logo?: string;
-  totalPaid: number;              // All-time sum in cents
-  dayPaid: number;                // Last 24h sum in cents
+  totalPaid: number;              // Sum of all-time bids (bidType='alltime') in cents
+  dayPaid: number;                // Sum of today-only bids (bidType='daily') from today (UTC) in cents
   clickCount: number;
   createdAt: Date;
   lastRaisedAt: Date;
   updatedAt: Date;
 }
 ```
+
+**Ranking System Notes:**
+- `totalPaid`: Based on payments with `bidType='alltime'`. This ranking is permanent and cumulative.
+- `dayPaid`: Based on payments with `bidType='daily'` from the current UTC day. Resets at UTC midnight each day.
+- Users can choose either bidType when bidding to target either the all-time or daily leaderboard.
+- To rank #1 on all-time board: Bid more than the current all-time #1's totalPaid
+- To rank #1 on daily board: Bid more than the current daily #1's dayPaid
 
 ### Payment
 
@@ -231,7 +320,8 @@ EasyPaisa webhook (server-to-server).
   userId: string;
   listingId: string;
   amount: number;                 // In cents
-  method: "jazzcash" | "easypaisa";
+  bidType: "alltime" | "daily";   // Ranking type this payment targets
+  provider: "jazzcash" | "stripe";
   status: "pending" | "completed" | "failed";
   transactionId?: string;
   checkoutSessionId?: string;
