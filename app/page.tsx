@@ -645,7 +645,7 @@ export default function Home() {
 
                         {/* Left Section - Title, Description, Meta */}
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-normal text-gray-900 text-xs group-hover:text-orange-600 transition-colors line-clamp-1 mb-1">
+                          <h3 className="font-normal text-gray-900 text-xs group-hover:text-orange-600 transition-colors line-clamp-1 mb-1" style={{fontWeight: '400', fontSize: '12px'}}>
                             {platform === 'instagram' ? `@${displayName}` : displayName}
                           </h3>
                           {listing.description && (
