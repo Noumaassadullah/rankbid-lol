@@ -418,18 +418,32 @@ export default function Home() {
                 if (paidListing) {
                   const topAmount = formData.bidType === 'daily' ? paidListing.dayPaid : paidListing.totalPaid;
                   return (
-                    <p className="text-sm text-gray-600 mt-2">
-                      Top paid: {formatPrice(topAmount)} • Pay to rank higher
-                    </p>
+                    <>
+                      <p className="text-sm text-gray-600 mt-2">
+                        Top paid: {formatPrice(topAmount)} • Pay to rank higher
+                      </p>
+                      <p className="text-lg font-bold text-orange-600 mt-4">
+                        Minimum bid: {formatPrice(minBidForFirst * 100)}
+                      </p>
+                    </>
                   );
                 } else if (topListings.length > 0) {
                   return (
-                    <p className="text-sm text-gray-600 mt-2">
-                      All current spots filled with free users • Pay any amount to rank at top
-                    </p>
+                    <>
+                      <p className="text-sm text-gray-600 mt-2">
+                        All current spots filled with free users • Pay any amount to rank at top
+                      </p>
+                      <p className="text-lg font-bold text-orange-600 mt-4">
+                        Minimum bid: {formatPrice(minBidForFirst * 100)}
+                      </p>
+                    </>
                   );
                 }
-                return null;
+                return (
+                  <p className="text-lg font-bold text-orange-600 mt-4">
+                    Minimum bid: {formatPrice(minBidForFirst * 100)}
+                  </p>
+                );
               })()}
             </div>
 
