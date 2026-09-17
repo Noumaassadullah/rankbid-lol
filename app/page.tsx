@@ -557,20 +557,24 @@ export default function Home() {
                     try {
                       const urlObj = new URL(listing.url || url);
                       const hostname = urlObj.hostname.toLowerCase();
+                      const pathname = urlObj.pathname.toLowerCase();
 
                       if (hostname.includes('instagram.com')) {
-                        const username = listing.title.match(/@?(\w+)/)?.[1] || listing.title;
+                        const usernameMatch = pathname.match(/\/?@?([a-z0-9._]+)/i);
+                        const username = usernameMatch?.[1] || listing.title.split(' ')[0];
                         return { platform: 'instagram', displayName: username };
                       } else if (hostname.includes('linkedin.com')) {
                         const parts = listing.title.split(' ');
                         return { platform: 'linkedin', displayName: parts[0] };
                       } else if (hostname.includes('twitter.com') || hostname.includes('x.com')) {
-                        const username = listing.title.match(/@?(\w+)/)?.[1] || listing.title;
+                        const usernameMatch = pathname.match(/\/?@?([a-z0-9_]+)/i);
+                        const username = usernameMatch?.[1] || listing.title.split(' ')[0];
                         return { platform: 'twitter', displayName: username };
                       } else if (hostname.includes('facebook.com')) {
                         return { platform: 'facebook', displayName: listing.title.split(' ')[0] };
                       } else if (hostname.includes('tiktok.com')) {
-                        const username = listing.title.match(/@?(\w+)/)?.[1] || listing.title;
+                        const usernameMatch = pathname.match(/\/?@?([a-z0-9._]+)/i);
+                        const username = usernameMatch?.[1] || listing.title.split(' ')[0];
                         return { platform: 'tiktok', displayName: username };
                       } else {
                         const parts = hostname.replace('www.', '').split('.');
