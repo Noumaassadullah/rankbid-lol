@@ -64,8 +64,31 @@ export default function Home() {
   const [metadataImage, setMetadataImage] = useState<string | null>(null);
   const [detectedPlatform, setDetectedPlatform] = useState('website');
   const [detectedCategory, setDetectedCategory] = useState('');
+  const [selectedCurrency, setSelectedCurrency] = useState<'PKR' | 'USD' | 'GBP' | 'INR'>('PKR');
 
   const PKR_RATE = 280; // 1 USD = 280 PKR
+  const CURRENCY_RATES: { [key: string]: number } = {
+    PKR: 1,
+    USD: 280,
+    GBP: 352,
+    INR: 3.36,
+  };
+
+  const formatPrice = (amountInCents: number, currency: string = selectedCurrency): string => {
+    const amountInPKR = (amountInCents / 100) * PKR_RATE;
+    const rate = CURRENCY_RATES[currency] || CURRENCY_RATES.PKR;
+    const converted = amountInPKR / rate;
+
+    const symbols: { [key: string]: string } = {
+      PKR: '₨',
+      USD: '$',
+      GBP: '£',
+      INR: '₹',
+    };
+
+    const symbol = symbols[currency] || '₨';
+    return `${symbol}${converted.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+  };
 
   useEffect(() => {
     fetchListings();
@@ -211,8 +234,10 @@ export default function Home() {
       }
 
       // For paid users: skip listing creation and go directly to payment
-      // Convert PKR to USD cents: PKR / 280 (rate) * 100 (to cents)
-      const amountInCents = Math.round((currentBid / PKR_RATE) * 100);
+      // Convert selected currency to PKR, then to USD cents for payment system
+      const rate = CURRENCY_RATES[selectedCurrency] || CURRENCY_RATES.PKR;
+      const amountInPKR = currentBid * rate;
+      const amountInCents = Math.round((amountInPKR / PKR_RATE) * 100);
 
       const checkoutRes = await fetch('/api/payment/jazzcash-checkout', {
         method: 'POST',
@@ -332,14 +357,32 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Currency Selector */}
+            <div className="flex justify-center gap-2 mb-8">
+              {(['PKR', 'USD', 'GBP', 'INR'] as const).map(currency => (
+                <button
+                  key={currency}
+                  type="button"
+                  onClick={() => setSelectedCurrency(currency)}
+                  className={`px-4 py-2 rounded-full font-semibold text-sm transition-all ${
+                    selectedCurrency === currency
+                      ? 'bg-orange-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {currency}
+                </button>
+              ))}
+            </div>
+
             {/* Main Heading with Price */}
             <div className="text-center mb-12">
               <h2 className="text-5xl md:text-6xl font-black text-gray-900">
-                Claim #1 for <span className="text-orange-500">₨{(currentBid * PKR_RATE).toLocaleString()}</span>
+                Claim #1 for <span className="text-orange-500">{formatPrice((currentBid * PKR_RATE) * 100)}</span>
               </h2>
               {topListings.length > 0 && (
                 <p className="text-sm text-gray-600 mt-2">
-                  Top listing: ₨{(topListings[0].totalPaid / 100 * PKR_RATE).toLocaleString()} • Bid more to rank #1
+                  Top listing: {formatPrice(topListings[0].totalPaid)} • Bid more to rank #1
                 </p>
               )}
             </div>
@@ -439,7 +482,7 @@ export default function Home() {
                   −
                 </button>
                 <p className="text-3xl md:text-4xl font-black text-orange-500 min-w-fit">
-                  ₨{(currentBid * PKR_RATE).toLocaleString()}
+                  {formatPrice((currentBid * PKR_RATE) * 100)}
                 </p>
                 <button
                   type="button"
@@ -451,7 +494,7 @@ export default function Home() {
               </div>
               {currentBid < minBidForFirst && topListings.length > 0 && (
                 <p className="text-sm text-orange-600 font-semibold">
-                  Bid at least ₨{(minBidForFirst * PKR_RATE).toLocaleString()} to rank #1
+                  Bid at least {formatPrice((minBidForFirst * PKR_RATE) * 100)} to rank #1
                 </p>
               )}
             </div>
@@ -566,14 +609,14 @@ export default function Home() {
                         {/* Right Section - Price */}
                         <div className="text-right flex-shrink-0 ml-3">
                           <p className="text-lg font-black text-orange-600">
-                            ₨{amountInPKR.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                            {formatPrice(amount)}
                           </p>
                         </div>
                       </div>
 
                       {/* Hover Tooltip - Amount to Rank */}
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-xs font-semibold rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        Pay ₨{bidToRank.toLocaleString()} to rank here
+                        Pay {formatPrice(Math.ceil(bidToRank * (CURRENCY_RATES[selectedCurrency] / PKR_RATE)) * 100)} to rank here
                         <div className="absolute top-full left-1/2 -translate-x-1/2 border-3 border-transparent border-t-gray-900"></div>
                       </div>
                     </a>
