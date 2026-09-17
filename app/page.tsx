@@ -519,16 +519,22 @@ export default function Home() {
 
             {/* Bid Amount Input - Show only during paid tier */}
             {spotsRemaining <= 0 && (
-              <div className="flex justify-center items-center gap-6 pt-8 flex-col">
-                <label className="text-sm text-gray-600 font-semibold">Bid Amount (in PKR)</label>
-                <input
-                  type="number"
-                  value={currentBid}
-                  onChange={(e) => setCurrentBid(Math.max(minBidForFirst, parseInt(e.target.value) || minBidForFirst))}
-                  min={minBidForFirst}
-                  className="px-6 py-3 border-2 border-orange-300 rounded-lg text-center text-2xl font-bold text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 w-48"
-                />
-                <p className="text-xs text-gray-500">Minimum: {formatPrice(minBidForFirst * 100)}</p>
+              <div className="flex justify-center items-center gap-6 pt-8 flex-col bg-gradient-to-r from-orange-50 to-orange-100 p-8 rounded-xl border border-orange-200 max-w-2xl mx-auto">
+                <div className="text-center mb-4">
+                  <p className="text-sm text-gray-600 mb-2">Minimum Bid Amount to Get Your Listing</p>
+                  <p className="text-3xl font-bold text-orange-600">{formatPrice(minBidForFirst * 100)}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600 font-semibold block mb-3">Enter Your Bid Amount</label>
+                  <input
+                    type="number"
+                    value={currentBid}
+                    onChange={(e) => setCurrentBid(Math.max(minBidForFirst, parseInt(e.target.value) || minBidForFirst))}
+                    min={minBidForFirst}
+                    className="px-6 py-3 border-2 border-orange-300 rounded-lg text-center text-2xl font-bold text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 w-48"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 text-center">Enter at least {formatPrice(minBidForFirst * 100)} to rank your listing</p>
               </div>
             )}
           </div>
