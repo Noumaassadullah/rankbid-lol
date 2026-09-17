@@ -569,7 +569,7 @@ export default function Home() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {topListings.map((listing, idx) => {
                   const amount = activeLeaderboard === 'today' ? listing.dayPaid : listing.totalPaid;
                   const amountInPKR = (amount / 100) * PKR_RATE;
@@ -620,7 +620,7 @@ export default function Home() {
                       rel="noopener noreferrer"
                       className="relative group"
                     >
-                      <div className="bg-white rounded-lg p-4 flex items-start justify-between hover:shadow-lg hover:scale-[1.01] transition-all cursor-pointer border border-gray-100 hover:border-orange-300 gap-4">
+                      <div className="bg-white rounded-lg p-3 flex items-start justify-between hover:shadow-lg hover:scale-[1.01] transition-all cursor-pointer border border-gray-100 hover:border-orange-300 gap-3">
                         {/* Rank Number */}
                         <div className="text-base font-black text-orange-500 flex-shrink-0 pt-1 min-w-fit">#{idx + 1}</div>
 
@@ -630,14 +630,14 @@ export default function Home() {
                             <img
                               src={listing.imageUrl}
                               alt={displayName}
-                              className="w-14 h-14 rounded-lg object-cover"
+                              className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
                               onError={(e) => {
                                 e.currentTarget.style.display = 'none';
                                 e.currentTarget.parentElement?.classList.add('hidden');
                               }}
                             />
                           ) : (
-                            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg">
+                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-base flex-shrink-0">
                               {displayName.charAt(0)}
                             </div>
                           )}
