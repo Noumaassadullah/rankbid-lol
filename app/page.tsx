@@ -501,6 +501,27 @@ export default function Home() {
                   const nextAmountPKR = (nextAmount / 100) * PKR_RATE;
                   const bidToRank = Math.ceil(nextAmountPKR) + 1;
 
+                  // Extract clean name from URL/title
+                  const extractCleanName = (url: string): string => {
+                    try {
+                      // If it's a full URL, extract domain
+                      if (url.startsWith('http')) {
+                        const urlObj = new URL(url);
+                        const hostname = urlObj.hostname;
+                        // Remove www. and get first part
+                        const parts = hostname.replace('www.', '').split('.');
+                        const name = parts[0];
+                        return name.charAt(0).toUpperCase() + name.slice(1);
+                      }
+                      // Otherwise use the title as-is (first word if it has spaces)
+                      return url.split(' ')[0];
+                    } catch {
+                      return url.split(' ')[0];
+                    }
+                  };
+
+                  const displayName = extractCleanName(listing.title);
+
                   return (
                     <a
                       key={listing.id}
@@ -509,60 +530,54 @@ export default function Home() {
                       rel="noopener noreferrer"
                       className="relative group"
                     >
-                      <div className="bg-white rounded-lg p-4 sm:p-5 flex items-center justify-between hover:shadow-lg hover:scale-[1.02] transition-all cursor-pointer border border-gray-100 hover:border-orange-300">
+                      <div className="bg-white rounded-lg p-3 flex items-center justify-between hover:shadow-md hover:scale-[1.01] transition-all cursor-pointer border border-gray-100 hover:border-orange-300">
                         {/* Left Section - Icon, Title, Description */}
-                        <div className="flex items-start gap-4 flex-1 min-w-0">
+                        <div className="flex items-start gap-3 flex-1 min-w-0">
                           {/* Rank Number */}
-                          <div className="text-xl sm:text-2xl font-black text-orange-500 flex-shrink-0 w-8 sm:w-10">#{idx + 1}</div>
+                          <div className="text-lg font-black text-orange-500 flex-shrink-0 w-6">#{idx + 1}</div>
 
                           {/* Icon */}
                           <div className="flex-shrink-0">
                             {listing.imageUrl ? (
                               <img
                                 src={listing.imageUrl}
-                                alt={listing.title}
-                                className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover"
+                                alt={displayName}
+                                className="w-12 h-12 rounded-lg object-cover"
                                 onError={(e) => {
                                   e.currentTarget.style.display = 'none';
                                   e.currentTarget.parentElement?.classList.add('hidden');
                                 }}
                               />
                             ) : (
-                              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-xl">
-                                {listing.title.charAt(0).toUpperCase()}
+                              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-base">
+                                {displayName.charAt(0)}
                               </div>
                             )}
                           </div>
 
                           {/* Title & Description */}
-                          <div className="flex-1 min-w-0 py-1">
-                            <h3 className="font-bold text-gray-900 text-sm sm:text-base group-hover:text-orange-600 transition-colors line-clamp-2">
-                              {listing.title}
+                          <div className="flex-1 min-w-0 py-0.5">
+                            <h3 className="font-bold text-gray-900 text-sm group-hover:text-orange-600 transition-colors line-clamp-1">
+                              {displayName}
                             </h3>
-                            <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 mt-1">
+                            <p className="text-xs text-gray-600 line-clamp-1 mt-0.5">
                               {listing.description || getCategoryLabel(listing.category)}
                             </p>
-                            <div className="flex items-center gap-2 mt-2">
-                              <span className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded">
-                                {getCategoryLabel(listing.category)}
-                              </span>
-                            </div>
                           </div>
                         </div>
 
                         {/* Right Section - Price */}
-                        <div className="text-right flex-shrink-0 ml-4">
-                          <p className="text-xl sm:text-2xl font-black text-orange-600">
+                        <div className="text-right flex-shrink-0 ml-3">
+                          <p className="text-lg font-black text-orange-600">
                             ₨{amountInPKR.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                           </p>
-                          <p className="text-xs text-gray-500 mt-1">{idx === 0 ? 'Leader' : `${topListings.length - idx} ahead`}</p>
                         </div>
                       </div>
 
                       {/* Hover Tooltip - Amount to Rank */}
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs font-semibold rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-xs font-semibold rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         Pay ₨{bidToRank.toLocaleString()} to rank here
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-3 border-transparent border-t-gray-900"></div>
                       </div>
                     </a>
                   );
