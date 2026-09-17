@@ -56,9 +56,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Count existing listings for free tier check
+    // Count existing listings for free tier check (first 20 users are free)
     const countResponse = await fetch(
-      `${supabaseUrl}/rest/v1/listings?select=id&limit=1&offset=10`,
+      `${supabaseUrl}/rest/v1/listings?select=id&limit=1&offset=20`,
       {
         headers: {
           'apikey': supabaseKey,
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     let isFreeUser = false;
     if (countResponse.ok) {
       const listings = await countResponse.json();
-      isFreeUser = listings.length === 0; // If we can't fetch 11th item, means < 10 exist
+      isFreeUser = listings.length === 0; // If we can't fetch 21st item, means < 20 exist
     }
 
     // Create new listing with UUID format

@@ -140,7 +140,7 @@ export default function Home() {
       const res = await fetch('/api/listings/submit?limit=100');
       const data = await res.json();
       const listingCount = data.listings?.length || 0;
-      const remaining = Math.max(0, 10 - listingCount);
+      const remaining = Math.max(0, 20 - listingCount);
       setSpotsRemaining(remaining);
       setFreeSpotAvailable(remaining > 0);
     } catch (error) {
@@ -210,7 +210,7 @@ export default function Home() {
       const checkRes = await fetch('/api/listings/submit?limit=100');
       const checkData = await checkRes.json();
       const listingCount = checkData.listings?.length || 0;
-      const isFreeUser = listingCount < 10;
+      const isFreeUser = listingCount < 20;
 
       // If free user, create listing immediately
       if (isFreeUser) {
@@ -229,7 +229,7 @@ export default function Home() {
         setDetectedPlatform('website');
         setDetectedCategory('');
         setFormLoading(false);
-        alert('🎉 Congratulations! You are in the first 10 users!\n\nYour listing is now live and ranked #1 for FREE!');
+        alert('🎉 Congratulations! You are in the first 20 users!\n\nYour listing is now live and ranked #1 for FREE!');
         fetchListings();
         return;
       }
@@ -328,7 +328,7 @@ export default function Home() {
             {freeSpotAvailable && (
               <div className="mb-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg">
                 <p className="text-center text-lg font-bold text-green-700">
-                  🎁 {spotsRemaining} Free Spot{spotsRemaining !== 1 ? 's' : ''} Left - First 10 Users Get FREE Listing!
+                  🎁 {spotsRemaining} Free Spot{spotsRemaining !== 1 ? 's' : ''} Left - First 20 Users Get FREE Listing!
                 </p>
               </div>
             )}
@@ -646,11 +646,19 @@ export default function Home() {
                         </div>
 
                         {/* Right Section - Price */}
-                        <div className="text-right flex-shrink-0 pt-1">
-                          <p className="text-xl font-black text-orange-600">
-                            {formatPrice(amount)}
-                          </p>
-                        </div>
+                        {idx >= 20 ? (
+                          <div className="text-right flex-shrink-0 pt-1">
+                            <p className="text-xl font-black text-orange-600">
+                              {formatPrice(amount)}
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="text-right flex-shrink-0 pt-1">
+                            <p className="text-sm font-semibold text-green-600">
+                              FREE
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       {/* Hover Tooltip - Amount to Rank */}
