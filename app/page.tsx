@@ -518,11 +518,13 @@ export default function Home() {
             </form>
 
             {/* Bid Adjuster - Separate from form */}
+            {spotsRemaining <= 0 && (
             <div className="flex justify-center items-center gap-6 pt-8 flex-col">
+              <p className="text-sm text-gray-600 font-semibold">Bid Amount (Adjust to rank higher)</p>
               <div className="flex items-center gap-6">
                 <button
                   type="button"
-                  onClick={() => setCurrentBid(Math.max(20, currentBid - 1))}
+                  onClick={() => setCurrentBid(Math.max(minBidForFirst, currentBid - 1))}
                   className="text-orange-500 text-3xl font-bold hover:text-orange-600 transition-colors p-2 cursor-pointer"
                 >
                   −
@@ -538,6 +540,9 @@ export default function Home() {
                   +
                 </button>
               </div>
+              <p className="text-xs text-gray-500">Minimum: {formatPrice(minBidForFirst * 100)}</p>
+            </div>
+            )}
               {currentBid < minBidForFirst && topListings.length > 0 && (
                 <p className="text-sm text-orange-600 font-semibold">
                   Bid at least {formatPrice(minBidForFirst * 100)} to rank #1
