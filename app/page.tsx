@@ -378,7 +378,7 @@ export default function Home() {
             {/* Main Heading with Price */}
             <div className="text-center mb-12">
               <h2 className="text-5xl md:text-6xl font-black text-gray-900">
-                Claim #1 for <span className="text-orange-500">{formatPrice((currentBid * PKR_RATE) * 100)}</span>
+                Claim #1 for <span className="text-orange-500">{formatPrice(currentBid * 100)}</span>
               </h2>
               {topListings.length > 0 && (
                 <p className="text-sm text-gray-600 mt-2">
@@ -482,7 +482,7 @@ export default function Home() {
                   −
                 </button>
                 <p className="text-3xl md:text-4xl font-black text-orange-500 min-w-fit">
-                  {formatPrice((currentBid * PKR_RATE) * 100)}
+                  {formatPrice(currentBid * 100)}
                 </p>
                 <button
                   type="button"
@@ -494,7 +494,7 @@ export default function Home() {
               </div>
               {currentBid < minBidForFirst && topListings.length > 0 && (
                 <p className="text-sm text-orange-600 font-semibold">
-                  Bid at least {formatPrice((minBidForFirst * PKR_RATE) * 100)} to rank #1
+                  Bid at least {formatPrice(minBidForFirst * 100)} to rank #1
                 </p>
               )}
             </div>
