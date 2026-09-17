@@ -348,14 +348,14 @@ export default function Home() {
             )}
 
             {/* Bid Type Selector */}
-            <div className="flex justify-center gap-2 mb-8">
+            <div className="flex justify-center gap-3 mb-10">
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, bidType: 'alltime' }))}
-                className={`px-6 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
+                className={`px-8 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center gap-2 ${
                   formData.bidType === 'alltime'
-                    ? 'bg-purple-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg hover:shadow-xl'
+                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-300'
                 }`}
               >
                 <span>🏆</span> All-time Ranking
@@ -363,13 +363,13 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, bidType: 'daily' }))}
-                className={`px-6 py-2 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
+                className={`px-8 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center gap-2 ${
                   formData.bidType === 'daily'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg hover:shadow-xl'
+                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-300'
                 }`}
               >
-                <span className="w-2 h-2 bg-blue-600 rounded-full inline-block"></span> Today Only
+                <span className="w-2 h-2 rounded-full inline-block"></span> Today Only
               </button>
             </div>
 
@@ -383,16 +383,16 @@ export default function Home() {
             </div>
 
             {/* Currency Selector */}
-            <div className="flex justify-center gap-2 mb-8">
+            <div className="flex justify-center gap-3 mb-12">
               {(['PKR', 'USD', 'GBP', 'INR'] as const).map(currency => (
                 <button
                   key={currency}
                   type="button"
                   onClick={() => setSelectedCurrency(currency)}
-                  className={`px-4 py-2 rounded-full font-semibold text-sm transition-all ${
+                  className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
                     selectedCurrency === currency
-                      ? 'bg-orange-500 text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
+                      : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-orange-300'
                   }`}
                 >
                   {currency}
@@ -478,7 +478,7 @@ export default function Home() {
                   placeholder={formData.platform === 'website' ? 'Your product URL' : 'Your @handle or page link'}
                   value={formData.url}
                   onChange={handleInputChange}
-                  className="flex-1 px-6 py-4 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="flex-1 px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-200"
                   required
                 />
 
@@ -487,7 +487,7 @@ export default function Home() {
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className="flex-1 px-6 py-4 border border-gray-300 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="flex-1 px-6 py-4 border-2 border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-200"
                   required
                 >
                   <option value="">Choose a category</option>
@@ -500,9 +500,9 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={formLoading || metadataLoading}
-                  className="px-8 py-4 bg-orange-500 text-white font-bold rounded-full hover:bg-orange-600 transition-colors disabled:opacity-50 whitespace-nowrap shadow-md hover:shadow-lg"
+                  className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 disabled:opacity-50 whitespace-nowrap shadow-lg hover:shadow-2xl hover:scale-105"
                 >
-                  {formLoading ? 'Processing...' : metadataLoading ? 'Loading...' : 'Claim rank'}
+                  {formLoading ? '⏳ Processing...' : metadataLoading ? '📸 Loading...' : '🚀 Claim Rank'}
                 </button>
               </div>
 
