@@ -151,10 +151,10 @@ function getPlatformUrl(platform: string, handle: string | undefined): string {
   }
 
   const baseUrls: { [key: string]: (handle: string) => string } = {
-    twitter: (h) => `https://twitter.com/${h}`,
-    facebook: (h) => `https://facebook.com/${h}`,
-    instagram: (h) => `https://instagram.com/${h}`,
-    tiktok: (h) => `https://tiktok.com/@${h}`,
+    twitter: (h) => `https://twitter.com/${h.replace('@', '')}`,
+    facebook: (h) => `https://facebook.com/${h.replace('@', '')}`,
+    instagram: (h) => `https://www.instagram.com/${h.replace('@', '')}/`,
+    tiktok: (h) => `https://www.tiktok.com/@${h.replace('@', '')}`,
   };
 
   if (platform && handle && baseUrls[platform]) {
