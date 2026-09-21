@@ -86,88 +86,49 @@ export default function Header() {
 
   return (
     <>
-      {/* Top Header */}
-      <header className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-40">
+      {/* Top Header - Neo-Brutalism */}
+      <header className="bg-white text-[#18181B] border-b-4 border-[#18181B] sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6">
           {/* Main Header */}
           <div className="flex items-center justify-between h-16">
             {/* Logo & Hamburger */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden p-2 text-gray-900 dark:text-white"
+                className="lg:hidden p-2 text-[#18181B] hover:bg-[#FFFFFF] hover:text-[#18181B] transition-colors"
               >
                 {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
               <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-xl font-black text-gray-900 dark:text-white">rankbid</span>
+                <span className="text-2xl font-black text-[#18181B] uppercase tracking-wider">RANKBID</span>
               </Link>
             </div>
 
-            {/* Stats Pill */}
-            <div className="flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950 dark:to-orange-900 rounded-full border border-orange-200 dark:border-orange-800">
-              <div className="flex items-center gap-4 text-sm">
-                {/* Live Users */}
-                <div className="flex items-center gap-2">
-                  <div className="relative flex items-center">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span className="absolute inset-0 w-2 h-2 bg-green-400 rounded-full animate-ping"></span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-orange-100">
-                    {stats.onlineNow} online
-                  </span>
-                </div>
-
-                {/* Divider */}
-                <span className="text-gray-300 dark:text-orange-700">·</span>
-
-                {/* Total Visitors */}
-                <div className="hidden sm:flex items-center gap-2">
-                  <Eye size={14} className="text-orange-600 dark:text-orange-400" />
-                  <span className="font-bold text-gray-900 dark:text-orange-100">
-                    {stats.allTimeVisitors > 0
-                      ? stats.allTimeVisitors > 1000
-                        ? `${(stats.allTimeVisitors / 1000).toFixed(1)}K visitors`
-                        : `${stats.allTimeVisitors} visitors`
-                      : '0 visitors'}
-                  </span>
-                </div>
-
-                {/* Divider */}
-                <span className="hidden sm:block text-gray-300 dark:text-orange-700">·</span>
-
-                {/* Stats Link */}
-                <Link
-                  href="/stats"
-                  className="hidden sm:flex items-center gap-1 text-orange-600 dark:text-orange-300 hover:text-orange-700 dark:hover:text-orange-200 font-bold transition-colors whitespace-nowrap"
-                >
-                  <TrendingUp size={14} />
-                  stats
-                </Link>
+            {/* Stats Pill - Neo style */}
+            <div className="hidden md:flex items-center gap-6 px-6 py-3 bg-[#FFFFFF] text-[#18181B] border-2 border-[#18181B] font-black">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-[#86EFAC] rounded-full animate-pulse"></span>
+                <span>{stats.onlineNow} LIVE</span>
               </div>
+              <span>•</span>
+              <span>{stats.allTimeVisitors}K VIEWS</span>
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
               {/* Desktop Nav */}
-              <nav className="hidden lg:flex items-center gap-8">
-                <Link href="/daily" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+              <nav className="hidden lg:flex items-center gap-6">
+                <Link href="/daily" className="text-sm font-black uppercase tracking-wider hover:border-b-2 hover:border-[#18181B] transition-all">
                   Daily
                 </Link>
-                <Link href="/archive" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                <Link href="/archive" className="text-sm font-black uppercase tracking-wider hover:border-b-2 hover:border-[#18181B] transition-all">
                   Archive
                 </Link>
-                <Link href="/categories" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                <Link href="/categories" className="text-sm font-black uppercase tracking-wider hover:border-b-2 hover:border-[#18181B] transition-all">
                   Categories
                 </Link>
-                <Link href="/about" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
+                <Link href="/about" className="text-sm font-black uppercase tracking-wider hover:border-b-2 hover:border-[#18181B] transition-all">
                   About
-                </Link>
-                <Link href="/rules" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
-                  Rules
-                </Link>
-                <Link href="/tos" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors">
-                  Terms
                 </Link>
               </nav>
 
@@ -179,15 +140,15 @@ export default function Header() {
                     window.location.href = `/search?q=${encodeURIComponent(query)}`;
                   }
                 }}
-                className="p-2 text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                className="p-2 text-[#18181B] hover:bg-[#FFFFFF] hover:text-[#18181B] transition-colors border-2 border-transparent hover:border-[#18181B]"
               >
                 <Search className="w-5 h-5" />
               </button>
 
-              {/* Dark Mode */}
+              {/* Dark Mode Toggle */}
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className="p-2 text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                className="p-2 text-[#18181B] hover:bg-[#FFFFFF] hover:text-[#18181B] transition-colors border-2 border-transparent hover:border-[#18181B]"
               >
                 {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
@@ -196,43 +157,25 @@ export default function Header() {
 
           {/* Mobile Menu */}
           {mobileOpen && (
-            <div className="sm:hidden py-4 border-t border-gray-200 dark:border-gray-800 space-y-3">
-              {/* Mobile Stats */}
-              <div className="flex items-center gap-2 px-2 py-2 bg-orange-50 dark:bg-orange-950 rounded-lg border border-orange-200 dark:border-orange-800 text-xs">
-                <div className="flex items-center gap-1.5">
-                  <span className="relative flex items-center">
-                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                    <span className="absolute inset-0 w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span>
-                  </span>
-                  <span className="font-bold text-gray-900 dark:text-orange-100">{stats.onlineNow} online</span>
-                </div>
-                <span className="text-gray-300">·</span>
-                <span className="font-bold text-gray-900 dark:text-orange-100">
-                  {stats.allTimeVisitors > 1000
-                    ? `${(stats.allTimeVisitors / 1000).toFixed(1)}K visits`
-                    : `${stats.allTimeVisitors} visits`}
-                </span>
+            <div className="lg:hidden py-6 border-t-2 border-[#18181B] space-y-4">
+              <div className="flex items-center gap-3 px-4 py-2 bg-[#FFFFFF] text-[#18181B] font-black text-sm border-2 border-[#18181B]">
+                <span className="w-2 h-2 bg-[#86EFAC] rounded-full animate-pulse"></span>
+                <span>{stats.onlineNow} LIVE • {stats.allTimeVisitors}K VIEWS</span>
               </div>
 
-              <Link href="/daily" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
+              <Link href="/daily" className="block text-sm font-black uppercase tracking-wider hover:pl-2 transition-all">
                 Daily
               </Link>
-              <Link href="/archive" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
+              <Link href="/archive" className="block text-sm font-black uppercase tracking-wider hover:pl-2 transition-all">
                 Archive
               </Link>
-              <Link href="/categories" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
+              <Link href="/categories" className="block text-sm font-black uppercase tracking-wider hover:pl-2 transition-all">
                 Categories
               </Link>
-              <Link href="/about" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
+              <Link href="/about" className="block text-sm font-black uppercase tracking-wider hover:pl-2 transition-all">
                 About
               </Link>
-              <Link href="/rules" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
-                Rules
-              </Link>
-              <Link href="/tos" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-orange-600">
-                Terms
-              </Link>
-              <Link href="/stats" className="block text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700">
+              <Link href="/stats" className="block text-sm font-black uppercase tracking-wider hover:pl-2 transition-all">
                 Stats
               </Link>
             </div>
@@ -240,24 +183,21 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Category Filter */}
-      <div className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 sticky top-16 z-30 overflow-x-auto">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex gap-2 items-center">
-          {CATEGORIES.map((cat, idx) => {
+      {/* Category Filter - Neo-Brutalism */}
+      <div className="bg-[#F5F5F5] text-[#18181B] border-b-3 border-[#18181B] sticky top-16 z-30 overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex gap-3 items-center">
+          {CATEGORIES.map((cat) => {
             const Icon = cat.Icon;
             const isAll = cat.name === 'All';
-            const isExplore = cat.name === 'Explore';
-            
+
             return (
               <Link
                 key={cat.name}
                 href="/categories"
-                className={`flex-shrink-0 px-4 py-2 rounded-full font-semibold text-sm whitespace-nowrap transition-all flex items-center gap-2 ${
+                className={`flex-shrink-0 px-3 py-2 font-black text-xs uppercase tracking-wider border-3 whitespace-nowrap transition-all flex items-center gap-2 ${
                   isAll
-                    ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-sm'
-                    : isExplore
-                    ? 'text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 font-bold'
-                    : 'text-gray-800 dark:text-gray-200 hover:text-orange-600 dark:hover:text-orange-400'
+                    ? 'bg-[#FFB28F] text-[#18181B] border-[#18181B]'
+                    : 'bg-white text-[#18181B] border-[#18181B] hover:bg-[#FFB28F]'
                 }`}
               >
                 <Icon className="w-4 h-4" />
