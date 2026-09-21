@@ -39,11 +39,11 @@ model Listing {
 
 model Vote {
   id        String   @id @default(cuid())
-  listingId String
+  listingId String   @map("listing_id")
   listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
-  voterId   String   // Anonymous voter ID (session-based)
-  votedAt   DateTime @default(now())
+  voterId   String   @map("voter_id")  // Anonymous voter ID (session-based)
+  votedAt   DateTime @default(now()) @map("voted_at")
 
   @@unique([listingId, voterId])  // One vote per voter per listing
   @@index([listingId])
