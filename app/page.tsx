@@ -3,6 +3,7 @@
 import Header from '@/components/Header';
 import FAQ from '@/components/FAQ';
 import Pagination from '@/components/Pagination';
+import PlatformIcon from '@/components/PlatformIcon';
 import { useState, useEffect, useCallback } from 'react';
 
 interface Listing {
@@ -544,16 +545,7 @@ export default function Home() {
                   const baseVoteCount = activeTimeFilter === 'today' ? listing.dayVotes : listing.totalVotes;
                   const voteCount = (optimisticVotes[listing.id] || 0) + baseVoteCount;
 
-                  const platformEmojis: Record<string, string> = {
-                    twitter: '𝕏',
-                    instagram: '📷',
-                    tiktok: '🎵',
-                    facebook: '👍',
-                    website: '🌐'
-                  };
-
                   const platformLabel = listing.platform || 'website';
-                  const platformEmoji = platformEmojis[platformLabel] || '🌐';
                   let faviconUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
                   try {
                     const urlObj = new URL(listing.url);
@@ -576,7 +568,9 @@ export default function Home() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <p className="text-sm font-bold text-[#18181B] truncate">{listing.title}</p>
-                            <span className="text-lg flex-shrink-0" title={platformLabel}>{platformEmoji}</span>
+                            <div className="w-5 h-5 flex-shrink-0" title={platformLabel}>
+                              <PlatformIcon platform={platformLabel} size={20} />
+                            </div>
                           </div>
                           {listing.category && (
                             <p className="text-xs text-[#18181B]/60 mt-1 flex items-center gap-1">
