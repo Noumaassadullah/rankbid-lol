@@ -336,11 +336,6 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               {/* Left Content */}
               <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#D97706]/20 border-2 border-[#D97706] rounded-full mb-6">
-                  <Icons.Sparkles />
-                  <span className="text-xs font-bold text-[#D97706] uppercase tracking-widest">List Your Product</span>
-                </div>
-
                 <h1 className="text-5xl md:text-6xl font-black text-[#18181B] mb-6 leading-tight">
                   Rank Everything.
                 </h1>
@@ -559,7 +554,13 @@ export default function Home() {
 
                   const platformLabel = listing.platform || 'website';
                   const platformEmoji = platformEmojis[platformLabel] || '🌐';
-                  const faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(new URL(listing.url).hostname)}&sz=32`;
+                  let faviconUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+                  try {
+                    const urlObj = new URL(listing.url);
+                    faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(urlObj.hostname)}&sz=32`;
+                  } catch {
+                    // If URL parsing fails, use placeholder
+                  }
 
                   return (
                     <a
