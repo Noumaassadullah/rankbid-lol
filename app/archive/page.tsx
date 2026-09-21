@@ -9,7 +9,7 @@ interface DailySnapshot {
     id: string;
     title: string;
     url: string;
-    amount: number;
+    votes: number;
     rank: number;
   }>;
 }
@@ -25,7 +25,6 @@ export default function ArchivePage() {
 
   const fetchArchives = async () => {
     try {
-      // Generate dates for past 30 days
       const dates = [];
       for (let i = 0; i < 30; i++) {
         const date = new Date();
@@ -34,8 +33,6 @@ export default function ArchivePage() {
         dates.push(date.toISOString().split('T')[0]);
       }
 
-      // In a real implementation, you would fetch actual snapshots from the database
-      // For now, we'll create sample snapshots based on current data
       const res = await fetch('/api/listings/submit?limit=100');
       if (res.ok) {
         const data = await res.json();
@@ -47,7 +44,7 @@ export default function ArchivePage() {
             id: listing.id,
             title: listing.title,
             url: listing.url,
-            amount: listing.dayPaid || 0,
+            votes: listing.dayVotes || 0,
             rank: rank + 1,
           })),
         }));
@@ -79,84 +76,91 @@ export default function ArchivePage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Daily Rankings Archive</h1>
-          <p className="text-gray-600 mb-12">View historical daily rankings from the past 30 days</p>
+      <div className="bg-white text-[#18181B]">
+        {/* Header Section */}
+        <section className="bg-white py-12 border-b-4 border-[#18181B]">
+          <div className="max-w-6xl mx-auto px-6">
+            <h1 className="text-4xl font-black text-[#18181B] uppercase mb-2">Rankings Archive</h1>
+            <p className="text-[#18181B]/70 font-semibold">View historical daily rankings from the past 30 days</p>
+          </div>
+        </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Date Selector */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-20 bg-gray-50 rounded-lg p-4 border border-gray-200 max-h-[600px] overflow-y-auto">
-                <h3 className="font-bold text-gray-900 mb-4">Select Date</h3>
-                <div className="space-y-2">
-                  {snapshots.map((snapshot) => (
-                    <button
-                      key={snapshot.date}
-                      onClick={() => setSelectedDate(snapshot.date)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors text-sm font-medium ${
-                        selectedDate === snapshot.date
-                          ? 'bg-orange-500 text-white'
-                          : 'text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      {formatDate(snapshot.date)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Snapshot Display */}
-            <div className="lg:col-span-3">
-              {loading ? (
-                <div className="text-center py-12 text-gray-600">Loading archives...</div>
-              ) : !selectedSnapshot || selectedSnapshot.listings.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg">
-                  <p className="text-lg font-semibold text-gray-900">No rankings for this date</p>
-                </div>
-              ) : (
-                <>
-                  <div className="mb-6 p-4 bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-lg">
-                    <p className="text-sm text-orange-900">
-                      <span className="font-semibold">Archive Date:</span> {formatDate(selectedSnapshot.date)}
-                    </p>
-                  </div>
-
-                  <div className="space-y-3">
-                    {selectedSnapshot.listings.map((listing, idx) => (
-                      <a
-                        key={listing.id}
-                        href={listing.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-white border border-gray-200 rounded-lg p-6 flex items-center justify-between hover:border-orange-300 hover:shadow-md transition-all group"
+        {/* Content Section */}
+        <section className="bg-white py-12">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+              {/* Date Selector */}
+              <div className="lg:col-span-1">
+                <div className="sticky top-20 bg-[#F5F5F5] p-4 border-3 border-[#18181B] max-h-[600px] overflow-y-auto">
+                  <h3 className="font-black text-[#18181B] mb-4 uppercase text-sm">Select Date</h3>
+                  <div className="space-y-2">
+                    {snapshots.map((snapshot) => (
+                      <button
+                        key={snapshot.date}
+                        onClick={() => setSelectedDate(snapshot.date)}
+                        className={`w-full text-left px-4 py-3 transition-all text-sm font-bold border-2 uppercase ${
+                          selectedDate === snapshot.date
+                            ? 'bg-[#D97706] text-white border-[#D97706]'
+                            : 'text-[#18181B] border-[#18181B] hover:bg-[#F5F5F5]'
+                        }`}
                       >
-                        <div className="flex-1">
-                          <div className="flex items-center gap-4">
-                            <span className="text-3xl font-bold text-orange-600 w-10">#{idx + 1}</span>
-                            <div>
-                              <h3 className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
-                                {listing.title}
-                              </h3>
-                              <p className="text-sm text-gray-500">{listing.url}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right ml-6">
-                          <p className="text-2xl font-bold text-orange-600">
-                            ₨{(listing.amount / 100).toLocaleString()}
-                          </p>
-                          <p className="text-sm text-gray-500">That Day</p>
-                        </div>
-                      </a>
+                        {formatDate(snapshot.date)}
+                      </button>
                     ))}
                   </div>
-                </>
-              )}
+                </div>
+              </div>
+
+              {/* Snapshot Display */}
+              <div className="lg:col-span-3">
+                {loading ? (
+                  <div className="text-center py-12">
+                    <div className="inline-block animate-spin text-4xl">⏳</div>
+                    <p className="text-[#18181B]/60 font-semibold mt-2">Loading archives...</p>
+                  </div>
+                ) : !selectedSnapshot || selectedSnapshot.listings.length === 0 ? (
+                  <div className="text-center py-12 border-[#18181B] border-4 bg-[#F5F5F5]">
+                    <p className="text-sm font-bold text-[#18181B]">No rankings for this date</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-6 p-6 bg-[#F5F5F5] border-3 border-[#18181B]">
+                      <p className="text-sm font-black text-[#18181B] uppercase">
+                        Archive Date: {formatDate(selectedSnapshot.date)}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      {selectedSnapshot.listings.map((listing, idx) => (
+                        <a
+                          key={listing.id}
+                          href={listing.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#D97706]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
+                        >
+                          <div className="flex items-center gap-4 flex-1">
+                            <div className="w-10 h-10 bg-[#D97706] text-[#18181B] font-black rounded-lg flex items-center justify-center text-sm">
+                              #{idx + 1}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-bold text-[#18181B] truncate">{listing.title}</p>
+                              <p className="text-xs text-[#18181B]/60 mt-1 truncate">{listing.url}</p>
+                            </div>
+                          </div>
+                          <div className="text-right flex-shrink-0 ml-4">
+                            <p className="text-2xl font-black text-[#D97706]">♥ {listing.votes}</p>
+                            <p className="text-xs text-[#18181B]/60 font-semibold uppercase">Votes</p>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </>
   );
