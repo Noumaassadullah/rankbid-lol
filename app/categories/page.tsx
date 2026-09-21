@@ -14,7 +14,7 @@ interface Listing {
   clickCount: number;
 }
 
-const CATEGORIES = ['AI', 'SaaS', 'Developer', 'Marketing', 'Productivity', 'Design', 'Crypto', 'Health', 'Business', 'Unlimited'];
+const CATEGORIES = ['Marketing', 'SEO', 'Productivity', 'Agents', 'Crypto', 'Developer', 'Health', 'Games', 'Business', 'Ecommerce', 'Travel', 'Directories', 'AIMedia', 'Agencies', 'Social', 'Education', 'People', 'Design', 'Hiring', 'Domains', 'Security', 'Sales', 'News', 'RealEstate', 'Writing', 'Audio', 'Analytics', 'Unlimited', 'Other'];
 
 export default function CategoriesPage() {
   const [listings, setListings] = useState<Listing[]>([]);

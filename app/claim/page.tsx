@@ -10,7 +10,7 @@ export default function ClaimPage() {
     amount: '',
   });
 
-  const categories = ['AI', 'SaaS', 'Developer', 'Marketing', 'Productivity', 'Analytics', 'Design', 'Crypto', 'Unlimited'];
+  const categories = ['Marketing', 'SEO', 'Productivity', 'Agents', 'Crypto', 'Developer', 'Health', 'Games', 'Business', 'Ecommerce', 'Travel', 'Directories', 'AI Media', 'Agencies', 'Social', 'Education', 'People', 'Design', 'Hiring', 'Domains', 'Security', 'Sales', 'News', 'Real Estate', 'Writing', 'Audio', 'Analytics', 'Unlimited', 'Other'];
 
   return (
     <div className="bg-white dark:bg-black min-h-screen">
