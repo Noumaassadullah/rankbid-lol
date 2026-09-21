@@ -57,30 +57,28 @@ export async function getRankedListings(
 }
 
 export async function calculateDayVotes(listingId: string): Promise<number> {
-  // Calculate dayVotes as the sum of all votes from today (UTC midnight to now)
+  // Calculate dayVotes as the count of all votes from today (UTC midnight to now)
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
 
-  const result = await prisma.vote.aggregate({
+  const count = await prisma.vote.count({
     where: {
       listingId,
-      createdAt: { gte: today },
+      votedAt: { gte: today },
     },
-    _count: true,
   });
 
-  return result._count || 0;
+  return count;
 }
 
 export async function getTotalVotes(listingId: string): Promise<number> {
-  const result = await prisma.vote.aggregate({
+  const count = await prisma.vote.count({
     where: {
       listingId,
     },
-    _count: true,
   });
 
-  return result._count || 0;
+  return count;
 }
 
 export async function updateRankingCache() {

@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       snapshots,
-      totalDays: Object.keys(groupedByDate).length,
+      totalDays: 1,
     });
   } catch (error) {
     console.error('Error fetching daily snapshots:', error);
