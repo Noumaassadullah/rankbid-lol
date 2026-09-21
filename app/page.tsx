@@ -323,18 +323,18 @@ export default function Home() {
       <div className="bg-white text-[#18181B]">
 
         {/* PREMIUM BANNER HERO SECTION */}
-        <section className="bg-gradient-to-br from-white via-[#F5F5F5] to-white pt-16 pb-16 border-b-4 border-[#18181B] relative overflow-hidden fade-in">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-[#FFB28F] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#86EFAC] rounded-full blur-3xl"></div>
+        <section className="bg-gradient-to-br from-white via-[#F8F7FF] to-white pt-16 pb-16 border-b-4 border-[#18181B] relative overflow-hidden fade-in">
+          {/* Background Pattern - Premium Dark Colors */}
+          <div className="absolute inset-0 opacity-8">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#9D4EDD] rounded-full blur-3xl opacity-20"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#3A86FF] rounded-full blur-3xl opacity-20"></div>
           </div>
 
           <div className="max-w-6xl mx-auto px-6 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               {/* Left Content */}
               <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFB28F]/20 border-2 border-color-shift rounded-full mb-6">
+                <div className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#9D4EDD]/10 to-[#3A86FF]/10 border-2 border-color-shift rounded-full mb-6">
                   <Icons.Sparkles />
                   <span className="text-xs font-bold color-shift uppercase tracking-widest">Premium Ranking Platform</span>
                 </div>
@@ -349,8 +349,8 @@ export default function Home() {
 
                 {/* Key Stats */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
-                  <div className="flex items-center gap-3 float-animate">
-                    <div className="w-12 h-12 bg-color-shift rounded-lg flex items-center justify-center color-shift">
+                  <div className="flex items-center gap-3 float-animate p-4 bg-gradient-to-br from-[#9D4EDD]/5 to-[#3A86FF]/5 rounded-lg border-2 border-color-shift">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#9D4EDD] to-[#3A86FF] rounded-lg flex items-center justify-center color-shift text-white">
                       <Icons.Users />
                     </div>
                     <div>
@@ -358,8 +358,8 @@ export default function Home() {
                       <p className="text-xs text-[#18181B]/60 font-semibold">Ranked Products</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 float-animate" style={{animationDelay: '0.3s'}}>
-                    <div className="w-12 h-12 bg-color-shift rounded-lg flex items-center justify-center color-shift">
+                  <div className="flex items-center gap-3 float-animate p-4 bg-gradient-to-br from-[#9D4EDD]/5 to-[#3A86FF]/5 rounded-lg border-2 border-color-shift" style={{animationDelay: '0.3s'}}>
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#3A86FF] to-[#9D4EDD] rounded-lg flex items-center justify-center color-shift text-white">
                       <Icons.TrendingUp />
                     </div>
                     <div>
@@ -373,16 +373,16 @@ export default function Home() {
                 <div className="flex gap-4 flex-wrap">
                   <button
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-color-shift text-[#18181B] font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 transition-transform duration-150"
-                    style={{boxShadow: '-6px 6px 0px rgba(24,24,27,0.3)'}}
+                    className="flex items-center gap-2 px-8 py-4 premium-gradient text-white font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    style={{boxShadow: '-6px 6px 0px rgba(24,24,27,0.2)'}}
                   >
                     <Icons.Upload />
                     Submit Now
                   </button>
                   <button
                     onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 transition-all duration-150"
-                    style={{boxShadow: '6px 6px 0px rgba(24,24,27,0.3)'}}
+                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black uppercase text-sm border-color-shift border-4 hover:bg-gradient-to-r hover:from-[#9D4EDD]/10 hover:to-[#3A86FF]/10 hover:scale-105 active:scale-95 transition-all duration-150"
+                    style={{boxShadow: '6px 6px 0px rgba(24,24,27,0.2)'}}
                   >
                     <Icons.TrendingUp />
                     View Rankings
@@ -392,11 +392,11 @@ export default function Home() {
 
               {/* Right Visual */}
               <div className="hidden md:block">
-                <div className="bg-white border-4 border-color-shift p-8 rounded-lg shadow-xl hover:scale-105 transition-transform duration-300">
+                <div className="bg-white border-4 border-color-shift p-8 rounded-lg hover:scale-105 transition-transform duration-300">
                   <div className="space-y-4">
                     {[1, 2, 3].map(i => (
-                      <div key={i} className="flex items-center gap-3 p-4 bg-[#F5F5F5] border-2 border-[#E4E4E7] rounded float-animate" style={{animationDelay: `${i * 0.2}s`}}>
-                        <div className="w-10 h-10 bg-color-shift text-white font-black rounded flex items-center justify-center">#{i}</div>
+                      <div key={i} className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#9D4EDD]/5 to-[#3A86FF]/5 border-2 border-color-shift rounded-lg float-animate" style={{animationDelay: `${i * 0.2}s`}}>
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#9D4EDD] to-[#3A86FF] text-white font-black rounded flex items-center justify-center">{`#${i}`}</div>
                         <div className="flex-1">
                           <p className="text-sm font-bold text-[#18181B]">Top Product {i}</p>
                           <p className="text-xs text-[#18181B]/60">Marketing</p>
@@ -412,7 +412,7 @@ export default function Home() {
         </section>
 
         {/* FORM SECTION */}
-        <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B] fade-in">
+        <section className="bg-gradient-to-b from-[#F8F7FF] to-[#F5F5F5] py-12 border-b-4 border-[#18181B] fade-in">
           <div className="max-w-4xl mx-auto px-6">
             <div className="flex items-center gap-3 mb-8">
               <Icons.Upload />
@@ -482,8 +482,8 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={formLoading || metadataLoading}
-                className="w-full px-6 py-4 bg-color-shift text-[#18181B] font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
-                style={{boxShadow: formLoading ? 'none' : '-4px 4px 0px rgba(24,24,27,0.3), -8px 8px 0px rgba(24,24,27,0.15)'}}
+                className="w-full px-6 py-4 premium-gradient text-white font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                style={{boxShadow: formLoading ? 'none' : '-4px 4px 0px rgba(24,24,27,0.2)'}}
               >
                 {formLoading ? (
                   <>
@@ -501,7 +501,7 @@ export default function Home() {
         </section>
 
         {/* LEADERBOARD SECTION */}
-        <section id="leaderboard" className="bg-white py-12 border-b-4 border-[#18181B] fade-in">
+        <section id="leaderboard" className="bg-gradient-to-b from-white to-[#F8F7FF] py-12 border-b-4 border-[#18181B] fade-in">
           <div className="max-w-6xl mx-auto px-6">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
@@ -515,8 +515,8 @@ export default function Home() {
                     onClick={() => setActiveTimeFilter(filter as 'alltime' | 'today')}
                     className={`px-4 py-2 font-bold text-xs uppercase border-3 transition-all duration-200 hover:scale-105 ${
                       activeTimeFilter === filter
-                        ? 'bg-color-shift text-[#18181B] border-color-shift'
-                        : 'bg-white text-[#18181B] border-[#18181B] hover:bg-[#FFB28F]'
+                        ? 'premium-gradient text-white border-color-shift'
+                        : 'bg-white text-[#18181B] border-[#18181B] hover:border-color-shift'
                     }`}
                   >
                     {filter === 'alltime' ? 'All Time' : 'Today'}
@@ -536,7 +536,7 @@ export default function Home() {
                 <p className="text-sm font-bold text-[#18181B] mb-4 mt-4">No rankings yet</p>
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-6 py-2 bg-color-shift text-[#18181B] font-bold text-xs uppercase border-color-shift border-3 hover:scale-105 transition-all duration-200"
+                  className="px-6 py-2 premium-gradient text-white font-bold text-xs uppercase border-color-shift border-3 hover:scale-105 transition-all duration-200"
                 >
                   Be First to Submit
                 </button>
@@ -553,10 +553,10 @@ export default function Home() {
                       href={listing.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between p-4 bg-white border-color-shift border-3 hover:bg-[#FFB28F] hover:scale-101 transition-all duration-200 group cursor-pointer"
+                      className="flex items-center justify-between p-4 bg-white border-color-shift border-3 hover:bg-gradient-to-r hover:from-[#9D4EDD]/5 hover:to-[#3A86FF]/5 hover:scale-101 transition-all duration-200 group cursor-pointer"
                     >
                       <div className="flex items-center gap-4 flex-1">
-                        <div className="w-10 h-10 bg-color-shift text-[#18181B] font-black rounded-lg flex items-center justify-center">{`#${idx + 1}`}</div>
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#9D4EDD] to-[#3A86FF] text-white font-black rounded-lg flex items-center justify-center">{`#${idx + 1}`}</div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-[#18181B] truncate">{listing.title}</p>
                           {listing.category && (
@@ -578,7 +578,7 @@ export default function Home() {
                           className={`text-sm font-bold px-3 py-1.5 mt-2 border-2 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center gap-1 justify-center ${
                             votedListings.has(listing.id)
                               ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                              : 'bg-white text-[#FFB28F] border-color-shift hover:bg-color-shift hover:text-white'
+                              : 'bg-white border-color-shift hover:premium-gradient hover:text-white'
                           }`}
                         >
                           <Icons.Heart />
@@ -594,7 +594,7 @@ export default function Home() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B] fade-in">
+        <section className="bg-gradient-to-b from-[#F5F5F5] to-white py-12 border-b-4 border-[#18181B] fade-in">
           <div className="max-w-6xl mx-auto px-6">
             <div className="flex items-center gap-3 mb-8">
               <Icons.Zap />
@@ -611,7 +611,7 @@ export default function Home() {
                 return (
                   <div
                     key={i}
-                    className="border-color-shift border-4 p-8 bg-white text-center hover:bg-[#FFB28F] hover:scale-105 transition-all duration-200 group float-animate"
+                    className="border-color-shift border-4 p-8 bg-white text-center hover:bg-gradient-to-br hover:from-[#9D4EDD]/5 hover:to-[#3A86FF]/5 hover:scale-105 transition-all duration-200 group float-animate"
                     style={{animationDelay: `${i * 0.15}s`}}
                   >
                     <div className="flex justify-center mb-4 color-shift text-4xl transition-colors">
@@ -641,7 +641,7 @@ export default function Home() {
                 ? 'bg-red-100 text-red-700 border-red-400'
                 : 'bg-white text-[#18181B]'
             }`}
-            style={{boxShadow: '0 4px 12px rgba(0,0,0,0.15)'}}
+            style={{boxShadow: 'none'}}
           >
             {toast.type === 'success' && <Icons.Check />}
             {toast.type === 'error' && <Icons.Zap />}
