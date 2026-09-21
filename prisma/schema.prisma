@@ -20,66 +20,50 @@ model Listing {
   category      Category  @default(Other)
   platform      String    @default("website") // "website" | "twitter" | "facebook" | "instagram" | "tiktok"
 
-  totalPaid     Int       @default(0)  // All-time sum in cents
-  dayPaid       Int       @default(0)  // Today (rolling 24h) in cents
+  totalVotes    Int       @default(0)  // All-time vote count
+  dayVotes      Int       @default(0)  // Today (rolling 24h) vote count
   clickCount    Int       @default(0)
 
   createdAt     DateTime  @default(now())
-  lastRaisedAt  DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  payments      Payment[]
-  dailyRanks    DailyRank[]
+  votes         Vote[]
+  dailySnapshots DailyVoteSnapshot[]
 
   @@index([category])
-  @@index([totalPaid])
-  @@index([dayPaid])
+  @@index([totalVotes])
+  @@index([dayVotes])
   @@index([createdAt])
   @@map("listings")
 }
 
-model Payment {
-  id                String   @id @default(cuid())
-  listingId         String
-  listing           Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+model Vote {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
-  amount            Int      // in cents
-  bidType           String   @default("alltime") // "alltime" | "daily"
-  provider          String   @default("jazzcash") // "jazzcash" | "stripe"
-  status            String   @default("pending") // "pending" | "completed" | "failed"
+  voterId   String   // Anonymous voter ID (session-based)
+  votedAt   DateTime @default(now())
 
-  transactionId     String?  @unique // JazzCash pp_txn_ref or Stripe transaction ID
-  stripeSessionId   String?  @unique // Legacy Stripe field
-  stripePaymentId   String?  @unique // Legacy Stripe field
-
-  metadata          Json?    // Provider-specific data (response codes, auth codes, etc.)
-
-  paidAt            DateTime?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
+  @@unique([listingId, voterId])  // One vote per voter per listing
   @@index([listingId])
-  @@index([status])
-  @@index([transactionId])
-  @@index([provider])
-  @@index([bidType])
-  @@map("payments")
+  @@index([voterId])
+  @@map("votes")
 }
 
-model DailyRank {
+model DailyVoteSnapshot {
   id        String   @id @default(cuid())
   listingId String
   listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
   date      DateTime // UTC date (midnight)
-  amount    Int      // Amount paid that day in cents
+  votes     Int      // Vote count for that day
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   @@unique([listingId, date])
   @@index([date])
-  @@map("daily_ranks")
+  @@map("daily_vote_snapshots")
 }
 
 model DailySnapshot {

@@ -56,22 +56,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Count existing listings for free tier check (first 20 users are free)
-    const countResponse = await fetch(
-      `${supabaseUrl}/rest/v1/listings?select=id&limit=1&offset=20`,
-      {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-        },
-      }
-    );
-
-    let isFreeUser = false;
-    if (countResponse.ok) {
-      const listings = await countResponse.json();
-      isFreeUser = listings.length === 0; // If we can't fetch 21st item, means < 20 exist
-    }
 
     // Create new listing with UUID format
     const generateUUID = () => {
@@ -120,7 +104,7 @@ export async function POST(req: NextRequest) {
         category: category || 'Other',
         status: 'active',
         location: normalizedUrl,
-        price: isFreeUser ? 0 : 0,  // Free users (first 20) get 0, paid users get their bid amount later
+        price: 0,  // No longer used, kept for backward compatibility
         views: 0,
         image_url: imageUrl || null,
         created_at: now,
@@ -137,7 +121,7 @@ export async function POST(req: NextRequest) {
     const listing = await insertResponse.json();
 
     return NextResponse.json(
-      { listing: listing[0] || listing, isNew: true, isFreeUser, listings: [] },
+      { listing: listing[0] || listing, isNew: true, listings: [] },
       { status: 201 }
     );
   } catch (error) {
@@ -180,7 +164,7 @@ export async function GET(req: NextRequest) {
     const url = searchParams.get('url');
     const category = searchParams.get('category');
     const limit = parseInt(searchParams.get('limit') || '100');
-    const sort = searchParams.get('sort') || 'totalPaid';
+    const sort = searchParams.get('sort') || 'totalVotes';
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -193,7 +177,8 @@ export async function GET(req: NextRequest) {
     }
 
     // Fetch from Supabase REST API instead of Prisma
-    const orderBy = sort === 'dayPaid' ? 'price.desc' : 'price.desc';
+    // For now, we'll sort by views as a placeholder until we migrate to vote columns
+    const orderBy = sort === 'dayVotes' ? 'views.desc' : 'views.desc';
     const query = `order=${orderBy}&limit=${limit}`;
 
     const response = await fetch(`${supabaseUrl}/rest/v1/listings?${query}`, {
@@ -225,11 +210,10 @@ export async function GET(req: NextRequest) {
         url: url,
         category: item.category || 'Other',
         platform: item.platform || 'website',
-        totalPaid: item.price || 0,
-        dayPaid: item.price || 0,
+        totalVotes: item.views || 0,
+        dayVotes: item.views || 0,
         clickCount: item.views || 0,
         createdAt: item.created_at,
-        lastRaisedAt: item.created_at,
         updatedAt: item.updated_at || item.created_at,
         imageUrl: item.image_url || null,
       };

@@ -9,7 +9,6 @@ import {
   Info,
   BookOpen,
   Briefcase,
-  CreditCard,
   Mail,
   Share2,
   GitBranch,
@@ -33,7 +32,7 @@ export default function Footer() {
               <span className="text-xl font-black text-black dark:text-white">RankBid</span>
             </div>
             <p className="text-sm font-bold text-gray-700 dark:text-gray-300 leading-relaxed">
-              Pay to rank on Pakistan's transparent leaderboard. No algorithms, no politics. Just real merit.
+              Community-ranked leaderboard. No algorithms, no politics. Just real merit.
             </p>
           </div>
 
@@ -120,26 +119,15 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Payments & Support */}
+          {/* Support */}
           <div>
             <h4 className="text-sm font-black text-black dark:text-white mb-4 uppercase tracking-wide flex items-center gap-2">
-              <CreditCard size={16} />
-              Payments
+              <Mail size={16} />
+              Support
             </h4>
-            <ul className="space-y-2 font-bold text-gray-700 dark:text-gray-300 text-sm mb-6">
-              <li className="flex items-center gap-2">
-                <span className="text-orange-600 dark:text-orange-500">✓</span>
-                RapidGateway
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-orange-600 dark:text-orange-500">✓</span>
-                JazzCash
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-orange-600 dark:text-orange-500">✓</span>
-                EasyPaisa
-              </li>
-            </ul>
+            <p className="font-bold text-gray-700 dark:text-gray-300 text-sm mb-4">
+              Have questions? Get in touch with our community team.
+            </p>
             <a
               href="mailto:support@rankbid.pk"
               className="inline-flex items-center gap-2 font-bold text-orange-600 dark:text-orange-500 hover:text-orange-700 dark:hover:text-orange-400 transition-colors text-sm"

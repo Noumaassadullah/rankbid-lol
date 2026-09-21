@@ -10,11 +10,12 @@ interface Listing {
   description: string;
   category: string;
   platform: string;
-  totalPaid: number;
-  dayPaid: number;
+  totalVotes: number;
+  dayVotes: number;
   clickCount: number;
   createdAt: string;
   imageUrl?: string;
+  userVoted?: boolean;
 }
 
 const CATEGORIES = [
@@ -54,47 +55,50 @@ export default function Home() {
     description: '',
     category: '',
     platform: 'website',
-    bidType: 'alltime' as 'alltime' | 'daily',
   });
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
-  const [currentBid, setCurrentBid] = useState(20);
-  const [freeSpotAvailable, setFreeSpotAvailable] = useState(false);
-  const [spotsRemaining, setSpotsRemaining] = useState(0);
   const [metadataLoading, setMetadataLoading] = useState(false);
   const [metadataImage, setMetadataImage] = useState<string | null>(null);
   const [detectedPlatform, setDetectedPlatform] = useState('website');
   const [detectedCategory, setDetectedCategory] = useState('');
-  const [selectedCurrency, setSelectedCurrency] = useState<'PKR' | 'USD' | 'GBP' | 'INR'>('PKR');
-
-  const PKR_RATE = 280; // 1 USD = 280 PKR
-  const CURRENCY_RATES: { [key: string]: number } = {
-    PKR: 1,
-    USD: 280,
-    GBP: 352,
-    INR: 3.36,
-  };
-
-  const formatPrice = (amountInCents: number, currency: string = selectedCurrency): string => {
-    const amountInPKR = (amountInCents / 100) * PKR_RATE;
-    const rate = CURRENCY_RATES[currency] || CURRENCY_RATES.PKR;
-    const converted = amountInPKR / rate;
-
-    const symbols: { [key: string]: string } = {
-      PKR: '₨',
-      USD: '$',
-      GBP: '£',
-      INR: '₹',
-    };
-
-    const symbol = symbols[currency] || '₨';
-    return `${symbol}${converted.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-  };
+  const [votedListings, setVotedListings] = useState<Set<string>>(new Set());
+  const [voterId, setVoterId] = useState<string>('');
 
   useEffect(() => {
+    // Initialize voter ID from localStorage
+    const stored = localStorage.getItem('rankbid_voter_id');
+    if (stored) {
+      setVoterId(stored);
+    } else {
+      const newId = 'voter_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('rankbid_voter_id', newId);
+      setVoterId(newId);
+    }
     fetchListings();
-    checkFreeSpots();
   }, [activeLeaderboard]);
+
+  const handleVote = useCallback(async (listingId: string) => {
+    if (!voterId) return;
+
+    try {
+      const res = await fetch('/api/votes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listingId,
+          voterId,
+        }),
+      });
+
+      if (res.ok) {
+        setVotedListings(prev => new Set([...prev, listingId]));
+        fetchListings();
+      }
+    } catch (error) {
+      console.error('Error voting:', error);
+    }
+  }, [voterId]);
 
   // Auto-detect platform and category from URL
   useEffect(() => {
@@ -135,23 +139,11 @@ export default function Home() {
     return () => clearTimeout(debounceTimer);
   }, [formData.url]);
 
-  const checkFreeSpots = useCallback(async () => {
-    try {
-      const res = await fetch('/api/listings/submit?limit=100');
-      const data = await res.json();
-      const listingCount = data.listings?.length || 0;
-      const remaining = Math.max(0, 20 - listingCount);
-      setSpotsRemaining(remaining);
-      setFreeSpotAvailable(remaining > 0);
-    } catch (error) {
-      console.error('Error checking free spots:', error);
-    }
-  }, []);
 
   const fetchListings = useCallback(async () => {
     setLoading(true);
     try {
-      const sort = activeLeaderboard === 'today' ? 'dayPaid' : 'totalPaid';
+      const sort = activeLeaderboard === 'today' ? 'dayVotes' : 'totalVotes';
       const res = await fetch(`/api/listings/submit?sort=${sort}&limit=100`);
 
       if (!res.ok) {
@@ -206,93 +198,33 @@ export default function Home() {
         platform: formData.platform,
       };
 
-      // First check if this would be a free user listing
-      const checkRes = await fetch('/api/listings/submit?limit=100');
-      const checkData = await checkRes.json();
-      const listingCount = checkData.listings?.length || 0;
-      const isFreeUser = listingCount < 20;
-
-      // If free user, create listing immediately
-      if (isFreeUser) {
-        const res = await fetch('/api/listings/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(submitData),
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-
-        setFormError('');
-        setFormData({ url: '', handle: '', description: '', category: '', platform: 'website', bidType: 'alltime' });
-        setMetadataImage(null);
-        setDetectedPlatform('website');
-        setDetectedCategory('');
-        setFormLoading(false);
-        alert('🎉 Congratulations! You are in the first 20 users!\n\nYour listing is now live and ranked #1 for FREE!');
-        fetchListings();
-        return;
-      }
-
-      // For paid users: skip listing creation and go directly to payment
-      // Convert selected currency to PKR, then to USD cents for payment system
-      const rate = CURRENCY_RATES[selectedCurrency] || CURRENCY_RATES.PKR;
-      const amountInPKR = currentBid * rate;
-      const amountInCents = Math.round((amountInPKR / PKR_RATE) * 100);
-
-      const checkoutRes = await fetch('/api/payment/jazzcash-checkout', {
+      // Submit listing directly (no payment needed)
+      const res = await fetch('/api/listings/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          formData: { ...submitData, bidType: formData.bidType },
-          amount: amountInCents,
-          bidType: formData.bidType,
-        }),
+        body: JSON.stringify(submitData),
       });
 
-      const checkoutData = await checkoutRes.json();
-      if (!checkoutRes.ok) throw new Error(checkoutData.error);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
 
-      window.location.href = checkoutData.url;
+      setFormError('');
+      setFormData({ url: '', handle: '', description: '', category: '', platform: 'website' });
+      setMetadataImage(null);
+      setDetectedPlatform('website');
+      setDetectedCategory('');
+      setFormLoading(false);
+      alert('✅ Your submission is live! The community will start voting now.');
+      fetchListings();
     } catch (error: any) {
       setFormError(error.message || 'Something went wrong');
       setFormLoading(false);
     }
   };
 
-  const topListings = formData.bidType === 'daily'
-    ? listings.slice(0, 10).sort((a, b) => b.dayPaid - a.dayPaid)
-    : listings.slice(0, 10).sort((a, b) => b.totalPaid - a.totalPaid);
-
-  const minBidForFirst = (() => {
-    // Find first PAID user (not free user with bid=0)
-    const paidListing = topListings.find(l => {
-      const amount = formData.bidType === 'daily' ? l.dayPaid : l.totalPaid;
-      return amount > 0;
-    });
-
-    if (paidListing) {
-      // Show amount needed to beat current top paid user
-      const topAmount = formData.bidType === 'daily' ? paidListing.dayPaid : paidListing.totalPaid;
-      return Math.ceil(((topAmount / 100) / PKR_RATE) + 1);
-    } else if (spotsRemaining <= 0) {
-      // If no paid users yet but free spots are full, show minimum paid bid (₨100 / 280 cents)
-      return Math.ceil((28000 / 100) / PKR_RATE);  // Minimum ₨100 to start paid bidding
-    }
-    return 20;
-  })();
-
-  const calculateRank = (bid: number) => {
-    // Convert PKR bid to cents for comparison
-    const bidInCents = Math.round((bid / PKR_RATE) * 100);
-    const higherBids = topListings.filter(l => {
-      const amount = formData.bidType === 'daily' ? l.dayPaid : l.totalPaid;
-      return amount > bidInCents;
-    }).length;
-    return higherBids + 1;
-  };
-
-  const currentRank = calculateRank(currentBid);
+  const topListings = activeLeaderboard === 'today'
+    ? listings.slice(0, 10).sort((a, b) => b.dayVotes - a.dayVotes)
+    : listings.slice(0, 10).sort((a, b) => b.totalVotes - a.totalVotes);
 
   return (
     <>
@@ -312,7 +244,7 @@ export default function Home() {
 
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
                 <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-xl font-medium">
-                  Pure pay-to-rank competition. No algorithms. No politics. Just merit.
+                  Community-ranked leaderboards. No algorithms. No politics. Pure voting.
                 </p>
 
                 <div className="flex gap-3 flex-col sm:flex-row">
@@ -338,113 +270,14 @@ export default function Home() {
         {/* FORM SECTION */}
         <section className="bg-white py-20">
           <div className="max-w-6xl mx-auto px-6">
-            {/* Free Spots Banner */}
-            {freeSpotAvailable && (
-              <div className="mb-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg">
-                <p className="text-center text-lg font-bold text-green-700">
-                  🎁 {spotsRemaining} Free Spot{spotsRemaining !== 1 ? 's' : ''} Left - First 20 Users Get FREE Listing!
-                </p>
-              </div>
-            )}
-
-            {/* Bid Type Selector */}
-            <div className="flex justify-center gap-3 mb-10">
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, bidType: 'alltime' }))}
-                className={`px-8 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center gap-2 ${
-                  formData.bidType === 'alltime'
-                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg hover:shadow-xl'
-                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-300'
-                }`}
-              >
-                <span>🏆</span> All-time Ranking
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, bidType: 'daily' }))}
-                className={`px-8 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center gap-2 ${
-                  formData.bidType === 'daily'
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg hover:shadow-xl'
-                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-300'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full inline-block"></span> Today Only
-              </button>
-            </div>
-
-            {/* Bid Type Info */}
-            <div className="text-center mb-8 p-4 bg-gray-50 rounded-lg max-w-2xl mx-auto">
-              <p className="text-sm text-gray-600">
-                {formData.bidType === 'alltime'
-                  ? "💰 All-time bid: Your payment adds to your permanent ranking and stays counted forever"
-                  : "⏰ Today-only bid: Your payment counts only for today's rankings, resets at UTC midnight"}
-              </p>
-            </div>
-
-            {/* Currency Selector */}
-            <div className="flex justify-center gap-3 mb-12">
-              {(['PKR', 'USD', 'GBP', 'INR'] as const).map(currency => (
-                <button
-                  key={currency}
-                  type="button"
-                  onClick={() => setSelectedCurrency(currency)}
-                  className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
-                    selectedCurrency === currency
-                      ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-orange-300'
-                  }`}
-                >
-                  {currency}
-                </button>
-              ))}
-            </div>
-
-            {/* Main Heading with Price */}
+            {/* Main Heading */}
             <div className="text-center mb-12">
               <h2 className="text-5xl md:text-6xl font-black text-gray-900">
-                Claim #1 {formData.bidType === 'daily' ? 'Today' : ''} for <span className="text-green-500">{spotsRemaining > 0 ? 'FREE 🎁' : formatPrice(currentBid * 100)}</span>
+                Share Your Product
               </h2>
-              {spotsRemaining > 0 ? (
-                <p className="text-sm text-gray-600 mt-2">
-                  {spotsRemaining} free spot{spotsRemaining !== 1 ? 's' : ''} left! No payment needed for first 20 users
-                </p>
-              ) : (() => {
-                const paidListing = topListings.find(l => {
-                  const amount = formData.bidType === 'daily' ? l.dayPaid : l.totalPaid;
-                  return amount > 0;
-                });
-
-                if (paidListing) {
-                  const topAmount = formData.bidType === 'daily' ? paidListing.dayPaid : paidListing.totalPaid;
-                  return (
-                    <>
-                      <p className="text-sm text-gray-600 mt-2">
-                        Top paid: {formatPrice(topAmount)} • Pay to rank higher
-                      </p>
-                      <p className="text-lg font-bold text-orange-600 mt-4">
-                        Minimum bid: {formatPrice(minBidForFirst * 100)}
-                      </p>
-                    </>
-                  );
-                } else if (topListings.length > 0) {
-                  return (
-                    <>
-                      <p className="text-sm text-gray-600 mt-2">
-                        All current spots filled with free users • Pay any amount to rank at top
-                      </p>
-                      <p className="text-lg font-bold text-orange-600 mt-4">
-                        Minimum bid: {formatPrice(minBidForFirst * 100)}
-                      </p>
-                    </>
-                  );
-                }
-                return (
-                  <p className="text-lg font-bold text-orange-600 mt-4">
-                    Minimum bid: {formatPrice(minBidForFirst * 100)}
-                  </p>
-                );
-              })()}
+              <p className="text-lg text-gray-600 mt-4">
+                Submit for free and let the community vote it up
+              </p>
             </div>
 
             {/* Platform Selection */}
@@ -531,26 +364,6 @@ export default function Home() {
               />
             </form>
 
-            {/* Bid Amount Input - Show only during paid tier */}
-            {spotsRemaining <= 0 && (
-              <div className="flex justify-center items-center gap-6 pt-8 flex-col bg-gradient-to-r from-orange-50 to-orange-100 p-8 rounded-xl border border-orange-200 max-w-2xl mx-auto">
-                <div className="text-center mb-4">
-                  <p className="text-sm text-gray-600 mb-2">Minimum Bid Amount to Get Your Listing</p>
-                  <p className="text-3xl font-bold text-orange-600">{formatPrice(minBidForFirst * 100)}</p>
-                </div>
-                <div>
-                  <label className="text-sm text-gray-600 font-semibold block mb-3">Enter Your Bid Amount</label>
-                  <input
-                    type="number"
-                    value={currentBid}
-                    onChange={(e) => setCurrentBid(Math.max(minBidForFirst, parseInt(e.target.value) || minBidForFirst))}
-                    min={minBidForFirst}
-                    className="px-6 py-3 border-2 border-orange-300 rounded-lg text-center text-2xl font-bold text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 w-48"
-                  />
-                </div>
-                <p className="text-xs text-gray-500 text-center">Enter at least {formatPrice(minBidForFirst * 100)} to rank your listing</p>
-              </div>
-            )}
           </div>
         </section>
 
@@ -591,10 +404,7 @@ export default function Home() {
             ) : (
               <div className="space-y-4">
                 {topListings.map((listing, idx) => {
-                  const amount = activeLeaderboard === 'today' ? listing.dayPaid : listing.totalPaid;
-                  const amountInPKR = (amount / 100) * PKR_RATE;
-                  // To rank at this position, you need to bid ₨1 more than current amount (in PKR)
-                  const bidToRank = Math.ceil(amountInPKR) + 1;
+                  const voteCount = activeLeaderboard === 'today' ? listing.dayVotes : listing.totalVotes;
 
                   // Extract platform and format display
                   const getPlatformInfo = (url: string): { platform: string; displayName: string } => {
@@ -687,34 +497,27 @@ export default function Home() {
                           </div>
                         </div>
 
-                        {/* Right Section - Price */}
-                        {idx >= 20 ? (
-                          <div className="text-right flex-shrink-0 pt-1">
-                            <p className="text-xl font-black text-orange-600">
-                              {formatPrice(amount)}
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="text-right flex-shrink-0 pt-1">
-                            <p className="text-sm font-semibold text-green-600">
-                              FREE
-                            </p>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Hover Tooltip - Show bid amount only for paid listings (position 21+) */}
-                      {idx >= 20 && (
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-xs font-semibold rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          {(() => {
-                            const symbols: { [key: string]: string } = { PKR: '₨', USD: '$', GBP: '£', INR: '₹' };
-                            const symbol = symbols[selectedCurrency] || '₨';
-                            const bidInCurrency = bidToRank / CURRENCY_RATES[selectedCurrency];
-                            return `Pay ${symbol}${Math.ceil(bidInCurrency).toLocaleString()} to rank here`;
-                          })()}
-                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-3 border-transparent border-t-gray-900"></div>
+                        {/* Right Section - Votes */}
+                        <div className="text-right flex-shrink-0 pt-1 flex flex-col items-end gap-2">
+                          <p className="text-xl font-black text-orange-600">
+                            {voteCount} vote{voteCount !== 1 ? 's' : ''}
+                          </p>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleVote(listing.id);
+                            }}
+                            disabled={votedListings.has(listing.id)}
+                            className={`px-3 py-1 text-xs font-semibold rounded transition-all ${
+                              votedListings.has(listing.id)
+                                ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
+                                : 'bg-orange-100 text-orange-700 hover:bg-orange-200 active:scale-95'
+                            }`}
+                          >
+                            {votedListings.has(listing.id) ? '✓ Voted' : '👍 Vote'}
+                          </button>
                         </div>
-                      )}
+                      </div>
                     </a>
                   );
                 })}
@@ -731,7 +534,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { num: '1', title: 'Submit', desc: 'Add your product URL or social media handle' },
-                { num: '2', title: 'Bid', desc: 'Place your bid to claim your rank' },
+                { num: '2', title: 'Vote', desc: 'Community votes to rank your listing higher' },
                 { num: '3', title: 'Dominate', desc: 'Get discovered by real makers' }
               ].map((step, i) => (
                 <div key={i} className="text-center">
