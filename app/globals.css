@@ -140,37 +140,37 @@ h3 {
 
 @keyframes colorShift {
   0% {
-    color: #9D4EDD;
+    color: #D97706;
   }
   50% {
-    color: #3A86FF;
+    color: #059669;
   }
   100% {
-    color: #9D4EDD;
+    color: #D97706;
   }
 }
 
 @keyframes bgColorShift {
   0% {
-    background-color: #9D4EDD;
+    background-color: #D97706;
   }
   50% {
-    background-color: #3A86FF;
+    background-color: #059669;
   }
   100% {
-    background-color: #9D4EDD;
+    background-color: #D97706;
   }
 }
 
 @keyframes numberGlow {
   0% {
-    text-shadow: 0 0 8px rgba(157, 78, 221, 0.6), 0 0 16px rgba(157, 78, 221, 0.3);
+    text-shadow: 0 0 8px rgba(217, 119, 6, 0.6), 0 0 16px rgba(217, 119, 6, 0.3);
   }
   50% {
-    text-shadow: 0 0 16px rgba(58, 134, 255, 0.8), 0 0 32px rgba(157, 78, 221, 0.6), 0 0 48px rgba(58, 134, 255, 0.4);
+    text-shadow: 0 0 16px rgba(5, 150, 105, 0.8), 0 0 32px rgba(217, 119, 6, 0.6), 0 0 48px rgba(5, 150, 105, 0.4);
   }
   100% {
-    text-shadow: 0 0 8px rgba(157, 78, 221, 0.6), 0 0 16px rgba(157, 78, 221, 0.3);
+    text-shadow: 0 0 8px rgba(217, 119, 6, 0.6), 0 0 16px rgba(217, 119, 6, 0.3);
   }
 }
 
@@ -197,13 +197,13 @@ h3 {
 
 @keyframes borderColorShift {
   0% {
-    border-color: #9D4EDD;
+    border-color: #D97706;
   }
   50% {
-    border-color: #3A86FF;
+    border-color: #059669;
   }
   100% {
-    border-color: #9D4EDD;
+    border-color: #D97706;
   }
 }
 
