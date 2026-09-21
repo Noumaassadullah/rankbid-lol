@@ -83,6 +83,7 @@ export default function Home() {
   const [detectedCategory, setDetectedCategory] = useState('');
   const [votedListings, setVotedListings] = useState<Set<string>>(new Set());
   const [voterId, setVoterId] = useState<string>('');
+  const [optimisticVotes, setOptimisticVotes] = useState<Record<string, number>>({});
 
   useEffect(() => {
     // Initialize voter ID from localStorage
@@ -103,6 +104,13 @@ export default function Home() {
       return;
     }
 
+    // Optimistic update - immediately update UI
+    setVotedListings(prev => new Set([...prev, listingId]));
+    setOptimisticVotes(prev => ({
+      ...prev,
+      [listingId]: (prev[listingId] || 0) + 1
+    }));
+
     try {
       const res = await fetch('/api/votes', {
         method: 'POST',
@@ -116,14 +124,58 @@ export default function Home() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setVotedListings(prev => new Set([...prev, listingId]));
-        alert('✅ Vote recorded!');
+        // Refresh listings in background to get accurate count after a short delay
+        setTimeout(async () => {
+          const sort = activeLeaderboard === 'today' ? 'dayVotes' : 'totalVotes';
+          const fetchRes = await fetch(`/api/listings/submit?sort=${sort}&limit=100`);
+          if (fetchRes.ok) {
+            const text = await fetchRes.text();
+            if (text) {
+              const data = JSON.parse(text);
+              setListings(data.listings || []);
+              setOptimisticVotes({}); // Clear optimistic votes
+            }
+          }
+        }, 1500);
       } else if (data.error === 'Already voted') {
+        // Revert optimistic update
+        setVotedListings(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(listingId);
+          return newSet;
+        });
+        setOptimisticVotes(prev => {
+          const newVotes = {...prev};
+          delete newVotes[listingId];
+          return newVotes;
+        });
         alert('⚠️ You already voted for this listing');
       } else {
+        // Revert optimistic update
+        setVotedListings(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(listingId);
+          return newSet;
+        });
+        setOptimisticVotes(prev => {
+          const newVotes = {...prev};
+          delete newVotes[listingId];
+          return newVotes;
+        });
         alert('❌ ' + (data.error || 'Failed to vote'));
       }
     } catch (error) {
+      // Revert optimistic update
+      setVotedListings(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(listingId);
+        return newSet;
+      });
+      setOptimisticVotes(prev => {
+        const newVotes = {...prev};
+        delete newVotes[listingId];
+        return newVotes;
+      });
       console.error('Error voting:', error);
       alert('❌ Error: ' + String(error));
     }
@@ -433,7 +485,8 @@ export default function Home() {
             ) : (
               <div className="space-y-4">
                 {topListings.map((listing, idx) => {
-                  const voteCount = activeLeaderboard === 'today' ? listing.dayVotes : listing.totalVotes;
+                  const baseVoteCount = activeLeaderboard === 'today' ? listing.dayVotes : listing.totalVotes;
+                  const voteCount = (optimisticVotes[listing.id] || 0) + baseVoteCount;
 
                   // Extract platform and format display
                   const getPlatformInfo = (url: string): { platform: string; displayName: string } => {
