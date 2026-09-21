@@ -118,6 +118,9 @@ export default function Header() {
             <div className="flex items-center gap-3">
               {/* Desktop Nav */}
               <nav className="hidden lg:flex items-center gap-6">
+                <Link href="/why" className="text-sm font-black uppercase tracking-wider hover:border-b-2 hover:border-[#18181B] transition-all">
+                  Why
+                </Link>
                 <Link href="/daily" className="text-sm font-black uppercase tracking-wider hover:border-b-2 hover:border-[#18181B] transition-all">
                   Daily
                 </Link>
@@ -163,6 +166,9 @@ export default function Header() {
                 <span>{stats.onlineNow} LIVE • {stats.allTimeVisitors}K VIEWS</span>
               </div>
 
+              <Link href="/why" className="block text-sm font-black uppercase tracking-wider hover:pl-2 transition-all">
+                Why
+              </Link>
               <Link href="/daily" className="block text-sm font-black uppercase tracking-wider hover:pl-2 transition-all">
                 Daily
               </Link>
