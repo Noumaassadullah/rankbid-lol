@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { query } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -13,16 +13,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if vote already exists
-    const existingVote = await prisma.vote.findUnique({
-      where: {
-        listingId_voterId: {
-          listingId,
-          voterId,
-        },
-      },
-    });
+    const existingResult = await query(
+      'SELECT id FROM votes WHERE listing_id = $1 AND voter_id = $2 LIMIT 1',
+      [listingId, voterId]
+    );
 
-    if (existingVote) {
+    if (existingResult.rows.length > 0) {
       return NextResponse.json(
         { error: 'Already voted', voted: true },
         { status: 400 }
@@ -30,42 +26,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Create vote record
-    await prisma.vote.create({
-      data: {
-        id: `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        listingId,
-        voterId,
-      },
-    });
-
-    // Increment listing's vote counts
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-
-    // Count today's votes
-    const dayVoteCount = await prisma.vote.count({
-      where: {
-        listingId,
-        votedAt: { gte: today },
-      },
-    });
-
-    // Count all-time votes
-    const totalVoteCount = await prisma.vote.count({
-      where: { listingId },
-    });
-
-    // Update listing with vote counts
-    await prisma.listing.update({
-      where: { id: listingId },
-      data: {
-        dayVotes: dayVoteCount,
-        totalVotes: totalVoteCount,
-      },
-    });
+    const voteId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    await query(
+      'INSERT INTO votes (id, listing_id, voter_id, voted_at) VALUES ($1, $2, $3, NOW())',
+      [voteId, listingId, voterId]
+    );
 
     return NextResponse.json(
-      { success: true, voted: true, totalVotes: totalVoteCount, dayVotes: dayVoteCount },
+      { success: true, voted: true },
       { status: 201 }
     );
   } catch (error) {
@@ -93,22 +61,20 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Get vote count for listing
-    const voteCount = await prisma.vote.count({
-      where: { listingId },
-    });
+    // Get vote count
+    const voteResult = await query(
+      'SELECT COUNT(*) as count FROM votes WHERE listing_id = $1',
+      [listingId]
+    );
+    const voteCount = parseInt(voteResult.rows[0]?.count || '0');
 
     let userVoted = false;
     if (voterId) {
-      const userVote = await prisma.vote.findUnique({
-        where: {
-          listingId_voterId: {
-            listingId,
-            voterId,
-          },
-        },
-      });
-      userVoted = !!userVote;
+      const userVoteResult = await query(
+        'SELECT id FROM votes WHERE listing_id = $1 AND voter_id = $2 LIMIT 1',
+        [listingId, voterId]
+      );
+      userVoted = userVoteResult.rows.length > 0;
     }
 
     return NextResponse.json({ voteCount, userVoted });

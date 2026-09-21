@@ -2,6 +2,45 @@ import { prisma } from '@/lib/prisma';
 import { normalizeURL, isValidPaymentURL, extractDomain } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
+async function isURLAccessible(url: string): Promise<boolean> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+    const response = await fetch(url, {
+      method: 'HEAD',
+      redirect: 'follow',
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; RankBid/1.0)',
+      },
+    });
+
+    clearTimeout(timeout);
+    return response.status >= 200 && response.status < 400;
+  } catch {
+    // If HEAD fails, try GET
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow',
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; RankBid/1.0)',
+        },
+      });
+
+      clearTimeout(timeout);
+      return response.status >= 200 && response.status < 400;
+    } catch {
+      return false;
+    }
+  }
+}
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const category = searchParams.get('category') || 'All';
@@ -58,12 +97,23 @@ export async function POST(request: NextRequest) {
     }
 
     const normalizedURL = normalizeURL(url);
+
+    // Check if URL already exists
     const existingListing = await prisma.listing.findUnique({
       where: { url: normalizedURL },
     });
 
     if (existingListing) {
       return NextResponse.json({ error: 'URL already listed' }, { status: 409 });
+    }
+
+    // Check if URL is accessible
+    const isAccessible = await isURLAccessible(normalizedURL);
+    if (!isAccessible) {
+      return NextResponse.json(
+        { error: 'URL is not accessible or does not exist. Please verify the URL is correct and accessible.' },
+        { status: 400 }
+      );
     }
 
     const newListing = await prisma.listing.create({

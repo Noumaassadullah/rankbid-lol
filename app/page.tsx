@@ -98,7 +98,10 @@ export default function Home() {
   }, [activeLeaderboard]);
 
   const handleVote = useCallback(async (listingId: string) => {
-    if (!voterId) return;
+    if (!voterId) {
+      alert('Please wait for the page to load fully');
+      return;
+    }
 
     try {
       const res = await fetch('/api/votes', {
@@ -110,12 +113,19 @@ export default function Home() {
         }),
       });
 
-      if (res.ok) {
+      const data = await res.json();
+
+      if (res.ok && data.success) {
         setVotedListings(prev => new Set([...prev, listingId]));
-        fetchListings();
+        alert('✅ Vote recorded!');
+      } else if (data.error === 'Already voted') {
+        alert('⚠️ You already voted for this listing');
+      } else {
+        alert('❌ ' + (data.error || 'Failed to vote'));
       }
     } catch (error) {
       console.error('Error voting:', error);
+      alert('❌ Error: ' + String(error));
     }
   }, [voterId]);
 
