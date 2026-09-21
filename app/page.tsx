@@ -2,6 +2,7 @@
 
 import Header from '@/components/Header';
 import FAQ from '@/components/FAQ';
+import Pagination from '@/components/Pagination';
 import { useState, useEffect, useCallback } from 'react';
 
 interface Listing {
@@ -128,6 +129,8 @@ export default function Home() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeTimeFilter, setActiveTimeFilter] = useState<'alltime' | 'today'>('alltime');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const [formData, setFormData] = useState({
@@ -224,11 +227,11 @@ export default function Home() {
     }
   }, [voterId, activeTimeFilter]);
 
-  const fetchListings = useCallback(async () => {
+  const fetchListings = useCallback(async (page: number = 1) => {
     setLoading(true);
     try {
       const sort = activeTimeFilter === 'today' ? 'dayVotes' : 'totalVotes';
-      const res = await fetch(`/api/listings/submit?sort=${sort}&limit=100`);
+      const res = await fetch(`/api/listings/submit?sort=${sort}&page=${page}&pageSize=15`);
       if (!res.ok) {
         setListings([]);
         return;
@@ -240,6 +243,8 @@ export default function Home() {
       }
       const data = JSON.parse(text);
       setListings(data.listings || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setCurrentPage(page);
     } catch (error) {
       setListings([]);
       addToast('Failed to load rankings', 'error');
@@ -314,10 +319,6 @@ export default function Home() {
     }
   };
 
-  const topListings = activeTimeFilter === 'today'
-    ? listings.slice(0, 10).sort((a, b) => b.dayVotes - a.dayVotes)
-    : listings.slice(0, 10).sort((a, b) => b.totalVotes - a.totalVotes);
-
   return (
     <>
       <Header />
@@ -350,21 +351,21 @@ export default function Home() {
 
                 {/* Key Stats */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
-                  <div className="flex items-center gap-3 float-animate">
+                  <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-[#D97706] rounded-lg flex items-center justify-center text-[#18181B]">
                       <Icons.Users />
                     </div>
                     <div>
-                      <p className="text-2xl font-black number-glow">100K+</p>
+                      <p className="text-2xl font-black">100K+</p>
                       <p className="text-xs text-[#18181B]/60 font-semibold">Ranked Products</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 float-animate" style={{animationDelay: '0.3s'}}>
+                  <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-[#059669] rounded-lg flex items-center justify-center text-[#18181B]">
                       <Icons.TrendingUp />
                     </div>
                     <div>
-                      <p className="text-2xl font-black number-glow">Real-time</p>
+                      <p className="text-2xl font-black">Real-time</p>
                       <p className="text-xs text-[#18181B]/60 font-semibold">Live Updates</p>
                     </div>
                   </div>
@@ -374,7 +375,7 @@ export default function Home() {
                 <div className="flex gap-4 flex-wrap">
                   <button
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-color-shift text-[#18181B] font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-[#D97706] text-[#18181B] font-black uppercase text-sm border-[#D97706] border-4 hover:scale-105 active:scale-95 transition-all duration-150"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.Upload />
@@ -396,7 +397,7 @@ export default function Home() {
                 <div className="bg-white border-4 border-[#18181B] p-8 rounded-lg hover:scale-105 transition-transform duration-300">
                   <div className="space-y-4">
                     {[1, 2, 3].map(i => (
-                      <div key={i} className="flex items-center gap-3 p-4 bg-[#F5F5F5] border-2 border-[#E4E4E7] rounded float-animate" style={{animationDelay: `${i * 0.2}s`}}>
+                      <div key={i} className="flex items-center gap-3 p-4 bg-[#F5F5F5] border-2 border-[#E4E4E7] rounded">
                         <div className="w-10 h-10 bg-[#D97706] text-[#18181B] font-black rounded flex items-center justify-center">{`#${i}`}</div>
                         <div className="flex-1">
                           <p className="text-sm font-bold text-[#18181B]">Top Product {i}</p>
@@ -483,7 +484,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={formLoading || metadataLoading}
-                className="w-full px-6 py-4 bg-color-shift text-[#18181B] font-black uppercase text-sm border-[#D97706] border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full px-6 py-4 bg-[#D97706] text-[#18181B] font-black uppercase text-sm border-[#D97706] border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
                 style={{boxShadow: 'none'}}
               >
                 {formLoading ? (
@@ -531,7 +532,7 @@ export default function Home() {
                 <div className="inline-block animate-spin text-4xl">⏳</div>
                 <p className="text-[#18181B]/60 font-semibold mt-2">Loading rankings...</p>
               </div>
-            ) : topListings.length === 0 ? (
+            ) : listings.length === 0 ? (
               <div className="text-center py-12 border-[#18181B] border-4 bg-[#F5F5F5] fade-in">
                 <Icons.Users />
                 <p className="text-sm font-bold text-[#18181B] mb-4 mt-4">No rankings yet</p>
@@ -544,9 +545,21 @@ export default function Home() {
               </div>
             ) : (
               <div className="space-y-2">
-                {topListings.map((listing, idx) => {
+                {listings.map((listing, idx) => {
                   const baseVoteCount = activeTimeFilter === 'today' ? listing.dayVotes : listing.totalVotes;
                   const voteCount = (optimisticVotes[listing.id] || 0) + baseVoteCount;
+
+                  const platformEmojis: Record<string, string> = {
+                    twitter: '𝕏',
+                    instagram: '📷',
+                    tiktok: '🎵',
+                    facebook: '👍',
+                    website: '🌐'
+                  };
+
+                  const platformLabel = listing.platform || 'website';
+                  const platformEmoji = platformEmojis[platformLabel] || '🌐';
+                  const faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(new URL(listing.url).hostname)}&sz=32`;
 
                   return (
                     <a
@@ -557,9 +570,13 @@ export default function Home() {
                       className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#D97706]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
                     >
                       <div className="flex items-center gap-4 flex-1">
-                        <div className="w-10 h-10 bg-[#D97706] text-[#18181B] font-black rounded-lg flex items-center justify-center">{`#${idx + 1}`}</div>
+                        <div className="w-10 h-10 bg-[#D97706] text-[#18181B] font-black rounded-lg flex items-center justify-center">{`#${(currentPage - 1) * 15 + idx + 1}`}</div>
+                        <img src={faviconUrl} alt="favicon" className="w-6 h-6 rounded" onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'; }} />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold text-[#18181B] truncate">{listing.title}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-bold text-[#18181B] truncate">{listing.title}</p>
+                            <span className="text-lg flex-shrink-0" title={platformLabel}>{platformEmoji}</span>
+                          </div>
                           {listing.category && (
                             <p className="text-xs text-[#18181B]/60 mt-1 flex items-center gap-1">
                               <Icons.Vote />
@@ -569,7 +586,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4">
-                        <p className="text-2xl font-black number-glow group-hover:text-[#18181B] transition-colors">{voteCount}</p>
+                        <p className="text-2xl font-black group-hover:text-[#18181B] transition-colors">{voteCount}</p>
                         <button
                           onClick={(e) => {
                             e.preventDefault();
@@ -590,6 +607,16 @@ export default function Home() {
                   );
                 })}
               </div>
+            )}
+            {listings.length > 0 && totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={(page) => {
+                  fetchListings(page);
+                  document.getElementById('leaderboard')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              />
             )}
           </div>
         </section>
@@ -612,8 +639,7 @@ export default function Home() {
                 return (
                   <div
                     key={i}
-                    className="border-[#18181B] border-4 p-8 bg-white text-center hover:bg-[#D97706]/10 hover:scale-105 transition-all duration-200 group float-animate"
-                    style={{animationDelay: `${i * 0.15}s`}}
+                    className="border-[#18181B] border-4 p-8 bg-white text-center hover:bg-[#D97706]/10 hover:scale-105 transition-all duration-200 group"
                   >
                     <div className="flex justify-center mb-4 text-[#D97706] text-4xl transition-colors">
                       <StepIcon />

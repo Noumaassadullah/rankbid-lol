@@ -138,74 +138,6 @@ h3 {
   }
 }
 
-@keyframes colorShift {
-  0% {
-    color: #D97706;
-  }
-  50% {
-    color: #059669;
-  }
-  100% {
-    color: #D97706;
-  }
-}
-
-@keyframes bgColorShift {
-  0% {
-    background-color: #D97706;
-  }
-  50% {
-    background-color: #059669;
-  }
-  100% {
-    background-color: #D97706;
-  }
-}
-
-@keyframes numberGlow {
-  0% {
-    text-shadow: 0 0 8px rgba(217, 119, 6, 0.6), 0 0 16px rgba(217, 119, 6, 0.3);
-  }
-  50% {
-    text-shadow: 0 0 16px rgba(5, 150, 105, 0.8), 0 0 32px rgba(217, 119, 6, 0.6), 0 0 48px rgba(5, 150, 105, 0.4);
-  }
-  100% {
-    text-shadow: 0 0 8px rgba(217, 119, 6, 0.6), 0 0 16px rgba(217, 119, 6, 0.3);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes borderColorShift {
-  0% {
-    border-color: #D97706;
-  }
-  50% {
-    border-color: #059669;
-  }
-  100% {
-    border-color: #D97706;
-  }
-}
 
 .fade-in {
   animation: fadeIn var(--transition-base) ease-out;
@@ -215,29 +147,6 @@ h3 {
   animation: slideIn var(--transition-base) ease-out;
 }
 
-.color-shift {
-  animation: colorShift 3s ease-in-out infinite;
-}
-
-.bg-color-shift {
-  animation: bgColorShift 3s ease-in-out infinite;
-}
-
-.number-glow {
-  animation: numberGlow 2s ease-in-out infinite;
-}
-
-.float-animate {
-  animation: float 3s ease-in-out infinite;
-}
-
-.gradient-shift {
-  animation: gradientShift 6s ease-in-out infinite;
-}
-
-.border-color-shift {
-  animation: borderColorShift 3s ease-in-out infinite;
-}
 
 /* Premium Styling */
 .premium-shadow {
