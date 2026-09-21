@@ -15,14 +15,14 @@ export async function GET(request: NextRequest) {
     if (timeWindow === 'alltime') {
       listings = await prisma.listing.findMany({
         ...(category !== 'All' && { where: { category: category as any } }),
-        orderBy: { totalPaid: 'desc' },
+        orderBy: { totalVotes: 'desc' },
         take: limit,
         skip: offset,
       });
     } else if (timeWindow === 'today') {
       listings = await prisma.listing.findMany({
         ...(category !== 'All' && { where: { category: category as any } }),
-        orderBy: { dayPaid: 'desc' },
+        orderBy: { dayVotes: 'desc' },
         take: limit,
         skip: offset,
       });
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const rankedListings = listings.map((listing, index) => ({
       ...listing,
       rank: offset + index + 1,
-      amountToOutrank: (timeWindow === 'today' ? listing.dayPaid : listing.totalPaid) + 500,
+      votesToOutrank: (timeWindow === 'today' ? listing.dayVotes : listing.totalVotes) + 1,
     }));
 
     return NextResponse.json(rankedListings);

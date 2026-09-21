@@ -16,21 +16,6 @@ export async function GET(request: NextRequest) {
 
     const listing = await prisma.listing.findUnique({
       where: listingId ? { id: listingId } : { url: url || '' },
-      include: {
-        payments: {
-          where: { status: 'completed' },
-          select: {
-            amount: true,
-            paidAt: true,
-          },
-          orderBy: { paidAt: 'desc' },
-          take: 10,
-        },
-        dailyRanks: {
-          orderBy: { date: 'desc' },
-          take: 7,
-        },
-      },
     });
 
     if (!listing) {
@@ -40,23 +25,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Calculate additional stats
-    const totalPayments = listing.payments.length;
-    const averageBid = totalPayments > 0
-      ? listing.payments.reduce((sum, p) => sum + p.amount, 0) / totalPayments
-      : 0;
-
-    // Calculate all-time rank
+    // Calculate all-time rank based on votes
     const higherRankedListings = await prisma.listing.count({
-      where: { totalPaid: { gt: listing.totalPaid } },
+      where: { totalVotes: { gt: listing.totalVotes } },
     });
 
-    // Calculate daily rank for today
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    // Calculate daily rank for today based on votes
     const dailyHigherRanked = await prisma.listing.count({
       where: {
-        dayPaid: { gt: listing.dayPaid },
+        dayVotes: { gt: listing.dayVotes },
       },
     });
 
@@ -66,10 +43,9 @@ export async function GET(request: NextRequest) {
         allTimeRank: higherRankedListings + 1,
         dailyRank: dailyHigherRanked + 1,
         stats: {
-          totalPayments,
-          averageBid: Math.round(averageBid),
-          recentPayments: listing.payments,
-          weeklyTrend: listing.dailyRanks,
+          totalVotes: listing.totalVotes,
+          dayVotes: listing.dayVotes,
+          clickCount: listing.clickCount,
         },
       },
     });
