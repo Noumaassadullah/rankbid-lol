@@ -1,6 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractMetadata } from '@/lib/metadata';
 
+async function isURLAccessible(url: string): Promise<boolean> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const response = await fetch(url, {
+      method: 'HEAD',
+      redirect: 'follow',
+      signal: controller.signal,
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RankBid/1.0)' },
+    });
+
+    clearTimeout(timeout);
+    return response.status >= 200 && response.status < 400;
+  } catch {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow',
+        signal: controller.signal,
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RankBid/1.0)' },
+      });
+
+      clearTimeout(timeout);
+      return response.status >= 200 && response.status < 400;
+    } catch {
+      return false;
+    }
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { url, handle, description, category, platform } = await req.json();
@@ -36,9 +70,9 @@ export async function POST(req: NextRequest) {
       normalizedUrl = `https://${normalizedUrl}`;
     }
 
-    // Check if listing already exists
+    // Check if listing already exists (by location field where URLs are stored)
     const checkResponse = await fetch(
-      `${supabaseUrl}/rest/v1/listings?title=eq.${encodeURIComponent(normalizedUrl)}&select=id`,
+      `${supabaseUrl}/rest/v1/listings?location=eq.${encodeURIComponent(normalizedUrl)}&select=id`,
       {
         headers: {
           'apikey': supabaseKey,
@@ -51,11 +85,20 @@ export async function POST(req: NextRequest) {
       const existing = await checkResponse.json();
       if (existing.length > 0) {
         return NextResponse.json(
-          { listing: existing[0], isNew: false, listings: [], isFreeUser: false }
+          { error: 'URL already listed. No duplicate submissions allowed.' },
+          { status: 409 }
         );
       }
     }
 
+    // Check if URL is accessible
+    const isAccessible = await isURLAccessible(normalizedUrl);
+    if (!isAccessible) {
+      return NextResponse.json(
+        { error: 'URL is not accessible or does not exist. Please verify the URL is correct and accessible.' },
+        { status: 400 }
+      );
+    }
 
     // Create new listing with UUID format
     const generateUUID = () => {
