@@ -351,7 +351,7 @@ export default function Home() {
                 {/* Key Stats */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div className="flex items-center gap-3 float-animate">
-                    <div className="w-12 h-12 bg-[#D97706] rounded-lg flex items-center justify-center text-white">
+                    <div className="w-12 h-12 bg-[#D97706] rounded-lg flex items-center justify-center text-[#18181B]">
                       <Icons.Users />
                     </div>
                     <div>
@@ -360,7 +360,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 float-animate" style={{animationDelay: '0.3s'}}>
-                    <div className="w-12 h-12 bg-[#059669] rounded-lg flex items-center justify-center text-white">
+                    <div className="w-12 h-12 bg-[#059669] rounded-lg flex items-center justify-center text-[#18181B]">
                       <Icons.TrendingUp />
                     </div>
                     <div>
@@ -374,7 +374,7 @@ export default function Home() {
                 <div className="flex gap-4 flex-wrap">
                   <button
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-color-shift text-white font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-color-shift text-[#18181B] font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 transition-all duration-150"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.Upload />
@@ -397,7 +397,7 @@ export default function Home() {
                   <div className="space-y-4">
                     {[1, 2, 3].map(i => (
                       <div key={i} className="flex items-center gap-3 p-4 bg-[#F5F5F5] border-2 border-[#E4E4E7] rounded float-animate" style={{animationDelay: `${i * 0.2}s`}}>
-                        <div className="w-10 h-10 bg-[#D97706] text-white font-black rounded flex items-center justify-center">{`#${i}`}</div>
+                        <div className="w-10 h-10 bg-[#D97706] text-[#18181B] font-black rounded flex items-center justify-center">{`#${i}`}</div>
                         <div className="flex-1">
                           <p className="text-sm font-bold text-[#18181B]">Top Product {i}</p>
                           <p className="text-xs text-[#18181B]/60">Marketing</p>
@@ -483,7 +483,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={formLoading || metadataLoading}
-                className="w-full px-6 py-4 bg-color-shift text-white font-black uppercase text-sm border-[#D97706] border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full px-6 py-4 bg-color-shift text-[#18181B] font-black uppercase text-sm border-[#D97706] border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
                 style={{boxShadow: 'none'}}
               >
                 {formLoading ? (
@@ -516,7 +516,7 @@ export default function Home() {
                     onClick={() => setActiveTimeFilter(filter as 'alltime' | 'today')}
                     className={`px-4 py-2 font-bold text-xs uppercase border-3 transition-all duration-200 hover:scale-105 ${
                       activeTimeFilter === filter
-                        ? 'bg-[#D97706] text-white border-[#D97706]'
+                        ? 'bg-[#D97706] text-[#18181B] border-[#D97706]'
                         : 'bg-white text-[#18181B] border-[#18181B]'
                     }`}
                   >
@@ -537,7 +537,7 @@ export default function Home() {
                 <p className="text-sm font-bold text-[#18181B] mb-4 mt-4">No rankings yet</p>
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-6 py-2 bg-[#D97706] text-white font-bold text-xs uppercase border-[#D97706] border-3 hover:scale-105 transition-all duration-200"
+                  className="px-6 py-2 bg-[#D97706] text-[#18181B] font-bold text-xs uppercase border-[#D97706] border-3 hover:scale-105 transition-all duration-200"
                 >
                   Be First to Submit
                 </button>
@@ -557,7 +557,7 @@ export default function Home() {
                       className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#D97706]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
                     >
                       <div className="flex items-center gap-4 flex-1">
-                        <div className="w-10 h-10 bg-[#D97706] text-white font-black rounded-lg flex items-center justify-center">{`#${idx + 1}`}</div>
+                        <div className="w-10 h-10 bg-[#D97706] text-[#18181B] font-black rounded-lg flex items-center justify-center">{`#${idx + 1}`}</div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-[#18181B] truncate">{listing.title}</p>
                           {listing.category && (
@@ -579,7 +579,7 @@ export default function Home() {
                           className={`text-sm font-bold px-3 py-1.5 mt-2 border-2 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center gap-1 justify-center ${
                             votedListings.has(listing.id)
                               ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                              : 'bg-white border-[#D97706] text-[#D97706] hover:bg-[#D97706] hover:text-white'
+                              : 'bg-white border-[#D97706] text-[#D97706] hover:bg-[#D97706] hover:text-[#18181B]'
                           }`}
                         >
                           <Icons.Heart />
