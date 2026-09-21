@@ -10,7 +10,7 @@ export default function ClaimPage() {
     amount: '',
   });
 
-  const categories = ['AI', 'SaaS', 'Developer', 'Marketing', 'Productivity', 'Analytics', 'Design', 'Crypto'];
+  const categories = ['AI', 'SaaS', 'Developer', 'Marketing', 'Productivity', 'Analytics', 'Design', 'Crypto', 'Unlimited'];
 
   return (
     <div className="bg-white dark:bg-black min-h-screen">

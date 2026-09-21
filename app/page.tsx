@@ -28,6 +28,7 @@ const CATEGORIES = [
   { value: 'Food', label: 'Food' },
   { value: 'Travel', label: 'Travel' },
   { value: 'Business', label: 'Business' },
+  { value: 'Unlimited', label: 'Unlimited' },
   { value: 'Other', label: 'Other' }
 ];
 

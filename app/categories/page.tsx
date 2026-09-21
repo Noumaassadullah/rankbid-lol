@@ -14,7 +14,7 @@ interface Listing {
   clickCount: number;
 }
 
-const CATEGORIES = ['AI', 'SaaS', 'Developer', 'Marketing', 'Productivity', 'Design', 'Crypto', 'Health', 'Business'];
+const CATEGORIES = ['AI', 'SaaS', 'Developer', 'Marketing', 'Productivity', 'Design', 'Crypto', 'Health', 'Business', 'Unlimited'];
 
 export default function CategoriesPage() {
   const [listings, setListings] = useState<Listing[]>([]);
