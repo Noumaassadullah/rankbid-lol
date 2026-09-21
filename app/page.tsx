@@ -334,9 +334,9 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               {/* Left Content */}
               <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFB28F]/20 border-2 border-[#FFB28F] rounded-full mb-6">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FFB28F]/20 border-2 border-color-shift rounded-full mb-6">
                   <Icons.Sparkles />
-                  <span className="text-xs font-bold text-[#FFB28F] uppercase tracking-widest">Premium Ranking Platform</span>
+                  <span className="text-xs font-bold color-shift uppercase tracking-widest">Premium Ranking Platform</span>
                 </div>
 
                 <h1 className="text-5xl md:text-6xl font-black text-[#18181B] mb-6 leading-tight">
@@ -349,21 +349,21 @@ export default function Home() {
 
                 {/* Key Stats */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#FFB28F]/20 rounded-lg flex items-center justify-center text-[#FFB28F]">
+                  <div className="flex items-center gap-3 float-animate">
+                    <div className="w-12 h-12 bg-color-shift rounded-lg flex items-center justify-center color-shift">
                       <Icons.Users />
                     </div>
                     <div>
-                      <p className="text-2xl font-black text-[#18181B]">100K+</p>
+                      <p className="text-2xl font-black number-glow">100K+</p>
                       <p className="text-xs text-[#18181B]/60 font-semibold">Ranked Products</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#86EFAC]/20 rounded-lg flex items-center justify-center text-[#86EFAC]">
+                  <div className="flex items-center gap-3 float-animate" style={{animationDelay: '0.3s'}}>
+                    <div className="w-12 h-12 bg-color-shift rounded-lg flex items-center justify-center color-shift">
                       <Icons.TrendingUp />
                     </div>
                     <div>
-                      <p className="text-2xl font-black text-[#18181B]">Real-time</p>
+                      <p className="text-2xl font-black number-glow">Real-time</p>
                       <p className="text-xs text-[#18181B]/60 font-semibold">Live Updates</p>
                     </div>
                   </div>
@@ -373,7 +373,7 @@ export default function Home() {
                 <div className="flex gap-4 flex-wrap">
                   <button
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-[#FFB28F] text-[#18181B] font-black uppercase text-sm border-4 border-[#18181B] hover:scale-105 active:scale-95 transition-transform duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-color-shift text-[#18181B] font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 transition-transform duration-150"
                     style={{boxShadow: '-6px 6px 0px rgba(24,24,27,0.3)'}}
                   >
                     <Icons.Upload />
@@ -381,7 +381,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black uppercase text-sm border-4 border-[#18181B] hover:bg-[#FFB28F] hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 transition-all duration-150"
                     style={{boxShadow: '6px 6px 0px rgba(24,24,27,0.3)'}}
                   >
                     <Icons.TrendingUp />
@@ -392,16 +392,16 @@ export default function Home() {
 
               {/* Right Visual */}
               <div className="hidden md:block">
-                <div className="bg-white border-4 border-[#18181B] p-8 rounded-lg shadow-xl hover:scale-105 transition-transform duration-300">
+                <div className="bg-white border-4 border-color-shift p-8 rounded-lg shadow-xl hover:scale-105 transition-transform duration-300">
                   <div className="space-y-4">
                     {[1, 2, 3].map(i => (
-                      <div key={i} className="flex items-center gap-3 p-4 bg-[#F5F5F5] border-2 border-[#E4E4E7] rounded">
-                        <div className="w-10 h-10 bg-[#FFB28F] text-white font-black rounded flex items-center justify-center">#{i}</div>
+                      <div key={i} className="flex items-center gap-3 p-4 bg-[#F5F5F5] border-2 border-[#E4E4E7] rounded float-animate" style={{animationDelay: `${i * 0.2}s`}}>
+                        <div className="w-10 h-10 bg-color-shift text-white font-black rounded flex items-center justify-center">#{i}</div>
                         <div className="flex-1">
                           <p className="text-sm font-bold text-[#18181B]">Top Product {i}</p>
                           <p className="text-xs text-[#18181B]/60">Marketing</p>
                         </div>
-                        <p className="font-black text-[#FFB28F] text-lg">{1000 - i * 200}</p>
+                        <p className="font-black number-glow text-lg">{1000 - i * 200}</p>
                       </div>
                     ))}
                   </div>
@@ -482,7 +482,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={formLoading || metadataLoading}
-                className="w-full px-6 py-4 bg-[#FFB28F] text-[#18181B] font-black uppercase text-sm border-4 border-[#18181B] hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full px-6 py-4 bg-color-shift text-[#18181B] font-black uppercase text-sm border-color-shift border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
                 style={{boxShadow: formLoading ? 'none' : '-4px 4px 0px rgba(24,24,27,0.3), -8px 8px 0px rgba(24,24,27,0.15)'}}
               >
                 {formLoading ? (
@@ -515,7 +515,7 @@ export default function Home() {
                     onClick={() => setActiveTimeFilter(filter as 'alltime' | 'today')}
                     className={`px-4 py-2 font-bold text-xs uppercase border-3 transition-all duration-200 hover:scale-105 ${
                       activeTimeFilter === filter
-                        ? 'bg-[#FFB28F] text-[#18181B] border-[#18181B]'
+                        ? 'bg-color-shift text-[#18181B] border-color-shift'
                         : 'bg-white text-[#18181B] border-[#18181B] hover:bg-[#FFB28F]'
                     }`}
                   >
@@ -531,12 +531,12 @@ export default function Home() {
                 <p className="text-[#18181B]/60 font-semibold mt-2">Loading rankings...</p>
               </div>
             ) : topListings.length === 0 ? (
-              <div className="text-center py-12 border-4 border-[#18181B] bg-[#F5F5F5] fade-in">
+              <div className="text-center py-12 border-color-shift border-4 bg-[#F5F5F5] fade-in">
                 <Icons.Users />
                 <p className="text-sm font-bold text-[#18181B] mb-4 mt-4">No rankings yet</p>
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-6 py-2 bg-[#FFB28F] text-[#18181B] font-bold text-xs uppercase border-3 border-[#18181B] hover:scale-105 transition-all duration-200"
+                  className="px-6 py-2 bg-color-shift text-[#18181B] font-bold text-xs uppercase border-color-shift border-3 hover:scale-105 transition-all duration-200"
                 >
                   Be First to Submit
                 </button>
@@ -553,10 +553,10 @@ export default function Home() {
                       href={listing.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between p-4 bg-white border-3 border-[#18181B] hover:bg-[#FFB28F] hover:scale-101 transition-all duration-200 group cursor-pointer"
+                      className="flex items-center justify-between p-4 bg-white border-color-shift border-3 hover:bg-[#FFB28F] hover:scale-101 transition-all duration-200 group cursor-pointer"
                     >
                       <div className="flex items-center gap-4 flex-1">
-                        <div className="w-10 h-10 bg-[#FFB28F] text-[#18181B] font-black rounded-lg flex items-center justify-center">#{idx + 1}</div>
+                        <div className="w-10 h-10 bg-color-shift text-[#18181B] font-black rounded-lg flex items-center justify-center">{`#${idx + 1}`}</div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold text-[#18181B] truncate">{listing.title}</p>
                           {listing.category && (
@@ -568,7 +568,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4">
-                        <p className="text-2xl font-black text-[#FFB28F] group-hover:text-[#18181B] transition-colors">{voteCount}</p>
+                        <p className="text-2xl font-black number-glow group-hover:text-[#18181B] transition-colors">{voteCount}</p>
                         <button
                           onClick={(e) => {
                             e.preventDefault();
@@ -578,7 +578,7 @@ export default function Home() {
                           className={`text-sm font-bold px-3 py-1.5 mt-2 border-2 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center gap-1 justify-center ${
                             votedListings.has(listing.id)
                               ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                              : 'bg-white text-[#FFB28F] border-[#FFB28F] hover:bg-[#FFB28F] hover:text-white'
+                              : 'bg-white text-[#FFB28F] border-color-shift hover:bg-color-shift hover:text-white'
                           }`}
                         >
                           <Icons.Heart />
@@ -611,12 +611,13 @@ export default function Home() {
                 return (
                   <div
                     key={i}
-                    className="border-4 border-[#18181B] p-8 bg-white text-center hover:bg-[#FFB28F] hover:scale-105 transition-all duration-200 group"
+                    className="border-color-shift border-4 p-8 bg-white text-center hover:bg-[#FFB28F] hover:scale-105 transition-all duration-200 group float-animate"
+                    style={{animationDelay: `${i * 0.15}s`}}
                   >
-                    <div className="flex justify-center mb-4 text-[#FFB28F] group-hover:text-[#18181B] text-4xl transition-colors">
+                    <div className="flex justify-center mb-4 color-shift text-4xl transition-colors">
                       <StepIcon />
                     </div>
-                    <p className="text-4xl font-black text-[#FFB28F] group-hover:text-[#18181B] mb-2">{step.num}</p>
+                    <p className="text-4xl font-black number-glow mb-2">{step.num}</p>
                     <h3 className="text-lg font-black text-[#18181B] uppercase mb-2">{step.title}</h3>
                     <p className="text-sm text-[#18181B]/70 font-semibold">{step.desc}</p>
                   </div>

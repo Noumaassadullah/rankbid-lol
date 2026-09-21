@@ -1,14 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Neobrutalism + Creem Color Fusion */
-  --primary-purple: #9D7FD9;
-  --primary-peach: #F5C5A8;
-  --primary-green: #6FD77C;
-  --primary-blue: #7B9FFF;
+  /* Color Palette */
+  --color-bg: #FFFFFF;
+  --color-surface: #F5F5F5;
+  --color-text: #18181B;
+  --color-text-secondary: rgba(24, 24, 27, 0.7);
+  --color-border: #E4E4E7;
+  --color-primary: #FFB28F;
+  --color-success: #86EFAC;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
 
-  --background: #ffffff;
-  --foreground: #000000;
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Poppins', system-ui, -apple-system, sans-serif;
+
+  /* Border Radius */
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -20,16 +56,196 @@ html {
 }
 
 body {
-  @apply bg-white dark:bg-black text-black dark:text-white transition-colors;
-  background: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-weight: 600;
+  @apply bg-white text-[#18181B];
+  font-family: var(--font-sans);
+  font-weight: 500;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #0a0a0a;
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+h1 {
+  font-size: 2.25rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes colorShift {
+  0% {
+    color: #FFB28F;
+  }
+  50% {
+    color: #86EFAC;
+  }
+  100% {
+    color: #FFB28F;
+  }
+}
+
+@keyframes bgColorShift {
+  0% {
+    background-color: #FFB28F;
+  }
+  50% {
+    background-color: #86EFAC;
+  }
+  100% {
+    background-color: #FFB28F;
+  }
+}
+
+@keyframes numberGlow {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 178, 143, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(255, 178, 143, 0.8), 0 0 25px rgba(134, 239, 172, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(255, 178, 143, 0.5);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes borderColorShift {
+  0% {
+    border-color: #FFB28F;
+  }
+  50% {
+    border-color: #86EFAC;
+  }
+  100% {
+    border-color: #FFB28F;
+  }
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-base) ease-out;
+}
+
+.slide-in {
+  animation: slideIn var(--transition-base) ease-out;
+}
+
+.color-shift {
+  animation: colorShift 3s ease-in-out infinite;
+}
+
+.bg-color-shift {
+  animation: bgColorShift 3s ease-in-out infinite;
+}
+
+.number-glow {
+  animation: numberGlow 2s ease-in-out infinite;
+}
+
+.float-animate {
+  animation: float 3s ease-in-out infinite;
+}
+
+.gradient-shift {
+  animation: gradientShift 6s ease-in-out infinite;
+}
+
+.border-color-shift {
+  animation: borderColorShift 3s ease-in-out infinite;
+}
+
+/* Smooth Transitions */
+button, input, select, textarea {
+  transition: all var(--transition-fast);
+}
+
+a {
+  transition: color var(--transition-fast);
 }
 
 /* Bold Neobrutalism Typography */
