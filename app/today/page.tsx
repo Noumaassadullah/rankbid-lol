@@ -11,8 +11,8 @@ interface Listing {
   title: string;
   description: string;
   category: string;
-  totalPaid: number;
-  dayPaid: number;
+  totalVotes: number;
+  dayVotes: number;
   clickCount: number;
   createdAt: string;
 }
@@ -24,7 +24,7 @@ export default function TodayPage() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const res = await fetch('/api/listings/submit?sort=dayPaid&limit=100');
+        const res = await fetch('/api/listings/submit?sort=dayVotes&timeFilter=today&limit=100');
 
         if (!res.ok) {
           console.error('API error:', res.status);
@@ -55,8 +55,8 @@ export default function TodayPage() {
   }, []);
 
   const topListingsToday = listings
-    .filter(l => l.dayPaid > 0)
-    .sort((a, b) => b.dayPaid - a.dayPaid)
+    .filter(l => l.dayVotes > 0)
+    .sort((a, b) => b.dayVotes - a.dayVotes)
     .slice(0, 50);
 
   return (
@@ -75,7 +75,7 @@ export default function TodayPage() {
           </p>
           <div className="bg-orange-100 border-4 border-orange-600 rounded-xl p-6 inline-block">
             <p className="font-black text-gray-900">
-              📊 {topListingsToday.length} products | 💰 ${topListingsToday.reduce((sum, l) => sum + l.dayPaid, 0) / 100 | 0} bid today
+              📊 {topListingsToday.length} products | 🗳️ {topListingsToday.reduce((sum, l) => sum + l.dayVotes, 0)} votes today
             </p>
           </div>
         </div>
@@ -112,12 +112,12 @@ export default function TodayPage() {
                     <div className="flex-1">
                       <h3 className="text-2xl font-black text-gray-900">{listing.title}</h3>
                       <p className="text-sm font-bold text-gray-600 mt-2">
-                        📁 {listing.category} • 📈 {listing.totalPaid / 100 > 0 ? `All-time: $${(listing.totalPaid / 100).toLocaleString()}` : 'New'}
+                        📁 {listing.category} • 📈 {listing.totalVotes > 0 ? `All-time: ${listing.totalVotes.toLocaleString()} votes` : 'New'}
                       </p>
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-4xl font-black text-orange-600">${(listing.dayPaid / 100).toLocaleString()}</p>
+                    <p className="text-4xl font-black text-orange-600">{listing.dayVotes.toLocaleString()}</p>
                     <p className="text-sm font-bold text-gray-600 mt-2">{listing.clickCount} clicks</p>
                     <a
                       href={`/api/click?id=${listing.id}`}
