@@ -9,8 +9,8 @@ interface Listing {
   title: string;
   description: string;
   category: string;
-  totalPaid: number;
-  dayPaid: number;
+  totalVotes: number;
+  dayVotes: number;
   clickCount: number;
 }
 
@@ -52,13 +52,13 @@ export default function DailyPage() {
 
   const fetchListings = async () => {
     try {
-      const res = await fetch('/api/listings/submit?sort=dayPaid&limit=100');
+      const res = await fetch('/api/listings/submit?sort=dayVotes&limit=100&timeFilter=today');
       if (!res.ok) {
         setListings([]);
         return;
       }
       const data = await res.json();
-      setListings((data.listings || []).sort((a: Listing, b: Listing) => b.dayPaid - a.dayPaid).slice(0, 50));
+      setListings((data.listings || []).sort((a: Listing, b: Listing) => b.dayVotes - a.dayVotes).slice(0, 50));
     } catch (error) {
       setListings([]);
     } finally {
@@ -72,8 +72,8 @@ export default function DailyPage() {
       <div className="min-h-screen bg-white">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Daily Rankings</h1>
-            <p className="text-gray-600 mb-4">Top ranked products for today</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Today's Top Rankings</h1>
+            <p className="text-gray-600 mb-4">Community-voted products ranking for today</p>
 
             {/* Countdown Timer */}
             <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200 rounded-lg inline-flex">
@@ -123,8 +123,8 @@ export default function DailyPage() {
                     </div>
                   </div>
                   <div className="text-right ml-6">
-                    <p className="text-2xl font-bold text-orange-600">${(listing.dayPaid / 100).toFixed(0)}</p>
-                    <p className="text-sm text-gray-500">Today</p>
+                    <p className="text-2xl font-bold text-orange-600">♥ {listing.dayVotes}</p>
+                    <p className="text-sm text-gray-500">Votes Today</p>
                   </div>
                 </a>
               ))}
