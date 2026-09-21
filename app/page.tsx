@@ -130,6 +130,7 @@ export default function Home() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeTimeFilter, setActiveTimeFilter] = useState<'alltime' | 'today'>('alltime');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -167,8 +168,9 @@ export default function Home() {
       localStorage.setItem('rankbid_voter_id', newId);
       setVoterId(newId);
     }
-    fetchListings();
-  }, [activeTimeFilter]);
+    setCurrentPage(1);
+    fetchListings(1);
+  }, [activeTimeFilter, selectedCategory]);
 
   const handleVote = useCallback(async (listingId: string) => {
     if (!voterId) {
@@ -232,7 +234,9 @@ export default function Home() {
     setLoading(true);
     try {
       const sort = activeTimeFilter === 'today' ? 'dayVotes' : 'totalVotes';
-      const res = await fetch(`/api/listings/submit?sort=${sort}&page=${page}&pageSize=15`);
+      const categoryParam = selectedCategory === 'All' ? '' : `&category=${encodeURIComponent(selectedCategory)}`;
+      const timeParam = activeTimeFilter === 'today' ? '&timeFilter=today' : '';
+      const res = await fetch(`/api/listings/submit?sort=${sort}&page=${page}&pageSize=15${categoryParam}${timeParam}`);
       if (!res.ok) {
         setListings([]);
         return;
@@ -252,7 +256,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, [activeTimeFilter]);
+  }, [activeTimeFilter, selectedCategory]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -312,7 +316,8 @@ export default function Home() {
       setFormData({ url: '', handle: '', description: '', category: '', platform: 'website' });
       setDetectedPlatform('website');
       setDetectedCategory('');
-      fetchListings();
+      setCurrentPage(1);
+      fetchListings(1);
     } catch (error: any) {
       addToast(error.message || 'Submission failed', 'error');
     } finally {
@@ -501,12 +506,12 @@ export default function Home() {
         {/* LEADERBOARD SECTION */}
         <section id="leaderboard" className="bg-white py-12 border-b-4 border-[#18181B] fade-in">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
               <div className="flex items-center gap-3">
                 <Icons.Trophy />
                 <h2 className="text-2xl font-black text-[#18181B] uppercase">Top Rankings</h2>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 {['alltime', 'today'].map(filter => (
                   <button
                     key={filter}
@@ -518,6 +523,25 @@ export default function Home() {
                     }`}
                   >
                     {filter === 'alltime' ? 'All Time' : 'Today'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-sm font-bold text-[#18181B] mb-3 uppercase">Filter by Category</p>
+              <div className="flex gap-2 flex-wrap">
+                {['All', ...CATEGORIES.map(cat => cat.value)].map(category => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-3 py-2 font-bold text-xs uppercase border-2 transition-all duration-200 hover:scale-105 ${
+                      selectedCategory === category
+                        ? 'bg-[#D97706] text-[#18181B] border-[#D97706]'
+                        : 'bg-white text-[#18181B] border-[#18181B]'
+                    }`}
+                  >
+                    {category === 'All' ? 'All Categories' : category}
                   </button>
                 ))}
               </div>
