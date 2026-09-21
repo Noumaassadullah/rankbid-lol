@@ -10,7 +10,6 @@ export interface URLMetadata {
 
 export async function extractMetadata(url: string): Promise<URLMetadata> {
   try {
-    // Detect platform from URL
     const urlObj = new URL(url);
     const hostname = urlObj.hostname.toLowerCase();
 
@@ -40,81 +39,101 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
       category = 'Technology';
     }
 
-    // Fetch metadata from the URL
-    let title = url.split('/').pop() || 'Listing';
+    const urlPath = url.split('?')[0];
+    const pathParts = urlPath.split('/').filter(p => p);
+    let handle = pathParts[pathParts.length - 1] || 'Account';
+    handle = handle.replace('@', '').replace(/\/$/, ''); // Remove @ and trailing slashes
+
+    let title = handle.charAt(0).toUpperCase() + handle.slice(1) || 'Listing';
     let description = '';
     let image: string | null = null;
     let followers: string | undefined;
     let posts: string | undefined;
 
-    try {
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
-      });
-
-      if (response.ok) {
-        const html = await response.text();
-
-        // Extract Open Graph metadata
-        const ogTitleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i);
-        const ogDescMatch = html.match(/<meta\s+property=["']og:description["']\s+content=["']([^"']+)["']/i);
-        const ogImageMatch = html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i);
-
-        // Fallback to regular meta tags
-        const metaTitleMatch = html.match(/<meta\s+name=["']title["']\s+content=["']([^"']+)["']/i);
-        const metaDescMatch = html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i);
-
-        // Extract title from h1 if no meta title
-        const h1Match = html.match(/<h1[^>]*>([^<]+)<\/h1>/i);
-
-        if (ogTitleMatch?.[1]) title = ogTitleMatch[1];
-        else if (metaTitleMatch?.[1]) title = metaTitleMatch[1];
-        else if (h1Match?.[1]) title = h1Match[1];
-
-        if (ogDescMatch?.[1]) description = ogDescMatch[1];
-        else if (metaDescMatch?.[1]) description = metaDescMatch[1];
-
-        if (ogImageMatch?.[1]) image = ogImageMatch[1];
-
-        // Extract platform-specific data for Instagram and LinkedIn
-        if (platform === 'instagram' || platform === 'linkedin') {
-          // Try to extract followers and posts from profile
-          const followersMatch = html.match(/([0-9.,K]+)\s*(?:follower|followers)/i);
-          const postsMatch = html.match(/([0-9.,K]+)\s*(?:post|posts|publication)/i);
-          if (followersMatch?.[1]) followers = followersMatch[1];
-          if (postsMatch?.[1]) posts = postsMatch[1];
-        }
-
-        // Make relative image URLs absolute
-        if (image && !image.startsWith('http')) {
-          const protocol = urlObj.protocol;
-          const host = urlObj.host;
-          image = image.startsWith('/') ? `${protocol}//${host}${image}` : `${protocol}//${host}/${image}`;
-        }
-      }
-    } catch (fetchError) {
-      console.warn('Error fetching URL metadata:', fetchError);
+    if (platform === 'instagram') {
+      title = `@${handle}`;
+      description = 'Instagram Profile';
+    } else if (platform === 'linkedin') {
+      title = `${handle}`;
+      description = 'LinkedIn Profile';
+    } else if (platform === 'tiktok') {
+      title = `@${handle}`;
+      description = 'TikTok Profile';
+    } else if (platform === 'twitter') {
+      title = `@${handle}`;
+      description = 'Twitter/X Profile';
+    } else if (platform === 'facebook') {
+      title = `${handle}`;
+      description = 'Facebook Profile';
     }
 
-    // Fallback to favicon if no image found
+    // Skip fetching metadata for social media platforms that block bots
+    const isBlockingPlatform = ['instagram', 'tiktok'].includes(platform);
+
+    if (!isBlockingPlatform) {
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          }
+        });
+
+        if (response.ok) {
+          const html = await response.text();
+
+          const ogTitleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i);
+          const ogDescMatch = html.match(/<meta\s+property=["']og:description["']\s+content=["']([^"']+)["']/i);
+          const ogImageMatch = html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i);
+
+          const metaTitleMatch = html.match(/<meta\s+name=["']title["']\s+content=["']([^"']+)["']/i);
+          const metaDescMatch = html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i);
+
+          const h1Match = html.match(/<h1[^>]*>([^<]+)<\/h1>/i);
+
+          if (ogTitleMatch?.[1]) title = ogTitleMatch[1];
+          else if (metaTitleMatch?.[1]) title = metaTitleMatch[1];
+          else if (h1Match?.[1]) title = h1Match[1];
+
+          if (ogDescMatch?.[1]) description = ogDescMatch[1];
+          else if (metaDescMatch?.[1]) description = metaDescMatch[1];
+
+          if (ogImageMatch?.[1]) image = ogImageMatch[1];
+
+          if (platform === 'instagram' || platform === 'linkedin') {
+            const followersMatch = html.match(/([0-9.,K]+)\s*(?:follower|followers)/i);
+            const postsMatch = html.match(/([0-9.,K]+)\s*(?:post|posts|publication)/i);
+            if (followersMatch?.[1]) followers = followersMatch[1];
+            if (postsMatch?.[1]) posts = postsMatch[1];
+          }
+
+          if (image && !image.startsWith('http')) {
+            const protocol = urlObj.protocol;
+            const host = urlObj.host;
+            image = image.startsWith('/') ? `${protocol}//${host}${image}` : `${protocol}//${host}/${image}`;
+          }
+        }
+      } catch (fetchError) {
+        console.warn('Error fetching URL metadata:', fetchError);
+      }
+    }
+
     if (!image) {
       image = `https://www.google.com/s2/favicons?domain=${hostname}&sz=256`;
     }
 
-    // Clean up title and description
     title = title.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').substring(0, 100);
     description = description.replace(/&amp;/g, '&').replace(/&quot;/g, '"').substring(0, 160);
 
-    // Append followers and posts info for Instagram and LinkedIn
     if ((platform === 'instagram' || platform === 'linkedin') && (followers || posts)) {
       const metaInfo = [];
+      metaInfo.push(`@${handle}`);
       if (followers) metaInfo.push(`👥 ${followers} followers`);
       if (posts) metaInfo.push(`📝 ${posts} posts`);
       if (metaInfo.length > 0) {
         description = metaInfo.join(' • ');
       }
+    } else if ((platform === 'instagram' || platform === 'linkedin' || platform === 'tiktok' || platform === 'twitter') && !followers) {
+      description = `@${handle}`;
     }
 
     return {
