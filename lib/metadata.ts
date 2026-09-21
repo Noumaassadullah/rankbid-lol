@@ -52,19 +52,19 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
 
     if (platform === 'instagram') {
       title = `@${handle}`;
-      description = 'Instagram Profile';
+      description = 'Instagram';
     } else if (platform === 'linkedin') {
       title = `${handle}`;
-      description = 'LinkedIn Profile';
+      description = 'LinkedIn';
     } else if (platform === 'tiktok') {
       title = `@${handle}`;
-      description = 'TikTok Profile';
+      description = 'TikTok';
     } else if (platform === 'twitter') {
       title = `@${handle}`;
-      description = 'Twitter/X Profile';
+      description = 'Twitter/X';
     } else if (platform === 'facebook') {
       title = `${handle}`;
-      description = 'Facebook Profile';
+      description = 'Facebook';
     }
 
     // Skip fetching metadata for social media platforms that block bots
@@ -132,8 +132,6 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
       if (metaInfo.length > 0) {
         description = metaInfo.join(' • ');
       }
-    } else if ((platform === 'instagram' || platform === 'linkedin' || platform === 'tiktok' || platform === 'twitter') && !followers) {
-      description = `@${handle}`;
     }
 
     return {
