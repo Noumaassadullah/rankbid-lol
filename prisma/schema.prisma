@@ -16,16 +16,16 @@ model Listing {
   title         String
   description   String
   url           String    @unique
-  handle        String?   // For @handles like Twitter
+  handle        String?   @map("handle")
   category      Category  @default(Other)
-  platform      String    @default("website") // "website" | "twitter" | "facebook" | "instagram" | "tiktok"
+  platform      String    @default("website") @map("platform")
 
-  totalVotes    Int       @default(0)  // All-time vote count
-  dayVotes      Int       @default(0)  // Today (rolling 24h) vote count
-  clickCount    Int       @default(0)
+  totalVotes    Int       @default(0) @map("total_votes")
+  dayVotes      Int       @default(0) @map("day_votes")
+  clickCount    Int       @default(0) @map("click_count")
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
   votes         Vote[]
   dailySnapshots DailyVoteSnapshot[]
@@ -53,13 +53,13 @@ model Vote {
 
 model DailyVoteSnapshot {
   id        String   @id @default(cuid())
-  listingId String
+  listingId String   @map("listing_id")
   listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
-  date      DateTime // UTC date (midnight)
-  votes     Int      // Vote count for that day
+  date      DateTime @map("date")
+  votes     Int      @map("votes")
 
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@unique([listingId, date])
   @@index([date])
