@@ -142,7 +142,7 @@ export default function PremiumListingCard({
 
           {/* Vote Count - Only show for Plan #1 */}
           {listing.premiumPosition === 1 && (
-            <div className="mb-4 bg-white bg-opacity-80 inline-block px-4 py-2 border-2 border-[#18181B] rounded">
+            <div className="mb-4 bg-white bg-opacity-80 inline-block px-4 py-2 border-2 border-gray-300 rounded">
               <p className="text-2xl font-black text-[#1F2937]">{listing.totalVotes}</p>
               <p className="text-xs text-[#1F2937]/60 font-semibold">Total Votes</p>
             </div>
@@ -161,7 +161,7 @@ export default function PremiumListingCard({
             className={`w-full py-3 px-4 font-black text-sm border-3 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 ${
               hasVoted
                 ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                : 'bg-white text-[#0F3460] border-[#0F3460] hover:bg-[#0F3460] hover:text-white'
+                : 'bg-white text-[#0F3460] border-[#0F3460] hover:bg-[#0F3460] text-white hover:text-white'
             }`}
           >
             <Icons.Heart />
@@ -190,7 +190,7 @@ export default function PremiumListingCard({
 
             {/* Social Links */}
             {socialLinks.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-2 border-t-2 border-[#18181B]/20">
+              <div className="flex flex-wrap gap-2 pt-2 border-t-2 border-gray-300/20">
                 {socialLinks.map((link, idx) => (
                   <a
                     key={idx}

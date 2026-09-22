@@ -22,7 +22,7 @@ export default function FAQ({ question, answer }: FAQProps) {
         </span>
       </button>
       {isOpen && (
-        <div className="px-6 py-4 border-t-3 border-[#18181B] bg-[#F5F5F4]">
+        <div className="px-6 py-4 border-t-3 border-gray-300 bg-[#F5F5F4]">
           <p className="text-[#1F2937] leading-relaxed">{answer}</p>
         </div>
       )}

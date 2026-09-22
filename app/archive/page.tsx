@@ -91,7 +91,7 @@ export default function ArchivePage() {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               {/* Date Selector */}
               <div className="lg:col-span-1">
-                <div className="sticky top-20 bg-gray-50 p-4 border-3 border-[#18181B] max-h-[600px] overflow-y-auto">
+                <div className="sticky top-20 bg-gray-50 p-4 border-3 border-gray-300 max-h-[600px] overflow-y-auto">
                   <h3 className="font-black text-[#1F2937] mb-4 uppercase text-sm">Select Date</h3>
                   <div className="space-y-2">
                     {snapshots.map((snapshot) => (
@@ -101,7 +101,7 @@ export default function ArchivePage() {
                         className={`w-full text-left px-4 py-3 transition-all text-sm font-bold border-2 uppercase ${
                           selectedDate === snapshot.date
                             ? 'bg-[#0F3460] text-white border-[#0F3460]'
-                            : 'text-[#1F2937] border-[#18181B] hover:bg-gray-50'
+                            : 'text-[#1F2937] border-gray-300 hover:bg-gray-50'
                         }`}
                       >
                         {formatDate(snapshot.date)}
@@ -119,12 +119,12 @@ export default function ArchivePage() {
                     <p className="text-[#1F2937]/60 font-semibold mt-2">Loading archives...</p>
                   </div>
                 ) : !selectedSnapshot || selectedSnapshot.listings.length === 0 ? (
-                  <div className="text-center py-12 border-[#18181B] border-4 bg-gray-50">
+                  <div className="text-center py-12 border-gray-300 border-4 bg-gray-50">
                     <p className="text-sm font-bold text-[#1F2937]">No rankings for this date</p>
                   </div>
                 ) : (
                   <>
-                    <div className="mb-6 p-6 bg-gray-50 border-3 border-[#18181B]">
+                    <div className="mb-6 p-6 bg-gray-50 border-3 border-gray-300">
                       <p className="text-sm font-black text-[#1F2937] uppercase">
                         Archive Date: {formatDate(selectedSnapshot.date)}
                       </p>
@@ -137,10 +137,10 @@ export default function ArchivePage() {
                           href={listing.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
+                          className="flex items-center justify-between p-4 bg-white border-gray-300 border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
                         >
                           <div className="flex items-center gap-4 flex-1">
-                            <div className="w-10 h-10 bg-[#0F3460] text-[#1F2937] font-black rounded-lg flex items-center justify-center text-sm">
+                            <div className="w-10 h-10 bg-[#0F3460] text-white font-black rounded-lg flex items-center justify-center text-sm">
                               #{idx + 1}
                             </div>
                             <div className="flex-1 min-w-0">

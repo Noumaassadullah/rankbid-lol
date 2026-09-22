@@ -58,7 +58,7 @@ export default function CategoriesPage() {
         </section>
 
         {/* Category Selector */}
-        <section className="bg-gray-50 py-6 border-b-3 border-[#18181B]">
+        <section className="bg-gray-50 py-6 border-b-3 border-gray-300">
           <div className="max-w-6xl mx-auto px-6">
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map(cat => (
@@ -68,7 +68,7 @@ export default function CategoriesPage() {
                   className={`px-4 py-2 font-bold text-xs uppercase border-3 transition-all ${
                     selectedCategory === cat
                       ? 'bg-[#0F3460] text-white border-[#0F3460]'
-                      : 'bg-white text-[#1F2937] border-[#18181B] hover:bg-[#0F3460]/10'
+                      : 'bg-white text-[#1F2937] border-gray-300 hover:bg-[#0F3460]/10'
                   }`}
                 >
                   {cat}
@@ -94,11 +94,11 @@ export default function CategoriesPage() {
                 <p className="text-[#1F2937]/60 font-semibold mt-2">Loading products...</p>
               </div>
             ) : categoryListings.length === 0 ? (
-              <div className="text-center py-12 border-[#18181B] border-4 bg-gray-50">
+              <div className="text-center py-12 border-gray-300 border-4 bg-gray-50">
                 <p className="text-sm font-bold text-[#1F2937] mb-4">No products yet in {selectedCategory}</p>
                 <button
                   onClick={() => window.location.href = '/'}
-                  className="px-6 py-2 bg-[#0F3460] text-[#1F2937] font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
+                  className="px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
                 >
                   Submit a Product
                 </button>
@@ -111,10 +111,10 @@ export default function CategoriesPage() {
                     href={listing.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
+                    className="flex items-center justify-between p-4 bg-white border-gray-300 border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
                   >
                     <div className="flex items-center gap-4 flex-1">
-                      <div className="w-10 h-10 bg-[#0F3460] text-[#1F2937] font-black rounded-lg flex items-center justify-center text-sm">
+                      <div className="w-10 h-10 bg-[#0F3460] text-white font-black rounded-lg flex items-center justify-center text-sm">
                         #{idx + 1}
                       </div>
                       <div className="flex-1 min-w-0">

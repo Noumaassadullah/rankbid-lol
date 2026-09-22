@@ -34,10 +34,10 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white text-[#1F2937] border-t-4 border-[#18181B]">
+    <footer className="bg-white text-[#1F2937] border-t-4 border-gray-300">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b-3 border-[#18181B]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b-3 border-gray-300">
           {/* Brand */}
           <div>
             <h3 className="text-sm font-black text-[#1F2937] mb-3 uppercase tracking-wider">RankBid</h3>
@@ -109,7 +109,7 @@ export default function Footer() {
             </p>
             <a
               href="mailto:support@rankbid.pk"
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-[#1F2937] font-bold text-xs uppercase border-2 border-[#18181B] hover:bg-[#18181B] hover:text-[#FFB28F] transition-all"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-[#1F2937] font-bold text-xs uppercase border-2 border-gray-300 hover:bg-[#18181B] hover:text-[#FFB28F] transition-all"
             >
               <Icons.Mail />
               Email

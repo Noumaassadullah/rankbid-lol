@@ -139,7 +139,7 @@ export default function PremiumListingModal({
                   className={`p-4 border-3 transition-all duration-200 hover:scale-105 ${
                     position === pos
                       ? 'bg-[#0F3460] border-[#0F3460] text-[#1F2937]'
-                      : 'bg-white border-[#18181B] text-[#1F2937] hover:bg-blue-100'
+                      : 'bg-white border-gray-300 text-[#1F2937] hover:bg-blue-100'
                   }`}
                 >
                   <p className="text-2xl font-black">#{pos}</p>
@@ -153,7 +153,7 @@ export default function PremiumListingModal({
           </div>
 
           {/* Founder Information */}
-          <div className="border-t-4 border-[#18181B] pt-6">
+          <div className="border-t-4 border-gray-300 pt-6">
             <h3 className="text-lg font-black text-[#1F2937] mb-4 uppercase">Founder Information</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -198,7 +198,7 @@ export default function PremiumListingModal({
 
           {/* Social Accounts */}
           {position !== 3 && (
-            <div className="border-t-4 border-[#18181B] pt-6">
+            <div className="border-t-4 border-gray-300 pt-6">
               <h3 className="text-lg font-black text-[#1F2937] mb-4 uppercase">Social Accounts</h3>
               <p className="text-xs text-[#1F2937]/60 font-semibold mb-4">
                 {position === 1 ? 'Add up to 4 social profiles to be displayed on your premium listing' : 'Add 1 social profile to be displayed on your premium listing'}
@@ -229,7 +229,7 @@ export default function PremiumListingModal({
                         value={formData[field.name as keyof typeof formData]}
                         onChange={handleChange}
                         placeholder={field.placeholder}
-                        className="w-full px-4 py-3 border-2 border-[#18181B] bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="w-full px-4 py-3 border-2 border-gray-300 bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                       />
                     </div>
                   );
@@ -239,7 +239,7 @@ export default function PremiumListingModal({
           )}
 
           {/* Payment Info */}
-          <div className="bg-gray-50 border-2 border-[#18181B] p-4">
+          <div className="bg-gray-50 border-2 border-gray-300 p-4">
             <p className="font-bold text-[#1F2937] mb-2">Payment Method: Manual Verification</p>
             <p className="text-sm text-[#1F2937]/70">
               After submission, an admin will verify your payment of <span className="font-black">${price}</span> and activate your premium listing. You'll receive a confirmation email.
@@ -251,14 +251,14 @@ export default function PremiumListingModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-4 bg-white text-[#1F2937] font-black uppercase text-sm border-[#18181B] border-3 hover:scale-105 active:scale-95 transition-all duration-200"
+              className="flex-1 px-6 py-4 bg-white text-[#1F2937] font-black uppercase text-sm border-gray-300 border-3 hover:scale-105 active:scale-95 transition-all duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-4 bg-[#0F3460] text-[#1F2937] font-black uppercase text-sm border-[#0F3460] border-3 hover:scale-105 active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-4 bg-[#0F3460] text-white font-black uppercase text-sm border-[#0F3460] border-3 hover:scale-105 active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

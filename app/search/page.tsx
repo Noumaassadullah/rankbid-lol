@@ -72,7 +72,7 @@ function SearchContent() {
             <p className="text-[#1F2937]/60 font-semibold mt-2">Searching products...</p>
           </div>
         ) : results.length === 0 ? (
-          <div className="text-center py-16 border-[#18181B] border-4 bg-gray-50">
+          <div className="text-center py-16 border-gray-300 border-4 bg-gray-50">
             <h2 className="text-2xl font-black text-[#1F2937] mb-2 uppercase">
               {query ? 'No products found' : 'Start Searching'}
             </h2>
@@ -83,7 +83,7 @@ function SearchContent() {
             </p>
             <button
               onClick={() => window.location.href = '/'}
-              className="inline-block px-6 py-2 bg-[#0F3460] text-[#1F2937] font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all"
+              className="inline-block px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all"
             >
               Browse All Products
             </button>
@@ -100,13 +100,13 @@ function SearchContent() {
                   href={listing.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
+                  className="flex items-center justify-between p-4 bg-white border-gray-300 border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-[#1F2937] truncate">{listing.title}</p>
                     <p className="text-xs text-[#1F2937]/60 mt-1 truncate">{listing.description}</p>
                     <div className="flex gap-3 mt-2 text-xs">
-                      <span className="px-2 py-1 bg-gray-50 text-[#1F2937] border-2 border-[#18181B] font-bold">
+                      <span className="px-2 py-1 bg-gray-50 text-[#1F2937] border-2 border-gray-300 font-bold">
                         {listing.category}
                       </span>
                     </div>
