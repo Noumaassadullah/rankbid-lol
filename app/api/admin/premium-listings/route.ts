@@ -18,8 +18,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get('status') || 'pending';
 
-    const result = await query(
-      `SELECT
+    let query_str = `SELECT
         pl.*,
         l.title as listing_title,
         l.description as listing_description,
@@ -27,11 +26,18 @@ export async function GET(req: NextRequest) {
         l.total_votes,
         l.day_votes
       FROM premium_listings pl
-      JOIN listings l ON pl.listing_id = l.id
-      WHERE pl.payment_status = $1
-      ORDER BY pl.created_at DESC`,
-      [status]
-    );
+      JOIN listings l ON pl.listing_id = l.id`;
+
+    const params: any[] = [];
+
+    if (status) {
+      query_str += ` WHERE pl.payment_status = $1`;
+      params.push(status);
+    }
+
+    query_str += ` ORDER BY pl.created_at DESC`;
+
+    const result = await query(query_str, params);
 
     return NextResponse.json({
       premiumListings: result.rows

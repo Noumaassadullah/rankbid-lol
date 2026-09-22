@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp, LogOut } from 'lucide-react';
+import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp, LogOut, Shield } from 'lucide-react';
 
 const CATEGORIES = [
   { name: 'All', Icon: Grid3x3 },
@@ -134,21 +134,8 @@ export default function Header() {
               <span>{stats.allTimeVisitors}K VIEWS</span>
             </div>
 
-            {/* Right Actions */}
-            <div className="flex items-center gap-2 md:gap-4">
-              {/* Auth Buttons */}
-              {user ? (
-                <Link
-                  href="/profile"
-                  className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-sm hover:shadow-md transition-all"
-                  title={user.name || user.email}
-                >
-                  {(user.name || user.email).charAt(0).toUpperCase()}
-                </Link>
-              ) : null}
-
-              {/* Desktop Nav */}
-              <nav className="hidden lg:flex items-center gap-4 md:gap-8">
+            {/* Desktop Nav */}
+            <nav className="hidden lg:flex items-center gap-4 md:gap-8 flex-1">
                 <Link href="/platforms" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors flex items-center gap-1">
                   <TrendingUp className="w-4 h-4" />
                   Platforms
@@ -168,7 +155,24 @@ export default function Header() {
                 <Link href="/about" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
                   About
                 </Link>
+                {user && (
+                  <Link href="/admin" className="text-xs md:text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1 border border-purple-200 px-2 py-1 rounded-lg hover:bg-purple-50">
+                    <Shield className="w-4 h-4" />
+                    Admin
+                  </Link>
+                )}
               </nav>
+
+              {/* Profile Avatar - Far Right */}
+              {user ? (
+                <Link
+                  href="/profile"
+                  className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-sm hover:shadow-md transition-all"
+                  title={user.name || user.email}
+                >
+                  {(user.name || user.email).charAt(0).toUpperCase()}
+                </Link>
+              ) : null}
 
               {/* Search */}
               <button
@@ -182,15 +186,6 @@ export default function Header() {
               >
                 <Search className="w-4 h-4 md:w-5 md:h-5" />
               </button>
-
-              {/* Dark Mode Toggle */}
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className="p-1.5 md:p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg"
-              >
-                {darkMode ? <Sun className="w-4 h-4 md:w-5 md:h-5" /> : <Moon className="w-4 h-4 md:w-5 md:h-5" />}
-              </button>
-            </div>
           </div>
 
           {/* Mobile Menu */}
@@ -203,13 +198,23 @@ export default function Header() {
 
               {/* Mobile Auth Buttons */}
               {user ? (
-                <Link
-                  href="/profile"
-                  className="block px-2 py-1 text-xs md:text-sm font-medium text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  My Profile
-                </Link>
+                <>
+                  <Link
+                    href="/profile"
+                    className="block px-2 py-1 text-xs md:text-sm font-medium text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    href="/admin"
+                    className="block px-2 py-1 text-xs md:text-sm font-medium text-purple-600 hover:bg-purple-50 rounded-lg transition-colors flex items-center gap-1"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <Shield className="w-4 h-4" />
+                    Admin Dashboard
+                  </Link>
+                </>
               ) : null}
 
               <Link href="/platforms" className="flex items-center gap-2 text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
