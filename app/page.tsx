@@ -824,7 +824,7 @@ export default function Home() {
                     </div>
                   )}
 
-                  <div>
+                  <div className={idx === 0 ? 'mt-12 md:mt-14' : ''}>
                     <div className="mb-3 md:mb-4">
                       <div className={`text-3xl md:text-4xl font-black ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
                         {plan.price}
