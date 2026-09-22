@@ -3,10 +3,81 @@ import { extractMetadata } from '@/lib/metadata';
 import { query } from '@/lib/db';
 import { extractSocialHandle, formatSocialMediaUrl, isSocialMediaUrl } from '@/lib/social-utils';
 
-async function isURLAccessible(url: string): Promise<boolean> {
-  // Skip accessibility check for social media platforms (they block automated requests)
+async function verifySocialMediaAccount(url: string): Promise<boolean> {
+  // Verify social media accounts actually exist
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const response = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      },
+    });
+
+    clearTimeout(timeout);
+
+    // 404 means account doesn't exist
+    if (response.status === 404) {
+      return false;
+    }
+
+    // 410 Gone means account was deleted
+    if (response.status === 410) {
+      return false;
+    }
+
+    // 451 Unavailable for Legal Reasons (banned/suspended)
+    if (response.status === 451) {
+      return false;
+    }
+
+    // 429 Too Many Requests - might be temp, but we should reject
+    if (response.status === 429) {
+      return false;
+    }
+
+    // 403 Forbidden - private or blocked
+    if (response.status === 403) {
+      return false;
+    }
+
+    // Check for common "user not found" patterns in response
+    if (response.status === 200) {
+      const text = await response.text();
+      const notFoundPatterns = [
+        'user not found',
+        'page not found',
+        'account not found',
+        'does not exist',
+        'no longer exists',
+        'been deleted',
+        'been suspended',
+        'been banned',
+        'this account is suspended',
+        'this page is not available',
+      ];
+
+      const lowerText = text.toLowerCase();
+      if (notFoundPatterns.some(pattern => lowerText.includes(pattern))) {
+        return false;
+      }
+    }
+
+    return response.status >= 200 && response.status < 400;
+  } catch {
+    return false;
+  }
+}
+
+async function isURLAccessible(url: string, platform?: string): Promise<boolean> {
+  // Verify social media accounts with stricter checks
   if (isSocialMediaUrl(url)) {
-    return true;
+    return verifySocialMediaAccount(url);
   }
 
   try {
@@ -185,6 +256,44 @@ export async function POST(req: NextRequest) {
         { error: 'Website must have a proper title. Please check that the URL is valid.' },
         { status: 400 }
       );
+    }
+
+    // Strict validation for social media accounts
+    if (isSocialMediaUrl(normalizedUrl)) {
+      // Social media account must have valid title (username/handle)
+      if (!metaTitle || metaTitle.length < 2) {
+        return NextResponse.json(
+          { error: 'Social media account does not exist or is not accessible. Please verify the profile URL.' },
+          { status: 400 }
+        );
+      }
+
+      // Reject suspicious/empty social media profiles
+      if (metaTitle.toLowerCase().includes('not found') ||
+          metaTitle.toLowerCase().includes('deleted') ||
+          metaTitle.toLowerCase().includes('suspended') ||
+          metaTitle.toLowerCase().includes('unavailable')) {
+        return NextResponse.json(
+          { error: 'Social media account is deleted, suspended, or unavailable.' },
+          { status: 400 }
+        );
+      }
+
+      // Profile should have description/bio
+      if (!metaDescription || metaDescription === normalizedUrl || metaDescription.length < 2) {
+        return NextResponse.json(
+          { error: 'Social media profile appears to be empty or fake. Ensure the profile is real and has a bio.' },
+          { status: 400 }
+        );
+      }
+
+      // For social media, we should have a profile image
+      if (!imageUrl) {
+        return NextResponse.json(
+          { error: 'Social media profile could not be verified. Please ensure the profile is real and publicly accessible.' },
+          { status: 400 }
+        );
+      }
     }
 
     const insertResponse = await fetch(`${supabaseUrl}/rest/v1/listings`, {
