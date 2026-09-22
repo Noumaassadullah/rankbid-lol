@@ -869,7 +869,7 @@ export default function Home() {
                         : 'bg-[#D97706] text-[#18181B] border-[#D97706]'
                     }`}
                   >
-                    Choose Plan #{plan.position}
+                    Get {plan.title}
                   </button>
                 </div>
               ))}
