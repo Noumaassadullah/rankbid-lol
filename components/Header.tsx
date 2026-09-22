@@ -195,11 +195,12 @@ export default function Header() {
           {CATEGORIES.map((cat) => {
             const Icon = cat.Icon;
             const isAll = cat.name === 'All';
+            const href = isAll ? '/' : `/categories?category=${encodeURIComponent(cat.name)}`;
 
             return (
               <Link
                 key={cat.name}
-                href="/categories"
+                href={href}
                 className={`flex-shrink-0 px-3 py-2 font-black text-xs uppercase tracking-wider border-3 whitespace-nowrap transition-all flex items-center gap-2 ${
                   isAll
                     ? 'bg-[#FFB28F] text-[#18181B] border-[#18181B]'
