@@ -72,6 +72,7 @@ const CATEGORIES = [
 const PLATFORMS = [
   { id: 'website', label: 'Website' },
   { id: 'twitter', label: 'Twitter/X' },
+  { id: 'linkedin', label: 'LinkedIn' },
   { id: 'facebook', label: 'Facebook' },
   { id: 'instagram', label: 'Instagram' },
   { id: 'tiktok', label: 'TikTok' }
@@ -547,6 +548,7 @@ export default function Home() {
                       {formData.platform === 'facebook' && 'e.g., facebook.com/yourpage or just yourpage'}
                       {formData.platform === 'instagram' && 'e.g., instagram.com/username or just @username'}
                       {formData.platform === 'tiktok' && 'e.g., tiktok.com/@username or just @username'}
+                      {formData.platform === 'linkedin' && 'e.g., linkedin.com/in/yourprofile or just yourprofile'}
                       {['twitter', 'x'].includes(formData.platform) && 'e.g., twitter.com/username or just @username'}
                     </p>
                   )}
