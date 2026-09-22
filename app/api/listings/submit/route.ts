@@ -4,7 +4,6 @@ import { query } from '@/lib/db';
 import { extractSocialHandle, formatSocialMediaUrl, isSocialMediaUrl } from '@/lib/social-utils';
 
 async function verifySocialMediaAccount(url: string): Promise<boolean> {
-  // Verify social media accounts actually exist
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
@@ -20,48 +19,13 @@ async function verifySocialMediaAccount(url: string): Promise<boolean> {
     });
 
     clearTimeout(timeout);
-
-    // 404 means account doesn't exist
-    if (response.status === 404) {
+    if (response.status === 404 || response.status === 410 || response.status === 451 || response.status === 429 || response.status === 403) {
       return false;
     }
 
-    // 410 Gone means account was deleted
-    if (response.status === 410) {
-      return false;
-    }
-
-    // 451 Unavailable for Legal Reasons (banned/suspended)
-    if (response.status === 451) {
-      return false;
-    }
-
-    // 429 Too Many Requests - might be temp, but we should reject
-    if (response.status === 429) {
-      return false;
-    }
-
-    // 403 Forbidden - private or blocked
-    if (response.status === 403) {
-      return false;
-    }
-
-    // Check for common "user not found" patterns in response
     if (response.status === 200) {
       const text = await response.text();
-      const notFoundPatterns = [
-        'user not found',
-        'page not found',
-        'account not found',
-        'does not exist',
-        'no longer exists',
-        'been deleted',
-        'been suspended',
-        'been banned',
-        'this account is suspended',
-        'this page is not available',
-      ];
-
+      const notFoundPatterns = ['user not found', 'page not found', 'account not found', 'does not exist', 'no longer exists', 'been deleted', 'been suspended', 'been banned', 'this account is suspended', 'this page is not available'];
       const lowerText = text.toLowerCase();
       if (notFoundPatterns.some(pattern => lowerText.includes(pattern))) {
         return false;
@@ -75,7 +39,6 @@ async function verifySocialMediaAccount(url: string): Promise<boolean> {
 }
 
 async function isURLAccessible(url: string, platform?: string): Promise<boolean> {
-  // Verify social media accounts with stricter checks
   if (isSocialMediaUrl(url)) {
     return verifySocialMediaAccount(url);
   }
@@ -124,7 +87,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // For social platforms, require full URL - no usernames/handles allowed
     if (['facebook', 'instagram', 'tiktok', 'twitter', 'x', 'linkedin'].includes(platform) && url && !url.startsWith('http')) {
       return NextResponse.json(
         { error: `Please enter the full profile URL for ${platform}. Example: https://${platform}.com/username`, listings: [] },
@@ -152,12 +114,10 @@ export async function POST(req: NextRequest) {
     let normalizedUrl = url || getPlatformUrl(platform, handle);
     let displayHandle = handle;
 
-    // Ensure URL has protocol and extract handle for social platforms
     if (normalizedUrl && !normalizedUrl.startsWith('http')) {
       normalizedUrl = `https://${normalizedUrl}`;
     }
 
-    // Extract social media handle from URL
     if (['facebook', 'instagram', 'tiktok', 'twitter', 'x'].includes(platform)) {
       const extracted = extractSocialHandle(normalizedUrl, platform);
       if (extracted) {
@@ -165,7 +125,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Check if listing already exists (by location field where URLs are stored)
     const checkResponse = await fetch(
       `${supabaseUrl}/rest/v1/listings?location=eq.${encodeURIComponent(normalizedUrl)}&select=id`,
       {
@@ -186,7 +145,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Check if URL is accessible
     const isAccessible = await isURLAccessible(normalizedUrl);
     if (!isAccessible) {
       return NextResponse.json(
@@ -195,7 +153,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create new listing with UUID format
     const generateUUID = () => {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         const r = Math.random() * 16 | 0;
@@ -207,13 +164,10 @@ export async function POST(req: NextRequest) {
     const id = generateUUID();
     const now = new Date().toISOString();
 
-    // Fetch metadata to get website title, description, image, and platform-specific data
     let imageUrl: string | null = null;
     let metaTitle = normalizedUrl;
     let metaDescription = description || normalizedUrl;
     let metaPlatform = platform || 'website';
-    let metaFollowers: string | null = null;
-    let metaPosts: string | null = null;
 
     try {
       const metadata = await extractMetadata(normalizedUrl);
@@ -221,10 +175,7 @@ export async function POST(req: NextRequest) {
       metaTitle = metadata.title || normalizedUrl;
       metaDescription = metadata.description || metaDescription;
       metaPlatform = metadata.platform || platform || 'website';
-      metaFollowers = metadata.followers || null;
-      metaPosts = metadata.posts || null;
 
-      // Validate metadata extraction for websites (not social media)
       if (platform === 'website' || !isSocialMediaUrl(normalizedUrl)) {
         if (!metadata.title || metadata.title.length < 3) {
           return NextResponse.json(
@@ -247,7 +198,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Reject spam indicators
     const titleLower = metaTitle.toLowerCase();
     const descLower = metaDescription.toLowerCase();
     const spamKeywords = ['viagra', 'casino', 'lottery', 'prize', 'click here', 'buy now'];
@@ -258,7 +208,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Reject if title is just the URL
     if (metaTitle === normalizedUrl || metaTitle.includes('https://') || metaTitle.includes('http://')) {
       return NextResponse.json(
         { error: 'Website must have a proper title. Please check that the URL is valid.' },
@@ -266,9 +215,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Strict validation for social media accounts
     if (isSocialMediaUrl(normalizedUrl)) {
-      // Social media account must have valid title (username/handle)
       if (!metaTitle || metaTitle.length < 2) {
         return NextResponse.json(
           { error: 'Social media account does not exist or is not accessible. Please verify the profile URL.' },
@@ -276,18 +223,13 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Reject suspicious/empty social media profiles
-      if (metaTitle.toLowerCase().includes('not found') ||
-          metaTitle.toLowerCase().includes('deleted') ||
-          metaTitle.toLowerCase().includes('suspended') ||
-          metaTitle.toLowerCase().includes('unavailable')) {
+      if (metaTitle.toLowerCase().includes('not found') || metaTitle.toLowerCase().includes('deleted') || metaTitle.toLowerCase().includes('suspended') || metaTitle.toLowerCase().includes('unavailable')) {
         return NextResponse.json(
           { error: 'Social media account is deleted, suspended, or unavailable.' },
           { status: 400 }
         );
       }
 
-      // Profile should have description/bio
       if (!metaDescription || metaDescription === normalizedUrl || metaDescription.length < 2) {
         return NextResponse.json(
           { error: 'Social media profile appears to be empty or fake. Ensure the profile is real and has a bio.' },
@@ -295,7 +237,6 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // For social media, we should have a profile image
       if (!imageUrl) {
         return NextResponse.json(
           { error: 'Social media profile could not be verified. Please ensure the profile is real and publicly accessible.' },
@@ -363,7 +304,6 @@ export async function POST(req: NextRequest) {
 }
 
 function getPlatformUrl(platform: string, handle: string | undefined): string {
-  // If handle is already a full URL, return it as-is
   if (handle && (handle.startsWith('http://') || handle.startsWith('https://'))) {
     return handle;
   }
@@ -388,110 +328,98 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const pageSize = parseInt(searchParams.get('pageSize') || '15');
     const sort = searchParams.get('sort') || 'totalVotes';
-    const searchQuery = searchParams.get('search') || '';
     const category = searchParams.get('category') || '';
-    const timeFilter = searchParams.get('timeFilter') || 'alltime';
-    const platforms = searchParams.getAll('platform') || [];
 
-    // Build WHERE clause based on filters
-    let whereConditions = [];
-    let params: any[] = [];
-    let paramIndex = 1;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    // Search filter
-    if (searchQuery) {
-      whereConditions.push(`(title ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`);
-      params.push(`%${searchQuery}%`);
-      paramIndex++;
+    if (!supabaseUrl || !supabaseKey) {
+      return NextResponse.json(
+        { listings: [], listing: null, error: 'Database not configured' },
+        { status: 500 }
+      );
     }
 
-    // Category filter
-    if (category && category !== 'All') {
-      whereConditions.push(`category = $${paramIndex}`);
-      params.push(category);
-      paramIndex++;
-    }
-
-    // Platform filter
-    if (platforms.length > 0) {
-      const platformPlaceholders = platforms.map(() => `$${paramIndex++}`).join(',');
-      whereConditions.push(`platform IN (${platformPlaceholders})`);
-      params.push(...platforms);
-    }
-
-    // Time filter
-    if (timeFilter === 'today') {
-      whereConditions.push(`created_at >= NOW() - INTERVAL '24 hours'`);
-    } else if (timeFilter === 'weekly') {
-      whereConditions.push(`created_at >= NOW() - INTERVAL '7 days'`);
-    } else if (timeFilter === 'monthly') {
-      whereConditions.push(`created_at >= NOW() - INTERVAL '30 days'`);
-    }
-
-    const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
-
-    // Get total count for pagination
-    const countSql = `SELECT COUNT(*) as total FROM listings ${whereClause}`;
-    const countResult = await query(countSql, params);
-    const total = parseInt(countResult.rows[0]?.total || '0');
-    const totalPages = Math.ceil(total / pageSize);
-
-    // Calculate offset for pagination
+    const orderColumn = sort === 'dayVotes' ? 'day_votes' : 'total_votes';
     const offset = (page - 1) * pageSize;
 
-    // Fetch listings from PostgreSQL with vote counts
-    const orderColumn = sort === 'dayVotes' ? 'day_votes' : 'total_votes';
-    const sql = `
-      SELECT *
-      FROM listings
-      ${whereClause}
-      ORDER BY ${orderColumn} DESC
-      LIMIT ${pageSize} OFFSET ${offset}
-    `;
+    let queryUrl = `${supabaseUrl}/rest/v1/listings?order=${orderColumn}.desc&limit=${pageSize}&offset=${offset}`;
 
-    const result = await query(sql, params);
+    if (category && category !== 'All') {
+      queryUrl += `&category=eq.${encodeURIComponent(category)}`;
+    }
 
-    // Map database schema to expected schema
-    const listings = result.rows.map((item: any) => ({
+    const response = await fetch(queryUrl, {
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+      },
+    });
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { listings: [], listing: null, error: 'Failed to fetch listings' },
+        { status: 500 }
+      );
+    }
+
+    const listings = await response.json();
+
+    const mappedListings = listings.map((item: any) => ({
       id: item.id,
       title: item.title,
       description: item.description,
-      url: item.location || item.url,
+      url: item.location,
+      handle: item.handle,
       category: item.category || 'Other',
       platform: item.platform || 'website',
       totalVotes: item.total_votes || 0,
       dayVotes: item.day_votes || 0,
-      clickCount: item.click_count || 0,
+      clickCount: item.views || 0,
       createdAt: item.created_at,
       updatedAt: item.updated_at || item.created_at,
       imageUrl: item.image_url || null,
       isPremium: false,
       premiumPosition: null,
-      founderName: item.founder_name || null,
-      founderEmail: item.founder_email || null,
-      founderPhone: item.founder_phone || null,
-      founderWebsite: item.founder_website || null,
-      founderTwitter: item.founder_twitter || null,
-      founderLinkedin: item.founder_linkedin || null,
-      founderInstagram: item.founder_instagram || null,
-      founderFacebook: item.founder_facebook || null,
-      founderTiktok: item.founder_tiktok || null,
-      founderYoutube: item.founder_youtube || null,
-      founderGithub: item.founder_github || null,
     }));
 
-    return NextResponse.json({ listings, listing: null, pagination: { page, pageSize, total, totalPages } }, {
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-      },
-    });
+    const countResponse = await fetch(
+      `${supabaseUrl}/rest/v1/listings?select=count()`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'count=exact',
+        },
+      }
+    );
+
+    let total = 0;
+    if (countResponse.ok) {
+      const countHeader = countResponse.headers.get('content-range');
+      if (countHeader) {
+        const totalStr = countHeader.split('/')[1];
+        total = parseInt(totalStr) || 0;
+      }
+    }
+
+    const totalPages = Math.ceil(total / pageSize);
+
+    return NextResponse.json(
+      { listings: mappedListings, listing: null, pagination: { page, pageSize, total, totalPages } },
+      {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    );
   } catch (error) {
     console.error('GET error:', error);
     return NextResponse.json(
       { listings: [], listing: null, error: 'Database error' },
-      { status: 200 }
+      { status: 500 }
     );
   }
 }
