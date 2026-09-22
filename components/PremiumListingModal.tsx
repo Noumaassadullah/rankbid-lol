@@ -136,14 +136,18 @@ export default function PremiumListingModal({
                   key={pos}
                   type="button"
                   onClick={() => setPosition(pos)}
-                  className={`py-3 px-3 rounded-lg transition-all duration-200 ${
+                  className={`py-3 px-3 rounded-lg transition-all duration-200 group ${
                     position === pos
-                      ? 'bg-[#0F3460] text-white shadow-md ring-2 ring-[#0F3460] ring-offset-2'
-                      : 'bg-white border border-gray-300 text-[#1F2937] hover:bg-gray-50'
+                      ? 'bg-[#0F3460] shadow-md ring-2 ring-[#0F3460] ring-offset-2'
+                      : 'bg-white border border-gray-300 hover:bg-blue-50'
                   }`}
                 >
-                  <p className="text-xl font-bold">#{pos}</p>
-                  <p className="text-sm font-semibold text-[#0F3460] mt-1">${PRICES[pos]}</p>
+                  <p className={`text-xl font-bold ${position === pos ? 'text-white' : 'text-[#1F2937]'}`}>#{pos}</p>
+                  <p className={`text-sm font-semibold mt-1 transition-colors ${
+                    position === pos
+                      ? 'text-white'
+                      : 'text-[#0F3460] group-hover:text-white'
+                  }`}>${PRICES[pos]}</p>
                 </button>
               ))}
             </div>
