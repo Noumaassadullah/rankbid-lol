@@ -78,6 +78,16 @@ export default function PremiumListingCard({
 }: PremiumListingCardProps) {
   const getSocialLinks = (): SocialLink[] => {
     const links: SocialLink[] = [];
+    const position = listing.premiumPosition || 1;
+
+    // Plan #1: All 8 socials
+    // Plan #2: Only 1 social (first one available)
+    // Plan #3: No socials
+
+    if (position === 3) {
+      return []; // Plan #3: No social accounts
+    }
+
     if (listing.founderWebsite) links.push({ icon: 'globe', label: 'Website', url: listing.founderWebsite });
     if (listing.founderTwitter) links.push({ icon: 'twitter', label: 'Twitter', url: `https://twitter.com/${listing.founderTwitter.replace('@', '')}` });
     if (listing.founderLinkedin) links.push({ icon: 'linkedin', label: 'LinkedIn', url: listing.founderLinkedin });
@@ -86,6 +96,12 @@ export default function PremiumListingCard({
     if (listing.founderTiktok) links.push({ icon: 'tiktok', label: 'TikTok', url: `https://tiktok.com/@${listing.founderTiktok.replace('@', '')}` });
     if (listing.founderYoutube) links.push({ icon: 'youtube', label: 'YouTube', url: listing.founderYoutube });
     if (listing.founderGithub) links.push({ icon: 'github', label: 'GitHub', url: `https://github.com/${listing.founderGithub.replace('@', '')}` });
+
+    // Plan #2: Only show 1 social
+    if (position === 2 && links.length > 1) {
+      return [links[0]];
+    }
+
     return links;
   };
 
@@ -119,11 +135,13 @@ export default function PremiumListingCard({
             </div>
           </div>
 
-          {/* Vote Count */}
-          <div className="mb-4 bg-white bg-opacity-80 inline-block px-4 py-2 border-2 border-[#18181B] rounded">
-            <p className="text-2xl font-black text-[#18181B]">{listing.totalVotes}</p>
-            <p className="text-xs text-[#18181B]/60 font-semibold">Total Votes</p>
-          </div>
+          {/* Vote Count - Only show for Plan #1 */}
+          {listing.premiumPosition === 1 && (
+            <div className="mb-4 bg-white bg-opacity-80 inline-block px-4 py-2 border-2 border-[#18181B] rounded">
+              <p className="text-2xl font-black text-[#18181B]">{listing.totalVotes}</p>
+              <p className="text-xs text-[#18181B]/60 font-semibold">Total Votes</p>
+            </div>
+          )}
         </div>
 
         {/* Right: Founder Info & Vote Button */}

@@ -778,10 +778,10 @@ export default function Home() {
                 {
                   position: '1',
                   price: '$5',
-                  title: '#1 Position',
+                  title: 'Top Position',
                   description: 'Top spot on the leaderboard',
                   features: [
-                    'PREMIUM #1 badge',
+                    'PREMIUM badge',
                     'Founder name display',
                     'Email (clickable)',
                     'Phone (clickable)',
@@ -795,16 +795,15 @@ export default function Home() {
                 {
                   position: '2',
                   price: '$3',
-                  title: '#2 Position',
+                  title: 'Mid Position',
                   description: 'Second spot on the leaderboard',
                   features: [
-                    'PREMIUM #2 badge',
+                    'PREMIUM badge',
                     'Founder name display',
                     'Email (clickable)',
                     'Phone (clickable)',
-                    '8 social accounts',
+                    '1 social account',
                     'Gradient card design',
-                    'Vote count visible',
                     'Permanent placement',
                     'One-time payment'
                   ]
@@ -812,16 +811,14 @@ export default function Home() {
                 {
                   position: '3',
                   price: '$1',
-                  title: '#3 Position',
+                  title: 'Basic Position',
                   description: 'Third spot on the leaderboard',
                   features: [
-                    'PREMIUM #3 badge',
+                    'PREMIUM badge',
                     'Founder name display',
                     'Email (clickable)',
                     'Phone (clickable)',
-                    '8 social accounts',
                     'Gradient card design',
-                    'Vote count visible',
                     'Permanent placement',
                     'One-time payment'
                   ]
