@@ -106,7 +106,7 @@ export default function PremiumListingModal({
         {/* Header */}
         <div className="bg-[#0F3460] border-b border-gray-200 p-6 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-black text-[#1F2937] uppercase">Boost to Premium</h2>
+            <h2 className="text-2xl font-black text-[#1F2937]">Boost to Premium</h2>
             <p className="text-sm text-[#1F2937]/70 font-semibold mt-1">{listingTitle}</p>
           </div>
           <button
@@ -127,7 +127,7 @@ export default function PremiumListingModal({
 
           {/* Position Selection */}
           <div>
-            <label className="block text-sm font-black text-[#1F2937] mb-3 uppercase">
+            <label className="block text-sm font-black text-[#1F2937] mb-3">
               Select Position & Price
             </label>
             <div className="grid grid-cols-3 gap-3">
@@ -158,7 +158,7 @@ export default function PremiumListingModal({
 
           {/* Founder Information */}
           <div className="border-t-4 border-gray-300 pt-6">
-            <h3 className="text-lg font-black text-[#1F2937] mb-4 uppercase">Founder Information</h3>
+            <h3 className="text-lg font-black text-[#1F2937] mb-4">Founder Information</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
@@ -203,7 +203,7 @@ export default function PremiumListingModal({
           {/* Social Accounts */}
           {position !== 3 && (
             <div className="border-t-4 border-gray-300 pt-6">
-              <h3 className="text-lg font-black text-[#1F2937] mb-4 uppercase">Social Accounts</h3>
+              <h3 className="text-lg font-black text-[#1F2937] mb-4">Social Accounts</h3>
               <p className="text-xs text-[#1F2937]/60 font-semibold mb-4">
                 {position === 1 ? 'Add up to 4 social profiles to be displayed on your premium listing' : 'Add 1 social profile to be displayed on your premium listing'}
               </p>
@@ -226,7 +226,7 @@ export default function PremiumListingModal({
 
                   return (
                     <div key={field.name}>
-                      <label className="block text-xs font-bold text-[#1F2937] mb-2 uppercase">{field.label}</label>
+                      <label className="block text-xs font-bold text-[#1F2937] mb-2">{field.label}</label>
                       <input
                         type="text"
                         name={field.name}

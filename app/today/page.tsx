@@ -166,7 +166,7 @@ export default function TodayPage() {
               <div key={idx} className="bg-white border-8 border-purple-600 p-8 flex gap-6">
                 <div className="text-5xl font-black text-purple-600 flex-shrink-0">{item.num}</div>
                 <div className="flex-grow">
-                  <h3 className="text-2xl font-black text-gray-900 mb-3 uppercase">{item.title}</h3>
+                  <h3 className="text-2xl font-black text-gray-900 mb-3">{item.title}</h3>
                   <p className="text-lg font-bold text-gray-700">{item.desc}</p>
                 </div>
               </div>

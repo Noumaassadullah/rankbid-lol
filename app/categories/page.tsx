@@ -52,7 +52,7 @@ export default function CategoriesPage() {
         {/* Header Section */}
         <section className="bg-white py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
-            <h1 className="text-4xl font-black text-[#1F2937] uppercase mb-2">Browse Categories</h1>
+            <h1 className="text-4xl font-black text-[#1F2937] mb-2">Browse Categories</h1>
             <p className="text-[#1F2937]/70 font-semibold">Explore products ranked by category</p>
           </div>
         </section>
@@ -65,7 +65,7 @@ export default function CategoriesPage() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 font-bold text-xs uppercase border-3 transition-all ${
+                  className={`px-4 py-2 font-bold text-xs border-3 transition-all ${
                     selectedCategory === cat
                       ? 'bg-[#0F3460] text-white border-[#0F3460]'
                       : 'bg-white text-[#1F2937] border-gray-300 hover:bg-[#0F3460]/10'
@@ -82,7 +82,7 @@ export default function CategoriesPage() {
         <section className="bg-white py-12">
           <div className="max-w-6xl mx-auto px-6">
             <div className="mb-8">
-              <h2 className="text-2xl font-black text-[#1F2937] uppercase mb-2">{selectedCategory}</h2>
+              <h2 className="text-2xl font-black text-[#1F2937] mb-2">{selectedCategory}</h2>
               <p className="text-[#1F2937]/70 font-semibold">
                 {categoryListings.length} product{categoryListings.length !== 1 ? 's' : ''} ranked
               </p>
@@ -98,7 +98,7 @@ export default function CategoriesPage() {
                 <p className="text-sm font-bold text-[#1F2937] mb-4">No products yet in {selectedCategory}</p>
                 <button
                   onClick={() => window.location.href = '/'}
-                  className="px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
+                  className="px-6 py-2 bg-[#0F3460] text-white font-bold text-xs border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
                 >
                   Submit a Product
                 </button>
@@ -124,7 +124,7 @@ export default function CategoriesPage() {
                     </div>
                     <div className="text-right flex-shrink-0 ml-4">
                       <p className="text-2xl font-black text-[#0F3460]">♥ {listing.totalVotes}</p>
-                      <p className="text-xs text-[#1F2937]/60 font-semibold uppercase">Votes</p>
+                      <p className="text-xs text-[#1F2937]/60 font-semibold">Votes</p>
                     </div>
                   </a>
                 ))}

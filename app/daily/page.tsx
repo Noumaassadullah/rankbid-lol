@@ -74,27 +74,27 @@ export default function DailyPage() {
         <section className="bg-white py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
             <div className="mb-8">
-              <h1 className="text-4xl font-black text-[#1F2937] uppercase mb-2">Today's Top Rankings</h1>
+              <h1 className="text-4xl font-black text-[#1F2937] mb-2">Today's Top Rankings</h1>
               <p className="text-[#1F2937]/70 font-semibold">Community-voted products ranking for today</p>
             </div>
 
             {/* Countdown Timer */}
             <div className="flex items-center gap-4 p-6 bg-gray-50 border-3 border-gray-300 inline-block">
-              <span className="text-sm font-black text-[#1F2937] uppercase">Resets in:</span>
+              <span className="text-sm font-black text-[#1F2937]">Resets in:</span>
               <div className="flex gap-3 items-center">
                 <div className="flex flex-col items-center bg-white border-2 border-[#0F3460] px-3 py-2">
                   <span className="text-2xl font-black text-[#0F3460]">{String(countdown.hours).padStart(2, '0')}</span>
-                  <span className="text-xs font-black text-[#1F2937] uppercase">Hours</span>
+                  <span className="text-xs font-black text-[#1F2937]">Hours</span>
                 </div>
                 <span className="text-2xl font-black text-[#1F2937]">:</span>
                 <div className="flex flex-col items-center bg-white border-2 border-[#0F3460] px-3 py-2">
                   <span className="text-2xl font-black text-[#0F3460]">{String(countdown.minutes).padStart(2, '0')}</span>
-                  <span className="text-xs font-black text-[#1F2937] uppercase">Mins</span>
+                  <span className="text-xs font-black text-[#1F2937]">Mins</span>
                 </div>
                 <span className="text-2xl font-black text-[#1F2937]">:</span>
                 <div className="flex flex-col items-center bg-white border-2 border-[#0F3460] px-3 py-2">
                   <span className="text-2xl font-black text-[#0F3460]">{String(countdown.seconds).padStart(2, '0')}</span>
-                  <span className="text-xs font-black text-[#1F2937] uppercase">Secs</span>
+                  <span className="text-xs font-black text-[#1F2937]">Secs</span>
                 </div>
               </div>
             </div>
@@ -114,7 +114,7 @@ export default function DailyPage() {
                 <p className="text-sm font-bold text-[#1F2937] mb-4">No rankings yet for today</p>
                 <button
                   onClick={() => window.location.href = '/'}
-                  className="px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
+                  className="px-6 py-2 bg-[#0F3460] text-white font-bold text-xs border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
                 >
                   Submit a Listing
                 </button>
@@ -142,7 +142,7 @@ export default function DailyPage() {
                     </div>
                     <div className="text-right flex-shrink-0 ml-4">
                       <p className="text-2xl font-black text-[#0F3460]">♥ {listing.dayVotes}</p>
-                      <p className="text-xs text-[#1F2937]/60 font-semibold uppercase">Votes</p>
+                      <p className="text-xs text-[#1F2937]/60 font-semibold">Votes</p>
                     </div>
                   </a>
                 ))}

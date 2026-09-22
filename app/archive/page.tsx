@@ -80,7 +80,7 @@ export default function ArchivePage() {
         {/* Header Section */}
         <section className="bg-white py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
-            <h1 className="text-4xl font-black text-[#1F2937] uppercase mb-2">Rankings Archive</h1>
+            <h1 className="text-4xl font-black text-[#1F2937] mb-2">Rankings Archive</h1>
             <p className="text-[#1F2937]/70 font-semibold">View historical daily rankings from the past 30 days</p>
           </div>
         </section>
@@ -92,13 +92,13 @@ export default function ArchivePage() {
               {/* Date Selector */}
               <div className="lg:col-span-1">
                 <div className="sticky top-20 bg-gray-50 p-4 border-3 border-gray-300 max-h-[600px] overflow-y-auto">
-                  <h3 className="font-black text-[#1F2937] mb-4 uppercase text-sm">Select Date</h3>
+                  <h3 className="font-black text-[#1F2937] mb-4 text-sm">Select Date</h3>
                   <div className="space-y-2">
                     {snapshots.map((snapshot) => (
                       <button
                         key={snapshot.date}
                         onClick={() => setSelectedDate(snapshot.date)}
-                        className={`w-full text-left px-4 py-3 transition-all text-sm font-bold border-2 uppercase ${
+                        className={`w-full text-left px-4 py-3 transition-all text-sm font-bold border-2 ${
                           selectedDate === snapshot.date
                             ? 'bg-[#0F3460] text-white border-[#0F3460]'
                             : 'text-[#1F2937] border-gray-300 hover:bg-gray-50'
@@ -125,7 +125,7 @@ export default function ArchivePage() {
                 ) : (
                   <>
                     <div className="mb-6 p-6 bg-gray-50 border-3 border-gray-300">
-                      <p className="text-sm font-black text-[#1F2937] uppercase">
+                      <p className="text-sm font-black text-[#1F2937]">
                         Archive Date: {formatDate(selectedSnapshot.date)}
                       </p>
                     </div>
@@ -150,7 +150,7 @@ export default function ArchivePage() {
                           </div>
                           <div className="text-right flex-shrink-0 ml-4">
                             <p className="text-2xl font-black text-[#0F3460]">♥ {listing.votes}</p>
-                            <p className="text-xs text-[#1F2937]/60 font-semibold uppercase">Votes</p>
+                            <p className="text-xs text-[#1F2937]/60 font-semibold">Votes</p>
                           </div>
                         </a>
                       ))}

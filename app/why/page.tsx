@@ -108,14 +108,14 @@ export default function WhyRankBid() {
                 <div className="flex gap-4 flex-wrap">
                   <button
                     onClick={() => window.location.href = '/#leaderboard'}
-                    className="flex items-center gap-2 px-8 py-4 bg-[#D97706] text-[#18181B] font-black uppercase text-sm border-4 border-[#D97706] hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-[#D97706] text-[#18181B] font-black text-sm border-4 border-[#D97706] hover:scale-105 active:scale-95 transition-all duration-150"
                   >
                     <Icons.TrendingUp />
                     View Rankings
                   </button>
                   <button
                     onClick={() => window.location.href = '/'}
-                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black uppercase text-sm border-4 border-[#18181B] hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black text-sm border shadow-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-150"
                   >
                     <Icons.Upload />
                     Submit Product
@@ -124,7 +124,7 @@ export default function WhyRankBid() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="border-4 border-[#18181B] bg-white p-6 hover:bg-[#D97706]/5 transition-colors">
+                <div className="border shadow-sm rounded-lg bg-white p-6 hover:bg-[#D97706]/5 transition-colors">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-[#18181B]">
                       <Icons.Vote />
@@ -134,7 +134,7 @@ export default function WhyRankBid() {
                   <p className="text-xs text-[#18181B]/60 font-semibold">Community Voting</p>
                 </div>
 
-                <div className="border-4 border-[#18181B] bg-white p-6 hover:bg-[#059669]/5 transition-colors">
+                <div className="border shadow-sm rounded-lg bg-white p-6 hover:bg-[#059669]/5 transition-colors">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-[#18181B]">
                       <Icons.Trophy />
@@ -144,7 +144,7 @@ export default function WhyRankBid() {
                   <p className="text-xs text-[#18181B]/60 font-semibold">Ranked Products</p>
                 </div>
 
-                <div className="border-4 border-[#18181B] bg-white p-6 hover:bg-[#D97706]/5 transition-colors">
+                <div className="border shadow-sm rounded-lg bg-white p-6 hover:bg-[#D97706]/5 transition-colors">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-[#18181B]">
                       <Icons.Zap />
@@ -154,7 +154,7 @@ export default function WhyRankBid() {
                   <p className="text-xs text-[#18181B]/60 font-semibold">Live Rankings</p>
                 </div>
 
-                <div className="border-4 border-[#18181B] bg-white p-6 hover:bg-[#059669]/5 transition-colors">
+                <div className="border shadow-sm rounded-lg bg-white p-6 hover:bg-[#059669]/5 transition-colors">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-[#18181B]">
                       <Icons.Check />
@@ -171,28 +171,28 @@ export default function WhyRankBid() {
         {/* HOW IT WORKS SECTION */}
         <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B]">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] uppercase mb-8">How RankBid Works</h2>
+            <h2 className="text-2xl font-black text-[#18181B] mb-8">How RankBid Works</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <p className="text-5xl font-black text-[#D97706] mb-4">1</p>
-                <h3 className="text-lg font-black text-[#18181B] uppercase mb-3">Submit Your Product</h3>
+                <h3 className="text-lg font-black text-[#18181B] mb-3">Submit Your Product</h3>
                 <p className="text-sm text-[#18181B]/70 font-medium leading-relaxed">
                   Add your product with a URL or handle, select a category, write a description. Takes 2 minutes. No approval needed. Goes live instantly.
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <p className="text-5xl font-black text-[#D97706] mb-4">2</p>
-                <h3 className="text-lg font-black text-[#18181B] uppercase mb-3">Community Votes</h3>
+                <h3 className="text-lg font-black text-[#18181B] mb-3">Community Votes</h3>
                 <p className="text-sm text-[#18181B]/70 font-medium leading-relaxed">
                   Real users discover your product and vote for it. Each vote is counted. Vote totals update in real-time. Everyone sees the same numbers.
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <p className="text-5xl font-black text-[#D97706] mb-4">3</p>
-                <h3 className="text-lg font-black text-[#18181B] uppercase mb-3">Climb Rankings</h3>
+                <h3 className="text-lg font-black text-[#18181B] mb-3">Climb Rankings</h3>
                 <p className="text-sm text-[#18181B]/70 font-medium leading-relaxed">
                   The more votes you get, the higher you rank. View all-time rankings or today's trending. Filter by 25+ categories. Pure merit-based.
                 </p>
@@ -204,7 +204,7 @@ export default function WhyRankBid() {
         {/* GLOBAL VISIBILITY SECTION */}
         <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B]">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] uppercase mb-8">Your Products Go Global</h2>
+            <h2 className="text-2xl font-black text-[#18181B] mb-8">Your Products Go Global</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div>
@@ -253,31 +253,31 @@ export default function WhyRankBid() {
                 </div>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8">
+              <div className="border shadow-sm rounded-lg bg-white p-8">
                 <div className="space-y-4">
                   <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4 rounded">
-                    <p className="text-xs font-black text-[#18181B]/60 uppercase mb-2">Global Rank</p>
+                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Global Rank</p>
                     <div className="flex items-center justify-between">
                       <p className="text-2xl font-black text-[#D97706]">#1</p>
                       <p className="text-xs font-semibold text-[#18181B]/70">1,234 votes</p>
                     </div>
                   </div>
                   <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4 rounded">
-                    <p className="text-xs font-black text-[#18181B]/60 uppercase mb-2">Marketing Category</p>
+                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Marketing Category</p>
                     <div className="flex items-center justify-between">
                       <p className="text-2xl font-black text-[#D97706]">#3</p>
                       <p className="text-xs font-semibold text-[#18181B]/70">987 votes</p>
                     </div>
                   </div>
                   <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4 rounded">
-                    <p className="text-xs font-black text-[#18181B]/60 uppercase mb-2">Today's Trending</p>
+                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Today's Trending</p>
                     <div className="flex items-center justify-between">
                       <p className="text-2xl font-black text-[#D97706]">#7</p>
                       <p className="text-xs font-semibold text-[#18181B]/70">234 votes today</p>
                     </div>
                   </div>
                   <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4 rounded">
-                    <p className="text-xs font-black text-[#18181B]/60 uppercase mb-2">All Time</p>
+                    <p className="text-xs font-black text-[#18181B]/60 mb-2">All Time</p>
                     <div className="flex items-center justify-between">
                       <p className="text-2xl font-black text-[#D97706]">#12</p>
                       <p className="text-xs font-semibold text-[#18181B]/70">2,456 total votes</p>
@@ -292,13 +292,13 @@ export default function WhyRankBid() {
         {/* YOUR PROFILE & PRODUCTS SECTION */}
         <section className="bg-white py-12 border-b-4 border-[#18181B]">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] uppercase mb-8">Your Profile & Products Showcase</h2>
+            <h2 className="text-2xl font-black text-[#18181B] mb-8">Your Profile & Products Showcase</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="border-4 border-[#18181B] bg-[#F5F5F5] p-8">
+              <div className="border shadow-sm rounded-lg bg-[#F5F5F5] p-8">
                 <div className="space-y-4">
                   <div>
-                    <p className="text-xs font-black text-[#18181B]/60 uppercase mb-2">Your Creator Profile</p>
+                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Your Creator Profile</p>
                     <div className="bg-white border-2 border-[#18181B] p-4">
                       <p className="font-black text-[#18181B] text-lg">Your Brand Name</p>
                       <p className="text-xs text-[#18181B]/60 mt-1">12 Products Ranked</p>
@@ -307,7 +307,7 @@ export default function WhyRankBid() {
                   </div>
 
                   <div>
-                    <p className="text-xs font-black text-[#18181B]/60 uppercase mb-2">Your Products</p>
+                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Your Products</p>
                     <div className="space-y-2">
                       <div className="bg-white border-2 border-[#18181B] p-3 flex justify-between items-center">
                         <span className="font-semibold text-[#18181B] text-sm">Product #1</span>
@@ -378,10 +378,10 @@ export default function WhyRankBid() {
         {/* WHY CREATORS LOVE IT SECTION */}
         <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B]">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] uppercase mb-8">Why Creators Choose RankBid</h2>
+            <h2 className="text-2xl font-black text-[#18181B] mb-8">Why Creators Choose RankBid</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
@@ -393,7 +393,7 @@ export default function WhyRankBid() {
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
@@ -405,7 +405,7 @@ export default function WhyRankBid() {
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
@@ -417,7 +417,7 @@ export default function WhyRankBid() {
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
@@ -429,7 +429,7 @@ export default function WhyRankBid() {
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
@@ -441,7 +441,7 @@ export default function WhyRankBid() {
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
@@ -459,10 +459,10 @@ export default function WhyRankBid() {
         {/* WHY USERS LOVE IT SECTION */}
         <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B]">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] uppercase mb-8">Why Community Members Use RankBid</h2>
+            <h2 className="text-2xl font-black text-[#18181B] mb-8">Why Community Members Use RankBid</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Globe />
@@ -474,7 +474,7 @@ export default function WhyRankBid() {
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Vote />
@@ -486,7 +486,7 @@ export default function WhyRankBid() {
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Zap />
@@ -498,7 +498,7 @@ export default function WhyRankBid() {
                 </p>
               </div>
 
-              <div className="border-4 border-[#18181B] bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Users />
@@ -516,13 +516,13 @@ export default function WhyRankBid() {
         {/* FAQ SECTION */}
         <section className="bg-white py-12 border-b-4 border-[#18181B]">
           <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] uppercase mb-8">Common Questions</h2>
+            <h2 className="text-2xl font-black text-[#18181B] mb-8">Common Questions</h2>
 
             <div className="space-y-3">
               {faqs.map((faq, idx) => (
                 <div
                   key={idx}
-                  className="border-4 border-[#18181B] bg-white cursor-pointer hover:bg-[#D97706]/5 transition-colors"
+                  className="border shadow-sm rounded-lg bg-white cursor-pointer hover:bg-[#D97706]/5 transition-colors"
                   onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
                 >
                   <div className="p-6 flex items-start justify-between gap-4">
@@ -547,21 +547,21 @@ export default function WhyRankBid() {
         {/* CTA SECTION */}
         <section className="bg-[#D97706] py-12 border-b-4 border-[#18181B]">
           <div className="max-w-6xl mx-auto px-6 text-center">
-            <h2 className="text-4xl font-black text-[#18181B] mb-4 uppercase">Ready to Get Ranked?</h2>
+            <h2 className="text-4xl font-black text-[#18181B] mb-4">Ready to Get Ranked?</h2>
             <p className="text-lg text-[#18181B] font-medium mb-8 max-w-2xl mx-auto">
               Submit your product today and let the community decide. It takes 2 minutes and it's completely free.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
               <button
                 onClick={() => window.location.href = '/'}
-                className="flex items-center gap-2 px-8 py-4 bg-[#18181B] text-[#D97706] font-black uppercase border-4 border-[#18181B] hover:scale-105 active:scale-95 transition-all duration-150"
+                className="flex items-center gap-2 px-8 py-4 bg-[#18181B] text-[#D97706] font-black border shadow-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-150"
               >
                 <Icons.Upload />
                 Submit Product
               </button>
               <button
                 onClick={() => window.location.href = '/#leaderboard'}
-                className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black uppercase border-4 border-[#18181B] hover:scale-105 active:scale-95 transition-all duration-150"
+                className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black border shadow-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-150"
               >
                 <Icons.TrendingUp />
                 View Top Rankings

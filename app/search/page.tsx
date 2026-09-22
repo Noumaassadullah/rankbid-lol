@@ -58,7 +58,7 @@ function SearchContent() {
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Header */}
         <div className="mb-12 pb-8 border-b border-gray-200">
-          <h1 className="text-4xl font-black text-[#1F2937] uppercase mb-2">Search Results</h1>
+          <h1 className="text-4xl font-black text-[#1F2937] mb-2">Search Results</h1>
           {query && (
             <p className="text-[#1F2937]/70 font-semibold">
               Results for "<span className="font-black">{query}</span>"
@@ -73,7 +73,7 @@ function SearchContent() {
           </div>
         ) : results.length === 0 ? (
           <div className="text-center py-16 border-gray-300 border-4 bg-gray-50">
-            <h2 className="text-2xl font-black text-[#1F2937] mb-2 uppercase">
+            <h2 className="text-2xl font-black text-[#1F2937] mb-2">
               {query ? 'No products found' : 'Start Searching'}
             </h2>
             <p className="text-[#1F2937]/70 font-semibold mb-6">
@@ -83,7 +83,7 @@ function SearchContent() {
             </p>
             <button
               onClick={() => window.location.href = '/'}
-              className="inline-block px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all"
+              className="inline-block px-6 py-2 bg-[#0F3460] text-white font-bold text-xs border-[#0F3460] border-3 hover:scale-105 transition-all"
             >
               Browse All Products
             </button>
@@ -113,7 +113,7 @@ function SearchContent() {
                   </div>
                   <div className="text-right flex-shrink-0 ml-4">
                     <p className="text-2xl font-black text-[#0F3460]">♥ {listing.totalVotes}</p>
-                    <p className="text-xs text-[#1F2937]/60 font-semibold uppercase">Votes</p>
+                    <p className="text-xs text-[#1F2937]/60 font-semibold">Votes</p>
                   </div>
                 </a>
               ))}

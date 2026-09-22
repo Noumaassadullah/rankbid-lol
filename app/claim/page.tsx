@@ -27,7 +27,7 @@ export default function ClaimPage() {
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex-1">
               <div className={`h-2 border-t-4 ${s <= step ? 'border-black dark:border-white' : 'border-gray-300 dark:border-gray-700'}`} />
-              <p className="text-center mt-4 text-xs font-black uppercase tracking-wider text-black dark:text-white">
+              <p className="text-center mt-4 text-xs font-black tracking-wider text-black dark:text-white">
                 Step {s}
               </p>
             </div>
@@ -37,12 +37,12 @@ export default function ClaimPage() {
         {/* Step 1 */}
         {step === 1 && (
           <div className="card-neobrutalism shadow-neobrutalism mb-8">
-            <div className="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-6 border-b-4 border-black dark:border-white pb-6">Step 1 of 3</div>
+            <div className="text-xs font-black tracking-wider text-black dark:text-white mb-6 border-b-4 border-black dark:border-white pb-6">Step 1 of 3</div>
             <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white mb-8">PRODUCT INFO</h2>
 
             <div className="space-y-6 mb-8">
               <div>
-                <label className="block text-sm font-black uppercase text-black dark:text-white mb-3">Product URL or @Handle</label>
+                <label className="block text-sm font-black text-black dark:text-white mb-3">Product URL or @Handle</label>
                 <input
                   type="text"
                   placeholder="example.com or @yourproduct"
@@ -53,7 +53,7 @@ export default function ClaimPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-black uppercase text-black dark:text-white mb-3">Description</label>
+                <label className="block text-sm font-black text-black dark:text-white mb-3">Description</label>
                 <textarea
                   placeholder="What does it do?"
                   className="w-full bg-white dark:bg-black text-black dark:text-white placeholder-gray-600 dark:placeholder-gray-400 px-6 py-4 font-bold text-lg"
@@ -75,7 +75,7 @@ export default function ClaimPage() {
         {/* Step 2 */}
         {step === 2 && (
           <div className="card-neobrutalism shadow-neobrutalism mb-8">
-            <div className="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-6 border-b-4 border-black dark:border-white pb-6">Step 2 of 3</div>
+            <div className="text-xs font-black tracking-wider text-black dark:text-white mb-6 border-b-4 border-black dark:border-white pb-6">Step 2 of 3</div>
             <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white mb-8">CHOOSE CATEGORY</h2>
 
             <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -115,17 +115,17 @@ export default function ClaimPage() {
         {/* Step 3 */}
         {step === 3 && (
           <div className="card-neobrutalism shadow-neobrutalism mb-8">
-            <div className="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-6 border-b-4 border-black dark:border-white pb-6">Step 3 of 3</div>
+            <div className="text-xs font-black tracking-wider text-black dark:text-white mb-6 border-b-4 border-black dark:border-white pb-6">Step 3 of 3</div>
             <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white mb-8">SET YOUR BID</h2>
 
             <div className="card-neobrutalism-dark shadow-neobrutalism mb-8">
-              <p className="text-xs font-black uppercase text-white dark:text-black mb-2">CURRENT #1</p>
+              <p className="text-xs font-black text-white dark:text-black mb-2">CURRENT #1</p>
               <p className="text-5xl font-black text-white dark:text-black">Rs. 2,000</p>
               <p className="text-sm font-bold text-gray-300 dark:text-gray-600 mt-3">Bid Rs. 2,250+ to outrank</p>
             </div>
 
             <div className="mb-8">
-              <label className="block text-sm font-black uppercase text-black dark:text-white mb-3">Your Bid</label>
+              <label className="block text-sm font-black text-black dark:text-white mb-3">Your Bid</label>
               <div className="relative">
                 <span className="absolute left-4 top-4 text-black dark:text-white font-black text-lg">Rs.</span>
                 <input

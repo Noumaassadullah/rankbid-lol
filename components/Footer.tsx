@@ -39,13 +39,13 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white text-[#1F2937] border-t-4 border-gray-300">
+    <footer className="bg-white text-[#1F2937] border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b-3 border-gray-300">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-gray-200">
           {/* Brand */}
           <div>
-            <h3 className="text-sm font-black text-[#1F2937] mb-3 uppercase tracking-wider">RankBid</h3>
+            <h3 className="text-sm font-black text-[#1F2937] mb-3 tracking-wider">RankBid</h3>
             <p className="text-xs font-semibold text-[#1F2937]/70 leading-relaxed">
               Community-driven product rankings. No algorithms. Pure voting.
             </p>
@@ -55,7 +55,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Icons.Trophy />
-              <h4 className="text-xs font-black text-[#1F2937] uppercase tracking-wider">Rankings</h4>
+              <h4 className="text-xs font-black text-[#1F2937] tracking-wider">Rankings</h4>
             </div>
             <ul className="space-y-2">
               <li>
@@ -85,7 +85,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Icons.Book />
-              <h4 className="text-xs font-black text-[#1F2937] uppercase tracking-wider">Resources</h4>
+              <h4 className="text-xs font-black text-[#1F2937] tracking-wider">Resources</h4>
             </div>
             <ul className="space-y-2">
               <li>
@@ -110,14 +110,14 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Icons.Mail />
-              <h4 className="text-xs font-black text-[#1F2937] uppercase tracking-wider">Contact</h4>
+              <h4 className="text-xs font-black text-[#1F2937] tracking-wider">Contact</h4>
             </div>
             <p className="text-xs font-semibold text-[#1F2937]/70 mb-3">
               Questions? Reach out.
             </p>
             <a
               href="mailto:support@rankbid.pk"
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-[#1F2937] font-bold text-xs uppercase border-2 border-gray-300 hover:bg-[#18181B] hover:text-[#FFB28F] transition-all"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-[#0F3460] font-semibold text-xs border border-gray-300 rounded-lg hover:bg-[#0F3460] hover:text-white transition-all"
             >
               <Icons.Mail />
               Email
@@ -140,7 +140,7 @@ export default function Footer() {
           <div className="flex gap-3">
             <a
               href="https://twitter.com"
-              className="w-8 h-8 bg-blue-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
+              className="w-8 h-8 bg-blue-100 text-[#0F3460] flex items-center justify-center border border-gray-300 rounded-lg hover:bg-[#0F3460] hover:text-white transition-all"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Twitter"
