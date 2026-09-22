@@ -20,7 +20,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
       <button
         key="first"
         onClick={() => onPageChange(1)}
-        className="px-4 py-2 font-black border-2 border-black hover:bg-black hover:text-white transition-all"
+        className="px-4 py-2 font-black border-2 rounded-lg border-black hover:bg-black hover:text-white transition-all"
       >
         « First
       </button>
@@ -60,7 +60,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
       <button
         key="last"
         onClick={() => onPageChange(totalPages)}
-        className="px-4 py-2 font-black border-2 border-black hover:bg-black hover:text-white transition-all"
+        className="px-4 py-2 font-black border-2 rounded-lg border-black hover:bg-black hover:text-white transition-all"
       >
         Last »
       </button>

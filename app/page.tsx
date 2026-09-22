@@ -646,7 +646,7 @@ export default function Home() {
                       href={listing.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between p-3 bg-white border-gray-300 border shadow-sm hover:bg-[#0F3460]/10 hover:shadow-md transition-all duration-200 group cursor-pointer rounded-lg"
+                      className="flex items-center justify-between p-3 bg-white border-gray-300 border shadow-sm rounded-lg hover:bg-[#0F3460]/10 hover:shadow-md transition-all duration-200 group cursor-pointer rounded-lg"
                     >
                       <div className="flex items-center gap-4 flex-1">
                         <div className="w-10 h-10 bg-[#0F3460] text-white font-black rounded-lg flex items-center justify-center">{`#${(currentPage - 1) * 15 + idx + 1}`}</div>

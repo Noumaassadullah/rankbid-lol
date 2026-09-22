@@ -11,7 +11,7 @@ export default function FAQ({ question, answer }: FAQProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border border-gray-300 bg-white">
+    <div className="border border-gray-300 bg-white rounded-lg">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-8 py-4 flex items-center justify-between hover:bg-[#F5F5F4] transition-colors"
