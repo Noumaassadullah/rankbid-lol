@@ -481,10 +481,10 @@ export default function Home() {
                   key={platform.id}
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, platform: platform.id }))}
-                  className={`px-4 py-2 font-bold text-xs uppercase border-3 transition-all duration-200 hover:scale-105 flex items-center gap-2 ${
+                  className={`px-4 py-2 font-bold text-xs rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 ${
                     formData.platform === platform.id
-                      ? 'bg-blue-100 text-[#1F2937] border-gray-300'
-                      : 'bg-white text-[#1F2937] border-gray-300 hover:bg-blue-100'
+                      ? 'bg-blue-100 text-[#1F2937] border border-gray-300'
+                      : 'bg-white text-[#1F2937] border border-gray-300 hover:bg-blue-100'
                   }`}
                 >
                   <Icons.Globe />
@@ -503,7 +503,7 @@ export default function Home() {
                     placeholder={formData.platform === 'website' ? 'Product URL' : 'Profile URL or username'}
                     value={formData.url}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 bg-white text-[#1F2937] border-3 border-gray-300 font-semibold text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
+                    className={`w-full px-4 py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-sm rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
                       formErrors.url ? 'border-red-500 shake' : ''
                     }`}
                     required
@@ -526,7 +526,7 @@ export default function Home() {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 bg-white text-[#1F2937] border-3 border-gray-300 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
+                    className={`w-full px-4 py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
                       formErrors.category ? 'border-red-500 shake' : ''
                     }`}
                     required
@@ -545,8 +545,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={formLoading || metadataLoading}
-                className="w-full px-6 py-4 bg-[#0F3460] text-white font-black uppercase text-sm border-[#0F3460] border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
-                style={{boxShadow: 'none'}}
+                className="w-full px-6 py-4 bg-[#0F3460] text-white font-semibold text-sm rounded-lg hover:bg-[#0D2A50] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
               >
                 {formLoading ? (
                   <>
