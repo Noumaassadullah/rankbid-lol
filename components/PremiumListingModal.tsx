@@ -204,7 +204,7 @@ export default function PremiumListingModal({
                 {position === 1 ? 'Add up to 4 social profiles to be displayed on your premium listing' : 'Add 1 social profile to be displayed on your premium listing'}
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   { name: 'founderWebsite', label: 'Website', placeholder: 'https://example.com' },
                   { name: 'founderTwitter', label: 'Twitter/X', placeholder: '@handle' },
@@ -221,15 +221,17 @@ export default function PremiumListingModal({
                   if (position === 2 && idx >= 1) return null;
 
                   return (
-                    <input
-                      key={field.name}
-                      type="text"
-                      name={field.name}
-                      value={formData[field.name as keyof typeof formData]}
-                      onChange={handleChange}
-                      placeholder={field.placeholder}
-                      className="px-4 py-3 border-2 border-[#18181B] bg-white text-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FFB28F]"
-                    />
+                    <div key={field.name}>
+                      <label className="block text-xs font-bold text-[#18181B] mb-2 uppercase">{field.label}</label>
+                      <input
+                        type="text"
+                        name={field.name}
+                        value={formData[field.name as keyof typeof formData]}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                        className="w-full px-4 py-3 border-2 border-[#18181B] bg-white text-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FFB28F]"
+                      />
+                    </div>
                   );
                 })}
               </div>
