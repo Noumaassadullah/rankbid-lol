@@ -289,32 +289,13 @@ export async function GET(req: NextRequest) {
     // Calculate offset for pagination
     const offset = (page - 1) * pageSize;
 
-    // Fetch listings from PostgreSQL with vote counts and premium status
+    // Fetch listings from PostgreSQL with vote counts
     const orderColumn = sort === 'dayVotes' ? 'day_votes' : 'total_votes';
     const sql = `
-      SELECT
-        l.*,
-        pl.id as premium_id,
-        pl.founder_name,
-        pl.founder_email,
-        pl.founder_phone,
-        pl.founder_website,
-        pl.founder_twitter,
-        pl.founder_linkedin,
-        pl.founder_instagram,
-        pl.founder_facebook,
-        pl.founder_tiktok,
-        pl.founder_youtube,
-        pl.founder_github,
-        pl.position as premium_position,
-        pl.amount_paid,
-        pl.payment_status
-      FROM listings l
-      LEFT JOIN premium_listings pl ON l.id = pl.listing_id AND pl.payment_status = 'approved'
+      SELECT *
+      FROM listings
       ${whereClause}
-      ORDER BY
-        CASE WHEN pl.id IS NOT NULL THEN pl.position ELSE 999 END ASC,
-        ${orderColumn} DESC
+      ORDER BY ${orderColumn} DESC
       LIMIT ${pageSize} OFFSET ${offset}
     `;
 
@@ -334,8 +315,8 @@ export async function GET(req: NextRequest) {
       createdAt: item.created_at,
       updatedAt: item.updated_at || item.created_at,
       imageUrl: item.image_url || null,
-      isPremium: !!item.premium_id,
-      premiumPosition: item.premium_position || null,
+      isPremium: false,
+      premiumPosition: null,
       founderName: item.founder_name || null,
       founderEmail: item.founder_email || null,
       founderPhone: item.founder_phone || null,
