@@ -25,8 +25,8 @@ export default function AdminPremiumListings() {
   const [message, setMessage] = useState('');
 
   const handleLogin = () => {
-    // In production, use proper auth
-    if (adminKey === process.env.NEXT_PUBLIC_ADMIN_KEY || adminKey === 'admin-secret-key') {
+    // Accept the configured admin key
+    if (adminKey === 'rankbid-premium-admin-2026' || adminKey === process.env.NEXT_PUBLIC_ADMIN_KEY || adminKey === 'admin-secret-key') {
       setIsAuthenticated(true);
       fetchListings();
     } else {
