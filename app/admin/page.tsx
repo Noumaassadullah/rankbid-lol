@@ -80,25 +80,34 @@ export default function AdminPage() {
       const statsRes = await fetch('/api/admin/stats', { headers });
       if (statsRes.ok) {
         const data = await statsRes.json();
+        console.log('Stats data:', data);
         setStats(data.stats);
-        setCategoryData(data.categoryBreakdown);
-        setDailyStats(data.dailyStats);
+        setCategoryData(data.categoryBreakdown || []);
+        setDailyStats(data.dailyStats || []);
+      } else {
+        console.error('Stats error:', statsRes.status);
+        showToast('Failed to fetch stats', 'error');
       }
 
       // Fetch listings
       const listingsRes = await fetch(`/api/admin/listings?page=${listingsPage}&limit=20&search=${encodeURIComponent(searchQuery)}`, { headers });
       if (listingsRes.ok) {
         const data = await listingsRes.json();
-        setListings(data.listings);
+        setListings(data.listings || []);
+      } else {
+        console.error('Listings error:', listingsRes.status);
       }
 
       // Fetch users
       const usersRes = await fetch(`/api/admin/users?page=${usersPage}&limit=20&search=${encodeURIComponent(searchQuery)}`, { headers });
       if (usersRes.ok) {
         const data = await usersRes.json();
-        setUsers(data.users);
+        setUsers(data.users || []);
+      } else {
+        console.error('Users error:', usersRes.status);
       }
     } catch (error) {
+      console.error('Fetch error:', error);
       showToast('Failed to fetch data', 'error');
     } finally {
       setLoading(false);

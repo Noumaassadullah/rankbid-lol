@@ -15,59 +15,108 @@ export async function GET(req: NextRequest) {
 
   try {
     // Total users
-    const usersResult = await query('SELECT COUNT(*) as count FROM users');
-    const totalUsers = parseInt(usersResult.rows[0].count);
+    let totalUsers = 0;
+    try {
+      const usersResult = await query('SELECT COUNT(*) as count FROM users');
+      if (usersResult.rows[0]) {
+        totalUsers = parseInt(usersResult.rows[0].count);
+      }
+    } catch (e) {
+      console.error('Error counting users:', e);
+    }
 
     // Total listings
-    const listingsResult = await query('SELECT COUNT(*) as count FROM listings');
-    const totalListings = parseInt(listingsResult.rows[0].count);
+    let totalListings = 0;
+    try {
+      const listingsResult = await query('SELECT COUNT(*) as count FROM listings');
+      if (listingsResult.rows[0]) {
+        totalListings = parseInt(listingsResult.rows[0].count);
+      }
+    } catch (e) {
+      console.error('Error counting listings:', e);
+    }
 
     // Total votes
-    const votesResult = await query('SELECT COUNT(*) as count FROM user_votes');
-    const totalVotes = parseInt(votesResult.rows[0].count);
+    let totalVotes = 0;
+    try {
+      const votesResult = await query('SELECT COUNT(*) as count FROM user_votes');
+      if (votesResult.rows[0]) {
+        totalVotes = parseInt(votesResult.rows[0].count);
+      }
+    } catch (e) {
+      console.error('Error counting votes:', e);
+    }
 
     // Top listings
-    const topListingsResult = await query(
-      'SELECT id, title, total_votes, category FROM listings ORDER BY total_votes DESC LIMIT 10'
-    );
+    let topListingsResult = { rows: [] };
+    try {
+      topListingsResult = await query(
+        'SELECT id, title, total_votes, category FROM listings ORDER BY total_votes DESC LIMIT 10'
+      );
+    } catch (e) {
+      console.error('Error fetching top listings:', e);
+    }
 
     // Recent listings
-    const recentListingsResult = await query(
-      'SELECT id, title, created_at, category FROM listings ORDER BY created_at DESC LIMIT 10'
-    );
+    let recentListingsResult = { rows: [] };
+    try {
+      recentListingsResult = await query(
+        'SELECT id, title, created_at, category FROM listings ORDER BY created_at DESC LIMIT 10'
+      );
+    } catch (e) {
+      console.error('Error fetching recent listings:', e);
+    }
 
     // Category breakdown
-    const categoryResult = await query(
-      'SELECT category, COUNT(*) as count, AVG(total_votes) as avg_votes FROM listings GROUP BY category ORDER BY count DESC'
-    );
+    let categoryResult = { rows: [] };
+    try {
+      categoryResult = await query(
+        'SELECT category, COUNT(*) as count, AVG(total_votes) as avg_votes FROM listings GROUP BY category ORDER BY count DESC'
+      );
+    } catch (e) {
+      console.error('Error fetching category breakdown:', e);
+    }
 
     // Premium listings
-    const premiumResult = await query(
-      `SELECT COUNT(*) as count,
-              SUM(CASE WHEN payment_status = 'approved' THEN 1 ELSE 0 END) as approved,
-              SUM(CASE WHEN payment_status = 'pending' THEN 1 ELSE 0 END) as pending
-       FROM premium_listings`
-    );
+    let premiumListings = { total: 0, approved: 0, pending: 0 };
+    try {
+      const premiumResult = await query(
+        `SELECT COUNT(*) as count,
+                SUM(CASE WHEN payment_status = 'approved' THEN 1 ELSE 0 END) as approved,
+                SUM(CASE WHEN payment_status = 'pending' THEN 1 ELSE 0 END) as pending
+         FROM premium_listings`
+      );
+      if (premiumResult.rows[0]) {
+        premiumListings = {
+          total: parseInt(premiumResult.rows[0].count || 0),
+          approved: parseInt(premiumResult.rows[0].approved || 0),
+          pending: parseInt(premiumResult.rows[0].pending || 0),
+        };
+      }
+    } catch (e) {
+      console.error('Error fetching premium listings:', e);
+    }
 
     // Daily stats for last 7 days
-    const dailyStatsResult = await query(
-      `SELECT DATE(created_at)::text as date, COUNT(*) as votes
-       FROM user_votes
-       WHERE created_at >= NOW() - INTERVAL '7 days'
-       GROUP BY DATE(created_at)
-       ORDER BY DATE(created_at)`
-    );
+    let dailyStatsResult = { rows: [] };
+    try {
+      dailyStatsResult = await query(
+        `SELECT DATE(created_at)::text as date, COUNT(*) as votes
+         FROM user_votes
+         WHERE created_at >= NOW() - INTERVAL '7 days'
+         GROUP BY DATE(created_at)
+         ORDER BY DATE(created_at)`
+      );
+    } catch (e) {
+      console.error('Error fetching daily stats:', e);
+    }
 
     return NextResponse.json({
       stats: {
         totalUsers,
         totalListings,
         totalVotes,
-        premiumListings: {
-          total: parseInt(premiumResult.rows[0].count),
-          approved: parseInt(premiumResult.rows[0].approved || 0),
-          pending: parseInt(premiumResult.rows[0].pending || 0),
-        }
+        premiumListings
       },
       topListings: topListingsResult.rows,
       recentListings: recentListingsResult.rows,
@@ -75,10 +124,18 @@ export async function GET(req: NextRequest) {
       dailyStats: dailyStatsResult.rows
     });
   } catch (error) {
-    console.error('Error fetching admin stats:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch stats' },
-      { status: 500 }
-    );
+    console.error('Error in admin stats endpoint:', error);
+    return NextResponse.json({
+      stats: {
+        totalUsers: 0,
+        totalListings: 0,
+        totalVotes: 0,
+        premiumListings: { total: 0, approved: 0, pending: 0 }
+      },
+      topListings: [],
+      recentListings: [],
+      categoryBreakdown: [],
+      dailyStats: []
+    }, { status: 500 });
   }
 }
