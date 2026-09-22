@@ -339,6 +339,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
+        id: responseData.id,
         listing: responseData,
         isNew: true,
         listings: [],
