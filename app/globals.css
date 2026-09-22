@@ -265,6 +265,12 @@ h3 {
   @apply gap-6;
 }
 
+/* Custom Font Sizes */
+.text-15px {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
 /* Standardized Button System (5 core styles) */
 .btn-primary {
   @apply px-4 py-2 bg-[#0F3460] text-white font-medium text-sm rounded-lg shadow-sm hover:bg-[#0D2A50] active:scale-95 transition-all disabled:opacity-50;
