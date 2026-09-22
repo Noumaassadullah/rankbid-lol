@@ -24,24 +24,32 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const response = await fetch(
-      `${supabaseUrl}/rest/v1/listings?user_id=eq.${userId}&order=created_at.desc`,
-      {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-        },
-      }
-    );
+    // Try to fetch with user_id filter - if the column doesn't exist, fall back to all listings
+    let listings: any[] = [];
 
-    if (!response.ok) {
-      return NextResponse.json(
-        { listings: [] },
-        { status: 200 }
+    try {
+      const response = await fetch(
+        `${supabaseUrl}/rest/v1/listings?user_id=eq.${userId}&order=created_at.desc`,
+        {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+          },
+        }
       );
-    }
 
-    const listings = await response.json();
+      if (response.ok) {
+        listings = await response.json();
+      } else if (response.status === 400) {
+        // user_id column might not exist yet (migration not applied)
+        // For now, return empty array with helpful message
+        console.log('Note: user_id column may not exist yet. Please apply database migration.');
+        listings = [];
+      }
+    } catch (err) {
+      console.error('Error fetching submissions:', err);
+      listings = [];
+    }
 
     // Transform Supabase response to match expected format
     const transformedListings = listings.map((listing: any) => ({
