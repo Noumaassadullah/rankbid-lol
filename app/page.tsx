@@ -1192,8 +1192,8 @@ export default function Home() {
 
         {/* CTA Section - After FAQ */}
         <section className="py-10 md:py-20 bg-white border-b border-gray-200">
-          <div className="max-w-4xl mx-auto px-4 md:px-6">
-            <div className="p-6 md:p-10 bg-gradient-to-r from-[#0F3460] to-[#1a5490] rounded-2xl text-white text-center shadow-lg border-2 border-[#0F3460]/30">
+          <div className="max-w-7xl mx-auto px-3 md:px-6">
+            <div className="p-8 md:p-16 bg-gradient-to-r from-[#0F3460] to-[#1a5490] rounded-2xl text-white text-center shadow-lg border-2 border-[#0F3460]/30">
               <h3 className="text-xl md:text-2xl font-black mb-2 md:mb-3">Get Your Product Ranked</h3>
               <p className="text-sm md:text-base mb-4 md:mb-6 opacity-95 max-w-xl mx-auto">Submit across all platforms and climb the global rankings. No algorithms. Just community voting power.</p>
               <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
