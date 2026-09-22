@@ -4,6 +4,8 @@ import Header from '@/components/Header';
 import FAQ from '@/components/FAQ';
 import Pagination from '@/components/Pagination';
 import PlatformIcon from '@/components/PlatformIcon';
+import PremiumListingCard from '@/components/PremiumListingCard';
+import PremiumListingModal from '@/components/PremiumListingModal';
 import { useState, useEffect, useCallback } from 'react';
 
 interface Listing {
@@ -19,6 +21,19 @@ interface Listing {
   createdAt: string;
   imageUrl?: string;
   userVoted?: boolean;
+  isPremium?: boolean;
+  premiumPosition?: number | null;
+  founderName?: string | null;
+  founderEmail?: string | null;
+  founderPhone?: string | null;
+  founderWebsite?: string | null;
+  founderTwitter?: string | null;
+  founderLinkedin?: string | null;
+  founderInstagram?: string | null;
+  founderFacebook?: string | null;
+  founderTiktok?: string | null;
+  founderYoutube?: string | null;
+  founderGithub?: string | null;
 }
 
 const CATEGORIES = [
@@ -134,6 +149,8 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
+  const [selectedListingForPremium, setSelectedListingForPremium] = useState<Listing | null>(null);
 
   const [formData, setFormData] = useState({
     url: '',
@@ -323,6 +340,30 @@ export default function Home() {
       addToast(error.message || 'Submission failed', 'error');
     } finally {
       setFormLoading(false);
+    }
+  };
+
+  const handlePremiumSubmit = async (data: any) => {
+    if (!selectedListingForPremium) return;
+
+    try {
+      const res = await fetch('/api/listings/premium', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listingId: selectedListingForPremium.id,
+          ...data,
+        }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error);
+
+      addToast('✨ Premium listing request submitted! Admin approval pending.', 'success');
+      setPremiumModalOpen(false);
+      setSelectedListingForPremium(null);
+    } catch (error: any) {
+      throw error;
     }
   };
 
@@ -556,6 +597,25 @@ export default function Home() {
               </div>
             </div>
 
+            {/* PREMIUM LISTINGS SECTION */}
+            {!loading && listings.filter(l => l.isPremium).length > 0 && (
+              <div className="mb-8 space-y-4">
+                <div className="flex items-center gap-3">
+                  <Icons.Star />
+                  <h3 className="text-lg font-black text-[#18181B] uppercase">Premium Featured</h3>
+                </div>
+                {listings.filter(l => l.isPremium).map((listing, idx) => (
+                  <PremiumListingCard
+                    key={listing.id}
+                    listing={listing}
+                    position={idx + 1}
+                    onVote={handleVote}
+                    hasVoted={votedListings.has(listing.id)}
+                  />
+                ))}
+              </div>
+            )}
+
             {loading ? (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin text-4xl">⏳</div>
@@ -613,23 +673,38 @@ export default function Home() {
                           )}
                         </div>
                       </div>
-                      <div className="text-right flex-shrink-0 ml-4">
+                      <div className="text-right flex-shrink-0 ml-4 flex flex-col gap-2">
                         <p className="text-2xl font-black group-hover:text-[#18181B] transition-colors">{voteCount}</p>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleVote(listing.id);
-                          }}
-                          disabled={votedListings.has(listing.id)}
-                          className={`text-sm font-bold px-3 py-1.5 mt-2 border-2 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center gap-1 justify-center ${
-                            votedListings.has(listing.id)
-                              ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                              : 'bg-white border-[#D97706] text-[#D97706] hover:bg-[#D97706] hover:text-[#18181B]'
-                          }`}
-                        >
-                          <Icons.Heart />
-                          {votedListings.has(listing.id) ? 'Voted' : 'Vote'}
-                        </button>
+                        <div className="flex gap-1">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleVote(listing.id);
+                            }}
+                            disabled={votedListings.has(listing.id)}
+                            className={`text-sm font-bold px-3 py-1.5 border-2 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center gap-1 justify-center flex-1 ${
+                              votedListings.has(listing.id)
+                                ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
+                                : 'bg-white border-[#D97706] text-[#D97706] hover:bg-[#D97706] hover:text-[#18181B]'
+                            }`}
+                          >
+                            <Icons.Heart />
+                            {votedListings.has(listing.id) ? 'Voted' : 'Vote'}
+                          </button>
+                          {!listing.isPremium && (
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setSelectedListingForPremium(listing);
+                                setPremiumModalOpen(true);
+                              }}
+                              title="Make this listing premium"
+                              className="text-sm font-bold px-2 py-1.5 bg-white border-2 border-[#FFB28F] text-[#FFB28F] hover:bg-[#FFB28F] hover:text-[#18181B] transition-all duration-200 hover:scale-110 active:scale-95"
+                            >
+                              ⭐
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </a>
                   );
@@ -678,6 +753,44 @@ export default function Home() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </section>
+
+        {/* STATS/SHOWCASE CARDS SECTION */}
+        <section className="bg-[#F5F5F5] py-16 border-b-4 border-[#18181B]">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: '📤',
+                  number: '500+',
+                  title: 'Products Submitted',
+                  desc: 'Founders ship their ideas daily'
+                },
+                {
+                  icon: '♥',
+                  number: '50K+',
+                  title: 'Community Votes',
+                  desc: 'Real, transparent rankings'
+                },
+                {
+                  icon: '🚀',
+                  number: '10M+',
+                  title: 'Discovery Impact',
+                  desc: 'Users discovering new products'
+                }
+              ].map((stat, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white border-4 border-[#18181B] p-8 text-center hover:bg-[#D97706]/10 transition-all duration-200 group"
+                >
+                  <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-200">{stat.icon}</div>
+                  <p className="text-4xl font-black text-[#D97706] mb-2">{stat.number}</p>
+                  <h3 className="text-lg font-black text-[#18181B] uppercase mb-2">{stat.title}</h3>
+                  <p className="text-sm text-[#18181B]/70 font-semibold">{stat.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -790,6 +903,20 @@ export default function Home() {
         </section>
 
       </div>
+
+      {/* PREMIUM LISTING MODAL */}
+      {selectedListingForPremium && (
+        <PremiumListingModal
+          listingId={selectedListingForPremium.id}
+          listingTitle={selectedListingForPremium.title}
+          isOpen={premiumModalOpen}
+          onClose={() => {
+            setPremiumModalOpen(false);
+            setSelectedListingForPremium(null);
+          }}
+          onSubmit={handlePremiumSubmit}
+        />
+      )}
 
       {/* TOAST NOTIFICATIONS */}
       <div className="fixed bottom-6 right-6 z-50 space-y-2">
