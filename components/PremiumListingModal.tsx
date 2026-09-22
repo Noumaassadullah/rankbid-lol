@@ -197,33 +197,44 @@ export default function PremiumListingModal({
           </div>
 
           {/* Social Accounts */}
-          <div className="border-t-4 border-[#18181B] pt-6">
-            <h3 className="text-lg font-black text-[#18181B] mb-4 uppercase">Social Accounts</h3>
-            <p className="text-xs text-[#18181B]/60 font-semibold mb-4">Add your social profiles to be displayed on your premium listing</p>
+          {position !== 3 && (
+            <div className="border-t-4 border-[#18181B] pt-6">
+              <h3 className="text-lg font-black text-[#18181B] mb-4 uppercase">Social Accounts</h3>
+              <p className="text-xs text-[#18181B]/60 font-semibold mb-4">
+                {position === 1 ? 'Add up to 4 social profiles to be displayed on your premium listing' : 'Add 1 social profile to be displayed on your premium listing'}
+              </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {[
-                { name: 'founderWebsite', label: 'Website', placeholder: 'https://example.com' },
-                { name: 'founderTwitter', label: 'Twitter/X', placeholder: '@handle' },
-                { name: 'founderLinkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/in/...' },
-                { name: 'founderInstagram', label: 'Instagram', placeholder: '@handle' },
-                { name: 'founderFacebook', label: 'Facebook', placeholder: 'https://facebook.com/...' },
-                { name: 'founderTiktok', label: 'TikTok', placeholder: '@handle' },
-                { name: 'founderYoutube', label: 'YouTube', placeholder: 'https://youtube.com/c/...' },
-                { name: 'founderGithub', label: 'GitHub', placeholder: '@username' },
-              ].map(field => (
-                <input
-                  key={field.name}
-                  type="text"
-                  name={field.name}
-                  value={formData[field.name as keyof typeof formData]}
-                  onChange={handleChange}
-                  placeholder={field.placeholder}
-                  className="px-4 py-3 border-2 border-[#18181B] bg-white text-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FFB28F]"
-                />
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {[
+                  { name: 'founderWebsite', label: 'Website', placeholder: 'https://example.com' },
+                  { name: 'founderTwitter', label: 'Twitter/X', placeholder: '@handle' },
+                  { name: 'founderLinkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/in/...' },
+                  { name: 'founderInstagram', label: 'Instagram', placeholder: '@handle' },
+                  { name: 'founderFacebook', label: 'Facebook', placeholder: 'https://facebook.com/...' },
+                  { name: 'founderTiktok', label: 'TikTok', placeholder: '@handle' },
+                  { name: 'founderYoutube', label: 'YouTube', placeholder: 'https://youtube.com/c/...' },
+                  { name: 'founderGithub', label: 'GitHub', placeholder: '@username' },
+                ].map((field, idx) => {
+                  // Plan #1: Show first 4 socials
+                  // Plan #2: Show only first 1 social
+                  if (position === 1 && idx >= 4) return null;
+                  if (position === 2 && idx >= 1) return null;
+
+                  return (
+                    <input
+                      key={field.name}
+                      type="text"
+                      name={field.name}
+                      value={formData[field.name as keyof typeof formData]}
+                      onChange={handleChange}
+                      placeholder={field.placeholder}
+                      className="px-4 py-3 border-2 border-[#18181B] bg-white text-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FFB28F]"
+                    />
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Payment Info */}
           <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4">
