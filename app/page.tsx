@@ -144,6 +144,11 @@ const Icons = {
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   ),
+  Tag: () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+    </svg>
+  ),
 };
 
 export default function Home() {
@@ -655,7 +660,7 @@ export default function Home() {
                           </div>
                           {listing.category && (
                             <p className="text-xs text-[#1F2937]/60 mt-1 flex items-center gap-1">
-                              <Icons.Vote />
+                              <Icons.Tag />
                               {getCategoryLabel(listing.category)}
                             </p>
                           )}
@@ -687,9 +692,9 @@ export default function Home() {
                                 setPremiumModalOpen(true);
                               }}
                               title="Make this listing premium"
-                              className="text-sm font-bold px-2 py-1.5 bg-white border-2 border-[#FFB28F] text-[#FFB28F] hover:bg-blue-100 hover:text-[#1F2937] transition-all duration-200 hover:scale-110 active:scale-95"
+                              className="text-sm font-bold px-3 py-1.5 bg-white border border-gray-300 text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 hover:scale-105 active:scale-95 rounded flex items-center gap-1"
                             >
-                              ⭐
+                              ⭐ Premium
                             </button>
                           )}
                         </div>
@@ -752,7 +757,7 @@ export default function Home() {
               <div className="inline-block mb-4">
                 <span className="text-5xl">💎</span>
               </div>
-              <h2 className="text-4xl font-black text-[#1F2937] mb-4 uppercase">Premium Features</h2>
+              <h2 className="text-4xl font-black text-[#1F2937] mb-4">Premium Features</h2>
               <p className="text-lg text-[#1F2937]/70 max-w-2xl mx-auto">Boost your product visibility with guaranteed placement and founder spotlight</p>
             </div>
 

@@ -14,7 +14,7 @@ export default function FAQ({ question, answer }: FAQProps) {
     <div className="border border-gray-300 bg-white">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#F5F5F4] transition-colors"
+        className="w-full px-8 py-4 flex items-center justify-between hover:bg-[#F5F5F4] transition-colors"
       >
         <h3 className="font-semibold text-sm text-[#1F2937] text-left ">{question}</h3>
         <span className={`font-black text-2xl transition-transform ${isOpen ? 'rotate-180' : ''}`}>
@@ -22,7 +22,7 @@ export default function FAQ({ question, answer }: FAQProps) {
         </span>
       </button>
       {isOpen && (
-        <div className="px-6 py-4 border-t-3 border-gray-300 bg-[#F5F5F4]">
+        <div className="px-8 py-4 border-t border-gray-300 bg-[#F5F5F4]">
           <p className="text-[#1F2937] leading-relaxed">{answer}</p>
         </div>
       )}

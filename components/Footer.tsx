@@ -28,6 +28,11 @@ const Icons = {
       <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.211.375-.444.864-.607 1.25a18.27 18.27 0 0 0-5.487 0c-.163-.386-.395-.875-.607-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.975 14.975 0 0 0 1.293-2.1a.07.07 0 0 0-.038-.098a13.11 13.11 0 0 1-1.872-.892a.072.072 0 0 1-.009-.119c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.062 0a.075.075 0 0 1 .079.009c.12.098.246.195.372.288a.072.072 0 0 1-.008.119c-.598.35-1.22.645-1.873.891a.07.07 0 0 0-.037.098c.36.698.772 1.356 1.293 2.1a.078.078 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.056c.5-4.506-.838-8.44-3.549-11.921a.06.06 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-.965-2.157-2.156c0-1.193.93-2.157 2.157-2.157c1.226 0 2.157.964 2.157 2.157c0 1.19-.93 2.155-2.157 2.155zm7.975 0c-1.183 0-2.157-.965-2.157-2.156c0-1.193.93-2.157 2.157-2.157c1.226 0 2.157.964 2.157 2.157c0 1.19-.931 2.155-2.157 2.155z" />
     </svg>
   ),
+  Book: () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C6.5 6.253 2 10.998 2 17s4.5 10.747 10 10.747c5.5 0 10-4.998 10-10.747C22 11 17.5 6.253 12 6.253z" />
+    </svg>
+  ),
 };
 
 export default function Footer() {
@@ -78,7 +83,10 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-xs font-black text-[#1F2937] mb-4 uppercase tracking-wider">Resources</h4>
+            <div className="flex items-center gap-2 mb-4">
+              <Icons.Book />
+              <h4 className="text-xs font-black text-[#1F2937] uppercase tracking-wider">Resources</h4>
+            </div>
             <ul className="space-y-2">
               <li>
                 <Link href="/about" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
@@ -120,7 +128,7 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left">
-            <p className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
+            <p className="text-xs font-bold text-[#1F2937]">
               © {currentYear} RankBid Global
             </p>
             <p className="text-xs font-semibold text-[#1F2937]/60 mt-1">

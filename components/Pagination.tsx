@@ -68,7 +68,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
   }
 
   return (
-    <div className="flex gap-2 justify-center items-center mt-12 flex-wrap">
+    <div className="flex gap-3 justify-center items-center mt-12 flex-wrap">
       {pages}
     </div>
   );
