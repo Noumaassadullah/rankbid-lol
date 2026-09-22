@@ -645,39 +645,39 @@ export default function Home() {
                       href={listing.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between p-3 bg-white border-gray-300 border shadow-sm rounded-lg hover:bg-[#0F3460]/10 hover:shadow-md transition-all duration-200 group cursor-pointer rounded-lg"
+                      className="flex items-center justify-between p-4 bg-white border border-gray-200 shadow-sm rounded-lg hover:shadow-md hover:border-[#0F3460]/20 transition-all duration-200 group cursor-pointer"
                     >
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="w-10 h-10 bg-[#0F3460] text-white font-black rounded-lg flex items-center justify-center">{`#${(currentPage - 1) * 15 + idx + 1}`}</div>
-                        <img src={faviconUrl} alt="favicon" className="w-6 h-6 rounded" onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'; }} />
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="w-8 h-8 bg-[#0F3460] text-white font-semibold text-xs rounded-lg flex items-center justify-center flex-shrink-0">#{(currentPage - 1) * 15 + idx + 1}</div>
+                        <img src={faviconUrl} alt="favicon" className="w-6 h-6 rounded-md flex-shrink-0" onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'; }} />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <p className="text-sm font-bold text-[#1F2937] truncate">{listing.title}</p>
-                            <div className="w-5 h-5 flex-shrink-0" title={platformLabel}>
-                              <PlatformIcon platform={platformLabel} size={20} />
+                            <p className="text-xs font-semibold text-[#1F2937] truncate">{listing.title}</p>
+                            <div className="w-4 h-4 flex-shrink-0" title={platformLabel}>
+                              <PlatformIcon platform={platformLabel} size={16} />
                             </div>
                           </div>
                           {listing.category && (
-                            <p className="text-xs text-[#1F2937]/60 mt-1 flex items-center gap-1">
+                            <p className="text-xs text-[#1F2937]/60 mt-0.5 flex items-center gap-1">
                               <Icons.Tag />
                               {getCategoryLabel(listing.category)}
                             </p>
                           )}
                         </div>
                       </div>
-                      <div className="text-right flex-shrink-0 ml-4 flex flex-col gap-2">
-                        <p className="text-2xl font-black text-[#0F3460] group-hover:text-white transition-colors">{voteCount}</p>
-                        <div className="flex gap-1">
+                      <div className="text-right flex-shrink-0 ml-3 flex flex-col items-center gap-2">
+                        <p className="text-lg font-black text-[#0F3460] group-hover:text-[#0D2A50] transition-colors">{voteCount}</p>
+                        <div className="flex gap-1 w-full">
                           <button
                             onClick={(e) => {
                               e.preventDefault();
                               handleVote(listing.id);
                             }}
                             disabled={votedListings.has(listing.id)}
-                            className={`text-sm font-bold px-3 py-1.5 border-2 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center gap-1 justify-center flex-1 rounded ${
+                            className={`text-xs font-semibold px-2 py-1 rounded-lg transition-all duration-200 active:scale-95 flex items-center gap-1 justify-center whitespace-nowrap ${
                               votedListings.has(listing.id)
-                                ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                                : 'bg-white border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white'
+                                ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
+                                : 'bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white'
                             }`}
                           >
                             <Icons.Heart />
@@ -691,7 +691,7 @@ export default function Home() {
                                 setPremiumModalOpen(true);
                               }}
                               title="Make this listing premium"
-                              className="text-sm font-bold px-3 py-1.5 bg-white border border-gray-300 text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 hover:scale-105 active:scale-95 rounded flex items-center gap-1"
+                              className="text-xs font-semibold px-2 py-1 bg-white border border-gray-300 text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
                             >
                               ⭐ Premium
                             </button>
