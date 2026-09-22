@@ -1,18 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-async function query(text: string, params: any[] = []) {
-  const url = `${supabaseUrl}/rest/v1/rpc/sql`;
-  const res = await fetch(`${supabaseUrl}/rest/v1/listings?id=eq.${encodeURIComponent(params[0])}`, {
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-    },
-  });
-
-  return res.json();
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Missing Supabase configuration');
 }
 
 export async function GET(
@@ -34,9 +26,9 @@ export async function GET(
       `${supabaseUrl}/rest/v1/listings?id=eq.${encodeURIComponent(id)}&select=*`,
       {
         headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-        },
+          'apikey': supabaseKey as string,
+          'Authorization': `Bearer ${supabaseKey as string}`,
+        } as HeadersInit,
       }
     );
 
@@ -78,9 +70,9 @@ export async function GET(
       `${supabaseUrl}/rest/v1/listings?select=id,price,total_votes,day_votes`,
       {
         headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-        },
+          'apikey': supabaseKey as string,
+          'Authorization': `Bearer ${supabaseKey as string}`,
+        } as HeadersInit,
       }
     );
 
