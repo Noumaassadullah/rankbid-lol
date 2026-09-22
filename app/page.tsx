@@ -762,6 +762,75 @@ export default function Home() {
           </div>
         </section>
 
+        {/* PREMIUM FEATURES SECTION */}
+        <section className="bg-gradient-to-b from-[#F5F5F5] to-white py-20 border-b-4 border-[#18181B]">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="text-center mb-16">
+              <div className="inline-block mb-4">
+                <span className="text-5xl">💎</span>
+              </div>
+              <h2 className="text-4xl font-black text-[#18181B] mb-4 uppercase">Premium Features</h2>
+              <p className="text-lg text-[#18181B]/70 max-w-2xl mx-auto">Boost your product visibility with guaranteed placement and founder spotlight</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: '📍',
+                  title: 'Guaranteed Position',
+                  description: 'Choose your spot: #1 position ($5), #2 position ($3), or #3 position ($1). Your product stays visible at the top of the leaderboard.',
+                  features: ['Permanent placement', 'Choose your rank', 'Vote-based sorting', 'One-time payment']
+                },
+                {
+                  icon: '👤',
+                  title: 'Founder Visibility',
+                  description: 'Display your name, email, phone, and 8 social accounts. Let the community connect directly with you.',
+                  features: ['Name & contact info', 'Email (clickable)', 'Phone (clickable)', '8 social platforms']
+                },
+                {
+                  icon: '⭐',
+                  title: 'Premium Badge',
+                  description: 'Stand out with a distinctive PREMIUM badge. Beautiful gradient card design that catches attention.',
+                  features: ['Premium badge', 'Gradient styling', 'Top placement', 'Never expires']
+                }
+              ].map((feature, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white border-4 border-[#18181B] p-8 hover:shadow-xl hover:scale-105 transition-all duration-300"
+                >
+                  <div className="text-5xl mb-4">{feature.icon}</div>
+                  <h3 className="text-2xl font-black text-[#18181B] mb-3 uppercase">{feature.title}</h3>
+                  <p className="text-sm text-[#18181B]/70 mb-6 font-semibold leading-relaxed">{feature.description}</p>
+
+                  <div className="space-y-2 pt-6 border-t-3 border-[#18181B]/20">
+                    {feature.features.map((item, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm font-bold text-[#18181B]">
+                        <span className="text-[#D97706]">✓</span>
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+
+                  <button className="w-full mt-8 py-3 bg-[#D97706] text-[#18181B] font-black uppercase text-sm border-[#D97706] border-3 hover:scale-105 active:scale-95 transition-all duration-200">
+                    Learn More
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 text-center bg-[#FFB28F] border-4 border-[#18181B] p-8 rounded-lg">
+              <p className="text-lg font-black text-[#18181B] mb-4">Ready to go premium?</p>
+              <p className="text-sm text-[#18181B]/80 mb-6 font-semibold">Submit your product for free, then click the ⭐ star button to upgrade to premium and boost your visibility!</p>
+              <button
+                onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-8 py-4 bg-[#18181B] text-white font-black uppercase text-sm border-[#18181B] border-4 hover:scale-105 active:scale-95 transition-all duration-200"
+              >
+                Submit Product Now
+              </button>
+            </div>
+          </div>
+        </section>
+
         {/* TESTIMONIALS SECTION */}
         <section className="py-20 bg-white">
           <div className="max-w-6xl mx-auto px-6">
