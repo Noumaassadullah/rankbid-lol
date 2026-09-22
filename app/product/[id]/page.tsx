@@ -2,6 +2,7 @@
 
 import Header from '@/components/Header';
 import { useState, useEffect } from 'react';
+import { use } from 'react';
 import { ArrowUpRight, TrendingUp, Eye, DollarSign, Share2, Copy, Check } from 'lucide-react';
 
 interface Listing {
@@ -16,7 +17,8 @@ interface Listing {
   createdAt: string;
 }
 
-export default function ProductPage({ params }: { params: { id: string } }) {
+export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const [product, setProduct] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
   const [allListings, setAllListings] = useState<Listing[]>([]);
@@ -24,7 +26,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     fetchProduct();
-  }, [params.id]);
+  }, [id]);
 
   const fetchProduct = async () => {
     try {
@@ -35,7 +37,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       const listings = data.listings || [];
       setAllListings(listings);
 
-      const found = listings.find((l: Listing) => l.id === params.id);
+      const found = listings.find((l: Listing) => l.id === id);
       setProduct(found || null);
     } catch (error) {
       console.error('Failed to fetch product:', error);
