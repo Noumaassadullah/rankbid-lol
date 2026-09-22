@@ -178,6 +178,8 @@ export default function Home() {
   const [votedListings, setVotedListings] = useState<Set<string>>(new Set());
   const [voterId, setVoterId] = useState<string>('');
   const [optimisticVotes, setOptimisticVotes] = useState<Record<string, number>>({});
+  const [lastSubmittedProduct, setLastSubmittedProduct] = useState<{ id: string; title: string } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const addToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     const id = Date.now().toString();
@@ -342,6 +344,7 @@ export default function Home() {
 
       const displayName = data.displayHandle ? `@${data.displayHandle}` : 'Your product';
       addToast(`🎉 ${displayName} is live! Community voting starts now.`, 'success');
+      setLastSubmittedProduct({ id: data.id, title: displayName });
       setFormData({ url: '', handle: '', description: '', category: '', platform: 'website' });
       setDetectedPlatform('website');
       setDetectedCategory('');
@@ -351,6 +354,29 @@ export default function Home() {
       addToast(error.message || 'Submission failed', 'error');
     } finally {
       setFormLoading(false);
+    }
+  };
+
+  const handleShareTwitter = () => {
+    if (!lastSubmittedProduct) return;
+    const text = `Just submitted ${lastSubmittedProduct.title} on RankBid! 🚀 Check it out and vote for my product on the global leaderboard. Join thousands of users discovering the best products worldwide. #RankBid`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://rankbid-lol.vercel.app')}`;
+    window.open(twitterUrl, '_blank', 'width=550,height=420');
+  };
+
+  const handleShareLinkedIn = () => {
+    if (!lastSubmittedProduct) return;
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://rankbid-lol.vercel.app')}`;
+    window.open(linkedInUrl, '_blank', 'width=550,height=420');
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText('https://rankbid-lol.vercel.app');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      addToast('Failed to copy link', 'error');
     }
   };
 
@@ -560,6 +586,63 @@ export default function Home() {
                 )}
               </button>
             </form>
+
+            {/* Share Buttons - Show after successful submission */}
+            {lastSubmittedProduct && (
+              <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg fade-in">
+                <h3 className="text-lg font-bold text-[#1F2937] mb-4">🎉 Your product is live!</h3>
+                <p className="text-sm text-[#1F2937]/70 mb-4">Share on social media to get more community votes:</p>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={handleShareTwitter}
+                    className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-bold text-sm"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7" />
+                    </svg>
+                    Share on X
+                  </button>
+
+                  <button
+                    onClick={handleShareLinkedIn}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold text-sm"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
+                    Share on LinkedIn
+                  </button>
+
+                  <button
+                    onClick={handleCopyLink}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-bold text-sm"
+                  >
+                    {copied ? (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copy Link
+                      </>
+                    )}
+                  </button>
+                </div>
+                <button
+                  onClick={() => setLastSubmittedProduct(null)}
+                  className="mt-4 text-sm text-[#1F2937]/60 hover:text-[#1F2937] font-semibold"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
           </div>
         </section>
 
