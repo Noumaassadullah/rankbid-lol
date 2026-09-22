@@ -466,7 +466,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto px-6">
             <div className="flex items-center gap-3 mb-8">
               <Icons.Upload />
-              <h2 className="text-2xl font-black text-[#1F2937] uppercase">Submit Your Product</h2>
+              <h2 className="text-2xl font-black text-[#1F2937]">Submit Your Product</h2>
             </div>
 
             {/* Platform Selection */}
@@ -571,10 +571,10 @@ export default function Home() {
                   <button
                     key={filter}
                     onClick={() => setActiveTimeFilter(filter as 'alltime' | 'today')}
-                    className={`px-4 py-2 font-bold text-xs uppercase border-3 transition-all duration-200 hover:scale-105 ${
+                    className={`px-4 py-2 font-bold text-xs rounded-lg shadow-sm transition-all duration-200 ${
                       activeTimeFilter === filter
-                        ? 'bg-[#0F3460] text-white border-[#0F3460]'
-                        : 'bg-white text-[#1F2937] border-gray-300'
+                        ? 'bg-[#0F3460] text-white shadow-md ring-2 ring-[#0F3460] ring-offset-2'
+                        : 'bg-white text-[#1F2937] border border-gray-300 hover:bg-gray-50'
                     }`}
                   >
                     {filter === 'alltime' ? 'All Time' : 'Today'}
@@ -583,24 +583,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mb-6">
-              <p className="text-sm font-bold text-[#1F2937] mb-3 uppercase">Filter by Category</p>
-              <div className="flex gap-2 flex-wrap">
-                {['All', ...CATEGORIES.map(cat => cat.value)].map(category => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`px-3 py-2 font-bold text-xs uppercase border-2 transition-all duration-200 hover:scale-105 ${
-                      selectedCategory === category
-                        ? 'bg-[#0F3460] text-white border-[#0F3460]'
-                        : 'bg-white text-[#1F2937] border-gray-300'
-                    }`}
-                  >
-                    {category === 'All' ? 'All Categories' : category}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {/* Category filter moved to header navigation */}
 
             {/* PREMIUM LISTINGS SECTION */}
             {!loading && listings.filter(l => l.isPremium).length > 0 && (
@@ -658,7 +641,7 @@ export default function Home() {
                       href={listing.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between p-4 bg-white border-gray-300 border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
+                      className="flex items-center justify-between p-3 bg-white border-gray-300 border shadow-sm hover:bg-[#0F3460]/10 hover:shadow-md transition-all duration-200 group cursor-pointer rounded-lg"
                     >
                       <div className="flex items-center gap-4 flex-1">
                         <div className="w-10 h-10 bg-[#0F3460] text-white font-black rounded-lg flex items-center justify-center">{`#${(currentPage - 1) * 15 + idx + 1}`}</div>

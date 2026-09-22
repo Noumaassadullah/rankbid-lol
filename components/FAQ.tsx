@@ -16,7 +16,7 @@ export default function FAQ({ question, answer }: FAQProps) {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#F5F5F4] transition-colors"
       >
-        <h3 className="font-semibold text-sm text-[#1F2937] text-left uppercase tracking-wide">{question}</h3>
+        <h3 className="font-semibold text-sm text-[#1F2937] text-left ">{question}</h3>
         <span className={`font-black text-2xl transition-transform ${isOpen ? 'rotate-180' : ''}`}>
           ▼
         </span>

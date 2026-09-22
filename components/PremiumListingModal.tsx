@@ -136,14 +136,14 @@ export default function PremiumListingModal({
                   key={pos}
                   type="button"
                   onClick={() => setPosition(pos)}
-                  className={`p-4 border-3 transition-all duration-200 hover:scale-105 ${
+                  className={`py-3 px-3 rounded-lg transition-all duration-200 ${
                     position === pos
-                      ? 'bg-[#0F3460] border-[#0F3460] text-[#1F2937]'
-                      : 'bg-white border-gray-300 text-[#1F2937] hover:bg-blue-100'
+                      ? 'bg-[#0F3460] text-white shadow-md ring-2 ring-[#0F3460] ring-offset-2'
+                      : 'bg-white border border-gray-300 text-[#1F2937] hover:bg-gray-50'
                   }`}
                 >
-                  <p className="text-2xl font-black">#{pos}</p>
-                  <p className="text-lg font-black text-[#0F3460] mt-1">${PRICES[pos]}</p>
+                  <p className="text-xl font-bold">#{pos}</p>
+                  <p className="text-sm font-semibold text-[#0F3460] mt-1">${PRICES[pos]}</p>
                 </button>
               ))}
             </div>
@@ -251,14 +251,14 @@ export default function PremiumListingModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-4 bg-white text-[#1F2937] font-black uppercase text-sm border-gray-300 border-3 hover:scale-105 active:scale-95 transition-all duration-200"
+              className="flex-1 px-4 py-3 bg-white text-[#1F2937] font-semibold text-sm border border-gray-300 rounded-lg hover:bg-gray-50 active:scale-95 transition-all duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-4 bg-[#0F3460] text-white font-black uppercase text-sm border-[#0F3460] border-3 hover:scale-105 active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-3 bg-[#0F3460] text-white font-semibold text-sm rounded-lg hover:bg-[#0D2A50] active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
             >
               {loading ? (
                 <>
