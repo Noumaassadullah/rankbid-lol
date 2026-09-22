@@ -989,28 +989,6 @@ export default function Home() {
                 );
               })}
             </div>
-
-            {/* CTA Section */}
-            <div className="mt-8 md:mt-16 p-6 md:p-10 bg-gradient-to-r from-[#0F3460] to-[#1a5490] rounded-2xl text-white text-center shadow-lg border-2 border-[#0F3460]/30">
-              <h3 className="text-xl md:text-2xl font-black mb-2 md:mb-3">Get Your Product Ranked</h3>
-              <p className="text-sm md:text-base mb-4 md:mb-6 opacity-95 max-w-xl mx-auto">Submit across all platforms and climb the global rankings. No algorithms. Just community voting power.</p>
-              <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
-                <button
-                  onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="inline-flex items-center gap-2 px-6 md:px-8 py-2.5 md:py-3.5 bg-white text-[#0F3460] font-black text-xs md:text-sm rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
-                >
-                  <Icons.Upload />
-                  START RANKING NOW
-                </button>
-                <a
-                  href="/platforms"
-                  className="inline-flex items-center gap-2 px-6 md:px-8 py-2.5 md:py-3.5 bg-white/20 text-white font-black text-xs md:text-sm rounded-xl hover:bg-white/30 active:scale-95 transition-all duration-200 shadow-lg border-2 border-white/40"
-                >
-                  <Icons.TrendingUp />
-                  EXPLORE PLATFORMS
-                </a>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -1208,6 +1186,32 @@ export default function Home() {
               ].map((faq, idx) => (
                 <FAQ key={idx} question={faq.q} answer={faq.a} />
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section - After FAQ */}
+        <section className="py-10 md:py-20 bg-white border-b border-gray-200">
+          <div className="max-w-4xl mx-auto px-4 md:px-6">
+            <div className="p-6 md:p-10 bg-gradient-to-r from-[#0F3460] to-[#1a5490] rounded-2xl text-white text-center shadow-lg border-2 border-[#0F3460]/30">
+              <h3 className="text-xl md:text-2xl font-black mb-2 md:mb-3">Get Your Product Ranked</h3>
+              <p className="text-sm md:text-base mb-4 md:mb-6 opacity-95 max-w-xl mx-auto">Submit across all platforms and climb the global rankings. No algorithms. Just community voting power.</p>
+              <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+                <button
+                  onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="inline-flex items-center gap-2 px-6 md:px-8 py-2.5 md:py-3.5 bg-white text-[#0F3460] font-black text-xs md:text-sm rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
+                >
+                  <Icons.Upload />
+                  START RANKING NOW
+                </button>
+                <a
+                  href="/platforms"
+                  className="inline-flex items-center gap-2 px-6 md:px-8 py-2.5 md:py-3.5 bg-white/20 text-white font-black text-xs md:text-sm rounded-xl hover:bg-white/30 active:scale-95 transition-all duration-200 shadow-lg border-2 border-white/40"
+                >
+                  <Icons.TrendingUp />
+                  EXPLORE PLATFORMS
+                </a>
+              </div>
             </div>
           </div>
         </section>
