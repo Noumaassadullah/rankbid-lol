@@ -384,27 +384,27 @@ export default function Home() {
       <div className="bg-white text-[#1F2937]">
 
         {/* BANNER HERO SECTION */}
-        <section className="bg-white pt-16 pb-16 border-b border-gray-200 relative overflow-hidden fade-in">
+        <section className="bg-white pt-8 md:pt-16 pb-8 md:pb-16 border-b border-gray-200 relative overflow-hidden fade-in">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-0 right-0 w-96 h-96 bg-[#0F3460] text-white rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#059669] rounded-full blur-3xl"></div>
           </div>
 
-          <div className="max-w-6xl mx-auto px-6 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="max-w-6xl mx-auto px-4 md:px-6 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
               {/* Left Content */}
               <div className="max-w-2xl">
-                <h1 className="text-5xl md:text-6xl font-black text-[#1F2937] mb-6 leading-tight">
+                <h1 className="text-3xl md:text-6xl font-black text-[#1F2937] mb-4 md:mb-6 leading-tight">
                   Rank Everything.
                 </h1>
 
-                <p className="text-lg text-[#1F2937]/75 mb-8 leading-relaxed font-medium">
+                <p className="text-base md:text-lg text-[#1F2937]/75 mb-6 md:mb-8 leading-relaxed font-medium">
                   No algorithms. No gatekeepers. Pure community voting power. Let the world discover your product through transparent, democratic rankings.
                 </p>
 
                 {/* Key Stats */}
-                <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-[#0F3460] text-white rounded-lg flex items-center justify-center text-white">
                       <Icons.Users />
@@ -751,7 +751,7 @@ export default function Home() {
         </section>
 
         {/* PREMIUM FEATURES SECTION */}
-        <section className="bg-gradient-to-b from-[#F5F5F5] to-white py-20 border-b border-gray-200">
+        <section className="bg-gradient-to-b from-blue-50 to-white py-20 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-16">
               <div className="inline-block mb-4">
@@ -863,16 +863,6 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="mt-12 text-center bg-blue-100 shadow-sm border border-gray-200 p-8 rounded-lg">
-              <p className="text-lg font-black text-[#1F2937] mb-4">Ready to go premium?</p>
-              <p className="text-sm text-[#1F2937]/80 mb-6 font-semibold">Submit your product for free, then click the ⭐ star button to upgrade to premium and boost your visibility!</p>
-              <button
-                onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-4 bg-[#18181B] text-white font-black uppercase text-sm border-gray-300 border-4 hover:scale-105 active:scale-95 transition-all duration-200"
-              >
-                Submit Product Now
-              </button>
-            </div>
           </div>
         </section>
 
