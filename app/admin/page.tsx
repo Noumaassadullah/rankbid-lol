@@ -124,7 +124,7 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated && activeTab !== 'overview') {
+    if (isAuthenticated) {
       fetchAllData();
     }
   }, [activeTab, listingsPage, usersPage, searchQuery]);
