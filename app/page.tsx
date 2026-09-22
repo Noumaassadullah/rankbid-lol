@@ -904,11 +904,6 @@ export default function Home() {
                     key={platform}
                     className={`bg-gradient-to-br ${bgGradient} border-2 md:border-4 border-gray-200 p-4 md:p-6 hover:shadow-2xl hover:border-gray-300 transition-all duration-300 group rounded-2xl backdrop-blur-sm relative overflow-hidden`}
                   >
-                    {/* Platform badge */}
-                    <div className="absolute top-3 right-3 md:top-4 md:right-4 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-2xl bg-white shadow-md border-2 border-gray-200 group-hover:scale-110 transition-transform">
-                      {platformEmoji}
-                    </div>
-
                     {/* Header */}
                     <div className="flex items-center gap-3 mb-4 md:mb-6 pr-16">
                       <div className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0 rounded-lg flex items-center justify-center" style={{backgroundColor: platformColor + '15', color: platformColor}}>
