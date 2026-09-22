@@ -134,34 +134,37 @@ export default function Header() {
               <span>{stats.allTimeVisitors}K VIEWS</span>
             </div>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-4 md:gap-8 flex-1">
-                <Link href="/platforms" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors flex items-center gap-1">
+            {/* Spacer */}
+            <div className="flex-1"></div>
+
+            {/* Desktop Nav - Right Side */}
+            <nav className="hidden lg:flex items-center gap-2 md:gap-4">
+                <Link href="/platforms" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors flex items-center gap-1 px-2 py-1">
                   <TrendingUp className="w-4 h-4" />
                   Platforms
                 </Link>
-                <Link href="/why" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
+                <Link href="/why" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors px-2 py-1">
                   Why
                 </Link>
-                <Link href="/daily" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
+                <Link href="/daily" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors px-2 py-1">
                   Daily
                 </Link>
-                <Link href="/archive" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
+                <Link href="/archive" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors px-2 py-1">
                   Archive
                 </Link>
-                <Link href="/categories" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
+                <Link href="/categories" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors px-2 py-1">
                   Categories
                 </Link>
-                <Link href="/about" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
+                <Link href="/about" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors px-2 py-1">
                   About
                 </Link>
               </nav>
 
-              {/* Profile Avatar - Far Right */}
+              {/* Profile Avatar */}
               {user ? (
                 <Link
                   href="/profile"
-                  className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-sm hover:shadow-md transition-all"
+                  className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-sm hover:shadow-md transition-all ml-2"
                   title={user.name || user.email}
                 >
                   {(user.name || user.email).charAt(0).toUpperCase()}

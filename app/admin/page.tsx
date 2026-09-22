@@ -63,11 +63,30 @@ export default function AdminPage() {
     }, 3000);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('admin_key', adminKey);
-    setIsAuthenticated(true);
-    fetchAllData();
+
+    // Test admin key first
+    try {
+      const testRes = await fetch('/api/admin/debug', {
+        headers: { 'x-admin-key': adminKey }
+      });
+      const testData = await testRes.json();
+      console.log('Debug response:', testData);
+
+      if (!testData.adminKey.matches) {
+        showToast('❌ Admin key is incorrect!', 'error');
+        return;
+      }
+
+      localStorage.setItem('admin_key', adminKey);
+      setIsAuthenticated(true);
+      fetchAllData();
+      showToast('✅ Authenticated! Loading dashboard...', 'success');
+    } catch (error) {
+      console.error('Login error:', error);
+      showToast('Failed to connect to database', 'error');
+    }
   };
 
   const fetchAllData = async () => {
@@ -250,6 +269,20 @@ export default function AdminPage() {
         {/* OVERVIEW TAB */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
+            {/* Debug Info */}
+            {!stats && (
+              <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4 text-yellow-800">
+                <p className="font-bold mb-2">⚠️ No data loaded yet</p>
+                <p className="text-sm mb-3">Check browser console (F12) for errors. Stats should appear below once data loads.</p>
+                <button
+                  onClick={fetchAllData}
+                  className="px-4 py-2 bg-yellow-600 text-white rounded font-bold text-sm hover:bg-yellow-700"
+                >
+                  Retry Loading Data
+                </button>
+              </div>
+            )}
+
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white rounded-lg shadow p-6">
