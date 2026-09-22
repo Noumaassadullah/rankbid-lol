@@ -102,16 +102,16 @@ export default function PremiumListingModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white border-4 border-[#18181B] rounded-lg max-w-2xl w-full my-8">
+      <div className="bg-white shadow-sm border border-gray-200 rounded-lg max-w-2xl w-full my-8">
         {/* Header */}
-        <div className="bg-[#D97706] border-b-4 border-[#18181B] p-6 flex items-center justify-between">
+        <div className="bg-[#0F3460] border-b border-gray-200 p-6 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-black text-[#18181B] uppercase">Boost to Premium</h2>
-            <p className="text-sm text-[#18181B]/70 font-semibold mt-1">{listingTitle}</p>
+            <h2 className="text-2xl font-black text-[#1F2937] uppercase">Boost to Premium</h2>
+            <p className="text-sm text-[#1F2937]/70 font-semibold mt-1">{listingTitle}</p>
           </div>
           <button
             onClick={onClose}
-            className="text-2xl font-black text-[#18181B] hover:scale-110 transition-transform"
+            className="text-2xl font-black text-[#1F2937] hover:scale-110 transition-transform"
           >
             ✕
           </button>
@@ -127,7 +127,7 @@ export default function PremiumListingModal({
 
           {/* Position Selection */}
           <div>
-            <label className="block text-sm font-black text-[#18181B] mb-3 uppercase">
+            <label className="block text-sm font-black text-[#1F2937] mb-3 uppercase">
               Select Position & Price
             </label>
             <div className="grid grid-cols-3 gap-3">
@@ -138,58 +138,58 @@ export default function PremiumListingModal({
                   onClick={() => setPosition(pos)}
                   className={`p-4 border-3 transition-all duration-200 hover:scale-105 ${
                     position === pos
-                      ? 'bg-[#D97706] border-[#D97706] text-[#18181B]'
-                      : 'bg-white border-[#18181B] text-[#18181B] hover:bg-[#FFB28F]'
+                      ? 'bg-[#0F3460] border-[#0F3460] text-[#1F2937]'
+                      : 'bg-white border-[#18181B] text-[#1F2937] hover:bg-blue-100'
                   }`}
                 >
                   <p className="text-2xl font-black">#{pos}</p>
-                  <p className="text-lg font-black text-[#D97706] mt-1">${PRICES[pos]}</p>
+                  <p className="text-lg font-black text-[#0F3460] mt-1">${PRICES[pos]}</p>
                 </button>
               ))}
             </div>
-            <p className="text-xs text-[#18181B]/60 font-semibold mt-2">
+            <p className="text-xs text-[#1F2937]/60 font-semibold mt-2">
               📌 Your product will be featured at position #{position} for ${price}. Votes can still move it in rankings.
             </p>
           </div>
 
           {/* Founder Information */}
           <div className="border-t-4 border-[#18181B] pt-6">
-            <h3 className="text-lg font-black text-[#18181B] mb-4 uppercase">Founder Information</h3>
+            <h3 className="text-lg font-black text-[#1F2937] mb-4 uppercase">Founder Information</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-bold text-[#18181B] mb-2">Name *</label>
+                <label className="block text-sm font-bold text-[#1F2937] mb-2">Name *</label>
                 <input
                   type="text"
                   name="founderName"
                   value={formData.founderName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-3 border-[#18181B] bg-white text-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FFB28F]"
+                  className="w-full px-4 py-3 border border-gray-300 bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   placeholder="John Doe"
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-[#18181B] mb-2">Email *</label>
+                <label className="block text-sm font-bold text-[#1F2937] mb-2">Email *</label>
                 <input
                   type="email"
                   name="founderEmail"
                   value={formData.founderEmail}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-3 border-[#18181B] bg-white text-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FFB28F]"
+                  className="w-full px-4 py-3 border border-gray-300 bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   placeholder="john@example.com"
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-[#18181B] mb-2">Phone *</label>
+                <label className="block text-sm font-bold text-[#1F2937] mb-2">Phone *</label>
                 <input
                   type="tel"
                   name="founderPhone"
                   value={formData.founderPhone}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-3 border-[#18181B] bg-white text-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FFB28F]"
+                  className="w-full px-4 py-3 border border-gray-300 bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   placeholder="+92 300 1234567"
                 />
               </div>
@@ -199,8 +199,8 @@ export default function PremiumListingModal({
           {/* Social Accounts */}
           {position !== 3 && (
             <div className="border-t-4 border-[#18181B] pt-6">
-              <h3 className="text-lg font-black text-[#18181B] mb-4 uppercase">Social Accounts</h3>
-              <p className="text-xs text-[#18181B]/60 font-semibold mb-4">
+              <h3 className="text-lg font-black text-[#1F2937] mb-4 uppercase">Social Accounts</h3>
+              <p className="text-xs text-[#1F2937]/60 font-semibold mb-4">
                 {position === 1 ? 'Add up to 4 social profiles to be displayed on your premium listing' : 'Add 1 social profile to be displayed on your premium listing'}
               </p>
 
@@ -222,14 +222,14 @@ export default function PremiumListingModal({
 
                   return (
                     <div key={field.name}>
-                      <label className="block text-xs font-bold text-[#18181B] mb-2 uppercase">{field.label}</label>
+                      <label className="block text-xs font-bold text-[#1F2937] mb-2 uppercase">{field.label}</label>
                       <input
                         type="text"
                         name={field.name}
                         value={formData[field.name as keyof typeof formData]}
                         onChange={handleChange}
                         placeholder={field.placeholder}
-                        className="w-full px-4 py-3 border-2 border-[#18181B] bg-white text-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FFB28F]"
+                        className="w-full px-4 py-3 border-2 border-[#18181B] bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                       />
                     </div>
                   );
@@ -239,9 +239,9 @@ export default function PremiumListingModal({
           )}
 
           {/* Payment Info */}
-          <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4">
-            <p className="font-bold text-[#18181B] mb-2">Payment Method: Manual Verification</p>
-            <p className="text-sm text-[#18181B]/70">
+          <div className="bg-gray-50 border-2 border-[#18181B] p-4">
+            <p className="font-bold text-[#1F2937] mb-2">Payment Method: Manual Verification</p>
+            <p className="text-sm text-[#1F2937]/70">
               After submission, an admin will verify your payment of <span className="font-black">${price}</span> and activate your premium listing. You'll receive a confirmation email.
             </p>
           </div>
@@ -251,14 +251,14 @@ export default function PremiumListingModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-6 py-4 bg-white text-[#18181B] font-black uppercase text-sm border-[#18181B] border-3 hover:scale-105 active:scale-95 transition-all duration-200"
+              className="flex-1 px-6 py-4 bg-white text-[#1F2937] font-black uppercase text-sm border-[#18181B] border-3 hover:scale-105 active:scale-95 transition-all duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-4 bg-[#D97706] text-[#18181B] font-black uppercase text-sm border-[#D97706] border-3 hover:scale-105 active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-4 bg-[#0F3460] text-[#1F2937] font-black uppercase text-sm border-[#0F3460] border-3 hover:scale-105 active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

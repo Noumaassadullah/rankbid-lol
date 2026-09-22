@@ -69,32 +69,32 @@ export default function DailyPage() {
   return (
     <>
       <Header />
-      <div className="bg-white text-[#18181B]">
+      <div className="bg-white text-[#1F2937]">
         {/* Header Section */}
-        <section className="bg-white py-12 border-b-4 border-[#18181B]">
+        <section className="bg-white py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
             <div className="mb-8">
-              <h1 className="text-4xl font-black text-[#18181B] uppercase mb-2">Today's Top Rankings</h1>
-              <p className="text-[#18181B]/70 font-semibold">Community-voted products ranking for today</p>
+              <h1 className="text-4xl font-black text-[#1F2937] uppercase mb-2">Today's Top Rankings</h1>
+              <p className="text-[#1F2937]/70 font-semibold">Community-voted products ranking for today</p>
             </div>
 
             {/* Countdown Timer */}
-            <div className="flex items-center gap-4 p-6 bg-[#F5F5F5] border-3 border-[#18181B] inline-block">
-              <span className="text-sm font-black text-[#18181B] uppercase">Resets in:</span>
+            <div className="flex items-center gap-4 p-6 bg-gray-50 border-3 border-[#18181B] inline-block">
+              <span className="text-sm font-black text-[#1F2937] uppercase">Resets in:</span>
               <div className="flex gap-3 items-center">
-                <div className="flex flex-col items-center bg-white border-2 border-[#D97706] px-3 py-2">
-                  <span className="text-2xl font-black text-[#D97706]">{String(countdown.hours).padStart(2, '0')}</span>
-                  <span className="text-xs font-black text-[#18181B] uppercase">Hours</span>
+                <div className="flex flex-col items-center bg-white border-2 border-[#0F3460] px-3 py-2">
+                  <span className="text-2xl font-black text-[#0F3460]">{String(countdown.hours).padStart(2, '0')}</span>
+                  <span className="text-xs font-black text-[#1F2937] uppercase">Hours</span>
                 </div>
-                <span className="text-2xl font-black text-[#18181B]">:</span>
-                <div className="flex flex-col items-center bg-white border-2 border-[#D97706] px-3 py-2">
-                  <span className="text-2xl font-black text-[#D97706]">{String(countdown.minutes).padStart(2, '0')}</span>
-                  <span className="text-xs font-black text-[#18181B] uppercase">Mins</span>
+                <span className="text-2xl font-black text-[#1F2937]">:</span>
+                <div className="flex flex-col items-center bg-white border-2 border-[#0F3460] px-3 py-2">
+                  <span className="text-2xl font-black text-[#0F3460]">{String(countdown.minutes).padStart(2, '0')}</span>
+                  <span className="text-xs font-black text-[#1F2937] uppercase">Mins</span>
                 </div>
-                <span className="text-2xl font-black text-[#18181B]">:</span>
-                <div className="flex flex-col items-center bg-white border-2 border-[#D97706] px-3 py-2">
-                  <span className="text-2xl font-black text-[#D97706]">{String(countdown.seconds).padStart(2, '0')}</span>
-                  <span className="text-xs font-black text-[#18181B] uppercase">Secs</span>
+                <span className="text-2xl font-black text-[#1F2937]">:</span>
+                <div className="flex flex-col items-center bg-white border-2 border-[#0F3460] px-3 py-2">
+                  <span className="text-2xl font-black text-[#0F3460]">{String(countdown.seconds).padStart(2, '0')}</span>
+                  <span className="text-xs font-black text-[#1F2937] uppercase">Secs</span>
                 </div>
               </div>
             </div>
@@ -102,19 +102,19 @@ export default function DailyPage() {
         </section>
 
         {/* Listings Section */}
-        <section className="bg-white py-12 border-b-4 border-[#18181B]">
+        <section className="bg-white py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
             {loading ? (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin text-4xl">⏳</div>
-                <p className="text-[#18181B]/60 font-semibold mt-2">Loading rankings...</p>
+                <p className="text-[#1F2937]/60 font-semibold mt-2">Loading rankings...</p>
               </div>
             ) : listings.length === 0 ? (
-              <div className="text-center py-12 border-[#18181B] border-4 bg-[#F5F5F5]">
-                <p className="text-sm font-bold text-[#18181B] mb-4">No rankings yet for today</p>
+              <div className="text-center py-12 border-[#18181B] border-4 bg-gray-50">
+                <p className="text-sm font-bold text-[#1F2937] mb-4">No rankings yet for today</p>
                 <button
                   onClick={() => window.location.href = '/'}
-                  className="px-6 py-2 bg-[#D97706] text-[#18181B] font-bold text-xs uppercase border-[#D97706] border-3 hover:scale-105 transition-all duration-200"
+                  className="px-6 py-2 bg-[#0F3460] text-[#1F2937] font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
                 >
                   Submit a Listing
                 </button>
@@ -127,22 +127,22 @@ export default function DailyPage() {
                     href={listing.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#D97706]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
+                    className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
                   >
                     <div className="flex items-center gap-4 flex-1">
-                      <div className="w-10 h-10 bg-[#D97706] text-[#18181B] font-black rounded-lg flex items-center justify-center text-sm">
+                      <div className="w-10 h-10 bg-[#0F3460] text-[#1F2937] font-black rounded-lg flex items-center justify-center text-sm">
                         #{idx + 1}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-[#18181B] truncate">{listing.title}</p>
+                        <p className="text-sm font-bold text-[#1F2937] truncate">{listing.title}</p>
                         {listing.category && (
-                          <p className="text-xs text-[#18181B]/60 mt-1">{listing.category}</p>
+                          <p className="text-xs text-[#1F2937]/60 mt-1">{listing.category}</p>
                         )}
                       </div>
                     </div>
                     <div className="text-right flex-shrink-0 ml-4">
-                      <p className="text-2xl font-black text-[#D97706]">♥ {listing.dayVotes}</p>
-                      <p className="text-xs text-[#18181B]/60 font-semibold uppercase">Votes</p>
+                      <p className="text-2xl font-black text-[#0F3460]">♥ {listing.dayVotes}</p>
+                      <p className="text-xs text-[#1F2937]/60 font-semibold uppercase">Votes</p>
                     </div>
                   </a>
                 ))}

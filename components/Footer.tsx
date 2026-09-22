@@ -34,14 +34,14 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white text-[#18181B] border-t-4 border-[#18181B]">
+    <footer className="bg-white text-[#1F2937] border-t-4 border-[#18181B]">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b-3 border-[#18181B]">
           {/* Brand */}
           <div>
-            <h3 className="text-sm font-black text-[#18181B] mb-3 uppercase tracking-wider">RankBid</h3>
-            <p className="text-xs font-semibold text-[#18181B]/70 leading-relaxed">
+            <h3 className="text-sm font-black text-[#1F2937] mb-3 uppercase tracking-wider">RankBid</h3>
+            <p className="text-xs font-semibold text-[#1F2937]/70 leading-relaxed">
               Community-driven product rankings. No algorithms. Pure voting.
             </p>
           </div>
@@ -50,26 +50,26 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Icons.Trophy />
-              <h4 className="text-xs font-black text-[#18181B] uppercase tracking-wider">Rankings</h4>
+              <h4 className="text-xs font-black text-[#1F2937] uppercase tracking-wider">Rankings</h4>
             </div>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-xs font-bold text-[#18181B]/70 hover:text-[#FFB28F] transition-colors">
+                <Link href="/" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
                   All Time
                 </Link>
               </li>
               <li>
-                <Link href="/today" className="text-xs font-bold text-[#18181B]/70 hover:text-[#FFB28F] transition-colors">
+                <Link href="/today" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
                   Today
                 </Link>
               </li>
               <li>
-                <Link href="/daily" className="text-xs font-bold text-[#18181B]/70 hover:text-[#FFB28F] transition-colors">
+                <Link href="/daily" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
                   Daily
                 </Link>
               </li>
               <li>
-                <Link href="/categories" className="text-xs font-bold text-[#18181B]/70 hover:text-[#FFB28F] transition-colors">
+                <Link href="/categories" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
                   Categories
                 </Link>
               </li>
@@ -78,20 +78,20 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-xs font-black text-[#18181B] mb-4 uppercase tracking-wider">Resources</h4>
+            <h4 className="text-xs font-black text-[#1F2937] mb-4 uppercase tracking-wider">Resources</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" className="text-xs font-bold text-[#18181B]/70 hover:text-[#FFB28F] transition-colors">
+                <Link href="/about" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/rules" className="text-xs font-bold text-[#18181B]/70 hover:text-[#FFB28F] transition-colors">
+                <Link href="/rules" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
                   Rules & Terms
                 </Link>
               </li>
               <li>
-                <Link href="/claim" className="text-xs font-bold text-[#18181B]/70 hover:text-[#FFB28F] transition-colors">
+                <Link href="/claim" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
                   Claim Listing
                 </Link>
               </li>
@@ -102,14 +102,14 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Icons.Mail />
-              <h4 className="text-xs font-black text-[#18181B] uppercase tracking-wider">Contact</h4>
+              <h4 className="text-xs font-black text-[#1F2937] uppercase tracking-wider">Contact</h4>
             </div>
-            <p className="text-xs font-semibold text-[#18181B]/70 mb-3">
+            <p className="text-xs font-semibold text-[#1F2937]/70 mb-3">
               Questions? Reach out.
             </p>
             <a
               href="mailto:support@rankbid.pk"
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#FFB28F] text-[#18181B] font-bold text-xs uppercase border-2 border-[#18181B] hover:bg-[#18181B] hover:text-[#FFB28F] transition-all"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-[#1F2937] font-bold text-xs uppercase border-2 border-[#18181B] hover:bg-[#18181B] hover:text-[#FFB28F] transition-all"
             >
               <Icons.Mail />
               Email
@@ -120,10 +120,10 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-center md:text-left">
-            <p className="text-xs font-bold text-[#18181B] uppercase tracking-wider">
+            <p className="text-xs font-bold text-[#1F2937] uppercase tracking-wider">
               © {currentYear} RankBid Global
             </p>
-            <p className="text-xs font-semibold text-[#18181B]/60 mt-1">
+            <p className="text-xs font-semibold text-[#1F2937]/60 mt-1">
               The transparent platform. Merit wins.
             </p>
           </div>
@@ -132,7 +132,7 @@ export default function Footer() {
           <div className="flex gap-3">
             <a
               href="https://twitter.com"
-              className="w-8 h-8 bg-[#FFB28F] text-[#18181B] flex items-center justify-center border-3 border-[#18181B] hover:scale-110 transition-all"
+              className="w-8 h-8 bg-blue-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Twitter"
@@ -141,7 +141,7 @@ export default function Footer() {
             </a>
             <a
               href="https://github.com"
-              className="w-8 h-8 bg-[#FFB28F] text-[#18181B] flex items-center justify-center border-3 border-[#18181B] hover:scale-110 transition-all"
+              className="w-8 h-8 bg-blue-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
@@ -150,7 +150,7 @@ export default function Footer() {
             </a>
             <a
               href="https://discord.com"
-              className="w-8 h-8 bg-[#FFB28F] text-[#18181B] flex items-center justify-center border-3 border-[#18181B] hover:scale-110 transition-all"
+              className="w-8 h-8 bg-blue-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Discord"

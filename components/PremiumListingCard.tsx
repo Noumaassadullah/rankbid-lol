@@ -117,7 +117,7 @@ export default function PremiumListingCard({
       href={listing.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block bg-gradient-to-br from-[#FFB28F] to-[#D97706] border-4 border-[#18181B] p-6 hover:shadow-xl transition-all duration-200 group relative overflow-hidden"
+      className="block bg-gradient-to-br from-[#FFB28F] to-[#D97706] shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-200 group relative overflow-hidden"
     >
       {/* Premium Badge */}
       <div className="absolute top-3 right-3 bg-[#18181B] text-[#FFB28F] px-3 py-1 border-2 border-[#FFB28F] font-black text-xs flex items-center gap-1">
@@ -133,8 +133,8 @@ export default function PremiumListingCard({
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-10 h-10 bg-[#18181B] text-[#FFB28F] font-black rounded-lg flex items-center justify-center">{`#${position}`}</div>
                 <div>
-                  <p className="text-lg font-black text-[#18181B] group-hover:underline">{listing.title}</p>
-                  <p className="text-xs text-[#18181B]/70 font-semibold">{listing.category}</p>
+                  <p className="text-lg font-black text-[#1F2937] group-hover:underline">{listing.title}</p>
+                  <p className="text-xs text-[#1F2937]/70 font-semibold">{listing.category}</p>
                 </div>
               </div>
             </div>
@@ -143,8 +143,8 @@ export default function PremiumListingCard({
           {/* Vote Count - Only show for Plan #1 */}
           {listing.premiumPosition === 1 && (
             <div className="mb-4 bg-white bg-opacity-80 inline-block px-4 py-2 border-2 border-[#18181B] rounded">
-              <p className="text-2xl font-black text-[#18181B]">{listing.totalVotes}</p>
-              <p className="text-xs text-[#18181B]/60 font-semibold">Total Votes</p>
+              <p className="text-2xl font-black text-[#1F2937]">{listing.totalVotes}</p>
+              <p className="text-xs text-[#1F2937]/60 font-semibold">Total Votes</p>
             </div>
           )}
         </div>
@@ -161,7 +161,7 @@ export default function PremiumListingCard({
             className={`w-full py-3 px-4 font-black text-sm border-3 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 ${
               hasVoted
                 ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                : 'bg-white text-[#D97706] border-[#D97706] hover:bg-[#D97706] hover:text-white'
+                : 'bg-white text-[#0F3460] border-[#0F3460] hover:bg-[#0F3460] hover:text-white'
             }`}
           >
             <Icons.Heart />
@@ -169,19 +169,19 @@ export default function PremiumListingCard({
           </button>
 
           {/* Founder Info */}
-          <div className="bg-white bg-opacity-90 p-4 border-3 border-[#18181B] rounded">
-            <p className="font-black text-[#18181B] text-sm mb-3">Founder</p>
-            <p className="font-bold text-[#18181B] text-sm mb-2">{listing.founderName}</p>
+          <div className="bg-white bg-opacity-90 p-4 border border-gray-300 rounded">
+            <p className="font-black text-[#1F2937] text-sm mb-3">Founder</p>
+            <p className="font-bold text-[#1F2937] text-sm mb-2">{listing.founderName}</p>
 
             <div className="space-y-2 mb-3 text-xs">
               {listing.founderEmail && (
-                <a href={`mailto:${listing.founderEmail}`} className="flex items-center gap-2 text-[#18181B] hover:text-[#D97706] transition-colors">
+                <a href={`mailto:${listing.founderEmail}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   <Icons.Mail />
                   <span className="truncate">{listing.founderEmail}</span>
                 </a>
               )}
               {listing.founderPhone && (
-                <a href={`tel:${listing.founderPhone}`} className="flex items-center gap-2 text-[#18181B] hover:text-[#D97706] transition-colors">
+                <a href={`tel:${listing.founderPhone}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   <Icons.Phone />
                   <span>{listing.founderPhone}</span>
                 </a>
@@ -198,7 +198,7 @@ export default function PremiumListingCard({
                     target="_blank"
                     rel="noopener noreferrer"
                     title={link.label}
-                    className="p-1.5 bg-[#18181B] text-[#FFB28F] border border-[#FFB28F] rounded hover:bg-[#FFB28F] hover:text-[#18181B] transition-colors"
+                    className="p-1.5 bg-[#18181B] text-[#FFB28F] border border-[#FFB28F] rounded hover:bg-blue-100 hover:text-[#1F2937] transition-colors"
                   >
                     {link.icon === 'globe' && <Icons.Globe />}
                     {link.icon === 'twitter' && <Icons.Twitter />}

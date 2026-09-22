@@ -375,13 +375,13 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="bg-white text-[#18181B]">
+      <div className="bg-white text-[#1F2937]">
 
         {/* BANNER HERO SECTION */}
-        <section className="bg-white pt-16 pb-16 border-b-4 border-[#18181B] relative overflow-hidden fade-in">
+        <section className="bg-white pt-16 pb-16 border-b border-gray-200 relative overflow-hidden fade-in">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-[#D97706] rounded-full blur-3xl"></div>
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#0F3460] rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#059669] rounded-full blur-3xl"></div>
           </div>
 
@@ -389,32 +389,32 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               {/* Left Content */}
               <div className="max-w-2xl">
-                <h1 className="text-5xl md:text-6xl font-black text-[#18181B] mb-6 leading-tight">
+                <h1 className="text-5xl md:text-6xl font-black text-[#1F2937] mb-6 leading-tight">
                   Rank Everything.
                 </h1>
 
-                <p className="text-lg text-[#18181B]/75 mb-8 leading-relaxed font-medium">
+                <p className="text-lg text-[#1F2937]/75 mb-8 leading-relaxed font-medium">
                   No algorithms. No gatekeepers. Pure community voting power. Let the world discover your product through transparent, democratic rankings.
                 </p>
 
                 {/* Key Stats */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#D97706] rounded-lg flex items-center justify-center text-[#18181B]">
+                    <div className="w-12 h-12 bg-[#0F3460] rounded-lg flex items-center justify-center text-[#1F2937]">
                       <Icons.Users />
                     </div>
                     <div>
                       <p className="text-2xl font-black">100K+</p>
-                      <p className="text-xs text-[#18181B]/60 font-semibold">Ranked Products</p>
+                      <p className="text-xs text-[#1F2937]/60 font-semibold">Ranked Products</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#059669] rounded-lg flex items-center justify-center text-[#18181B]">
+                    <div className="w-12 h-12 bg-[#059669] rounded-lg flex items-center justify-center text-[#1F2937]">
                       <Icons.TrendingUp />
                     </div>
                     <div>
                       <p className="text-2xl font-black">Real-time</p>
-                      <p className="text-xs text-[#18181B]/60 font-semibold">Live Updates</p>
+                      <p className="text-xs text-[#1F2937]/60 font-semibold">Live Updates</p>
                     </div>
                   </div>
                 </div>
@@ -423,7 +423,7 @@ export default function Home() {
                 <div className="flex gap-4 flex-wrap">
                   <button
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-[#D97706] text-[#18181B] font-black uppercase text-sm border-[#D97706] border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-[#0F3460] text-[#1F2937] font-black uppercase text-sm border-[#0F3460] border-4 hover:scale-105 active:scale-95 transition-all duration-150"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.Upload />
@@ -431,7 +431,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black uppercase text-sm border-[#18181B] border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#1F2937] font-black uppercase text-sm border-[#18181B] border-4 hover:scale-105 active:scale-95 transition-all duration-150"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.TrendingUp />
@@ -442,16 +442,16 @@ export default function Home() {
 
               {/* Right Visual */}
               <div className="hidden md:block">
-                <div className="bg-white border-4 border-[#18181B] p-8 rounded-lg hover:scale-105 transition-transform duration-300">
+                <div className="bg-white shadow-sm border border-gray-200 p-8 rounded-lg hover:scale-105 transition-transform duration-300">
                   <div className="space-y-4">
                     {[1, 2, 3].map(i => (
-                      <div key={i} className="flex items-center gap-3 p-4 bg-[#F5F5F5] border-2 border-[#E4E4E7] rounded">
-                        <div className="w-10 h-10 bg-[#D97706] text-[#18181B] font-black rounded flex items-center justify-center">{`#${i}`}</div>
+                      <div key={i} className="flex items-center gap-3 p-4 bg-gray-50 border-2 border-[#E4E4E7] rounded">
+                        <div className="w-10 h-10 bg-[#0F3460] text-[#1F2937] font-black rounded flex items-center justify-center">{`#${i}`}</div>
                         <div className="flex-1">
-                          <p className="text-sm font-bold text-[#18181B]">Top Product {i}</p>
-                          <p className="text-xs text-[#18181B]/60">Marketing</p>
+                          <p className="text-sm font-bold text-[#1F2937]">Top Product {i}</p>
+                          <p className="text-xs text-[#1F2937]/60">Marketing</p>
                         </div>
-                        <p className="font-black text-[#D97706] text-lg">{1000 - i * 200}</p>
+                        <p className="font-black text-[#0F3460] text-lg">{1000 - i * 200}</p>
                       </div>
                     ))}
                   </div>
@@ -462,11 +462,11 @@ export default function Home() {
         </section>
 
         {/* FORM SECTION */}
-        <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B] fade-in">
+        <section className="bg-gray-50 py-12 border-b border-gray-200 fade-in">
           <div className="max-w-4xl mx-auto px-6">
             <div className="flex items-center gap-3 mb-8">
               <Icons.Upload />
-              <h2 className="text-2xl font-black text-[#18181B] uppercase">Submit Your Product</h2>
+              <h2 className="text-2xl font-black text-[#1F2937] uppercase">Submit Your Product</h2>
             </div>
 
             {/* Platform Selection */}
@@ -478,8 +478,8 @@ export default function Home() {
                   onClick={() => setFormData(prev => ({ ...prev, platform: platform.id }))}
                   className={`px-4 py-2 font-bold text-xs uppercase border-3 transition-all duration-200 hover:scale-105 flex items-center gap-2 ${
                     formData.platform === platform.id
-                      ? 'bg-[#FFB28F] text-[#18181B] border-[#18181B]'
-                      : 'bg-white text-[#18181B] border-[#18181B] hover:bg-[#FFB28F]'
+                      ? 'bg-blue-100 text-[#1F2937] border-[#18181B]'
+                      : 'bg-white text-[#1F2937] border-[#18181B] hover:bg-blue-100'
                   }`}
                 >
                   <Icons.Globe />
@@ -498,7 +498,7 @@ export default function Home() {
                     placeholder={formData.platform === 'website' ? 'Product URL' : 'Profile URL or username'}
                     value={formData.url}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 bg-white text-[#18181B] border-3 border-[#18181B] font-semibold text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFB28F] focus:ring-offset-2 transition-all duration-200 ${
+                    className={`w-full px-4 py-3 bg-white text-[#1F2937] border-3 border-[#18181B] font-semibold text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
                       formErrors.url ? 'border-red-500 shake' : ''
                     }`}
                     required
@@ -507,7 +507,7 @@ export default function Home() {
                     <p className="text-xs text-red-600 font-bold mt-1 slide-in">{formErrors.url}</p>
                   )}
                   {formData.platform !== 'website' && (
-                    <p className="text-xs text-[#18181B]/60 font-semibold mt-1">
+                    <p className="text-xs text-[#1F2937]/60 font-semibold mt-1">
                       {formData.platform === 'facebook' && 'e.g., facebook.com/yourpage or just yourpage'}
                       {formData.platform === 'instagram' && 'e.g., instagram.com/username or just @username'}
                       {formData.platform === 'tiktok' && 'e.g., tiktok.com/@username or just @username'}
@@ -521,7 +521,7 @@ export default function Home() {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 bg-white text-[#18181B] border-3 border-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-[#FFB28F] focus:ring-offset-2 transition-all duration-200 ${
+                    className={`w-full px-4 py-3 bg-white text-[#1F2937] border-3 border-[#18181B] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
                       formErrors.category ? 'border-red-500 shake' : ''
                     }`}
                     required
@@ -540,7 +540,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={formLoading || metadataLoading}
-                className="w-full px-6 py-4 bg-[#D97706] text-[#18181B] font-black uppercase text-sm border-[#D97706] border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full px-6 py-4 bg-[#0F3460] text-[#1F2937] font-black uppercase text-sm border-[#0F3460] border-4 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
                 style={{boxShadow: 'none'}}
               >
                 {formLoading ? (
@@ -559,12 +559,12 @@ export default function Home() {
         </section>
 
         {/* LEADERBOARD SECTION */}
-        <section id="leaderboard" className="bg-white py-12 border-b-4 border-[#18181B] fade-in">
+        <section id="leaderboard" className="bg-white py-12 border-b border-gray-200 fade-in">
           <div className="max-w-6xl mx-auto px-6">
             <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
               <div className="flex items-center gap-3">
                 <Icons.Trophy />
-                <h2 className="text-2xl font-black text-[#18181B] uppercase">Top Rankings</h2>
+                <h2 className="text-2xl font-black text-[#1F2937] uppercase">Top Rankings</h2>
               </div>
               <div className="flex gap-2 flex-wrap">
                 {['alltime', 'today'].map(filter => (
@@ -573,8 +573,8 @@ export default function Home() {
                     onClick={() => setActiveTimeFilter(filter as 'alltime' | 'today')}
                     className={`px-4 py-2 font-bold text-xs uppercase border-3 transition-all duration-200 hover:scale-105 ${
                       activeTimeFilter === filter
-                        ? 'bg-[#D97706] text-[#18181B] border-[#D97706]'
-                        : 'bg-white text-[#18181B] border-[#18181B]'
+                        ? 'bg-[#0F3460] text-[#1F2937] border-[#0F3460]'
+                        : 'bg-white text-[#1F2937] border-[#18181B]'
                     }`}
                   >
                     {filter === 'alltime' ? 'All Time' : 'Today'}
@@ -584,7 +584,7 @@ export default function Home() {
             </div>
 
             <div className="mb-6">
-              <p className="text-sm font-bold text-[#18181B] mb-3 uppercase">Filter by Category</p>
+              <p className="text-sm font-bold text-[#1F2937] mb-3 uppercase">Filter by Category</p>
               <div className="flex gap-2 flex-wrap">
                 {['All', ...CATEGORIES.map(cat => cat.value)].map(category => (
                   <button
@@ -592,8 +592,8 @@ export default function Home() {
                     onClick={() => setSelectedCategory(category)}
                     className={`px-3 py-2 font-bold text-xs uppercase border-2 transition-all duration-200 hover:scale-105 ${
                       selectedCategory === category
-                        ? 'bg-[#D97706] text-[#18181B] border-[#D97706]'
-                        : 'bg-white text-[#18181B] border-[#18181B]'
+                        ? 'bg-[#0F3460] text-[#1F2937] border-[#0F3460]'
+                        : 'bg-white text-[#1F2937] border-[#18181B]'
                     }`}
                   >
                     {category === 'All' ? 'All Categories' : category}
@@ -607,7 +607,7 @@ export default function Home() {
               <div className="mb-8 space-y-4">
                 <div className="flex items-center gap-3">
                   <Icons.Star />
-                  <h3 className="text-lg font-black text-[#18181B] uppercase">Premium Featured</h3>
+                  <h3 className="text-lg font-black text-[#1F2937] uppercase">Premium Featured</h3>
                 </div>
                 {listings.filter(l => l.isPremium).map((listing, idx) => (
                   <PremiumListingCard
@@ -624,15 +624,15 @@ export default function Home() {
             {loading ? (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin text-4xl">⏳</div>
-                <p className="text-[#18181B]/60 font-semibold mt-2">Loading rankings...</p>
+                <p className="text-[#1F2937]/60 font-semibold mt-2">Loading rankings...</p>
               </div>
             ) : listings.length === 0 ? (
-              <div className="text-center py-12 border-[#18181B] border-4 bg-[#F5F5F5] fade-in">
+              <div className="text-center py-12 border-[#18181B] border-4 bg-gray-50 fade-in">
                 <Icons.Users />
-                <p className="text-sm font-bold text-[#18181B] mb-4 mt-4">No rankings yet</p>
+                <p className="text-sm font-bold text-[#1F2937] mb-4 mt-4">No rankings yet</p>
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-6 py-2 bg-[#D97706] text-[#18181B] font-bold text-xs uppercase border-[#D97706] border-3 hover:scale-105 transition-all duration-200"
+                  className="px-6 py-2 bg-[#0F3460] text-[#1F2937] font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
                 >
                   Be First to Submit
                 </button>
@@ -658,20 +658,20 @@ export default function Home() {
                       href={listing.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#D97706]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
+                      className="flex items-center justify-between p-4 bg-white border-[#18181B] border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
                     >
                       <div className="flex items-center gap-4 flex-1">
-                        <div className="w-10 h-10 bg-[#D97706] text-[#18181B] font-black rounded-lg flex items-center justify-center">{`#${(currentPage - 1) * 15 + idx + 1}`}</div>
+                        <div className="w-10 h-10 bg-[#0F3460] text-[#1F2937] font-black rounded-lg flex items-center justify-center">{`#${(currentPage - 1) * 15 + idx + 1}`}</div>
                         <img src={faviconUrl} alt="favicon" className="w-6 h-6 rounded" onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'; }} />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <p className="text-sm font-bold text-[#18181B] truncate">{listing.title}</p>
+                            <p className="text-sm font-bold text-[#1F2937] truncate">{listing.title}</p>
                             <div className="w-5 h-5 flex-shrink-0" title={platformLabel}>
                               <PlatformIcon platform={platformLabel} size={20} />
                             </div>
                           </div>
                           {listing.category && (
-                            <p className="text-xs text-[#18181B]/60 mt-1 flex items-center gap-1">
+                            <p className="text-xs text-[#1F2937]/60 mt-1 flex items-center gap-1">
                               <Icons.Vote />
                               {getCategoryLabel(listing.category)}
                             </p>
@@ -679,7 +679,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4 flex flex-col gap-2">
-                        <p className="text-2xl font-black group-hover:text-[#18181B] transition-colors">{voteCount}</p>
+                        <p className="text-2xl font-black group-hover:text-[#1F2937] transition-colors">{voteCount}</p>
                         <div className="flex gap-1">
                           <button
                             onClick={(e) => {
@@ -690,7 +690,7 @@ export default function Home() {
                             className={`text-sm font-bold px-3 py-1.5 border-2 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center gap-1 justify-center flex-1 ${
                               votedListings.has(listing.id)
                                 ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                                : 'bg-white border-[#D97706] text-[#D97706] hover:bg-[#D97706] hover:text-[#18181B]'
+                                : 'bg-white border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-[#1F2937]'
                             }`}
                           >
                             <Icons.Heart />
@@ -704,7 +704,7 @@ export default function Home() {
                                 setPremiumModalOpen(true);
                               }}
                               title="Make this listing premium"
-                              className="text-sm font-bold px-2 py-1.5 bg-white border-2 border-[#FFB28F] text-[#FFB28F] hover:bg-[#FFB28F] hover:text-[#18181B] transition-all duration-200 hover:scale-110 active:scale-95"
+                              className="text-sm font-bold px-2 py-1.5 bg-white border-2 border-[#FFB28F] text-[#FFB28F] hover:bg-blue-100 hover:text-[#1F2937] transition-all duration-200 hover:scale-110 active:scale-95"
                             >
                               ⭐
                             </button>
@@ -730,11 +730,11 @@ export default function Home() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B] fade-in">
+        <section className="bg-gray-50 py-12 border-b border-gray-200 fade-in">
           <div className="max-w-6xl mx-auto px-6">
             <div className="flex items-center gap-3 mb-8">
               <Icons.Zap />
-              <h2 className="text-2xl font-black text-[#18181B] uppercase">How It Works</h2>
+              <h2 className="text-2xl font-black text-[#1F2937] uppercase">How It Works</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -747,14 +747,14 @@ export default function Home() {
                 return (
                   <div
                     key={i}
-                    className="border-[#18181B] border-4 p-8 bg-white text-center hover:bg-[#D97706]/10 hover:scale-105 transition-all duration-200 group"
+                    className="border-[#18181B] border-4 p-8 bg-white text-center hover:bg-[#0F3460]/10 hover:scale-105 transition-all duration-200 group"
                   >
-                    <div className="flex justify-center mb-4 text-[#D97706] text-4xl transition-colors">
+                    <div className="flex justify-center mb-4 text-[#0F3460] text-4xl transition-colors">
                       <StepIcon />
                     </div>
-                    <p className="text-4xl font-black text-[#D97706] mb-2">{step.num}</p>
-                    <h3 className="text-lg font-black text-[#18181B] uppercase mb-2">{step.title}</h3>
-                    <p className="text-sm text-[#18181B]/70 font-semibold">{step.desc}</p>
+                    <p className="text-4xl font-black text-[#0F3460] mb-2">{step.num}</p>
+                    <h3 className="text-lg font-black text-[#1F2937] uppercase mb-2">{step.title}</h3>
+                    <p className="text-sm text-[#1F2937]/70 font-semibold">{step.desc}</p>
                   </div>
                 );
               })}
@@ -763,14 +763,14 @@ export default function Home() {
         </section>
 
         {/* PREMIUM FEATURES SECTION */}
-        <section className="bg-gradient-to-b from-[#F5F5F5] to-white py-20 border-b-4 border-[#18181B]">
+        <section className="bg-gradient-to-b from-[#F5F5F5] to-white py-20 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-16">
               <div className="inline-block mb-4">
                 <span className="text-5xl">💎</span>
               </div>
-              <h2 className="text-4xl font-black text-[#18181B] mb-4 uppercase">Premium Features</h2>
-              <p className="text-lg text-[#18181B]/70 max-w-2xl mx-auto">Boost your product visibility with guaranteed placement and founder spotlight</p>
+              <h2 className="text-4xl font-black text-[#1F2937] mb-4 uppercase">Premium Features</h2>
+              <p className="text-lg text-[#1F2937]/70 max-w-2xl mx-auto">Boost your product visibility with guaranteed placement and founder spotlight</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -826,7 +826,7 @@ export default function Home() {
               ].map((plan, idx) => (
                 <div
                   key={idx}
-                  className={`border-4 border-[#18181B] p-8 hover:shadow-xl hover:scale-105 transition-all duration-300 ${
+                  className={`shadow-sm border border-gray-200 p-8 hover:shadow-xl hover:scale-105 transition-all duration-300 ${
                     idx === 0 ? 'bg-gradient-to-br from-[#FFB28F] to-[#D97706] scale-105' : 'bg-white'
                   }`}
                 >
@@ -837,22 +837,22 @@ export default function Home() {
                   )}
 
                   <div className="mb-4">
-                    <div className={`text-4xl font-black ${idx === 0 ? 'text-[#18181B]' : 'text-[#18181B]'}`}>
+                    <div className={`text-4xl font-black ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
                       {plan.price}
                     </div>
                   </div>
 
-                  <h3 className={`text-2xl font-black mb-2 uppercase ${idx === 0 ? 'text-[#18181B]' : 'text-[#18181B]'}`}>
+                  <h3 className={`text-2xl font-black mb-2 uppercase ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
                     {plan.title}
                   </h3>
-                  <p className={`text-sm mb-6 font-semibold ${idx === 0 ? 'text-[#18181B]/80' : 'text-[#18181B]/70'}`}>
+                  <p className={`text-sm mb-6 font-semibold ${idx === 0 ? 'text-[#1F2937]/80' : 'text-[#1F2937]/70'}`}>
                     {plan.description}
                   </p>
 
                   <div className="space-y-2 py-6 border-t-3 border-b-3 border-[#18181B]/20 mb-6">
                     {plan.features.map((feature, i) => (
-                      <div key={i} className={`flex items-center gap-2 text-xs font-bold ${idx === 0 ? 'text-[#18181B]' : 'text-[#18181B]'}`}>
-                        <span className={`${idx === 0 ? 'text-[#18181B]' : 'text-[#D97706]'}`}>✓</span>
+                      <div key={i} className={`flex items-center gap-2 text-xs font-bold ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
+                        <span className={`${idx === 0 ? 'text-[#1F2937]' : 'text-[#0F3460]'}`}>✓</span>
                         {feature}
                       </div>
                     ))}
@@ -866,7 +866,7 @@ export default function Home() {
                     className={`w-full py-4 font-black uppercase text-sm border-4 hover:scale-105 active:scale-95 transition-all duration-200 ${
                       idx === 0
                         ? 'bg-[#18181B] text-[#FFB28F] border-[#18181B]'
-                        : 'bg-[#D97706] text-[#18181B] border-[#D97706]'
+                        : 'bg-[#0F3460] text-[#1F2937] border-[#0F3460]'
                     }`}
                   >
                     Get {plan.title}
@@ -875,9 +875,9 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="mt-12 text-center bg-[#FFB28F] border-4 border-[#18181B] p-8 rounded-lg">
-              <p className="text-lg font-black text-[#18181B] mb-4">Ready to go premium?</p>
-              <p className="text-sm text-[#18181B]/80 mb-6 font-semibold">Submit your product for free, then click the ⭐ star button to upgrade to premium and boost your visibility!</p>
+            <div className="mt-12 text-center bg-blue-100 shadow-sm border border-gray-200 p-8 rounded-lg">
+              <p className="text-lg font-black text-[#1F2937] mb-4">Ready to go premium?</p>
+              <p className="text-sm text-[#1F2937]/80 mb-6 font-semibold">Submit your product for free, then click the ⭐ star button to upgrade to premium and boost your visibility!</p>
               <button
                 onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
                 className="px-8 py-4 bg-[#18181B] text-white font-black uppercase text-sm border-[#18181B] border-4 hover:scale-105 active:scale-95 transition-all duration-200"
@@ -891,8 +891,8 @@ export default function Home() {
         {/* TESTIMONIALS SECTION */}
         <section className="py-20 bg-white">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-5xl font-black text-[#18181B] mb-12 text-center uppercase tracking-tight">Trusted by builders worldwide</h2>
-            <p className="text-center text-lg text-[#18181B]/70 mb-16 max-w-2xl mx-auto">Founders, indie hackers and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
+            <h2 className="text-5xl font-black text-[#1F2937] mb-12 text-center uppercase tracking-tight">Trusted by builders worldwide</h2>
+            <p className="text-center text-lg text-[#1F2937]/70 mb-16 max-w-2xl mx-auto">Founders, indie hackers and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
@@ -937,11 +937,11 @@ export default function Home() {
                   <div className="flex items-center gap-4 mb-4">
                     <div className="text-4xl">{testimonial.image}</div>
                     <div>
-                      <p className="font-black text-[#18181B]">{testimonial.name}</p>
-                      <p className="text-sm text-[#18181B]/60">{testimonial.handle}</p>
+                      <p className="font-black text-[#1F2937]">{testimonial.name}</p>
+                      <p className="text-sm text-[#1F2937]/60">{testimonial.handle}</p>
                     </div>
                   </div>
-                  <p className="text-sm text-[#18181B] leading-relaxed">{testimonial.text}</p>
+                  <p className="text-sm text-[#1F2937] leading-relaxed">{testimonial.text}</p>
                 </div>
               ))}
             </div>
@@ -951,8 +951,8 @@ export default function Home() {
         {/* FAQ SECTION */}
         <section className="py-20 bg-[#F5F5F4] border-t-4 border-[#18181B]">
           <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-2xl font-medium text-[#18181B] mb-4 uppercase tracking-tight text-center">FAQS</h2>
-            <p className="text-sm font-medium text-[#18181B]/70 mb-12">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
+            <h2 className="text-2xl font-medium text-[#1F2937] mb-4 uppercase tracking-tight text-center">FAQS</h2>
+            <p className="text-sm font-medium text-[#1F2937]/70 mb-12">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
 
             <div className="space-y-4">
               {[
@@ -1018,10 +1018,10 @@ export default function Home() {
             key={toast.id}
             className={`px-4 py-3 border-3 border-[#18181B] font-bold text-sm animate-in fade-in slide-in-from-bottom-2 flex items-center gap-2 ${
               toast.type === 'success'
-                ? 'bg-[#86EFAC] text-[#18181B]'
+                ? 'bg-[#86EFAC] text-[#1F2937]'
                 : toast.type === 'error'
                 ? 'bg-red-100 text-red-700 border-red-400'
-                : 'bg-white text-[#18181B]'
+                : 'bg-white text-[#1F2937]'
             }`}
             style={{boxShadow: 'none'}}
           >

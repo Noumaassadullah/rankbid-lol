@@ -34,8 +34,8 @@ export default function PlatformIcon({ platform, size = 24, className = '' }: Pl
   }
 
   if (platformLower === 'website') {
-    return <FaGlobe {...iconProps} className={`text-[#18181B] ${baseClasses}`} />;
+    return <FaGlobe {...iconProps} className={`text-[#1F2937] ${baseClasses}`} />;
   }
 
-  return <FaGlobe {...iconProps} className={`text-[#18181B] ${baseClasses}`} />;
+  return <FaGlobe {...iconProps} className={`text-[#1F2937] ${baseClasses}`} />;
 }
