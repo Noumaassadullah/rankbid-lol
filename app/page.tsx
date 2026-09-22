@@ -806,32 +806,68 @@ export default function Home() {
           </div>
         </section>
 
-        {/* HOW IT WORKS */}
+        {/* TOP RANKINGS BY SOCIAL PLATFORM */}
         <section className="bg-gray-50 py-6 md:py-12 border-b border-gray-200 fade-in">
           <div className="max-w-6xl mx-auto px-4 md:px-6">
             <div className="flex items-center gap-3 mb-6 md:mb-8">
-              <Icons.Zap />
-              <h2 className="text-lg md:text-2xl font-black text-[#1F2937] uppercase">How It Works</h2>
+              <Icons.TrendingUp />
+              <h2 className="text-lg md:text-2xl font-black text-[#1F2937] uppercase">Top Rankings by Platform</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
-              {[
-                { num: '1', title: 'Submit', desc: 'Add your product', icon: Icons.Upload },
-                { num: '2', title: 'Vote', desc: 'Community votes', icon: Icons.Vote },
-                { num: '3', title: 'Rank', desc: 'Climb rankings', icon: Icons.Trophy }
-              ].map((step, i) => {
-                const StepIcon = step.icon;
+              {['instagram', 'linkedin', 'twitter'].map((platform) => {
+                const platformLabel = platform === 'twitter' ? 'X' : platform.charAt(0).toUpperCase() + platform.slice(1);
+                const platformListings = listings
+                  .filter(l => l.platform === platform)
+                  .sort((a, b) => (activeTimeFilter === 'today' ? b.dayVotes - a.dayVotes : b.totalVotes - a.totalVotes))
+                  .slice(0, 5);
+
                 return (
                   <div
-                    key={i}
-                    className="border-gray-300 border-2 md:border-4 p-4 md:p-8 bg-white text-center hover:bg-[#0F3460]/10 hover:scale-105 transition-all duration-200 group"
+                    key={platform}
+                    className="border-gray-300 border-2 md:border-4 p-4 md:p-6 bg-white hover:shadow-lg hover:scale-105 transition-all duration-200 group rounded-lg"
                   >
-                    <div className="flex justify-center mb-3 md:mb-4 text-[#0F3460] text-3xl md:text-4xl transition-colors">
-                      <StepIcon />
+                    <div className="flex items-center gap-2 mb-4 md:mb-6">
+                      <div className="w-8 h-8 flex-shrink-0">
+                        <PlatformIcon platform={platform} size={24} />
+                      </div>
+                      <h3 className="text-base md:text-lg font-black text-[#1F2937] uppercase">{platformLabel}</h3>
                     </div>
-                    <p className="text-3xl md:text-4xl font-black text-[#0F3460] mb-1 md:mb-2">{step.num}</p>
-                    <h3 className="text-base md:text-lg font-black text-[#1F2937] uppercase mb-1 md:mb-2">{step.title}</h3>
-                    <p className="text-xs md:text-sm text-[#1F2937]/70 font-semibold">{step.desc}</p>
+
+                    {platformListings.length > 0 ? (
+                      <div className="space-y-2">
+                        {platformListings.map((item, idx) => (
+                          <a
+                            key={item.id}
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between p-2 md:p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-[#0F3460]/5 hover:border-[#0F3460]/30 transition-all duration-200 group"
+                          >
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              <span className="text-xs md:text-sm font-black text-[#0F3460] flex-shrink-0">#{idx + 1}</span>
+                              <p className="text-xs md:text-sm font-semibold text-[#1F2937] truncate group-hover:text-[#0F3460]">{item.title}</p>
+                            </div>
+                            <span className="text-xs md:text-sm font-black text-[#0F3460] ml-2 flex-shrink-0">
+                              {activeTimeFilter === 'today' ? item.dayVotes : item.totalVotes}
+                            </span>
+                          </a>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs md:text-sm text-[#1F2937]/60 font-semibold text-center py-4">No {platformLabel} rankings yet</p>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        setSelectedCategory('Social');
+                        setCurrentPage(1);
+                        document.getElementById('leaderboard')?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="w-full mt-4 px-3 py-2 bg-[#0F3460] text-white text-xs md:text-sm font-bold rounded-lg hover:bg-[#0D2A50] active:scale-95 transition-all duration-200"
+                    >
+                      View All {platformLabel}
+                    </button>
                   </div>
                 );
               })}

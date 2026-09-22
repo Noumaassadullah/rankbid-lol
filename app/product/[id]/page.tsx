@@ -33,15 +33,27 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
   const fetchProduct = async () => {
     try {
-      const res = await fetch('/api/listings/submit?limit=500');
-      if (!res.ok) return;
-
-      const data = await res.json();
-      const listings = data.listings || [];
-      setAllListings(listings);
-
-      const found = listings.find((l: Listing) => l.id === id);
-      setProduct(found || null);
+      // First try the specific product endpoint
+      const res = await fetch(`/api/product/${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setProduct(data.product);
+        setAllListings(data.allListings || []);
+      } else if (res.status === 404) {
+        // If not found immediately, retry after a short delay (might be replication lag)
+        setTimeout(async () => {
+          try {
+            const retryRes = await fetch(`/api/product/${id}`);
+            if (retryRes.ok) {
+              const data = await retryRes.json();
+              setProduct(data.product);
+              setAllListings(data.allListings || []);
+            }
+          } catch (error) {
+            console.error('Retry fetch failed:', error);
+          }
+        }, 1000);
+      }
     } catch (error) {
       console.error('Failed to fetch product:', error);
     } finally {
