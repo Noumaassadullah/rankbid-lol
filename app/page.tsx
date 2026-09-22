@@ -776,43 +776,106 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
-                  icon: '📍',
-                  title: 'Guaranteed Position',
-                  description: 'Choose your spot: #1 position ($5), #2 position ($3), or #3 position ($1). Your product stays visible at the top of the leaderboard.',
-                  features: ['Permanent placement', 'Choose your rank', 'Vote-based sorting', 'One-time payment']
+                  position: '1',
+                  price: '$5',
+                  title: '#1 Position',
+                  description: 'Top spot on the leaderboard',
+                  features: [
+                    'PREMIUM #1 badge',
+                    'Founder name display',
+                    'Email (clickable)',
+                    'Phone (clickable)',
+                    '8 social accounts',
+                    'Gradient card design',
+                    'Vote count visible',
+                    'Permanent placement',
+                    'One-time payment'
+                  ]
                 },
                 {
-                  icon: '👤',
-                  title: 'Founder Visibility',
-                  description: 'Display your name, email, phone, and 8 social accounts. Let the community connect directly with you.',
-                  features: ['Name & contact info', 'Email (clickable)', 'Phone (clickable)', '8 social platforms']
+                  position: '2',
+                  price: '$3',
+                  title: '#2 Position',
+                  description: 'Second spot on the leaderboard',
+                  features: [
+                    'PREMIUM #2 badge',
+                    'Founder name display',
+                    'Email (clickable)',
+                    'Phone (clickable)',
+                    '8 social accounts',
+                    'Gradient card design',
+                    'Vote count visible',
+                    'Permanent placement',
+                    'One-time payment'
+                  ]
                 },
                 {
-                  icon: '⭐',
-                  title: 'Premium Badge',
-                  description: 'Stand out with a distinctive PREMIUM badge. Beautiful gradient card design that catches attention.',
-                  features: ['Premium badge', 'Gradient styling', 'Top placement', 'Never expires']
+                  position: '3',
+                  price: '$1',
+                  title: '#3 Position',
+                  description: 'Third spot on the leaderboard',
+                  features: [
+                    'PREMIUM #3 badge',
+                    'Founder name display',
+                    'Email (clickable)',
+                    'Phone (clickable)',
+                    '8 social accounts',
+                    'Gradient card design',
+                    'Vote count visible',
+                    'Permanent placement',
+                    'One-time payment'
+                  ]
                 }
-              ].map((feature, idx) => (
+              ].map((plan, idx) => (
                 <div
                   key={idx}
-                  className="bg-white border-4 border-[#18181B] p-8 hover:shadow-xl hover:scale-105 transition-all duration-300"
+                  className={`border-4 border-[#18181B] p-8 hover:shadow-xl hover:scale-105 transition-all duration-300 ${
+                    idx === 0 ? 'bg-gradient-to-br from-[#FFB28F] to-[#D97706] scale-105' : 'bg-white'
+                  }`}
                 >
-                  <div className="text-5xl mb-4">{feature.icon}</div>
-                  <h3 className="text-2xl font-black text-[#18181B] mb-3 uppercase">{feature.title}</h3>
-                  <p className="text-sm text-[#18181B]/70 mb-6 font-semibold leading-relaxed">{feature.description}</p>
+                  {idx === 0 && (
+                    <div className="inline-block mb-4 bg-[#18181B] text-[#FFB28F] px-4 py-2 border-2 border-[#FFB28F] font-black text-xs uppercase rounded">
+                      Most Popular
+                    </div>
+                  )}
 
-                  <div className="space-y-2 pt-6 border-t-3 border-[#18181B]/20">
-                    {feature.features.map((item, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm font-bold text-[#18181B]">
-                        <span className="text-[#D97706]">✓</span>
-                        {item}
+                  <div className="mb-2">
+                    <div className={`text-5xl font-black mb-2 ${idx === 0 ? 'text-[#18181B]' : 'text-[#D97706]'}`}>
+                      {plan.position}
+                    </div>
+                    <div className={`text-4xl font-black mb-4 ${idx === 0 ? 'text-[#18181B]' : 'text-[#18181B]'}`}>
+                      {plan.price}
+                    </div>
+                  </div>
+
+                  <h3 className={`text-2xl font-black mb-2 uppercase ${idx === 0 ? 'text-[#18181B]' : 'text-[#18181B]'}`}>
+                    {plan.title}
+                  </h3>
+                  <p className={`text-sm mb-6 font-semibold ${idx === 0 ? 'text-[#18181B]/80' : 'text-[#18181B]/70'}`}>
+                    {plan.description}
+                  </p>
+
+                  <div className="space-y-2 py-6 border-t-3 border-b-3 border-[#18181B]/20 mb-6">
+                    {plan.features.map((feature, i) => (
+                      <div key={i} className={`flex items-center gap-2 text-xs font-bold ${idx === 0 ? 'text-[#18181B]' : 'text-[#18181B]'}`}>
+                        <span className={`${idx === 0 ? 'text-[#18181B]' : 'text-[#D97706]'}`}>✓</span>
+                        {feature}
                       </div>
                     ))}
                   </div>
 
-                  <button className="w-full mt-8 py-3 bg-[#D97706] text-[#18181B] font-black uppercase text-sm border-[#D97706] border-3 hover:scale-105 active:scale-95 transition-all duration-200">
-                    Learn More
+                  <button
+                    onClick={() => {
+                      setSelectedListingForPremium(listings[0] || null);
+                      setPremiumModalOpen(true);
+                    }}
+                    className={`w-full py-4 font-black uppercase text-sm border-4 hover:scale-105 active:scale-95 transition-all duration-200 ${
+                      idx === 0
+                        ? 'bg-[#18181B] text-[#FFB28F] border-[#18181B]'
+                        : 'bg-[#D97706] text-[#18181B] border-[#D97706]'
+                    }`}
+                  >
+                    Choose Plan #{plan.position}
                   </button>
                 </div>
               ))}
