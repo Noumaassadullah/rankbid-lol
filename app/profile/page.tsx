@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { LogOut, ChevronRight } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 
 interface User {
   id: string;
@@ -95,7 +95,7 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
