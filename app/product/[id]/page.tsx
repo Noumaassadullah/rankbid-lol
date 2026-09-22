@@ -11,8 +11,11 @@ interface Listing {
   title: string;
   description: string;
   category: string;
-  totalPaid: number;
-  dayPaid: number;
+  platform: string;
+  totalVotes?: number;
+  dayVotes?: number;
+  totalPaid?: number;
+  dayPaid?: number;
   clickCount: number;
   createdAt: string;
 }
@@ -43,6 +46,30 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
       console.error('Failed to fetch product:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getVisitUrl = () => {
+    if (!product) return '#';
+    // If URL already has protocol, use it as-is
+    if (product.url.startsWith('http://') || product.url.startsWith('https://')) {
+      return product.url;
+    }
+    // For social platforms without protocol, construct the proper URL
+    switch (product.platform?.toLowerCase()) {
+      case 'linkedin':
+        return `https://www.linkedin.com/in/${product.url}`;
+      case 'twitter':
+      case 'x':
+        return `https://twitter.com/${product.url.replace('@', '')}`;
+      case 'instagram':
+        return `https://instagram.com/${product.url.replace('@', '')}`;
+      case 'tiktok':
+        return `https://tiktok.com/@${product.url.replace('@', '')}`;
+      case 'facebook':
+        return `https://facebook.com/${product.url}`;
+      default:
+        return product.url;
     }
   };
 
@@ -100,8 +127,11 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     );
   }
 
-  const allTimeRank = allListings.filter(l => l.totalPaid > product.totalPaid).length + 1;
-  const dayRank = allListings.filter(l => l.dayPaid > product.dayPaid).length + 1;
+  const getTotalScore = (p: Listing) => (p.totalPaid || 0) + (p.totalVotes || 0);
+  const getDayScore = (p: Listing) => (p.dayPaid || 0) + (p.dayVotes || 0);
+
+  const allTimeRank = allListings.filter(l => getTotalScore(l) > getTotalScore(product)).length + 1;
+  const dayRank = allListings.filter(l => getDayScore(l) > getDayScore(product)).length + 1;
 
   return (
     <>
@@ -129,12 +159,12 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             {/* Visit Button */}
             <div className="flex flex-col gap-6">
               <a
-                href={product.url}
+                href={getVisitUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 transition-colors text-lg w-fit"
               >
-                Visit Product
+                Visit {product.platform === 'website' ? 'Product' : 'Profile'}
                 <ArrowUpRight className="w-5 h-5" />
               </a>
 
@@ -246,9 +276,11 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                 <p className="text-lg text-gray-900 dark:text-white font-semibold">${(product.dayPaid / 100).toFixed(0)}</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Website</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">
+                  {product.platform === 'website' ? 'Website' : 'Profile'}
+                </p>
                 <a
-                  href={product.url}
+                  href={getVisitUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-lg text-orange-600 hover:text-orange-700 font-semibold truncate"
