@@ -876,10 +876,10 @@ export default function Home() {
         </section>
 
         {/* TESTIMONIALS SECTION */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-white border-t border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-5xl font-black text-[#1F2937] mb-12 text-center uppercase tracking-tight">Trusted by builders worldwide</h2>
-            <p className="text-center text-lg text-[#1F2937]/70 mb-16 max-w-2xl mx-auto">Founders, indie hackers and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
+            <h2 className="text-4xl font-black text-[#1F2937] mb-4 text-center">Trusted by Builders Worldwide</h2>
+            <p className="text-center text-base text-[#1F2937]/70 mb-16 max-w-2xl mx-auto">Founders, indie hackers, and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
@@ -920,12 +920,12 @@ export default function Home() {
                   image: '👨'
                 }
               ].map((testimonial, idx) => (
-                <div key={idx} className="p-6 border-3 border-gray-300 bg-white hover:shadow-lg transition-shadow">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="text-4xl">{testimonial.image}</div>
+                <div key={idx} className="p-6 border border-gray-200 bg-white rounded-lg shadow-sm hover:shadow-md hover:border-[#0F3460]/20 transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="text-3xl">{testimonial.image}</div>
                     <div>
-                      <p className="font-black text-[#1F2937]">{testimonial.name}</p>
-                      <p className="text-sm text-[#1F2937]/60">{testimonial.handle}</p>
+                      <p className="font-semibold text-sm text-[#1F2937]">{testimonial.name}</p>
+                      <p className="text-xs text-[#1F2937]/60">{testimonial.handle}</p>
                     </div>
                   </div>
                   <p className="text-sm text-[#1F2937] leading-relaxed">{testimonial.text}</p>
