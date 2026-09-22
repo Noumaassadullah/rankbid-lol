@@ -124,6 +124,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // For social platforms, require full URL - no usernames/handles allowed
+    if (['facebook', 'instagram', 'tiktok', 'twitter', 'x', 'linkedin'].includes(platform) && url && !url.startsWith('http')) {
+      return NextResponse.json(
+        { error: `Please enter the full profile URL for ${platform}. Example: https://${platform}.com/username`, listings: [] },
+        { status: 400 }
+      );
+    }
+
     if (!category) {
       return NextResponse.json(
         { error: 'Category required', listings: [] },

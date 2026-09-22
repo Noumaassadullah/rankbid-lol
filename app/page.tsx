@@ -532,7 +532,7 @@ export default function Home() {
                   <input
                     type="text"
                     name="url"
-                    placeholder={formData.platform === 'website' ? 'Product URL' : 'Profile URL or username'}
+                    placeholder={formData.platform === 'website' ? 'Product URL' : 'Full profile URL'}
                     value={formData.url}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-sm rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
@@ -545,11 +545,11 @@ export default function Home() {
                   )}
                   {formData.platform !== 'website' && (
                     <p className="text-xs text-[#1F2937]/60 font-semibold mt-1">
-                      {formData.platform === 'facebook' && 'e.g., facebook.com/yourpage or just yourpage'}
-                      {formData.platform === 'instagram' && 'e.g., instagram.com/username or just @username'}
-                      {formData.platform === 'tiktok' && 'e.g., tiktok.com/@username or just @username'}
-                      {formData.platform === 'linkedin' && 'e.g., linkedin.com/in/yourprofile or just yourprofile'}
-                      {['twitter', 'x'].includes(formData.platform) && 'e.g., twitter.com/username or just @username'}
+                      {formData.platform === 'facebook' && 'e.g., https://facebook.com/yourpage'}
+                      {formData.platform === 'instagram' && 'e.g., https://instagram.com/username'}
+                      {formData.platform === 'tiktok' && 'e.g., https://tiktok.com/@username'}
+                      {formData.platform === 'linkedin' && 'e.g., https://linkedin.com/in/yourprofile'}
+                      {['twitter', 'x'].includes(formData.platform) && 'e.g., https://twitter.com/username'}
                     </p>
                   )}
                 </div>
