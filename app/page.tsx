@@ -762,44 +762,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* STATS/SHOWCASE CARDS SECTION */}
-        <section className="bg-[#F5F5F5] py-16 border-b-4 border-[#18181B]">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: '📤',
-                  number: '500+',
-                  title: 'Products Submitted',
-                  desc: 'Founders ship their ideas daily'
-                },
-                {
-                  icon: '♥',
-                  number: '50K+',
-                  title: 'Community Votes',
-                  desc: 'Real, transparent rankings'
-                },
-                {
-                  icon: '🚀',
-                  number: '10M+',
-                  title: 'Discovery Impact',
-                  desc: 'Users discovering new products'
-                }
-              ].map((stat, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white border-4 border-[#18181B] p-8 text-center hover:bg-[#D97706]/10 transition-all duration-200 group"
-                >
-                  <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-200">{stat.icon}</div>
-                  <p className="text-4xl font-black text-[#D97706] mb-2">{stat.number}</p>
-                  <h3 className="text-lg font-black text-[#18181B] uppercase mb-2">{stat.title}</h3>
-                  <p className="text-sm text-[#18181B]/70 font-semibold">{stat.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* TESTIMONIALS SECTION */}
         <section className="py-20 bg-white">
           <div className="max-w-6xl mx-auto px-6">
