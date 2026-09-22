@@ -662,7 +662,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-4 flex flex-col gap-2">
-                        <p className="text-2xl font-black group-hover:text-[#1F2937] transition-colors">{voteCount}</p>
+                        <p className="text-2xl font-black text-[#0F3460] group-hover:text-white transition-colors">{voteCount}</p>
                         <div className="flex gap-1">
                           <button
                             onClick={(e) => {
@@ -670,10 +670,10 @@ export default function Home() {
                               handleVote(listing.id);
                             }}
                             disabled={votedListings.has(listing.id)}
-                            className={`text-sm font-bold px-3 py-1.5 border-2 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center gap-1 justify-center flex-1 ${
+                            className={`text-sm font-bold px-3 py-1.5 border-2 transition-all duration-200 hover:scale-110 active:scale-95 flex items-center gap-1 justify-center flex-1 rounded ${
                               votedListings.has(listing.id)
                                 ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                                : 'bg-white border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] text-white hover:text-[#1F2937]'
+                                : 'bg-white border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white'
                             }`}
                           >
                             <Icons.Heart />
