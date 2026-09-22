@@ -359,20 +359,24 @@ export default function Home() {
 
   const handleShareTwitter = () => {
     if (!lastSubmittedProduct) return;
-    const text = `Just submitted ${lastSubmittedProduct.title} on RankBid! 🚀 Check it out and vote for my product on the global leaderboard. Join thousands of users discovering the best products worldwide. #RankBid`;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://rankbid-lol.vercel.app')}`;
+    const productUrl = `https://rankbid-lol.vercel.app/product/${lastSubmittedProduct.id}`;
+    const text = `Just submitted ${lastSubmittedProduct.title} on RankBid! 🚀 Vote for my product and help it climb the global rankings. No algorithms, just pure community voting. #RankBid`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(productUrl)}`;
     window.open(twitterUrl, '_blank', 'width=550,height=420');
   };
 
   const handleShareLinkedIn = () => {
     if (!lastSubmittedProduct) return;
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://rankbid-lol.vercel.app')}`;
+    const productUrl = `https://rankbid-lol.vercel.app/product/${lastSubmittedProduct.id}`;
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(productUrl)}`;
     window.open(linkedInUrl, '_blank', 'width=550,height=420');
   };
 
   const handleCopyLink = async () => {
+    if (!lastSubmittedProduct) return;
+    const productUrl = `https://rankbid-lol.vercel.app/product/${lastSubmittedProduct.id}`;
     try {
-      await navigator.clipboard.writeText('https://rankbid-lol.vercel.app');
+      await navigator.clipboard.writeText(productUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
@@ -591,7 +595,7 @@ export default function Home() {
             {lastSubmittedProduct && (
               <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg fade-in">
                 <h3 className="text-lg font-bold text-[#1F2937] mb-4">🎉 Your product is live!</h3>
-                <p className="text-sm text-[#1F2937]/70 mb-4">Share on social media to get more community votes:</p>
+                <p className="text-sm text-[#1F2937]/70 mb-4">Share your submission link to get votes:</p>
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={handleShareTwitter}
