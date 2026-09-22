@@ -80,7 +80,7 @@ export default function PremiumListingCard({
     const links: SocialLink[] = [];
     const position = listing.premiumPosition || 1;
 
-    // Plan #1: All 8 socials
+    // Plan #1: First 4 socials
     // Plan #2: Only 1 social (first one available)
     // Plan #3: No socials
 
@@ -97,9 +97,14 @@ export default function PremiumListingCard({
     if (listing.founderYoutube) links.push({ icon: 'youtube', label: 'YouTube', url: listing.founderYoutube });
     if (listing.founderGithub) links.push({ icon: 'github', label: 'GitHub', url: `https://github.com/${listing.founderGithub.replace('@', '')}` });
 
-    // Plan #2: Only show first 4 socials
-    if (position === 2 && links.length > 4) {
+    // Plan #1: Only show first 4 socials
+    if (position === 1 && links.length > 4) {
       return links.slice(0, 4);
+    }
+
+    // Plan #2: Only show first 1 social
+    if (position === 2 && links.length > 1) {
+      return [links[0]];
     }
 
     return links;
