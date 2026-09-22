@@ -76,15 +76,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0F3460] to-[#1a5490] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white text-gray-900 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-xl p-8 md:p-10">
+        <div className="bg-white rounded-lg shadow-lg p-8 md:p-10 border border-gray-200">
           {/* Logo */}
           <div className="text-center mb-8">
-            <Link href="/" className="text-3xl md:text-4xl font-black text-[#0F3460]">
-              RankBid
+            <Link href="/" className="inline-flex items-center gap-2 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white font-black text-xl">
+                ⚡
+              </div>
+              <span className="text-3xl font-black text-orange-600">RankBid</span>
             </Link>
-            <p className="text-gray-600 text-sm mt-2">Sign in to your account</p>
+            <p className="text-gray-600 text-sm mt-4">Sign in to your account</p>
           </div>
 
           {error && (
@@ -127,7 +130,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-3 bg-[#0F3460] text-white font-bold rounded-lg hover:bg-[#0D2A50] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="w-full px-4 py-3 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

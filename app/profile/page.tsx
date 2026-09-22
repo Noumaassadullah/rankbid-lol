@@ -85,6 +85,7 @@ export default function ProfilePage() {
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('auth_token');
+    setUser(null);
     router.push('/');
   };
 
@@ -100,13 +101,18 @@ export default function ProfilePage() {
         <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-black text-gray-900">{user.name || user.email.split('@')[0]}</h1>
-              <p className="text-gray-600 text-sm mt-1">{user.email}</p>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+                {(user.name || user.email).charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <h1 className="text-3xl font-black text-gray-900">{user.name || user.email.split('@')[0]}</h1>
+                <p className="text-gray-600 text-sm mt-1">{user.email}</p>
+              </div>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-6 py-2 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition-colors"
+              className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
             >
               <LogOut className="w-5 h-5" />
               Logout
