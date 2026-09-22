@@ -6,6 +6,7 @@ import Pagination from '@/components/Pagination';
 import PlatformIcon from '@/components/PlatformIcon';
 import PremiumListingCard from '@/components/PremiumListingCard';
 import PremiumListingModal from '@/components/PremiumListingModal';
+import LoginModal from '@/components/LoginModal';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import { useState, useEffect, useCallback } from 'react';
 
@@ -164,6 +165,7 @@ export default function Home() {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const [selectedListingForPremium, setSelectedListingForPremium] = useState<Listing | null>(null);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     url: '',
@@ -217,7 +219,7 @@ export default function Home() {
 
   const handleVote = useCallback(async (listingId: string) => {
     if (!user) {
-      addToast('Please log in to vote', 'error');
+      setLoginModalOpen(true);
       return;
     }
 
@@ -336,7 +338,7 @@ export default function Home() {
     e.preventDefault();
 
     if (!user) {
-      addToast('Please log in to submit a product', 'error');
+      setLoginModalOpen(true);
       return;
     }
 
@@ -1225,6 +1227,13 @@ export default function Home() {
           onSubmit={handlePremiumSubmit}
         />
       )}
+
+      {/* LOGIN MODAL */}
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        title="Login Required to Submit"
+      />
 
       {/* TOAST NOTIFICATIONS */}
       <div className="fixed bottom-4 left-4 right-4 md:bottom-6 md:right-6 md:left-auto z-50 space-y-2">

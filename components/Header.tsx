@@ -145,22 +145,7 @@ export default function Header() {
                 >
                   {(user.name || user.email).charAt(0).toUpperCase()}
                 </Link>
-              ) : (
-                <div className="hidden md:flex items-center gap-2">
-                  <Link
-                    href="/login"
-                    className="px-3 py-1.5 md:px-4 md:py-2 text-[orange-600] text-xs md:text-sm font-semibold hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/signup"
-                    className="px-3 py-1.5 md:px-4 md:py-2 bg-[orange-600] text-white text-xs md:text-sm font-semibold rounded-lg hover:bg-[orange-700] transition-colors"
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              )}
+              ) : null}
 
               {/* Desktop Nav */}
               <nav className="hidden lg:flex items-center gap-4 md:gap-8">
@@ -225,22 +210,7 @@ export default function Header() {
                 >
                   My Profile
                 </Link>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="block px-2 py-1 text-xs md:text-sm font-medium text-[orange-600] hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/signup"
-                    className="block px-2 py-1 text-xs md:text-sm font-medium bg-[orange-600] text-white rounded-lg hover:bg-[orange-700] transition-colors"
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
+              ) : null}
 
               <Link href="/platforms" className="flex items-center gap-2 text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
                 <TrendingUp className="w-4 h-4" />
