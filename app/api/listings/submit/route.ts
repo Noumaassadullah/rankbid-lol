@@ -1,7 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractMetadata } from '@/lib/metadata';
+import { query } from '@/lib/db';
+import { extractSocialHandle, formatSocialMediaUrl } from '@/lib/social-utils';
+
+function isSocialMediaUrl(url: string): boolean {
+  const socialMediaDomains = [
+    'linkedin.com',
+    'twitter.com',
+    'x.com',
+    'instagram.com',
+    'facebook.com',
+    'tiktok.com',
+    'youtube.com',
+    'pinterest.com',
+    'reddit.com',
+    'github.com',
+  ];
+  return socialMediaDomains.some(domain => url.includes(domain));
+}
 
 async function isURLAccessible(url: string): Promise<boolean> {
+  // Skip accessibility check for social media platforms (they block automated requests)
+  if (isSocialMediaUrl(url)) {
+    return true;
+  }
+
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
@@ -10,7 +33,7 @@ async function isURLAccessible(url: string): Promise<boolean> {
       method: 'HEAD',
       redirect: 'follow',
       signal: controller.signal,
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RankBid/1.0)' },
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
     });
 
     clearTimeout(timeout);
@@ -24,7 +47,7 @@ async function isURLAccessible(url: string): Promise<boolean> {
         method: 'GET',
         redirect: 'follow',
         signal: controller.signal,
-        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RankBid/1.0)' },
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
       });
 
       clearTimeout(timeout);
@@ -64,10 +87,19 @@ export async function POST(req: NextRequest) {
     }
 
     let normalizedUrl = url || getPlatformUrl(platform, handle);
+    let displayHandle = handle;
 
-    // Ensure URL has protocol
+    // Ensure URL has protocol and extract handle for social platforms
     if (normalizedUrl && !normalizedUrl.startsWith('http')) {
       normalizedUrl = `https://${normalizedUrl}`;
+    }
+
+    // Extract social media handle from URL
+    if (['facebook', 'instagram', 'tiktok', 'twitter', 'x'].includes(platform)) {
+      const extracted = extractSocialHandle(normalizedUrl, platform);
+      if (extracted) {
+        displayHandle = extracted;
+      }
     }
 
     // Check if listing already exists (by location field where URLs are stored)
@@ -162,9 +194,16 @@ export async function POST(req: NextRequest) {
     }
 
     const listing = await insertResponse.json();
+    const responseData = listing[0] || listing;
 
     return NextResponse.json(
-      { listing: listing[0] || listing, isNew: true, listings: [] },
+      {
+        listing: responseData,
+        isNew: true,
+        listings: [],
+        displayHandle: displayHandle,
+        platform: platform
+      },
       { status: 201 }
     );
   } catch (error) {
@@ -190,7 +229,7 @@ function getPlatformUrl(platform: string, handle: string | undefined): string {
   const baseUrls: { [key: string]: (handle: string) => string } = {
     twitter: (h) => `https://twitter.com/${h.replace('@', '')}`,
     facebook: (h) => `https://facebook.com/${h.replace('@', '')}`,
-    instagram: (h) => `https://www.instagram.com/${h.replace('@', '')}/`,
+    instagram: (h) => `https://instagram.com/${h.replace('@', '')}`,
     tiktok: (h) => `https://www.tiktok.com/@${h.replace('@', '')}`,
   };
 
@@ -204,65 +243,113 @@ function getPlatformUrl(platform: string, handle: string | undefined): string {
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const url = searchParams.get('url');
-    const category = searchParams.get('category');
-    const limit = parseInt(searchParams.get('limit') || '100');
+    const page = parseInt(searchParams.get('page') || '1');
+    const pageSize = parseInt(searchParams.get('pageSize') || '15');
     const sort = searchParams.get('sort') || 'totalVotes';
+    const searchQuery = searchParams.get('search') || '';
+    const category = searchParams.get('category') || '';
+    const timeFilter = searchParams.get('timeFilter') || 'alltime';
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // Build WHERE clause based on filters
+    let whereConditions = [];
+    let params: any[] = [];
+    let paramIndex = 1;
 
-    if (!supabaseUrl || !supabaseKey) {
-      return NextResponse.json(
-        { listings: [], listing: null, warning: 'Database not configured' },
-        { status: 200 }
-      );
+    // Search filter
+    if (searchQuery) {
+      whereConditions.push(`(title ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`);
+      params.push(`%${searchQuery}%`);
+      paramIndex++;
     }
 
-    // Fetch from Supabase REST API instead of Prisma
-    // For now, we'll sort by views as a placeholder until we migrate to vote columns
-    const orderBy = sort === 'dayVotes' ? 'views.desc' : 'views.desc';
-    const query = `order=${orderBy}&limit=${limit}`;
-
-    const response = await fetch(`${supabaseUrl}/rest/v1/listings?${query}`, {
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-      },
-    });
-
-    if (!response.ok) {
-      return NextResponse.json({ listings: [], listing: null });
+    // Category filter
+    if (category && category !== 'All') {
+      whereConditions.push(`category = $${paramIndex}`);
+      params.push(category);
+      paramIndex++;
     }
 
-    let supabaseListings = await response.json();
+    // Time filter
+    if (timeFilter === 'today') {
+      whereConditions.push(`created_at >= NOW() - INTERVAL '24 hours'`);
+    } else if (timeFilter === 'weekly') {
+      whereConditions.push(`created_at >= NOW() - INTERVAL '7 days'`);
+    } else if (timeFilter === 'monthly') {
+      whereConditions.push(`created_at >= NOW() - INTERVAL '30 days'`);
+    }
 
-    // Map Supabase schema to expected schema
-    const listings = supabaseListings.map((item: any) => {
-      // For LinkedIn profiles, use location field as URL; for others use title or create listing link
-      let url = item.location;
-      if (!url || url === 'LinkedIn' || !url.startsWith('http')) {
-        // Generate listing detail page URL for marketplace items
-        url = `${process.env.NEXT_PUBLIC_APP_URL || 'https://rankbid-lol.vercel.app'}/listing/${item.id}`;
-      }
+    const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
 
-      return {
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        url: url,
-        category: item.category || 'Other',
-        platform: item.platform || 'website',
-        totalVotes: item.views || 0,
-        dayVotes: item.views || 0,
-        clickCount: item.views || 0,
-        createdAt: item.created_at,
-        updatedAt: item.updated_at || item.created_at,
-        imageUrl: item.image_url || null,
-      };
-    });
+    // Get total count for pagination
+    const countSql = `SELECT COUNT(*) as total FROM listings ${whereClause}`;
+    const countResult = await query(countSql, params);
+    const total = parseInt(countResult.rows[0]?.total || '0');
+    const totalPages = Math.ceil(total / pageSize);
 
-    return NextResponse.json({ listings, listing: null }, {
+    // Calculate offset for pagination
+    const offset = (page - 1) * pageSize;
+
+    // Fetch listings from PostgreSQL with vote counts and premium status
+    const orderColumn = sort === 'dayVotes' ? 'day_votes' : 'total_votes';
+    const sql = `
+      SELECT
+        l.*,
+        pl.id as premium_id,
+        pl.founder_name,
+        pl.founder_email,
+        pl.founder_phone,
+        pl.founder_website,
+        pl.founder_twitter,
+        pl.founder_linkedin,
+        pl.founder_instagram,
+        pl.founder_facebook,
+        pl.founder_tiktok,
+        pl.founder_youtube,
+        pl.founder_github,
+        pl.position as premium_position,
+        pl.amount_paid,
+        pl.payment_status
+      FROM listings l
+      LEFT JOIN premium_listings pl ON l.id = pl.listing_id AND pl.payment_status = 'approved'
+      ${whereClause}
+      ORDER BY
+        CASE WHEN pl.id IS NOT NULL THEN pl.position ELSE 999 END ASC,
+        ${orderColumn} DESC
+      LIMIT ${pageSize} OFFSET ${offset}
+    `;
+
+    const result = await query(sql, params);
+
+    // Map database schema to expected schema
+    const listings = result.rows.map((item: any) => ({
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      url: item.location || item.url,
+      category: item.category || 'Other',
+      platform: item.platform || 'website',
+      totalVotes: item.total_votes || 0,
+      dayVotes: item.day_votes || 0,
+      clickCount: item.click_count || 0,
+      createdAt: item.created_at,
+      updatedAt: item.updated_at || item.created_at,
+      imageUrl: item.image_url || null,
+      isPremium: !!item.premium_id,
+      premiumPosition: item.premium_position || null,
+      founderName: item.founder_name || null,
+      founderEmail: item.founder_email || null,
+      founderPhone: item.founder_phone || null,
+      founderWebsite: item.founder_website || null,
+      founderTwitter: item.founder_twitter || null,
+      founderLinkedin: item.founder_linkedin || null,
+      founderInstagram: item.founder_instagram || null,
+      founderFacebook: item.founder_facebook || null,
+      founderTiktok: item.founder_tiktok || null,
+      founderYoutube: item.founder_youtube || null,
+      founderGithub: item.founder_github || null,
+    }));
+
+    return NextResponse.json({ listings, listing: null, pagination: { page, pageSize, total, totalPages } }, {
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
         'Pragma': 'no-cache',

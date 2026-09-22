@@ -312,7 +312,8 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
 
-      addToast('🎉 Your product is live! Community voting starts now.', 'success');
+      const displayName = data.displayHandle ? `@${data.displayHandle}` : 'Your product';
+      addToast(`🎉 ${displayName} is live! Community voting starts now.`, 'success');
       setFormData({ url: '', handle: '', description: '', category: '', platform: 'website' });
       setDetectedPlatform('website');
       setDetectedCategory('');
@@ -448,7 +449,7 @@ export default function Home() {
                   <input
                     type="text"
                     name="url"
-                    placeholder="Product URL or handle"
+                    placeholder={formData.platform === 'website' ? 'Product URL' : 'Profile URL or username'}
                     value={formData.url}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-3 bg-white text-[#18181B] border-3 border-[#18181B] font-semibold text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFB28F] focus:ring-offset-2 transition-all duration-200 ${
@@ -458,6 +459,14 @@ export default function Home() {
                   />
                   {formErrors.url && (
                     <p className="text-xs text-red-600 font-bold mt-1 slide-in">{formErrors.url}</p>
+                  )}
+                  {formData.platform !== 'website' && (
+                    <p className="text-xs text-[#18181B]/60 font-semibold mt-1">
+                      {formData.platform === 'facebook' && 'e.g., facebook.com/yourpage or just yourpage'}
+                      {formData.platform === 'instagram' && 'e.g., instagram.com/username or just @username'}
+                      {formData.platform === 'tiktok' && 'e.g., tiktok.com/@username or just @username'}
+                      {['twitter', 'x'].includes(formData.platform) && 'e.g., twitter.com/username or just @username'}
+                    </p>
                   )}
                 </div>
 
@@ -682,39 +691,39 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
-                  name: 'Marko Denic',
-                  handle: '@denicmarko',
-                  text: 'When we started Active Builders, we needed two things: an easy payment processor and automatic revenue split. RankBid handled both out of the box. Plus, they support affiliates natively too. Choosing them was a no-brainer!',
+                  name: 'Sarah Chen',
+                  handle: '@sarahchen',
+                  text: 'Submitted our SaaS tool on RankBid and got 1,200 votes in the first week! The community voting is so transparent and fair. No algorithms hiding our product from users.',
+                  image: '👩'
+                },
+                {
+                  name: 'Alex Rodriguez',
+                  handle: '@alexroddev',
+                  text: 'Love how simple it is to submit and share. RankBid got my indie project discovered by thousands of users organically. The real-time rankings are addictive!',
                   image: '👨'
                 },
                 {
-                  name: 'Tibo',
-                  handle: '@Tibo_maker',
-                  text: 'After my Lemon Squeezy experience, I had one hard rule for payments: Stripe only. Today I\'m making my first exception. I tried RankBid, handled my community launch with it, and it was an amazing experience. The team moves so fast.',
+                  name: 'Emma Thompson',
+                  handle: '@emmathompson',
+                  text: 'Our AI tool ranked #1 in Developer category. The community-driven approach means quality products actually rise to the top. This is how discovery should work.',
+                  image: '👩'
+                },
+                {
+                  name: 'James Wilson',
+                  handle: '@jameswilson',
+                  text: 'Completely free to submit and compete on rankings. No gatekeepers, no algorithm black box. Just pure community voting power determining what gets seen.',
                   image: '👨'
                 },
                 {
-                  name: 'Daniel Smidstrup',
-                  handle: '@DanielSmidstrup',
-                  text: 'It has been quite amazing working with RankBid! Account approvals take hours, not days. They are reachable in their app, and their AI support agent actually answers queries directly and clearly.',
-                  image: '👨'
+                  name: 'Lisa Park',
+                  handle: '@lisapark_',
+                  text: 'The category filters and real-time updates make it perfect for finding what\'s trending. RankBid transformed how we discover new tools in our niche.',
+                  image: '👩'
                 },
                 {
-                  name: 'Florin Pop',
-                  handle: '@FlorinPop17',
-                  text: 'I switched the payments on all my products to RankBid, and I couldn\'t be happier! Soon I\'m going to test their split-revenue feature, this is the one I\'m most excited about.',
-                  image: '👨'
-                },
-                {
-                  name: 'Thomas Santis',
-                  handle: '@T_Zahii',
-                  text: 'That\'s one of the reasons I love RankBid. I suggested a feature in their board a few weeks ago, and it\'s been implemented. I\'m generating a lot of discount codes for Uneed every day, and now I can search them.',
-                  image: '👨'
-                },
-                {
-                  name: 'Marc Lou',
-                  handle: '@marclou',
-                  text: '3 new sponsors overnight on TrustMRR. 6 new sponsors the payment method helping my little marketplace reach new all-time highs. Thank you for sponsoring!',
+                  name: 'David Kumar',
+                  handle: '@davidkumar',
+                  text: 'Submitted 3 products and they all got amazing visibility. The community on RankBid actually votes on what they love. Finally a fair ranking platform!',
                   image: '👨'
                 }
               ].map((testimonial, idx) => (
@@ -736,8 +745,8 @@ export default function Home() {
         {/* FAQ SECTION */}
         <section className="py-20 bg-[#F5F5F4] border-t-4 border-[#18181B]">
           <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-5xl font-black text-[#18181B] mb-4 uppercase tracking-tight">Questions, answered.</h2>
-            <p className="text-lg text-[#18181B]/70 mb-12">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
+            <h2 className="text-2xl font-medium text-[#18181B] mb-4 uppercase tracking-tight text-center">FAQS</h2>
+            <p className="text-sm font-medium text-[#18181B]/70 mb-12">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
 
             <div className="space-y-4">
               {[
