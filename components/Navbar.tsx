@@ -1,11 +1,40 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Menu, X, User, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch {
+        localStorage.removeItem('user');
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('auth_token');
+    setUser(null);
+    setProfileOpen(false);
+    router.push('/');
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
@@ -38,14 +67,55 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
-            <Link
-              href="/#claim"
-              className="px-6 py-2 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors text-sm"
-            >
-              Claim Rank
-            </Link>
+          {/* Auth Section */}
+          <div className="hidden md:flex items-center gap-4">
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 font-semibold rounded-lg hover:bg-orange-100 transition-colors text-sm"
+                >
+                  <User className="w-4 h-4" />
+                  {user.name || user.email.split('@')[0]}
+                </button>
+
+                {/* Profile Dropdown */}
+                {profileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-2 px-4 py-2 text-gray-900 hover:bg-gray-100 transition-colors text-sm"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      <User className="w-4 h-4" />
+                      My Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-gray-900 hover:bg-gray-100 transition-colors text-sm text-left"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-gray-900 font-semibold hover:text-orange-600 transition-colors text-sm"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-6 py-2 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors text-sm"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -75,12 +145,43 @@ export default function Navbar() {
             <Link href="/rules" className="block text-sm font-semibold text-gray-900 hover:text-orange-600 transition-colors py-2">
               Rules
             </Link>
-            <Link
-              href="/#claim"
-              className="block px-6 py-2 bg-orange-600 text-white font-semibold rounded-lg text-center hover:bg-orange-700 transition-colors mt-4 text-sm"
-            >
-              Claim Rank
-            </Link>
+
+            {/* Mobile Auth */}
+            {user ? (
+              <>
+                <div className="border-t border-gray-200 mt-4 pt-4">
+                  <Link
+                    href="/profile"
+                    className="flex items-center gap-2 px-4 py-2 text-gray-900 hover:bg-gray-100 transition-colors text-sm rounded"
+                  >
+                    <User className="w-4 h-4" />
+                    My Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-gray-900 hover:bg-gray-100 transition-colors text-sm text-left rounded mt-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="border-t border-gray-200 mt-4 pt-4 space-y-2">
+                <Link
+                  href="/login"
+                  className="block px-4 py-2 text-gray-900 hover:bg-gray-100 transition-colors text-sm text-center rounded"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="block px-4 py-2 bg-orange-600 text-white font-semibold text-center rounded hover:bg-orange-700 transition-colors text-sm"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>

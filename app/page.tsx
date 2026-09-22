@@ -236,7 +236,7 @@ export default function Home() {
       const res = await fetch('/api/votes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ listingId, voterId }),
+        body: JSON.stringify({ listingId, voterId, userId: user.id }),
       });
 
       const data = await res.json();
@@ -354,11 +354,16 @@ export default function Home() {
         description: formData.description,
         category: formData.category,
         platform: formData.platform,
+        userId: user.id,
       };
 
+      const authToken = localStorage.getItem('auth_token');
       const res = await fetch('/api/listings/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authToken && { 'Authorization': `Bearer ${authToken}` }),
+        },
         body: JSON.stringify(submitData),
       });
 

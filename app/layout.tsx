@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 
 export const dynamic = 'force-dynamic';
-import { ThemeProvider } from '@/components/ThemeProvider';
 import { Providers } from '@/components/Providers';
 import Footer from '@/components/Footer';
 
@@ -17,13 +16,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-white dark:bg-black text-black dark:text-white flex flex-col min-h-screen`}>
+    <html lang="en">
+      <body className={`${inter.className} bg-white text-gray-900 flex flex-col min-h-screen`}>
         <Providers>
-          <ThemeProvider>
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </ThemeProvider>
+          <main className="flex-1">{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>

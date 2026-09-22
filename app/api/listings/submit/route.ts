@@ -115,7 +115,7 @@ async function isURLAccessible(url: string, platform?: string): Promise<boolean>
 
 export async function POST(req: NextRequest) {
   try {
-    const { url, handle, description, category, platform } = await req.json();
+    const { url, handle, description, category, platform, userId } = await req.json();
 
     if (!url && !handle) {
       return NextResponse.json(
@@ -314,13 +314,13 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         id,
-        user_id: '550e8400-e29b-41d4-a716-446655440000', // Default user for new submissions
+        user_id: userId || '550e8400-e29b-41d4-a716-446655440000',
         title: metaTitle,
         description: metaDescription,
         category: category || 'Other',
         status: 'active',
         location: normalizedUrl,
-        price: 0,  // No longer used, kept for backward compatibility
+        price: 0,
         views: 0,
         image_url: imageUrl || null,
         created_at: now,

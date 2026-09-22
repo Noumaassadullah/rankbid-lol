@@ -1,9 +1,12 @@
 import { query } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   try {
-    const { listingId, voterId } = await req.json();
+    const { listingId, voterId, userId } = await req.json();
 
     if (!listingId || !voterId) {
       return NextResponse.json(
@@ -31,6 +34,22 @@ export async function POST(req: NextRequest) {
       'INSERT INTO votes (id, listing_id, voter_id, voted_at) VALUES ($1, $2, $3, NOW())',
       [voteId, listingId, voterId]
     );
+
+    // If userId is provided, also record in UserVote table
+    if (userId) {
+      try {
+        await prisma.userVote.create({
+          data: {
+            userId,
+            listingId,
+          },
+        });
+      } catch (error: any) {
+        if (error.code !== 'P2002') {
+          console.error('Error recording user vote:', error);
+        }
+      }
+    }
 
     // Update listing vote counts
     const today = new Date();

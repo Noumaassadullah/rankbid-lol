@@ -42,13 +42,27 @@ model Vote {
   listingId String   @map("listing_id")
   listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
-  voterId   String   @map("voter_id")  // Anonymous voter ID (session-based)
+  voterId   String   @map("voter_id")
   votedAt   DateTime @default(now()) @map("voted_at")
 
-  @@unique([listingId, voterId])  // One vote per voter per listing
+  @@unique([listingId, voterId])
   @@index([listingId])
   @@index([voterId])
   @@map("votes")
+}
+
+model UserVote {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  listingId String   @map("listing_id")
+  votedAt   DateTime @default(now()) @map("voted_at")
+
+  @@unique([userId, listingId])
+  @@index([userId])
+  @@index([listingId])
+  @@map("user_votes")
 }
 
 model DailyVoteSnapshot {
@@ -90,6 +104,7 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   sessions  Session[]
+  votes     UserVote[]
 
   @@map("users")
 }
