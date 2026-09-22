@@ -32,8 +32,29 @@ export async function POST(req: NextRequest) {
       [voteId, listingId, voterId]
     );
 
+    // Update listing vote counts
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    const dayVotesResult = await query(
+      'SELECT COUNT(*) as count FROM votes WHERE listing_id = $1 AND voted_at >= $2',
+      [listingId, today]
+    );
+    const dayVoteCount = parseInt(dayVotesResult.rows[0]?.count || '0');
+
+    const totalVotesResult = await query(
+      'SELECT COUNT(*) as count FROM votes WHERE listing_id = $1',
+      [listingId]
+    );
+    const totalVoteCount = parseInt(totalVotesResult.rows[0]?.count || '0');
+
+    await query(
+      'UPDATE listings SET total_votes = $1, day_votes = $2 WHERE id = $3',
+      [totalVoteCount, dayVoteCount, listingId]
+    );
+
     return NextResponse.json(
-      { success: true, voted: true },
+      { success: true, voted: true, totalVotes: totalVoteCount, dayVotes: dayVoteCount },
       { status: 201 }
     );
   } catch (error) {

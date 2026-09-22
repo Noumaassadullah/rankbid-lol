@@ -9,8 +9,8 @@ import Footer from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'RankBid - Pay to Rank Public Leaderboard',
-  description: 'List your product and bid for the top rank. Pure pay-to-play leaderboard.',
+  title: 'RankBid - World Ranking Platform for Products',
+  description: 'Community-driven product rankings with transparent voting. No algorithms, no politics, just pure voting power.',
   icons: { icon: '/favicon.ico' },
 };
 

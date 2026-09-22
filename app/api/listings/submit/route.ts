@@ -1,23 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractMetadata } from '@/lib/metadata';
 import { query } from '@/lib/db';
-import { extractSocialHandle, formatSocialMediaUrl } from '@/lib/social-utils';
-
-function isSocialMediaUrl(url: string): boolean {
-  const socialMediaDomains = [
-    'linkedin.com',
-    'twitter.com',
-    'x.com',
-    'instagram.com',
-    'facebook.com',
-    'tiktok.com',
-    'youtube.com',
-    'pinterest.com',
-    'reddit.com',
-    'github.com',
-  ];
-  return socialMediaDomains.some(domain => url.includes(domain));
-}
+import { extractSocialHandle, formatSocialMediaUrl, isSocialMediaUrl } from '@/lib/social-utils';
 
 async function isURLAccessible(url: string): Promise<boolean> {
   // Skip accessibility check for social media platforms (they block automated requests)
@@ -151,6 +135,7 @@ export async function POST(req: NextRequest) {
     let metaPlatform = platform || 'website';
     let metaFollowers: string | null = null;
     let metaPosts: string | null = null;
+
     try {
       const metadata = await extractMetadata(normalizedUrl);
       imageUrl = metadata.image;
@@ -159,8 +144,47 @@ export async function POST(req: NextRequest) {
       metaPlatform = metadata.platform || platform || 'website';
       metaFollowers = metadata.followers || null;
       metaPosts = metadata.posts || null;
+
+      // Validate metadata extraction for websites (not social media)
+      if (platform === 'website' || !isSocialMediaUrl(normalizedUrl)) {
+        if (!metadata.title || metadata.title.length < 3) {
+          return NextResponse.json(
+            { error: 'Could not verify website content. Please ensure the URL is a valid, accessible website.' },
+            { status: 400 }
+          );
+        }
+        if (!metadata.description || metadata.description.length < 10) {
+          return NextResponse.json(
+            { error: 'Website must have a meaningful description. Please provide more details.' },
+            { status: 400 }
+          );
+        }
+      }
     } catch (err) {
-      console.warn('Could not fetch metadata:', err);
+      console.error('Metadata extraction failed:', err);
+      return NextResponse.json(
+        { error: 'Could not verify website. Please ensure the URL is valid and accessible.' },
+        { status: 400 }
+      );
+    }
+
+    // Reject spam indicators
+    const titleLower = metaTitle.toLowerCase();
+    const descLower = metaDescription.toLowerCase();
+    const spamKeywords = ['viagra', 'casino', 'lottery', 'prize', 'click here', 'buy now'];
+    if (spamKeywords.some(keyword => titleLower.includes(keyword) || descLower.includes(keyword))) {
+      return NextResponse.json(
+        { error: 'Submission rejected: Content appears to be spam or promotional.' },
+        { status: 400 }
+      );
+    }
+
+    // Reject if title is just the URL
+    if (metaTitle === normalizedUrl || metaTitle.includes('https://') || metaTitle.includes('http://')) {
+      return NextResponse.json(
+        { error: 'Website must have a proper title. Please check that the URL is valid.' },
+        { status: 400 }
+      );
     }
 
     const insertResponse = await fetch(`${supabaseUrl}/rest/v1/listings`, {

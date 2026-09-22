@@ -1,3 +1,13 @@
+export function isSocialMediaUrl(url: string): boolean {
+  const socialDomains = ['facebook.com', 'instagram.com', 'tiktok.com', 'twitter.com', 'x.com', 'linkedin.com', 'youtube.com'];
+  try {
+    const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`);
+    return socialDomains.some(domain => urlObj.hostname.includes(domain));
+  } catch {
+    return false;
+  }
+}
+
 export function extractSocialHandle(url: string, platform: string): string | null {
   if (!url) return null;
 
