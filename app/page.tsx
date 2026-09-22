@@ -154,6 +154,7 @@ const Icons = {
 };
 
 export default function Home() {
+  const [user, setUser] = useState<{ id: string; email: string; name?: string } | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeTimeFilter, setActiveTimeFilter] = useState<'alltime' | 'today'>('alltime');
@@ -199,11 +200,27 @@ export default function Home() {
       localStorage.setItem('rankbid_voter_id', newId);
       setVoterId(newId);
     }
+
+    // Check if user is logged in
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch {
+        localStorage.removeItem('user');
+      }
+    }
+
     setCurrentPage(1);
     fetchListings(1);
   }, [activeTimeFilter, selectedCategory]);
 
   const handleVote = useCallback(async (listingId: string) => {
+    if (!user) {
+      addToast('Please log in to vote', 'error');
+      return;
+    }
+
     if (!voterId) {
       addToast('Please wait for the page to load', 'error');
       return;
@@ -317,6 +334,11 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user) {
+      addToast('Please log in to submit a product', 'error');
+      return;
+    }
 
     if (!validateForm()) {
       addToast('Please fill in all required fields', 'error');
@@ -501,10 +523,31 @@ export default function Home() {
         {/* FORM SECTION */}
         <section className="bg-gray-50 py-6 md:py-12 border-b border-gray-200 fade-in">
           <div className="max-w-4xl mx-auto px-4 md:px-6">
-            <div className="flex items-center gap-3 mb-6 md:mb-8">
-              <Icons.Upload />
-              <h2 className="text-lg md:text-2xl font-black text-[#1F2937]">Submit Your Product</h2>
-            </div>
+            {!user ? (
+              <div className="mb-8 p-6 md:p-8 bg-blue-50 border-2 border-blue-200 rounded-lg text-center">
+                <p className="text-lg font-bold text-[#1F2937] mb-4">Login Required to Submit</p>
+                <p className="text-sm text-[#1F2937]/70 mb-6">You need to be logged in to submit your product and vote.</p>
+                <div className="flex gap-3 justify-center flex-wrap">
+                  <a
+                    href="/login"
+                    className="px-6 py-3 bg-[#0F3460] text-white font-bold rounded-lg hover:bg-[#0D2A50] transition-colors"
+                  >
+                    Sign In
+                  </a>
+                  <a
+                    href="/signup"
+                    className="px-6 py-3 bg-white text-[#0F3460] font-bold border-2 border-[#0F3460] rounded-lg hover:bg-[#0F3460]/5 transition-colors"
+                  >
+                    Create Account
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center gap-3 mb-6 md:mb-8">
+                  <Icons.Upload />
+                  <h2 className="text-lg md:text-2xl font-black text-[#1F2937]">Submit Your Product</h2>
+                </div>
 
             {/* Platform Selection */}
             <div className="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-6">
@@ -649,6 +692,8 @@ export default function Home() {
                 </button>
               </div>
             )}
+              </>
+            )}
           </div>
         </section>
 
@@ -758,21 +803,31 @@ export default function Home() {
                       <div className="text-right flex-shrink-0 ml-3 flex flex-col items-center gap-2">
                         <p className="text-lg font-black text-[#0F3460] group-hover:text-[#0D2A50] transition-colors">{voteCount}</p>
                         <div className="flex gap-1 w-full">
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleVote(listing.id);
-                            }}
-                            disabled={votedListings.has(listing.id)}
-                            className={`text-xs font-semibold px-2 py-1 rounded-lg transition-all duration-200 active:scale-95 flex items-center gap-1 justify-center whitespace-nowrap ${
-                              votedListings.has(listing.id)
-                                ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
-                                : 'bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white'
-                            }`}
-                          >
-                            <Icons.Heart />
-                            {votedListings.has(listing.id) ? 'Voted' : 'Vote'}
-                          </button>
+                          {user ? (
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleVote(listing.id);
+                              }}
+                              disabled={votedListings.has(listing.id)}
+                              className={`text-xs font-semibold px-2 py-1 rounded-lg transition-all duration-200 active:scale-95 flex items-center gap-1 justify-center whitespace-nowrap ${
+                                votedListings.has(listing.id)
+                                  ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
+                                  : 'bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white'
+                              }`}
+                            >
+                              <Icons.Heart />
+                              {votedListings.has(listing.id) ? 'Voted' : 'Vote'}
+                            </button>
+                          ) : (
+                            <a
+                              href="/login"
+                              className="text-xs font-semibold px-2 py-1 rounded-lg bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 flex items-center gap-1 justify-center whitespace-nowrap"
+                            >
+                              <Icons.Heart />
+                              Login to Vote
+                            </a>
+                          )}
                           {!listing.isPremium && (
                             <button
                               onClick={(e) => {
@@ -807,70 +862,147 @@ export default function Home() {
         </section>
 
         {/* TOP RANKINGS BY SOCIAL PLATFORM */}
-        <section className="bg-gray-50 py-6 md:py-12 border-b border-gray-200 fade-in">
-          <div className="max-w-6xl mx-auto px-4 md:px-6">
-            <div className="flex items-center gap-3 mb-6 md:mb-8">
-              <Icons.TrendingUp />
-              <h2 className="text-lg md:text-2xl font-black text-[#1F2937] uppercase">Top Rankings by Platform</h2>
+        <section className="bg-gradient-to-b from-white via-blue-50 to-white py-8 md:py-16 border-b border-gray-200 fade-in relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute inset-0 opacity-5 pointer-events-none">
+            <div className="absolute top-0 left-10 w-64 h-64 bg-[#0F3460] rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-10 w-64 h-64 bg-[#059669] rounded-full blur-3xl"></div>
+          </div>
+
+          <div className="max-w-6xl mx-auto px-4 md:px-6 relative z-10">
+            {/* Section Header */}
+            <div className="text-center mb-8 md:mb-16">
+              <div className="inline-flex items-center gap-2 mb-3 md:mb-4 px-4 py-2 bg-[#0F3460]/10 border border-[#0F3460]/20 rounded-full">
+                <Icons.TrendingUp />
+                <span className="text-xs md:text-sm font-bold text-[#0F3460] uppercase">Real-Time Rankings</span>
+              </div>
+              <h2 className="text-2xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4">Top by Social Platform</h2>
+              <p className="text-sm md:text-base text-[#1F2937]/70 max-w-2xl mx-auto">Discover trending submissions from Instagram, LinkedIn, and X. See what your community loves right now.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
               {['instagram', 'linkedin', 'twitter'].map((platform) => {
                 const platformLabel = platform === 'twitter' ? 'X' : platform.charAt(0).toUpperCase() + platform.slice(1);
+                const platformEmoji = platform === 'instagram' ? '📸' : platform === 'linkedin' ? '💼' : '✕';
+                const platformColor = platform === 'instagram' ? '#E4405F' : platform === 'linkedin' ? '#0A66C2' : '#000000';
+                const bgGradient = platform === 'instagram' ? 'from-pink-50 to-orange-50' : platform === 'linkedin' ? 'from-blue-50 to-cyan-50' : 'from-gray-50 to-slate-50';
+
                 const platformListings = listings
-                  .filter(l => l.platform === platform)
+                  .filter(l => platform === 'twitter' ? ['twitter', 'x'].includes(l.platform) : l.platform === platform)
                   .sort((a, b) => (activeTimeFilter === 'today' ? b.dayVotes - a.dayVotes : b.totalVotes - a.totalVotes))
                   .slice(0, 5);
 
                 return (
                   <div
                     key={platform}
-                    className="border-gray-300 border-2 md:border-4 p-4 md:p-6 bg-white hover:shadow-lg hover:scale-105 transition-all duration-200 group rounded-lg"
+                    className={`bg-gradient-to-br ${bgGradient} border-2 md:border-4 border-gray-200 p-4 md:p-6 hover:shadow-2xl hover:border-gray-300 transition-all duration-300 group rounded-2xl backdrop-blur-sm relative overflow-hidden`}
                   >
-                    <div className="flex items-center gap-2 mb-4 md:mb-6">
-                      <div className="w-8 h-8 flex-shrink-0">
-                        <PlatformIcon platform={platform} size={24} />
+                    {/* Platform badge */}
+                    <div className="absolute top-3 right-3 md:top-4 md:right-4 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-lg md:text-2xl bg-white shadow-md border-2 border-gray-200 group-hover:scale-110 transition-transform">
+                      {platformEmoji}
+                    </div>
+
+                    {/* Header */}
+                    <div className="flex items-center gap-3 mb-4 md:mb-6 pr-16">
+                      <div className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0 rounded-lg flex items-center justify-center" style={{backgroundColor: platformColor + '15', color: platformColor}}>
+                        <PlatformIcon platform={platform} size={20} />
                       </div>
-                      <h3 className="text-base md:text-lg font-black text-[#1F2937] uppercase">{platformLabel}</h3>
+                      <div>
+                        <h3 className="text-base md:text-lg font-black text-[#1F2937] uppercase">{platformLabel}</h3>
+                        <p className="text-xs text-[#1F2937]/60">Top Rated This {activeTimeFilter === 'today' ? 'Day' : 'Week'}</p>
+                      </div>
                     </div>
 
                     {platformListings.length > 0 ? (
-                      <div className="space-y-2">
-                        {platformListings.map((item, idx) => (
-                          <a
-                            key={item.id}
-                            href={item.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-between p-2 md:p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-[#0F3460]/5 hover:border-[#0F3460]/30 transition-all duration-200 group"
-                          >
-                            <div className="flex items-center gap-2 flex-1 min-w-0">
-                              <span className="text-xs md:text-sm font-black text-[#0F3460] flex-shrink-0">#{idx + 1}</span>
-                              <p className="text-xs md:text-sm font-semibold text-[#1F2937] truncate group-hover:text-[#0F3460]">{item.title}</p>
-                            </div>
-                            <span className="text-xs md:text-sm font-black text-[#0F3460] ml-2 flex-shrink-0">
-                              {activeTimeFilter === 'today' ? item.dayVotes : item.totalVotes}
-                            </span>
-                          </a>
-                        ))}
+                      <div className="space-y-2 md:space-y-3">
+                        {platformListings.map((item, idx) => {
+                          const isTopThree = idx < 3;
+                          const voteCount = activeTimeFilter === 'today' ? item.dayVotes : item.totalVotes;
+
+                          return (
+                            <a
+                              key={item.id}
+                              href={item.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`flex items-center justify-between p-2.5 md:p-3.5 rounded-xl transition-all duration-200 group/item cursor-pointer ${
+                                isTopThree
+                                  ? 'bg-white border-2 border-[#0F3460]/20 shadow-sm hover:shadow-md hover:border-[#0F3460]/40'
+                                  : 'bg-white/70 border border-gray-300/50 hover:bg-white hover:border-[#0F3460]/30'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                                <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-black flex-shrink-0 ${
+                                  isTopThree
+                                    ? 'bg-gradient-to-br from-[#0F3460] to-[#0D2A50] text-white shadow-md'
+                                    : 'bg-gray-200 text-[#1F2937]'
+                                }`}>
+                                  {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs md:text-sm font-bold text-[#1F2937] truncate group-hover/item:text-[#0F3460]">{item.title}</p>
+                                  {item.category && (
+                                    <p className="text-xs text-[#1F2937]/50 mt-0.5">
+                                      {getCategoryLabel(item.category)}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1.5 ml-2 flex-shrink-0">
+                                <span className={`text-xs md:text-sm font-black px-2 py-1 rounded-lg ${
+                                  isTopThree
+                                    ? 'bg-[#0F3460]/10 text-[#0F3460]'
+                                    : 'bg-gray-100 text-[#1F2937]'
+                                }`}>
+                                  {voteCount}
+                                </span>
+                                <Icons.Heart />
+                              </div>
+                            </a>
+                          );
+                        })}
                       </div>
                     ) : (
-                      <p className="text-xs md:text-sm text-[#1F2937]/60 font-semibold text-center py-4">No {platformLabel} rankings yet</p>
+                      <div className="text-center py-6 md:py-8">
+                        <p className="text-3xl mb-2">📭</p>
+                        <p className="text-xs md:text-sm text-[#1F2937]/60 font-semibold mb-3">No {platformLabel} submissions yet</p>
+                        <p className="text-xs text-[#1F2937]/50">Be the first to submit!</p>
+                      </div>
                     )}
 
                     <button
                       onClick={() => {
-                        setSelectedCategory('Social');
-                        setCurrentPage(1);
-                        document.getElementById('leaderboard')?.scrollIntoView({ behavior: 'smooth' });
+                        document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className="w-full mt-4 px-3 py-2 bg-[#0F3460] text-white text-xs md:text-sm font-bold rounded-lg hover:bg-[#0D2A50] active:scale-95 transition-all duration-200"
+                      className={`w-full mt-4 md:mt-6 px-3 py-2.5 md:py-3 font-bold text-xs md:text-sm rounded-xl transition-all duration-200 active:scale-95 border-2 border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white shadow-sm hover:shadow-md`}
                     >
-                      View All {platformLabel}
+                      Submit for {platformLabel} →
                     </button>
                   </div>
                 );
               })}
+            </div>
+
+            {/* CTA Section */}
+            <div className="mt-8 md:mt-16 p-6 md:p-10 bg-gradient-to-r from-[#0F3460] to-[#1a5490] rounded-2xl text-white text-center shadow-lg border-2 border-[#0F3460]/30">
+              <h3 className="text-xl md:text-2xl font-black mb-2 md:mb-3">Get Your Product Ranked</h3>
+              <p className="text-sm md:text-base mb-4 md:mb-6 opacity-95 max-w-xl mx-auto">Submit across all platforms and climb the global rankings. No algorithms. Just community voting power.</p>
+              <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+                <button
+                  onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="inline-flex items-center gap-2 px-6 md:px-8 py-2.5 md:py-3.5 bg-white text-[#0F3460] font-black text-xs md:text-sm rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
+                >
+                  <Icons.Upload />
+                  START RANKING NOW
+                </button>
+                <a
+                  href="/platforms"
+                  className="inline-flex items-center gap-2 px-6 md:px-8 py-2.5 md:py-3.5 bg-white/20 text-white font-black text-xs md:text-sm rounded-xl hover:bg-white/30 active:scale-95 transition-all duration-200 shadow-lg border-2 border-white/40"
+                >
+                  <Icons.TrendingUp />
+                  EXPLORE PLATFORMS
+                </a>
+              </div>
             </div>
           </div>
         </section>

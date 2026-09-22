@@ -391,6 +391,7 @@ export async function GET(req: NextRequest) {
     const searchQuery = searchParams.get('search') || '';
     const category = searchParams.get('category') || '';
     const timeFilter = searchParams.get('timeFilter') || 'alltime';
+    const platforms = searchParams.getAll('platform') || [];
 
     // Build WHERE clause based on filters
     let whereConditions = [];
@@ -409,6 +410,13 @@ export async function GET(req: NextRequest) {
       whereConditions.push(`category = $${paramIndex}`);
       params.push(category);
       paramIndex++;
+    }
+
+    // Platform filter
+    if (platforms.length > 0) {
+      const platformPlaceholders = platforms.map(() => `$${paramIndex++}`).join(',');
+      whereConditions.push(`platform IN (${platformPlaceholders})`);
+      params.push(...platforms);
     }
 
     // Time filter

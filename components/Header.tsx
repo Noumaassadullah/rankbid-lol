@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp, LogOut } from 'lucide-react';
 
 const CATEGORIES = [
   { name: 'All', Icon: Grid3x3 },
@@ -18,12 +19,14 @@ const CATEGORIES = [
 ];
 
 export default function Header() {
+  const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [stats, setStats] = useState({ onlineNow: 12, allTimeVisitors: 847 }); // Fallback values
   const [mounted, setMounted] = useState(false);
+  const [user, setUser] = useState<{ id: string; email: string; name?: string } | null>(null);
 
-  // Initialize dark mode from localStorage
+  // Initialize dark mode and check user login from localStorage
   useEffect(() => {
     setMounted(true);
     const savedTheme = localStorage.getItem('theme');
@@ -33,6 +36,16 @@ export default function Header() {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
+    }
+
+    // Check if user is logged in
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch {
+        localStorage.removeItem('user');
+      }
     }
   }, []);
 
@@ -47,6 +60,13 @@ export default function Header() {
       localStorage.setItem('theme', 'light');
     }
   }, [darkMode, mounted]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('auth_token');
+    setUser(null);
+    router.push('/');
+  };
 
   // Fetch stats and track visitor
   useEffect(() => {
@@ -115,9 +135,42 @@ export default function Header() {
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
+              {/* Auth Buttons */}
+              {user ? (
+                <div className="hidden md:flex items-center gap-3">
+                  <span className="text-xs md:text-sm font-medium text-[#1F2937]">{user.name || user.email}</span>
+                  <button
+                    onClick={handleLogout}
+                    className="px-3 py-1.5 md:px-4 md:py-2 bg-red-500 hover:bg-red-600 text-white text-xs md:text-sm font-semibold rounded-lg transition-colors flex items-center gap-1"
+                  >
+                    <LogOut className="w-3 h-3 md:w-4 md:h-4" />
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="hidden md:flex items-center gap-2">
+                  <Link
+                    href="/login"
+                    className="px-3 py-1.5 md:px-4 md:py-2 text-[#0F3460] text-xs md:text-sm font-semibold hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="px-3 py-1.5 md:px-4 md:py-2 bg-[#0F3460] text-white text-xs md:text-sm font-semibold rounded-lg hover:bg-[#0D2A50] transition-colors"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
+
               {/* Desktop Nav */}
               <nav className="hidden lg:flex items-center gap-4 md:gap-8">
+                <Link href="/platforms" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors flex items-center gap-1">
+                  <TrendingUp className="w-4 h-4" />
+                  Platforms
+                </Link>
                 <Link href="/why" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   Why
                 </Link>
@@ -166,6 +219,44 @@ export default function Header() {
                 <span>{stats.onlineNow} LIVE • {stats.allTimeVisitors}K VIEWS</span>
               </div>
 
+              {/* Mobile Auth Buttons */}
+              {user ? (
+                <>
+                  <div className="px-2 py-1 text-xs md:text-sm font-medium text-[#1F2937]">
+                    Signed in as {user.name || user.email}
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileOpen(false);
+                    }}
+                    className="w-full px-2 py-1 text-xs md:text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1"
+                  >
+                    <LogOut className="w-3 h-3 md:w-4 md:h-4" />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="block px-2 py-1 text-xs md:text-sm font-medium text-[#0F3460] hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="block px-2 py-1 text-xs md:text-sm font-medium bg-[#0F3460] text-white rounded-lg hover:bg-[#0D2A50] transition-colors"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
+
+              <Link href="/platforms" className="flex items-center gap-2 text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+                <TrendingUp className="w-4 h-4" />
+                Platforms
+              </Link>
               <Link href="/why" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
                 Why
               </Link>
