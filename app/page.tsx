@@ -936,12 +936,12 @@ export default function Home() {
         </section>
 
         {/* FAQ SECTION */}
-        <section className="py-20 bg-[#F5F5F4] border-t-4 border-gray-300">
+        <section className="py-20 bg-gray-50 border-t border-gray-200">
           <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-2xl font-medium text-[#1F2937] mb-4 uppercase tracking-tight text-center">FAQS</h2>
-            <p className="text-sm font-medium text-[#1F2937]/70 mb-12">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
+            <h2 className="text-3xl font-black text-[#1F2937] mb-4 text-center">Frequently Asked Questions</h2>
+            <p className="text-sm font-medium text-[#1F2937]/70 mb-12 text-center max-w-2xl mx-auto">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {[
                 {
                   q: 'How does the voting system work?',
