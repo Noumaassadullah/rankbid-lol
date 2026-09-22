@@ -88,24 +88,24 @@ export default function Header() {
     <>
       {/* Top Header - Professional Corporate */}
       <header className="bg-white text-[#1F2937] shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-3 md:px-6">
           {/* Main Header */}
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14 md:h-16">
             {/* Logo & Hamburger */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
                 className="lg:hidden p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg"
               >
-                {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileOpen ? <X className="w-5 h-5 md:w-6 md:h-6" /> : <Menu className="w-5 h-5 md:w-6 md:h-6" />}
               </button>
               <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-2xl font-bold text-[#0F3460]">RankBid</span>
+                <span className="text-lg md:text-2xl font-bold text-[#0F3460]">RankBid</span>
               </Link>
             </div>
 
             {/* Stats Pill - Professional */}
-            <div className="hidden md:flex items-center gap-6 px-6 py-2 bg-gray-50 text-[#1F2937] rounded-lg shadow-xs text-sm font-medium">
+            <div className="hidden md:flex items-center gap-3 md:gap-6 px-3 md:px-6 py-1 md:py-2 bg-gray-50 text-[#1F2937] rounded-lg shadow-xs text-xs md:text-sm font-medium">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                 <span>{stats.onlineNow} LIVE</span>
@@ -117,20 +117,20 @@ export default function Header() {
             {/* Right Actions */}
             <div className="flex items-center gap-4">
               {/* Desktop Nav */}
-              <nav className="hidden lg:flex items-center gap-8">
-                <Link href="/why" className="text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+              <nav className="hidden lg:flex items-center gap-4 md:gap-8">
+                <Link href="/why" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   Why
                 </Link>
-                <Link href="/daily" className="text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <Link href="/daily" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   Daily
                 </Link>
-                <Link href="/archive" className="text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <Link href="/archive" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   Archive
                 </Link>
-                <Link href="/categories" className="text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <Link href="/categories" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   Categories
                 </Link>
-                <Link href="/about" className="text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <Link href="/about" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   About
                 </Link>
               </nav>
@@ -143,45 +143,45 @@ export default function Header() {
                     window.location.href = `/search?q=${encodeURIComponent(query)}`;
                   }
                 }}
-                className="p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg"
+                className="p-1.5 md:p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-4 h-4 md:w-5 md:h-5" />
               </button>
 
               {/* Dark Mode Toggle */}
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className="p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg"
+                className="p-1.5 md:p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg"
               >
-                {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {darkMode ? <Sun className="w-4 h-4 md:w-5 md:h-5" /> : <Moon className="w-4 h-4 md:w-5 md:h-5" />}
               </button>
             </div>
           </div>
 
           {/* Mobile Menu */}
           {mobileOpen && (
-            <div className="lg:hidden py-4 border-t border-gray-200 space-y-3">
-              <div className="flex items-center gap-3 px-4 py-2 bg-gray-50 text-[#1F2937] text-sm font-medium rounded-lg">
+            <div className="lg:hidden py-2 md:py-4 border-t border-gray-200 space-y-2 md:space-y-3">
+              <div className="flex items-center gap-2 md:gap-3 px-2 md:px-4 py-1 md:py-2 bg-gray-50 text-[#1F2937] text-xs md:text-sm font-medium rounded-lg">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                 <span>{stats.onlineNow} LIVE • {stats.allTimeVisitors}K VIEWS</span>
               </div>
 
-              <Link href="/why" className="block text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/why" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
                 Why
               </Link>
-              <Link href="/daily" className="block text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/daily" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
                 Daily
               </Link>
-              <Link href="/archive" className="block text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/archive" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
                 Archive
               </Link>
-              <Link href="/categories" className="block text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/categories" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
                 Categories
               </Link>
-              <Link href="/about" className="block text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/about" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
                 About
               </Link>
-              <Link href="/stats" className="block text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/stats" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
                 Stats
               </Link>
             </div>
@@ -190,8 +190,8 @@ export default function Header() {
       </header>
 
       {/* Category Filter - Professional */}
-      <div className="bg-gray-50 text-[#1F2937] border-b border-gray-200 sticky top-16 z-30 overflow-x-auto">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex gap-2 items-center">
+      <div className="bg-gray-50 text-[#1F2937] border-b border-gray-200 sticky top-14 md:top-16 z-30 overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-3 md:px-6 py-2 md:py-3 flex gap-1 md:gap-2 items-center">
           {CATEGORIES.map((cat) => {
             const Icon = cat.Icon;
             const isAll = cat.name === 'All';
@@ -201,14 +201,14 @@ export default function Header() {
               <Link
                 key={cat.name}
                 href={href}
-                className={`flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap transition-all flex items-center gap-2 rounded-lg ${
+                className={`flex-shrink-0 px-2 md:px-4 py-1 md:py-2 text-xs md:text-sm font-medium whitespace-nowrap transition-all flex items-center gap-1 md:gap-2 rounded-lg ${
                   isAll
                     ? 'bg-[#0F3460] text-white shadow-sm'
                     : 'bg-white text-[#1F2937] hover:bg-[#0F3460] hover:text-white shadow-xs'
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                {cat.name}
+                <Icon className="w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">{cat.name}</span>
               </Link>
             );
           })}

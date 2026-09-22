@@ -814,36 +814,38 @@ export default function Home() {
               ].map((plan, idx) => (
                 <div
                   key={idx}
-                  className={`shadow-sm border border-gray-200 p-4 md:p-8 hover:shadow-xl hover:bg-blue-50 hover:border-[#0F3460]/30 transition-all duration-300 rounded-lg bg-white ${
+                  className={`shadow-sm border border-gray-200 p-4 md:p-8 hover:shadow-xl hover:bg-blue-50 hover:border-[#0F3460]/30 transition-all duration-300 rounded-lg bg-white flex flex-col justify-between ${
                     idx === 0 ? 'md:scale-105' : ''
                   }`}
                 >
-                  {idx === 0 && (
-                    <div className="inline-block mb-2 md:mb-4 bg-[#0F3460] text-white px-3 py-1 md:px-4 md:py-2 border border-[#0F3460] font-black text-xs rounded">
-                      Most Popular
-                    </div>
-                  )}
-
-                  <div className="mb-3 md:mb-4">
-                    <div className={`text-3xl md:text-4xl font-black ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
-                      {plan.price}
-                    </div>
-                  </div>
-
-                  <h3 className={`text-lg md:text-2xl font-black mb-1 md:mb-2 uppercase ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
-                    {plan.title}
-                  </h3>
-                  <p className={`text-xs md:text-sm mb-4 md:mb-6 font-semibold ${idx === 0 ? 'text-[#1F2937]/80' : 'text-[#1F2937]/70'}`}>
-                    {plan.description}
-                  </p>
-
-                  <div className="space-y-2 py-3 md:py-6 border-t-3 border-b-3 border-gray-300/20 mb-4 md:mb-6">
-                    {plan.features.map((feature, i) => (
-                      <div key={i} className={`flex items-center gap-2 text-xs font-bold ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
-                        <span className={`${idx === 0 ? 'text-[#1F2937]' : 'text-[#0F3460]'}`}>✓</span>
-                        {feature}
+                  <div>
+                    {idx === 0 && (
+                      <div className="inline-block mb-2 md:mb-4 bg-[#0F3460] text-white px-3 py-1 md:px-4 md:py-2 border border-[#0F3460] font-black text-xs rounded">
+                        Most Popular
                       </div>
-                    ))}
+                    )}
+
+                    <div className="mb-3 md:mb-4">
+                      <div className={`text-3xl md:text-4xl font-black ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
+                        {plan.price}
+                      </div>
+                    </div>
+
+                    <h3 className={`text-lg md:text-2xl font-black mb-1 md:mb-2 uppercase ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
+                      {plan.title}
+                    </h3>
+                    <p className={`text-xs md:text-sm mb-4 md:mb-6 font-semibold ${idx === 0 ? 'text-[#1F2937]/80' : 'text-[#1F2937]/70'}`}>
+                      {plan.description}
+                    </p>
+
+                    <div className="space-y-2 py-3 md:py-6 border-t-3 border-b-3 border-gray-300/20 mb-4 md:mb-6">
+                      {plan.features.map((feature, i) => (
+                        <div key={i} className={`flex items-center gap-2 text-xs font-bold ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
+                          <span className={`${idx === 0 ? 'text-[#1F2937]' : 'text-[#0F3460]'}`}>✓</span>
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <button
