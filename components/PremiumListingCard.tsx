@@ -117,7 +117,7 @@ export default function PremiumListingCard({
       href={listing.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block bg-gradient-to-br from-[#FFB28F] to-[#D97706] shadow-sm border border-gray-200 p-6 hover:shadow-xl transition-all duration-200 group relative overflow-hidden"
+      className="block bg-gradient-to-br from-[#FFB28F] to-[#D97706] shadow-sm border border-gray-200 p-4 md:p-6 hover:shadow-xl transition-all duration-200 group relative overflow-hidden"
     >
       {/* Premium Badge */}
       <div className="absolute top-3 right-3 bg-[#18181B] text-[#FFB28F] px-3 py-1 border-2 border-[#FFB28F] font-black text-xs flex items-center gap-1">
@@ -125,16 +125,16 @@ export default function PremiumListingCard({
         PREMIUM #{listing.premiumPosition}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
         {/* Left: Listing Info */}
         <div className="md:col-span-2">
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-10 h-10 bg-[#18181B] text-[#FFB28F] font-black rounded-lg flex items-center justify-center">{`#${position}`}</div>
-                <div>
-                  <p className="text-lg font-black text-[#1F2937] group-hover:underline">{listing.title}</p>
-                  <p className="text-xs text-[#1F2937]/70 font-semibold">{listing.category}</p>
+          <div className="flex items-start justify-between gap-2 md:gap-4 mb-3 md:mb-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1 md:mb-2">
+                <div className="w-8 md:w-10 h-8 md:h-10 bg-[#18181B] text-[#FFB28F] font-black rounded-lg flex items-center justify-center text-sm md:text-base flex-shrink-0">{`#${position}`}</div>
+                <div className="min-w-0">
+                  <p className="text-sm md:text-lg font-black text-[#1F2937] group-hover:underline truncate">{listing.title}</p>
+                  <p className="text-xs text-[#1F2937]/70 font-semibold truncate">{listing.category}</p>
                 </div>
               </div>
             </div>
@@ -142,15 +142,15 @@ export default function PremiumListingCard({
 
           {/* Vote Count - Only show for Plan #1 */}
           {listing.premiumPosition === 1 && (
-            <div className="mb-4 bg-white bg-opacity-80 inline-block px-4 py-2 border-2 border-gray-300 rounded">
-              <p className="text-2xl font-black text-[#1F2937]">{listing.totalVotes}</p>
+            <div className="mb-3 md:mb-4 bg-white bg-opacity-80 inline-block px-2 md:px-4 py-1 md:py-2 border-2 border-gray-300 rounded">
+              <p className="text-lg md:text-2xl font-black text-[#1F2937]">{listing.totalVotes}</p>
               <p className="text-xs text-[#1F2937]/60 font-semibold">Total Votes</p>
             </div>
           )}
         </div>
 
         {/* Right: Founder Info & Vote Button */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2 md:gap-4">
           {/* Vote Button */}
           <button
             onClick={(e) => {
@@ -158,10 +158,10 @@ export default function PremiumListingCard({
               onVote(listing.id);
             }}
             disabled={hasVoted}
-            className={`w-full py-3 px-4 font-black text-sm border-3 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 ${
+            className={`w-full py-2 md:py-3 px-3 md:px-4 font-black text-xs md:text-sm border-2 md:border-3 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 ${
               hasVoted
                 ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                : 'bg-white text-[#0F3460] border-[#0F3460] hover:bg-[#0F3460] text-white hover:text-white'
+                : 'bg-white text-[#0F3460] border-[#0F3460] hover:bg-[#0F3460] hover:text-white'
             }`}
           >
             <Icons.Heart />
@@ -169,11 +169,11 @@ export default function PremiumListingCard({
           </button>
 
           {/* Founder Info */}
-          <div className="bg-white bg-opacity-90 p-4 border border-gray-300 rounded">
-            <p className="font-black text-[#1F2937] text-sm mb-3">Founder</p>
-            <p className="font-bold text-[#1F2937] text-sm mb-2">{listing.founderName}</p>
+          <div className="bg-white bg-opacity-90 p-3 md:p-4 border border-gray-300 rounded">
+            <p className="font-black text-[#1F2937] text-xs md:text-sm mb-2 md:mb-3">Founder</p>
+            <p className="font-bold text-[#1F2937] text-xs md:text-sm mb-1 md:mb-2 truncate">{listing.founderName}</p>
 
-            <div className="space-y-2 mb-3 text-xs">
+            <div className="space-y-1 md:space-y-2 mb-2 md:mb-3 text-xs">
               {listing.founderEmail && (
                 <a href={`mailto:${listing.founderEmail}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   <Icons.Mail />
@@ -190,7 +190,7 @@ export default function PremiumListingCard({
 
             {/* Social Links */}
             {socialLinks.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-2 border-t-2 border-gray-300/20">
+              <div className="flex flex-wrap gap-1 md:gap-2 pt-1 md:pt-2 border-t-2 border-gray-300/20">
                 {socialLinks.map((link, idx) => (
                   <a
                     key={idx}
@@ -198,7 +198,7 @@ export default function PremiumListingCard({
                     target="_blank"
                     rel="noopener noreferrer"
                     title={link.label}
-                    className="p-1.5 bg-[#18181B] text-[#FFB28F] border border-[#FFB28F] rounded hover:bg-blue-100 hover:text-[#1F2937] transition-colors"
+                    className="p-1 md:p-1.5 bg-[#18181B] text-[#FFB28F] border border-[#FFB28F] rounded hover:bg-blue-100 hover:text-[#1F2937] transition-colors"
                   >
                     {link.icon === 'globe' && <Icons.Globe />}
                     {link.icon === 'twitter' && <Icons.Twitter />}

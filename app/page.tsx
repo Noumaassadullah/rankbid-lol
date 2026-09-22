@@ -426,10 +426,10 @@ export default function Home() {
                 </div>
 
                 {/* CTA Buttons */}
-                <div className="flex gap-4 flex-wrap">
+                <div className="flex gap-2 md:gap-4 flex-wrap">
                   <button
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-[#0F3460] text-white font-black uppercase text-sm border-[#0F3460] border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-[#0F3460] text-white font-black uppercase text-xs md:text-sm border-[#0F3460] border-2 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.Upload />
@@ -437,7 +437,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#1F2937] font-black uppercase text-sm border-gray-300 border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-white text-[#1F2937] font-black uppercase text-xs md:text-sm border-gray-300 border-2 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.TrendingUp />
@@ -468,15 +468,15 @@ export default function Home() {
         </section>
 
         {/* FORM SECTION */}
-        <section className="bg-gray-50 py-12 border-b border-gray-200 fade-in">
-          <div className="max-w-4xl mx-auto px-6">
-            <div className="flex items-center gap-3 mb-8">
+        <section className="bg-gray-50 py-6 md:py-12 border-b border-gray-200 fade-in">
+          <div className="max-w-4xl mx-auto px-4 md:px-6">
+            <div className="flex items-center gap-3 mb-6 md:mb-8">
               <Icons.Upload />
-              <h2 className="text-2xl font-black text-[#1F2937]">Submit Your Product</h2>
+              <h2 className="text-lg md:text-2xl font-black text-[#1F2937]">Submit Your Product</h2>
             </div>
 
             {/* Platform Selection */}
-            <div className="flex flex-wrap gap-3 mb-6">
+            <div className="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-6">
               {PLATFORMS.map(platform => (
                 <button
                   key={platform.id}
@@ -718,14 +718,14 @@ export default function Home() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section className="bg-gray-50 py-12 border-b border-gray-200 fade-in">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="flex items-center gap-3 mb-8">
+        <section className="bg-gray-50 py-6 md:py-12 border-b border-gray-200 fade-in">
+          <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <div className="flex items-center gap-3 mb-6 md:mb-8">
               <Icons.Zap />
-              <h2 className="text-2xl font-black text-[#1F2937] uppercase">How It Works</h2>
+              <h2 className="text-lg md:text-2xl font-black text-[#1F2937] uppercase">How It Works</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
               {[
                 { num: '1', title: 'Submit', desc: 'Add your product', icon: Icons.Upload },
                 { num: '2', title: 'Vote', desc: 'Community votes', icon: Icons.Vote },
@@ -735,14 +735,14 @@ export default function Home() {
                 return (
                   <div
                     key={i}
-                    className="border-gray-300 border-4 p-8 bg-white text-center hover:bg-[#0F3460]/10 hover:scale-105 transition-all duration-200 group"
+                    className="border-gray-300 border-2 md:border-4 p-4 md:p-8 bg-white text-center hover:bg-[#0F3460]/10 hover:scale-105 transition-all duration-200 group"
                   >
-                    <div className="flex justify-center mb-4 text-[#0F3460] text-4xl transition-colors">
+                    <div className="flex justify-center mb-3 md:mb-4 text-[#0F3460] text-3xl md:text-4xl transition-colors">
                       <StepIcon />
                     </div>
-                    <p className="text-4xl font-black text-[#0F3460] mb-2">{step.num}</p>
-                    <h3 className="text-lg font-black text-[#1F2937] uppercase mb-2">{step.title}</h3>
-                    <p className="text-sm text-[#1F2937]/70 font-semibold">{step.desc}</p>
+                    <p className="text-3xl md:text-4xl font-black text-[#0F3460] mb-1 md:mb-2">{step.num}</p>
+                    <h3 className="text-base md:text-lg font-black text-[#1F2937] uppercase mb-1 md:mb-2">{step.title}</h3>
+                    <p className="text-xs md:text-sm text-[#1F2937]/70 font-semibold">{step.desc}</p>
                   </div>
                 );
               })}
@@ -751,17 +751,17 @@ export default function Home() {
         </section>
 
         {/* PREMIUM FEATURES SECTION */}
-        <section className="bg-gradient-to-b from-blue-50 to-white py-20 border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <div className="inline-block mb-4">
-                <span className="text-5xl">💎</span>
+        <section className="bg-gradient-to-b from-blue-50 to-white py-10 md:py-20 border-b border-gray-200">
+          <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <div className="text-center mb-8 md:mb-16">
+              <div className="inline-block mb-2 md:mb-4">
+                <span className="text-3xl md:text-5xl">💎</span>
               </div>
-              <h2 className="text-4xl font-black text-[#1F2937] mb-4">Premium Features</h2>
-              <p className="text-lg text-[#1F2937]/70 max-w-2xl mx-auto">Boost your product visibility with guaranteed placement and founder spotlight</p>
+              <h2 className="text-2xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4">Premium Features</h2>
+              <p className="text-sm md:text-lg text-[#1F2937]/70 max-w-2xl mx-auto">Boost your product visibility with guaranteed placement and founder spotlight</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
               {[
                 {
                   price: '$5',
@@ -814,30 +814,30 @@ export default function Home() {
               ].map((plan, idx) => (
                 <div
                   key={idx}
-                  className={`shadow-sm border border-gray-200 p-8 hover:shadow-xl hover:scale-105 transition-all duration-300 ${
-                    idx === 0 ? 'bg-gradient-to-br from-[#FFB28F] to-[#D97706] scale-105' : 'bg-white'
+                  className={`shadow-sm border border-gray-200 p-4 md:p-8 hover:shadow-xl hover:bg-blue-50 hover:border-[#0F3460]/30 transition-all duration-300 rounded-lg bg-white ${
+                    idx === 0 ? 'md:scale-105' : ''
                   }`}
                 >
                   {idx === 0 && (
-                    <div className="inline-block mb-4 bg-[#18181B] text-[#FFB28F] px-4 py-2 border-2 border-[#FFB28F] font-black text-xs uppercase rounded">
+                    <div className="inline-block mb-2 md:mb-4 bg-[#0F3460] text-white px-3 py-1 md:px-4 md:py-2 border border-[#0F3460] font-black text-xs rounded">
                       Most Popular
                     </div>
                   )}
 
-                  <div className="mb-4">
-                    <div className={`text-4xl font-black ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
+                  <div className="mb-3 md:mb-4">
+                    <div className={`text-3xl md:text-4xl font-black ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
                       {plan.price}
                     </div>
                   </div>
 
-                  <h3 className={`text-2xl font-black mb-2 uppercase ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
+                  <h3 className={`text-lg md:text-2xl font-black mb-1 md:mb-2 uppercase ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
                     {plan.title}
                   </h3>
-                  <p className={`text-sm mb-6 font-semibold ${idx === 0 ? 'text-[#1F2937]/80' : 'text-[#1F2937]/70'}`}>
+                  <p className={`text-xs md:text-sm mb-4 md:mb-6 font-semibold ${idx === 0 ? 'text-[#1F2937]/80' : 'text-[#1F2937]/70'}`}>
                     {plan.description}
                   </p>
 
-                  <div className="space-y-2 py-6 border-t-3 border-b-3 border-gray-300/20 mb-6">
+                  <div className="space-y-2 py-3 md:py-6 border-t-3 border-b-3 border-gray-300/20 mb-4 md:mb-6">
                     {plan.features.map((feature, i) => (
                       <div key={i} className={`flex items-center gap-2 text-xs font-bold ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
                         <span className={`${idx === 0 ? 'text-[#1F2937]' : 'text-[#0F3460]'}`}>✓</span>
@@ -851,10 +851,10 @@ export default function Home() {
                       setSelectedListingForPremium(listings[0] || null);
                       setPremiumModalOpen(true);
                     }}
-                    className={`w-full py-4 font-black uppercase text-sm border-4 hover:scale-105 active:scale-95 transition-all duration-200 ${
+                    className={`w-full py-2 md:py-4 font-bold text-xs md:text-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-200 border ${
                       idx === 0
-                        ? 'bg-[#18181B] text-[#FFB28F] border-gray-300'
-                        : 'bg-[#0F3460] text-white border-[#0F3460]'
+                        ? 'bg-[#0F3460] text-white border-[#0F3460] hover:bg-[#0D2A50]'
+                        : 'bg-[#0F3460] text-white border-[#0F3460] hover:bg-[#0D2A50]'
                     }`}
                   >
                     Get {plan.title}
@@ -867,10 +867,10 @@ export default function Home() {
         </section>
 
         {/* TESTIMONIALS CAROUSEL SECTION */}
-        <section className="py-20 bg-white border-t border-gray-200">
-          <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-4xl font-black text-[#1F2937] mb-4 text-center">Trusted by Builders Worldwide</h2>
-            <p className="text-center text-base text-[#1F2937]/70 mb-12 max-w-2xl mx-auto">Founders, indie hackers, and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
+        <section className="py-10 md:py-20 bg-white border-t border-gray-200">
+          <div className="max-w-4xl mx-auto px-4 md:px-6">
+            <h2 className="text-2xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4 text-center">Trusted by Builders Worldwide</h2>
+            <p className="text-center text-sm md:text-base text-[#1F2937]/70 mb-8 md:mb-12 max-w-2xl mx-auto">Founders, indie hackers, and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
 
             <TestimonialsCarousel testimonials={[
               {
@@ -908,10 +908,10 @@ export default function Home() {
         </section>
 
         {/* FAQ SECTION */}
-        <section className="py-20 bg-gray-50 border-t border-gray-200">
-          <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-3xl font-black text-[#1F2937] mb-4 text-center">Frequently Asked Questions</h2>
-            <p className="text-sm font-medium text-[#1F2937]/70 mb-12 text-center max-w-2xl mx-auto">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
+        <section className="py-10 md:py-20 bg-gray-50 border-t border-gray-200">
+          <div className="max-w-4xl mx-auto px-4 md:px-6">
+            <h2 className="text-2xl md:text-3xl font-black text-[#1F2937] mb-2 md:mb-4 text-center">Frequently Asked Questions</h2>
+            <p className="text-xs md:text-sm font-medium text-[#1F2937]/70 mb-8 md:mb-12 text-center max-w-2xl mx-auto">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
 
             <div className="space-y-3">
               {[
@@ -971,11 +971,11 @@ export default function Home() {
       )}
 
       {/* TOAST NOTIFICATIONS */}
-      <div className="fixed bottom-6 right-6 z-50 space-y-2">
+      <div className="fixed bottom-4 left-4 right-4 md:bottom-6 md:right-6 md:left-auto z-50 space-y-2">
         {toasts.map(toast => (
           <div
             key={toast.id}
-            className={`px-4 py-3 border-3 border-gray-300 font-bold text-sm animate-in fade-in slide-in-from-bottom-2 flex items-center gap-2 ${
+            className={`px-3 md:px-4 py-2 md:py-3 border-2 md:border-3 border-gray-300 font-bold text-xs md:text-sm animate-in fade-in slide-in-from-bottom-2 flex items-center gap-2 ${
               toast.type === 'success'
                 ? 'bg-[#86EFAC] text-[#1F2937]'
                 : toast.type === 'error'
