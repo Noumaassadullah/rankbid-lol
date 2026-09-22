@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp, LogOut, Shield } from 'lucide-react';
+import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp, LogOut } from 'lucide-react';
 
 const CATEGORIES = [
   { name: 'All', Icon: Grid3x3 },
@@ -155,12 +155,6 @@ export default function Header() {
                 <Link href="/about" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
                   About
                 </Link>
-                {user && (
-                  <Link href="/admin" className="text-xs md:text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1 border border-purple-200 px-2 py-1 rounded-lg hover:bg-purple-50">
-                    <Shield className="w-4 h-4" />
-                    Admin
-                  </Link>
-                )}
               </nav>
 
               {/* Profile Avatar - Far Right */}
@@ -198,23 +192,13 @@ export default function Header() {
 
               {/* Mobile Auth Buttons */}
               {user ? (
-                <>
-                  <Link
-                    href="/profile"
-                    className="block px-2 py-1 text-xs md:text-sm font-medium text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    My Profile
-                  </Link>
-                  <Link
-                    href="/admin"
-                    className="block px-2 py-1 text-xs md:text-sm font-medium text-purple-600 hover:bg-purple-50 rounded-lg transition-colors flex items-center gap-1"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <Shield className="w-4 h-4" />
-                    Admin Dashboard
-                  </Link>
-                </>
+                <Link
+                  href="/profile"
+                  className="block px-2 py-1 text-xs md:text-sm font-medium text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  My Profile
+                </Link>
               ) : null}
 
               <Link href="/platforms" className="flex items-center gap-2 text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
