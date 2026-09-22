@@ -2,7 +2,7 @@
 
 import Header from '@/components/Header';
 import { useState, useEffect } from 'react';
-import { ArrowUpRight, TrendingUp, Eye, DollarSign } from 'lucide-react';
+import { ArrowUpRight, TrendingUp, Eye, DollarSign, Share2, Copy, Check } from 'lucide-react';
 
 interface Listing {
   id: string;
@@ -20,6 +20,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   const [product, setProduct] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
   const [allListings, setAllListings] = useState<Listing[]>([]);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetchProduct();
@@ -41,6 +42,33 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCopyLink = async () => {
+    if (!product) return;
+    const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/product/${product.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy:', error);
+    }
+  };
+
+  const handleShareTwitter = () => {
+    if (!product) return;
+    const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/product/${product.id}`;
+    const text = `Check out "${product.title}" on RankBid! It's ranked #1 in ${product.category}. Support it to climb the rankings. ${url}`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(twitterUrl, '_blank', 'width=550,height=420');
+  };
+
+  const handleShareLinkedIn = () => {
+    if (!product) return;
+    const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/product/${product.id}`;
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+    window.open(linkedInUrl, '_blank', 'width=550,height=420');
   };
 
   if (loading) {
@@ -97,15 +125,61 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Visit Button */}
-            <a
-              href={product.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 transition-colors text-lg"
-            >
-              Visit Product
-              <ArrowUpRight className="w-5 h-5" />
-            </a>
+            <div className="flex flex-col gap-6">
+              <a
+                href={product.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 transition-colors text-lg w-fit"
+              >
+                Visit Product
+                <ArrowUpRight className="w-5 h-5" />
+              </a>
+
+              {/* Share Buttons */}
+              <div className="flex flex-col gap-3">
+                <p className="text-sm font-semibold text-gray-600 dark:text-gray-400">Share this product</p>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={handleShareTwitter}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors font-medium"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7" />
+                    </svg>
+                    Twitter (X)
+                  </button>
+
+                  <button
+                    onClick={handleShareLinkedIn}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors font-medium"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
+                    LinkedIn
+                  </button>
+
+                  <button
+                    onClick={handleCopyLink}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors font-medium"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-5 h-5" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-5 h-5" />
+                        Copy Link
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Stats Grid */}

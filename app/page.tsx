@@ -814,17 +814,17 @@ export default function Home() {
               ].map((plan, idx) => (
                 <div
                   key={idx}
-                  className={`shadow-sm border border-gray-200 p-4 md:p-8 hover:shadow-xl hover:bg-blue-50 hover:border-[#0F3460]/30 transition-all duration-300 rounded-lg bg-white flex flex-col justify-between ${
+                  className={`shadow-sm border border-gray-200 p-4 md:p-8 hover:shadow-xl hover:bg-blue-50 hover:border-[#0F3460]/30 transition-all duration-300 rounded-lg bg-white flex flex-col justify-between relative ${
                     idx === 0 ? 'md:scale-105' : ''
                   }`}
                 >
-                  <div>
-                    {idx === 0 && (
-                      <div className="inline-block mb-2 md:mb-4 bg-[#0F3460] text-white px-3 py-1 md:px-4 md:py-2 border border-[#0F3460] font-black text-xs rounded">
-                        Most Popular
-                      </div>
-                    )}
+                  {idx === 0 && (
+                    <div className="absolute top-4 md:top-6 left-4 md:left-6 bg-[#0F3460] text-white px-2 py-1 md:px-3 md:py-1.5 border border-[#0F3460] font-black text-xs rounded">
+                      Most Popular
+                    </div>
+                  )}
 
+                  <div>
                     <div className="mb-3 md:mb-4">
                       <div className={`text-3xl md:text-4xl font-black ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
                         {plan.price}
