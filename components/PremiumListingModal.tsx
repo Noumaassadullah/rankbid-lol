@@ -104,7 +104,7 @@ export default function PremiumListingModal({
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-white shadow-sm border border-gray-200 rounded-lg max-w-2xl w-full my-8">
         {/* Header */}
-        <div className="bg-[#0F3460] border-b border-gray-200 p-6 flex items-center justify-between">
+        <div className="bg-[orange-600] border-b border-gray-200 p-6 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-black text-[#1F2937]">Boost to Premium</h2>
             <p className="text-sm text-[#1F2937]/70 font-semibold mt-1">{listingTitle}</p>
@@ -138,7 +138,7 @@ export default function PremiumListingModal({
                   onClick={() => setPosition(pos)}
                   className={`py-3 px-3 rounded-lg transition-all duration-200 group ${
                     position === pos
-                      ? 'bg-[#0F3460] shadow-md ring-2 ring-[#0F3460] ring-offset-2'
+                      ? 'bg-[orange-600] shadow-md ring-2 ring-[orange-600] ring-offset-2'
                       : 'bg-white border border-gray-300 hover:bg-blue-50'
                   }`}
                 >
@@ -146,7 +146,7 @@ export default function PremiumListingModal({
                   <p className={`text-sm font-semibold mt-1 transition-colors ${
                     position === pos
                       ? 'text-white'
-                      : 'text-[#0F3460] group-hover:text-white'
+                      : 'text-[orange-600] group-hover:text-white'
                   }`}>${PRICES[pos]}</p>
                 </button>
               ))}
@@ -262,7 +262,7 @@ export default function PremiumListingModal({
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-3 bg-[#0F3460] text-white font-semibold text-sm rounded-lg hover:bg-[#0D2A50] active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+              className="flex-1 px-4 py-3 bg-[orange-600] text-white font-semibold text-sm rounded-lg hover:bg-[orange-700] active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
             >
               {loading ? (
                 <>

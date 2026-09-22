@@ -117,7 +117,7 @@ export default function Footer() {
             </p>
             <a
               href="mailto:support@rankbid.pk"
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-[#0F3460] font-semibold text-xs border border-gray-300 rounded-lg hover:bg-[#0F3460] hover:text-white transition-all"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-100 text-[orange-600] font-semibold text-xs border border-gray-300 rounded-lg hover:bg-[orange-600] hover:text-white transition-all"
             >
               <Icons.Mail />
               Email
@@ -140,7 +140,7 @@ export default function Footer() {
           <div className="flex gap-3">
             <a
               href="https://twitter.com"
-              className="w-8 h-8 bg-blue-100 text-[#0F3460] flex items-center justify-center border border-gray-300 rounded-lg hover:bg-[#0F3460] hover:text-white transition-all"
+              className="w-8 h-8 bg-orange-100 text-[orange-600] flex items-center justify-center border border-gray-300 rounded-lg hover:bg-[orange-600] hover:text-white transition-all"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Twitter"
@@ -149,7 +149,7 @@ export default function Footer() {
             </a>
             <a
               href="https://github.com"
-              className="w-8 h-8 bg-blue-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
+              className="w-8 h-8 bg-orange-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
@@ -158,7 +158,7 @@ export default function Footer() {
             </a>
             <a
               href="https://discord.com"
-              className="w-8 h-8 bg-blue-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
+              className="w-8 h-8 bg-orange-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Discord"

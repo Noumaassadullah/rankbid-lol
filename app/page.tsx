@@ -563,8 +563,8 @@ export default function Home() {
                   onClick={() => setFormData(prev => ({ ...prev, platform: platform.id }))}
                   className={`px-4 py-2 font-bold text-xs rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 ${
                     formData.platform === platform.id
-                      ? 'bg-blue-100 text-[#1F2937] border border-gray-300'
-                      : 'bg-white text-[#1F2937] border border-gray-300 hover:bg-blue-100'
+                      ? 'bg-orange-100 text-[#1F2937] border border-gray-300'
+                      : 'bg-white text-[#1F2937] border border-gray-300 hover:bg-orange-100'
                   }`}
                 >
                   <Icons.Globe />
@@ -659,7 +659,7 @@ export default function Home() {
 
                   <button
                     onClick={handleShareLinkedIn}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold text-sm"
+                    className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold text-sm"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />

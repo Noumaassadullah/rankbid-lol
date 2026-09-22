@@ -133,9 +133,9 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                 <p className="text-sm text-gray-600 mb-1">All-Time Rank</p>
                 <p className="text-3xl font-black text-orange-600">#{listing.allTimeRank}</p>
               </div>
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4">
+              <div className="bg-gradient-to-br from-blue-50 to-orange-100 border border-blue-200 rounded-lg p-4">
                 <p className="text-sm text-gray-600 mb-1">Today's Rank</p>
-                <p className="text-3xl font-black text-blue-600">#{listing.dailyRank}</p>
+                <p className="text-3xl font-black text-orange-600">#{listing.dailyRank}</p>
               </div>
             </div>
           </div>
@@ -171,12 +171,12 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
             </div>
 
             {/* Daily Bid */}
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6">
+            <div className="bg-gradient-to-br from-blue-50 to-orange-100 border border-blue-200 rounded-lg p-6">
               <div className="flex items-start justify-between mb-2">
                 <p className="text-sm text-gray-600">Daily Bid</p>
-                <TrendingUp className="w-5 h-5 text-blue-600" />
+                <TrendingUp className="w-5 h-5 text-orange-600" />
               </div>
-              <p className="text-2xl font-bold text-blue-600">
+              <p className="text-2xl font-bold text-orange-600">
                 {formatPrice(listing.dayPaid, currency)}
               </p>
             </div>

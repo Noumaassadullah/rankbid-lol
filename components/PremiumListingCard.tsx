@@ -161,7 +161,7 @@ export default function PremiumListingCard({
             className={`w-full py-2 md:py-3 px-3 md:px-4 font-black text-xs md:text-sm border-2 md:border-3 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 ${
               hasVoted
                 ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                : 'bg-white text-[#0F3460] border-[#0F3460] hover:bg-[#0F3460] hover:text-white'
+                : 'bg-white text-[orange-600] border-[orange-600] hover:bg-[orange-600] hover:text-white'
             }`}
           >
             <Icons.Heart />
@@ -175,13 +175,13 @@ export default function PremiumListingCard({
 
             <div className="space-y-1 md:space-y-2 mb-2 md:mb-3 text-xs">
               {listing.founderEmail && (
-                <a href={`mailto:${listing.founderEmail}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <a href={`mailto:${listing.founderEmail}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[orange-600] transition-colors">
                   <Icons.Mail />
                   <span className="truncate">{listing.founderEmail}</span>
                 </a>
               )}
               {listing.founderPhone && (
-                <a href={`tel:${listing.founderPhone}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <a href={`tel:${listing.founderPhone}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[orange-600] transition-colors">
                   <Icons.Phone />
                   <span>{listing.founderPhone}</span>
                 </a>
@@ -198,7 +198,7 @@ export default function PremiumListingCard({
                     target="_blank"
                     rel="noopener noreferrer"
                     title={link.label}
-                    className="p-1 md:p-1.5 bg-[#18181B] text-[#FFB28F] border border-[#FFB28F] rounded hover:bg-blue-100 hover:text-[#1F2937] transition-colors"
+                    className="p-1 md:p-1.5 bg-[#18181B] text-[#FFB28F] border border-[#FFB28F] rounded hover:bg-orange-100 hover:text-[#1F2937] transition-colors"
                   >
                     {link.icon === 'globe' && <Icons.Globe />}
                     {link.icon === 'twitter' && <Icons.Twitter />}

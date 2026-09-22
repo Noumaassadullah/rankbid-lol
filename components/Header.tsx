@@ -120,7 +120,7 @@ export default function Header() {
                 {mobileOpen ? <X className="w-5 h-5 md:w-6 md:h-6" /> : <Menu className="w-5 h-5 md:w-6 md:h-6" />}
               </button>
               <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-lg md:text-2xl font-bold text-[#0F3460]">RankBid</span>
+                <span className="text-lg md:text-2xl font-bold text-[orange-600]">RankBid</span>
               </Link>
             </div>
 
@@ -152,13 +152,13 @@ export default function Header() {
                 <div className="hidden md:flex items-center gap-2">
                   <Link
                     href="/login"
-                    className="px-3 py-1.5 md:px-4 md:py-2 text-[#0F3460] text-xs md:text-sm font-semibold hover:bg-gray-100 rounded-lg transition-colors"
+                    className="px-3 py-1.5 md:px-4 md:py-2 text-[orange-600] text-xs md:text-sm font-semibold hover:bg-gray-100 rounded-lg transition-colors"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/signup"
-                    className="px-3 py-1.5 md:px-4 md:py-2 bg-[#0F3460] text-white text-xs md:text-sm font-semibold rounded-lg hover:bg-[#0D2A50] transition-colors"
+                    className="px-3 py-1.5 md:px-4 md:py-2 bg-[orange-600] text-white text-xs md:text-sm font-semibold rounded-lg hover:bg-[orange-700] transition-colors"
                   >
                     Sign Up
                   </Link>
@@ -167,23 +167,23 @@ export default function Header() {
 
               {/* Desktop Nav */}
               <nav className="hidden lg:flex items-center gap-4 md:gap-8">
-                <Link href="/platforms" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors flex items-center gap-1">
+                <Link href="/platforms" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors flex items-center gap-1">
                   <TrendingUp className="w-4 h-4" />
                   Platforms
                 </Link>
-                <Link href="/why" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <Link href="/why" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
                   Why
                 </Link>
-                <Link href="/daily" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <Link href="/daily" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
                   Daily
                 </Link>
-                <Link href="/archive" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <Link href="/archive" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
                   Archive
                 </Link>
-                <Link href="/categories" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <Link href="/categories" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
                   Categories
                 </Link>
-                <Link href="/about" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] transition-colors">
+                <Link href="/about" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors">
                   About
                 </Link>
               </nav>
@@ -240,39 +240,39 @@ export default function Header() {
                 <>
                   <Link
                     href="/login"
-                    className="block px-2 py-1 text-xs md:text-sm font-medium text-[#0F3460] hover:bg-gray-100 rounded-lg transition-colors"
+                    className="block px-2 py-1 text-xs md:text-sm font-medium text-[orange-600] hover:bg-gray-100 rounded-lg transition-colors"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/signup"
-                    className="block px-2 py-1 text-xs md:text-sm font-medium bg-[#0F3460] text-white rounded-lg hover:bg-[#0D2A50] transition-colors"
+                    className="block px-2 py-1 text-xs md:text-sm font-medium bg-[orange-600] text-white rounded-lg hover:bg-[orange-700] transition-colors"
                   >
                     Sign Up
                   </Link>
                 </>
               )}
 
-              <Link href="/platforms" className="flex items-center gap-2 text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/platforms" className="flex items-center gap-2 text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
                 <TrendingUp className="w-4 h-4" />
                 Platforms
               </Link>
-              <Link href="/why" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/why" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
                 Why
               </Link>
-              <Link href="/daily" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/daily" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
                 Daily
               </Link>
-              <Link href="/archive" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/archive" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
                 Archive
               </Link>
-              <Link href="/categories" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/categories" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
                 Categories
               </Link>
-              <Link href="/about" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/about" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
                 About
               </Link>
-              <Link href="/stats" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[#0F3460] px-2 py-1 transition-colors">
+              <Link href="/stats" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
                 Stats
               </Link>
             </div>
@@ -294,8 +294,8 @@ export default function Header() {
                 href={href}
                 className={`flex-shrink-0 px-2 md:px-4 py-1 md:py-2 text-xs md:text-sm font-medium whitespace-nowrap transition-all flex items-center gap-1 md:gap-2 rounded-lg ${
                   isAll
-                    ? 'bg-[#0F3460] text-white shadow-sm'
-                    : 'bg-white text-[#1F2937] hover:bg-[#0F3460] hover:text-white shadow-xs'
+                    ? 'bg-[orange-600] text-white shadow-sm'
+                    : 'bg-white text-[#1F2937] hover:bg-[orange-600] hover:text-white shadow-xs'
                 }`}
               >
                 <Icon className="w-3 h-3 md:w-4 md:h-4" />

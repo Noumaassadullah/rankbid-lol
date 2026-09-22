@@ -262,7 +262,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Page Views</p>
-                  <p className="text-4xl font-bold text-blue-600 mt-2">{product.clickCount}</p>
+                  <p className="text-4xl font-bold text-orange-600 mt-2">{product.clickCount}</p>
                 </div>
                 <Eye className="w-10 h-10 text-blue-200 dark:text-blue-900" />
               </div>
