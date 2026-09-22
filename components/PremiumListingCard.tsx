@@ -97,9 +97,9 @@ export default function PremiumListingCard({
     if (listing.founderYoutube) links.push({ icon: 'youtube', label: 'YouTube', url: listing.founderYoutube });
     if (listing.founderGithub) links.push({ icon: 'github', label: 'GitHub', url: `https://github.com/${listing.founderGithub.replace('@', '')}` });
 
-    // Plan #2: Only show 1 social
-    if (position === 2 && links.length > 1) {
-      return [links[0]];
+    // Plan #2: Only show first 4 socials
+    if (position === 2 && links.length > 4) {
+      return links.slice(0, 4);
     }
 
     return links;

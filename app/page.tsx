@@ -776,10 +776,10 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
-                  position: '1',
                   price: '$5',
                   title: 'Top Position',
                   description: 'Top spot on the leaderboard',
+                  socialCount: 8,
                   features: [
                     'PREMIUM badge',
                     'Founder name display',
@@ -793,26 +793,26 @@ export default function Home() {
                   ]
                 },
                 {
-                  position: '2',
                   price: '$3',
                   title: 'Mid Position',
                   description: 'Second spot on the leaderboard',
+                  socialCount: 4,
                   features: [
                     'PREMIUM badge',
                     'Founder name display',
                     'Email (clickable)',
                     'Phone (clickable)',
-                    '1 social account',
+                    '4 social accounts',
                     'Gradient card design',
                     'Permanent placement',
                     'One-time payment'
                   ]
                 },
                 {
-                  position: '3',
                   price: '$1',
                   title: 'Basic Position',
                   description: 'Third spot on the leaderboard',
+                  socialCount: 0,
                   features: [
                     'PREMIUM badge',
                     'Founder name display',
@@ -836,11 +836,8 @@ export default function Home() {
                     </div>
                   )}
 
-                  <div className="mb-2">
-                    <div className={`text-5xl font-black mb-2 ${idx === 0 ? 'text-[#18181B]' : 'text-[#D97706]'}`}>
-                      {plan.position}
-                    </div>
-                    <div className={`text-4xl font-black mb-4 ${idx === 0 ? 'text-[#18181B]' : 'text-[#18181B]'}`}>
+                  <div className="mb-4">
+                    <div className={`text-4xl font-black ${idx === 0 ? 'text-[#18181B]' : 'text-[#18181B]'}`}>
                       {plan.price}
                     </div>
                   </div>
