@@ -6,6 +6,7 @@ import Pagination from '@/components/Pagination';
 import PlatformIcon from '@/components/PlatformIcon';
 import PremiumListingCard from '@/components/PremiumListingCard';
 import PremiumListingModal from '@/components/PremiumListingModal';
+import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import { useState, useEffect, useCallback } from 'react';
 
 interface Listing {
@@ -875,63 +876,44 @@ export default function Home() {
           </div>
         </section>
 
-        {/* TESTIMONIALS SECTION */}
+        {/* TESTIMONIALS CAROUSEL SECTION */}
         <section className="py-20 bg-white border-t border-gray-200">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-4xl font-black text-[#1F2937] mb-4 text-center">Trusted by Builders Worldwide</h2>
-            <p className="text-center text-base text-[#1F2937]/70 mb-16 max-w-2xl mx-auto">Founders, indie hackers, and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
+            <p className="text-center text-base text-[#1F2937]/70 mb-12 max-w-2xl mx-auto">Founders, indie hackers, and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  name: 'Sarah Chen',
-                  handle: '@sarahchen',
-                  text: 'Submitted our SaaS tool on RankBid and got 1,200 votes in the first week! The community voting is so transparent and fair. No algorithms hiding our product from users.',
-                  image: '👩'
-                },
-                {
-                  name: 'Alex Rodriguez',
-                  handle: '@alexroddev',
-                  text: 'Love how simple it is to submit and share. RankBid got my indie project discovered by thousands of users organically. The real-time rankings are addictive!',
-                  image: '👨'
-                },
-                {
-                  name: 'Emma Thompson',
-                  handle: '@emmathompson',
-                  text: 'Our AI tool ranked #1 in Developer category. The community-driven approach means quality products actually rise to the top. This is how discovery should work.',
-                  image: '👩'
-                },
-                {
-                  name: 'James Wilson',
-                  handle: '@jameswilson',
-                  text: 'Completely free to submit and compete on rankings. No gatekeepers, no algorithm black box. Just pure community voting power determining what gets seen.',
-                  image: '👨'
-                },
-                {
-                  name: 'Lisa Park',
-                  handle: '@lisapark_',
-                  text: 'The category filters and real-time updates make it perfect for finding what\'s trending. RankBid transformed how we discover new tools in our niche.',
-                  image: '👩'
-                },
-                {
-                  name: 'David Kumar',
-                  handle: '@davidkumar',
-                  text: 'Submitted 3 products and they all got amazing visibility. The community on RankBid actually votes on what they love. Finally a fair ranking platform!',
-                  image: '👨'
-                }
-              ].map((testimonial, idx) => (
-                <div key={idx} className="p-6 border border-gray-200 bg-white rounded-lg shadow-sm hover:shadow-md hover:border-[#0F3460]/20 transition-all duration-200">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="text-3xl">{testimonial.image}</div>
-                    <div>
-                      <p className="font-semibold text-sm text-[#1F2937]">{testimonial.name}</p>
-                      <p className="text-xs text-[#1F2937]/60">{testimonial.handle}</p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-[#1F2937] leading-relaxed">{testimonial.text}</p>
-                </div>
-              ))}
-            </div>
+            <TestimonialsCarousel testimonials={[
+              {
+                name: 'Sarah Chen',
+                handle: '@sarahchen',
+                text: 'Submitted our SaaS tool on RankBid and got 1,200 votes in the first week! The community voting is so transparent and fair. No algorithms hiding our product from users.'
+              },
+              {
+                name: 'Alex Rodriguez',
+                handle: '@alexroddev',
+                text: 'Love how simple it is to submit and share. RankBid got my indie project discovered by thousands of users organically. The real-time rankings are addictive!'
+              },
+              {
+                name: 'Emma Thompson',
+                handle: '@emmathompson',
+                text: 'Our AI tool ranked #1 in Developer category. The community-driven approach means quality products actually rise to the top. This is how discovery should work.'
+              },
+              {
+                name: 'James Wilson',
+                handle: '@jameswilson',
+                text: 'Completely free to submit and compete on rankings. No gatekeepers, no algorithm black box. Just pure community voting power determining what gets seen.'
+              },
+              {
+                name: 'Lisa Park',
+                handle: '@lisapark_',
+                text: 'The category filters and real-time updates make it perfect for finding what\'s trending. RankBid transformed how we discover new tools in our niche.'
+              },
+              {
+                name: 'David Kumar',
+                handle: '@davidkumar',
+                text: 'Submitted 3 products and they all got amazing visibility. The community on RankBid actually votes on what they love. Finally a fair ranking platform!'
+              }
+            ]} />
           </div>
         </section>
 
