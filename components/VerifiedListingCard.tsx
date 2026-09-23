@@ -40,23 +40,25 @@ interface SocialLink {
 
 const Icons = {
   Heart: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
     </svg>
   ),
   Mail: () => (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+      <polyline points="22,6 12,13 2,6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
   Phone: () => (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
     </svg>
   ),
   Globe: () => (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20H7m6-4h.01M9 20h6" />
+    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" fill="none" strokeWidth="2" />
     </svg>
   ),
   Twitter: () => (
@@ -66,12 +68,20 @@ const Icons = {
   ),
   Linkedin: () => (
     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
+      <circle cx="4" cy="4" r="2" />
     </svg>
   ),
   Instagram: () => (
     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.322a1.44 1.44 0 110-2.881 1.44 1.44 0 010 2.881z" />
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="white" />
+      <circle cx="17.5" cy="6.5" r="1.5" fill="white" />
+    </svg>
+  ),
+  Star: () => (
+    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   ),
 };
@@ -106,47 +116,62 @@ export default function VerifiedListingCard({
 
   const socialLinks = getSocialLinks();
   const tierColors = {
-    verified: 'from-blue-100 to-blue-200 border-blue-300',
-    professional: 'from-purple-100 to-purple-200 border-purple-300',
+    verified: {
+      gradient: 'from-blue-50 via-blue-100 to-cyan-100',
+      border: 'border-blue-400',
+      badge: 'bg-blue-600 text-white border-blue-600',
+      button: 'bg-blue-600 text-white hover:bg-blue-700',
+      buttonBorder: 'border-blue-600',
+    },
+    professional: {
+      gradient: 'from-purple-50 via-purple-100 to-pink-100',
+      border: 'border-purple-400',
+      badge: 'bg-purple-600 text-white border-purple-600',
+      button: 'bg-purple-600 text-white hover:bg-purple-700',
+      buttonBorder: 'border-purple-600',
+    },
   };
+
+  const colors = tierColors[user.tier];
 
   return (
     <a
       href={listing.url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`block bg-gradient-to-br ${tierColors[user.tier]} shadow-sm border p-4 md:p-6 hover:shadow-xl transition-all duration-200 group relative overflow-hidden`}
+      className={`block bg-gradient-to-br ${colors.gradient} ${colors.border} shadow-2xl hover:shadow-2xl border-2 p-4 md:p-6 hover:scale-102 transition-all duration-300 group relative overflow-hidden rounded-xl backdrop-blur-sm`}
     >
       {/* Tier Badge */}
-      <div className="absolute top-3 right-3 bg-white text-blue-600 px-3 py-1 border-2 border-blue-500 font-black text-xs flex items-center gap-1">
-        <VerifiedBadge tier={user.tier} size="sm" />
-        {user.tier.toUpperCase()}
+      <div className={`absolute top-4 right-4 ${colors.badge} px-4 py-2 border-2 font-black text-xs md:text-sm flex items-center gap-2 rounded-lg shadow-lg`}>
+        <Icons.Star />
+        {user.tier === 'verified' ? 'VERIFIED' : 'PROFESSIONAL'}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
         {/* Left: Listing Info */}
         <div className="md:col-span-2">
-          <div className="flex items-start justify-between gap-2 md:gap-4 mb-3 md:mb-4">
+          <div className="flex items-start justify-between gap-2 md:gap-4 mb-4 md:mb-6">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1 md:mb-2">
-                <div className="w-8 md:w-10 h-8 md:h-10 bg-white text-blue-600 font-black rounded-lg flex items-center justify-center text-sm md:text-base flex-shrink-0">
+              <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                <div className={`w-10 md:w-12 h-10 md:h-12 text-white font-black rounded-lg flex items-center justify-center text-lg md:text-xl flex-shrink-0 shadow-lg ${colors.button}`}>
                   #{position}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm md:text-lg font-black text-slate-900 group-hover:underline truncate flex items-center gap-2">
+                  <p className="text-base md:text-2xl font-black text-slate-900 group-hover:underline truncate flex items-center gap-2">
                     {listing.title}
-                    <VerifiedBadge tier={user.tier} size="sm" />
                   </p>
-                  <p className="text-xs text-slate-700/70 font-semibold truncate">{listing.category}</p>
+                  <p className="text-xs md:text-sm text-slate-600 font-semibold truncate">{listing.category} • {listing.platform}</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Vote Count */}
-          <div className="mb-3 md:mb-4 bg-white bg-opacity-80 inline-block px-2 md:px-4 py-1 md:py-2 border-2 border-gray-300 rounded">
-            <p className="text-lg md:text-2xl font-black text-slate-900">{listing.totalVotes}</p>
-            <p className="text-xs text-slate-600/60 font-semibold">Total Votes</p>
+          <div className="mb-4 md:mb-6 bg-white/80 backdrop-blur inline-block px-4 md:px-6 py-3 md:py-4 border-2 border-gray-200 rounded-lg shadow-lg">
+            <p className="text-2xl md:text-4xl font-black text-slate-900">
+              💗 {listing.totalVotes.toLocaleString()}
+            </p>
+            <p className="text-xs md:text-sm text-slate-600 font-bold mt-1">Community Votes</p>
           </div>
         </div>
 
@@ -159,42 +184,44 @@ export default function VerifiedListingCard({
               onVote(listing.id);
             }}
             disabled={hasVoted}
-            className={`w-full py-2 md:py-3 px-3 md:px-4 font-black text-xs md:text-sm border-2 md:border-3 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 ${
+            className={`w-full py-3 md:py-4 px-3 md:px-4 font-black text-sm md:text-base border-2 md:border-3 rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-lg ${
               hasVoted
-                ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                : 'bg-white text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white'
+                ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed opacity-50'
+                : `${colors.button} ${colors.buttonBorder} hover:shadow-xl transform`
             }`}
           >
             <Icons.Heart />
-            {hasVoted ? 'Voted' : 'Vote'}
+            {hasVoted ? 'Voted ✓' : 'Vote Now'}
           </button>
 
           {/* User Info */}
-          <div className="bg-white bg-opacity-90 p-3 md:p-4 border border-gray-300 rounded">
-            <p className="font-black text-slate-900 text-xs md:text-sm mb-2 md:mb-3 flex items-center gap-1">
-              <VerifiedBadge tier={user.tier} size="sm" />
-              {user.tier === 'verified' ? 'Verified User' : 'Professional'}
-            </p>
-            <p className="font-bold text-slate-900 text-xs md:text-sm mb-1 md:mb-2 truncate">{user.name || user.email}</p>
+          <div className="bg-white/95 backdrop-blur p-4 md:p-5 border-2 border-gray-200 rounded-lg shadow-lg">
+            <div className="flex items-center gap-2 mb-3 md:mb-4">
+              <VerifiedBadge tier={user.tier} size="md" />
+              <p className="font-black text-slate-900 text-xs md:text-sm">
+                {user.tier === 'verified' ? 'Verified Creator' : '⭐ Professional'}
+              </p>
+            </div>
+            <p className="font-bold text-slate-900 text-sm md:text-base mb-1 md:mb-3 truncate">{user.name || user.email}</p>
 
-            <div className="space-y-1 md:space-y-2 mb-2 md:mb-3 text-xs">
+            <div className="space-y-2 md:space-y-2.5 mb-3 md:mb-4 text-xs md:text-sm">
               {user.email && (
-                <a href={`mailto:${user.email}`} className="flex items-center gap-2 text-slate-900 hover:text-blue-600 transition-colors">
+                <a href={`mailto:${user.email}`} className={`flex items-center gap-2 font-semibold transition-all hover:translate-x-1`} style={{color: user.tier === 'verified' ? '#2563eb' : '#9333ea'}}>
                   <Icons.Mail />
-                  <span className="truncate">{user.email}</span>
+                  <span className="truncate hover:underline">{user.email}</span>
                 </a>
               )}
               {user.phone && (
-                <a href={`tel:${user.phone}`} className="flex items-center gap-2 text-slate-900 hover:text-blue-600 transition-colors">
+                <a href={`tel:${user.phone}`} className={`flex items-center gap-2 font-semibold transition-all hover:translate-x-1`} style={{color: user.tier === 'verified' ? '#2563eb' : '#9333ea'}}>
                   <Icons.Phone />
-                  <span>{user.phone}</span>
+                  <span className="hover:underline">{user.phone}</span>
                 </a>
               )}
             </div>
 
             {/* Social Links */}
             {socialLinks.length > 0 && (
-              <div className="flex flex-wrap gap-1 md:gap-2 pt-1 md:pt-2 border-t-2 border-gray-300/20">
+              <div className="flex flex-wrap gap-2 pt-3 md:pt-4 border-t-2 border-gray-200">
                 {socialLinks.map((link, idx) => (
                   <a
                     key={idx}
@@ -202,7 +229,7 @@ export default function VerifiedListingCard({
                     target="_blank"
                     rel="noopener noreferrer"
                     title={link.label}
-                    className="p-1 md:p-1.5 bg-blue-600 text-white border border-blue-600 rounded hover:bg-white hover:text-blue-600 transition-colors"
+                    className={`p-2 md:p-2.5 rounded-lg border-2 transition-all duration-200 hover:scale-110 hover:shadow-lg ${colors.button} ${colors.buttonBorder}`}
                   >
                     {link.icon === 'globe' && <Icons.Globe />}
                     {link.icon === 'twitter' && <Icons.Twitter />}
