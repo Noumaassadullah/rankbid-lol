@@ -13,19 +13,19 @@ datasource db {
 model Listing {
   id            String    @id @default(cuid())
 
-  title         String    @map("title")
-  description   String    @map("description")
-  url           String    @unique @map("url")
-  handle        String?   @map("handle")
+  title         String
+  description   String
+  url           String    @unique
+  handle        String?
   category      Category  @default(Other)
-  platform      String    @default("website") @map("platform")
+  platform      String    @default("website")
 
-  totalVotes    Int       @default(0) @map("total_votes")
-  dayVotes      Int       @default(0) @map("day_votes")
-  clickCount    Int       @default(0) @map("click_count")
+  totalVotes    Int       @default(0)
+  dayVotes      Int       @default(0)
+  clickCount    Int       @default(0)
 
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   votes         Vote[]
   dailySnapshots DailyVoteSnapshot[]
