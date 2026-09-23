@@ -95,10 +95,10 @@ export default function SignupPage() {
           {/* Logo */}
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center text-white font-black text-xl">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-lg flex items-center justify-center text-white font-black text-xl">
                 ⚡
               </div>
-              <span className="text-3xl font-black text-orange-600">RankBid</span>
+              <span className="text-3xl font-black text-[#0F3460]">RankBid</span>
             </Link>
             <p className="text-gray-600 text-sm mt-4">Create a new account</p>
           </div>
@@ -173,7 +173,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-3 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 mt-6"
+              className="w-full px-4 py-3 bg-[#0F3460] text-white font-bold rounded-lg hover:bg-[#0D2A50] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 mt-6"
             >
               {loading ? (
                 <>
