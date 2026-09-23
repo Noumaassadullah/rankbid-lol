@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp, LogOut } from 'lucide-react';
-import CartButton from './CartButton';
 
 const CATEGORIES = [
   { name: 'All', Icon: Grid3x3 },
@@ -172,9 +171,6 @@ export default function Header() {
                 </Link>
               ) : null}
 
-              {/* Cart Button */}
-              <CartButton />
-
               {/* Search */}
               <button
                 onClick={() => {
@@ -229,9 +225,6 @@ export default function Header() {
               </Link>
               <Link href="/stats" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
                 Stats
-              </Link>
-              <Link href="/cart" className="block text-xs md:text-sm font-medium text-orange-600 hover:bg-orange-50 rounded-lg px-2 py-1 transition-colors">
-                🛒 Cart
               </Link>
             </div>
           )}
