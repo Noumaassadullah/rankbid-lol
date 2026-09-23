@@ -51,13 +51,13 @@ export default function LeaderboardPage() {
       <Header />
       <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-black dark:via-gray-900 dark:to-black">
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+        <div className="bg-gradient-to-r from-[#0F3460] to-[#1a5490] text-white">
           <div className="max-w-6xl mx-auto px-6 py-16">
             <div className="flex items-center gap-4 mb-4">
               <Trophy className="w-10 h-10" />
               <h1 className="text-5xl font-bold">Global Leaderboard</h1>
             </div>
-            <p className="text-xl text-orange-100">
+            <p className="text-xl text-white/80">
               Top-ranked products competing for the #1 spot
             </p>
           </div>
@@ -70,7 +70,7 @@ export default function LeaderboardPage() {
               onClick={() => setActiveTab('alltime')}
               className={`px-6 py-4 font-semibold transition-colors ${
                 activeTab === 'alltime'
-                  ? 'text-orange-600 border-b-2 border-orange-600'
+                  ? 'text-[#0F3460] border-b-2 border-[#0F3460]'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
@@ -80,7 +80,7 @@ export default function LeaderboardPage() {
               onClick={() => setActiveTab('today')}
               className={`px-6 py-4 font-semibold transition-colors ${
                 activeTab === 'today'
-                  ? 'text-orange-600 border-b-2 border-orange-600'
+                  ? 'text-[#0F3460] border-b-2 border-[#0F3460]'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
@@ -90,7 +90,7 @@ export default function LeaderboardPage() {
 
           {loading ? (
             <div className="text-center py-20">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#0F3460]"></div>
             </div>
           ) : (
             <>
@@ -118,12 +118,12 @@ export default function LeaderboardPage() {
                     {/* 1st Place */}
                     {topThree[0] && (
                       <div>
-                        <div className="bg-gradient-to-br from-orange-400 to-orange-500 rounded-xl border-4 border-orange-600 p-6 text-center text-white shadow-2xl">
+                        <div className="bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-xl border-4 border-[#0F3460] p-6 text-center text-white shadow-2xl">
                           <div className="text-6xl font-black mb-3">🥇</div>
                           <h3 className="font-bold text-xl mb-2">{topThree[0].title}</h3>
-                          <p className="text-sm text-orange-100 mb-4">{topThree[0].category}</p>
+                          <p className="text-sm text-white/80 mb-4">{topThree[0].category}</p>
                           <p className="text-4xl font-bold">${(activeTab === 'today' ? topThree[0].dayPaid : topThree[0].totalPaid) / 100}</p>
-                          <p className="text-sm text-orange-200 mt-2">#1 Ranked</p>
+                          <p className="text-sm text-white/70 mt-2">#1 Ranked</p>
                         </div>
                       </div>
                     )}
@@ -160,12 +160,12 @@ export default function LeaderboardPage() {
                       <a
                         key={listing.id}
                         href={`/product/${listing.id}`}
-                        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-between hover:shadow-lg hover:border-orange-300 dark:hover:border-orange-600 transition-all group"
+                        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex items-center justify-between hover:shadow-lg hover:border-[#0F3460]/30 dark:hover:border-[#0F3460]/60 transition-all group"
                       >
                         <div className="flex items-center gap-6 flex-1">
-                          <span className="text-4xl font-black text-orange-600">#{idx + 1}</span>
+                          <span className="text-4xl font-black text-[#0F3460]">#{idx + 1}</span>
                           <div>
-                            <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                            <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-[#0F3460] dark:group-hover:text-[#0F3460] transition-colors">
                               {listing.title}
                             </h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -174,7 +174,7 @@ export default function LeaderboardPage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-3xl font-bold text-orange-600">
+                          <p className="text-3xl font-bold text-[#0F3460]">
                             ${(activeTab === 'today' ? listing.dayPaid : listing.totalPaid) / 100}
                           </p>
                           <p className="text-sm text-gray-500 dark:text-gray-400">

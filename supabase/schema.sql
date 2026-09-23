@@ -25,12 +25,15 @@ CREATE TABLE IF NOT EXISTS listings (
   title text NOT NULL,
   description text NOT NULL,
   category text NOT NULL,
+  platform text DEFAULT 'website',
   price numeric NOT NULL,
   status text DEFAULT 'active' CHECK (status IN ('active', 'sold', 'expired')),
   image_url text,
   location text NOT NULL,
   views integer DEFAULT 0,
-  is_featured boolean DEFAULT false
+  is_featured boolean DEFAULT false,
+  total_votes integer DEFAULT 0,
+  day_votes integer DEFAULT 0
 );
 
 -- Create visitor_sessions table for tracking online users
