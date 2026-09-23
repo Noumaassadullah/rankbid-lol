@@ -259,6 +259,7 @@ export async function POST(req: NextRequest) {
         title: metaTitle,
         description: metaDescription,
         category: category || 'Other',
+        platform: metaPlatform,
         status: 'active',
         location: normalizedUrl,
         price: 0,
