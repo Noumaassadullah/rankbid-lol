@@ -49,18 +49,18 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get('offset') || '0');
 
   try {
-    let listings;
+    let listings: any[] = [];
 
     if (timeWindow === 'alltime') {
       listings = await prisma.listing.findMany({
-        ...(category !== 'All' && { where: { category: category as any } }),
+        where: category !== 'All' ? { category: category as any } : {},
         orderBy: { totalVotes: 'desc' },
         take: limit,
         skip: offset,
       });
     } else if (timeWindow === 'today') {
       listings = await prisma.listing.findMany({
-        ...(category !== 'All' && { where: { category: category as any } }),
+        where: category !== 'All' ? { category: category as any } : {},
         orderBy: { dayVotes: 'desc' },
         take: limit,
         skip: offset,
@@ -71,20 +71,6 @@ export async function GET(request: NextRequest) {
 
     const rankedListings = listings.map((listing, index) => ({
       ...listing,
-      // Use founder info as user info for now (premium listings)
-      userId: listing.userId || null,
-      userName: listing.founderName || null,
-      userEmail: listing.founderEmail || null,
-      userTier: null, // Will be populated from database once userId is available
-      userPhone: listing.founderPhone || null,
-      userWebsite: listing.founderWebsite || null,
-      userTwitter: listing.founderTwitter || null,
-      userLinkedin: listing.founderLinkedin || null,
-      userInstagram: listing.founderInstagram || null,
-      userFacebook: listing.founderFacebook || null,
-      userTiktok: listing.founderTiktok || null,
-      userYoutube: listing.founderYoutube || null,
-      userGithub: listing.founderGithub || null,
       rank: offset + index + 1,
       votesToOutrank: (timeWindow === 'today' ? listing.dayVotes : listing.totalVotes) + 1,
     }));
@@ -92,7 +78,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(rankedListings);
   } catch (error) {
     console.error('Error fetching listings:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error', details: String(error) }, { status: 500 });
   }
 }
 
