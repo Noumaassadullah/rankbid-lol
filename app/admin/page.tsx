@@ -66,27 +66,15 @@ export default function AdminPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Test admin key first
-    try {
-      const testRes = await fetch('/api/admin/debug', {
-        headers: { 'x-admin-key': adminKey }
-      });
-      const testData = await testRes.json();
-      console.log('Debug response:', testData);
-
-      if (!testData.adminKey.matches) {
-        showToast('❌ Admin key is incorrect!', 'error');
-        return;
-      }
-
-      localStorage.setItem('admin_key', adminKey);
-      setIsAuthenticated(true);
-      fetchAllData();
-      showToast('✅ Authenticated! Loading dashboard...', 'success');
-    } catch (error) {
-      console.error('Login error:', error);
-      showToast('Failed to connect to database', 'error');
+    if (!adminKey.trim()) {
+      showToast('❌ Please enter an admin key', 'error');
+      return;
     }
+
+    localStorage.setItem('admin_key', adminKey);
+    setIsAuthenticated(true);
+    fetchAllData();
+    showToast('✅ Authenticating... Loading dashboard...', 'success');
   };
 
   const fetchAllData = async () => {
