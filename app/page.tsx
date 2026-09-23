@@ -894,13 +894,17 @@ export default function Home() {
                 const platformColor = platform === 'instagram' ? '#E4405F' : platform === 'linkedin' ? '#0A66C2' : '#000000';
                 const bgGradient = platform === 'instagram' ? 'from-pink-50 to-orange-50' : platform === 'linkedin' ? 'from-blue-50 to-cyan-50' : 'from-gray-50 to-slate-50';
 
-                const platformListings = listings
-                  .filter(l => {
-                    if (!l.platform || l.platform === 'website') return false;
-                    return platform === 'twitter' ? ['twitter', 'x'].includes(l.platform) : l.platform === platform;
-                  })
+                let platformListings = listings
+                  .filter(l => platform === 'twitter' ? ['twitter', 'x'].includes(l.platform) : l.platform === platform)
                   .sort((a, b) => (activeTimeFilter === 'today' ? b.dayVotes - a.dayVotes : b.totalVotes - a.totalVotes))
                   .slice(0, 5);
+
+                // If no platform-specific submissions, show top submissions from all platforms
+                if (platformListings.length === 0) {
+                  platformListings = listings
+                    .sort((a, b) => (activeTimeFilter === 'today' ? b.dayVotes - a.dayVotes : b.totalVotes - a.totalVotes))
+                    .slice(0, 5);
+                }
 
                 return (
                   <div
