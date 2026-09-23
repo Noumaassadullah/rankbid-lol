@@ -5,47 +5,24 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const daysBack = parseInt(searchParams.get('daysBack') || '30');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '10'), 100);
 
-    // Get daily snapshots for the past N days
+    // Get daily snapshots for the past N days from database
     const startDate = new Date();
     startDate.setUTCHours(0, 0, 0, 0);
     startDate.setUTCDate(startDate.getUTCDate() - daysBack);
 
-    const endDate = new Date();
-    endDate.setUTCHours(23, 59, 59, 999);
-
-    // Get all listings ordered by daily votes
-    const listings = await prisma.listing.findMany({
+    const snapshots = await prisma.dailySnapshot.findMany({
       where: {
-        dayVotes: { gt: 0 },
+        date: {
+          gte: startDate,
+        },
       },
-      orderBy: { dayVotes: 'desc' },
-      take: limit,
+      orderBy: { date: 'desc' },
     });
-
-    // Format response with today's date
-    const today = new Date().toISOString().split('T')[0];
-    const snapshots = [
-      {
-        date: today,
-        listings: listings.map((listing, idx) => ({
-          rank: idx + 1,
-          listing: {
-            id: listing.id,
-            title: listing.title,
-            url: listing.url,
-            description: listing.description,
-            category: listing.category,
-          },
-          votes: listing.dayVotes,
-        })),
-      },
-    ];
 
     return NextResponse.json({
       snapshots,
-      totalDays: 1,
+      totalDays: snapshots.length,
     });
   } catch (error) {
     console.error('Error fetching daily snapshots:', error);
