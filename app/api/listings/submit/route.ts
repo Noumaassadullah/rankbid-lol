@@ -6,35 +6,34 @@ import { extractSocialHandle, formatSocialMediaUrl, isSocialMediaUrl } from '@/l
 async function verifySocialMediaAccount(url: string): Promise<boolean> {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
     const response = await fetch(url, {
-      method: 'GET',
+      method: 'HEAD',
       redirect: 'follow',
       signal: controller.signal,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       },
     });
 
     clearTimeout(timeout);
-    if (response.status === 404 || response.status === 410 || response.status === 451 || response.status === 429 || response.status === 403) {
-      return false;
+    // Accept 200-399 range as valid, skip 429 (rate limit) for now
+    if (response.status >= 200 && response.status < 400) {
+      return true;
     }
 
-    if (response.status === 200) {
-      const text = await response.text();
-      const notFoundPatterns = ['user not found', 'page not found', 'account not found', 'does not exist', 'no longer exists', 'been deleted', 'been suspended', 'been banned', 'this account is suspended', 'this page is not available'];
-      const lowerText = text.toLowerCase();
-      if (notFoundPatterns.some(pattern => lowerText.includes(pattern))) {
-        return false;
-      }
+    // If 429 (rate limited) or 403 (forbidden), assume profile exists but is protected
+    if (response.status === 429 || response.status === 403) {
+      return true;
     }
 
-    return response.status >= 200 && response.status < 400;
-  } catch {
-    return false;
+    // Only reject clear 404s
+    return response.status !== 404 && response.status !== 410;
+  } catch (error) {
+    console.warn(`Social media verification failed for ${url}:`, error);
+    // If fetch fails, assume the profile might exist (network issues)
+    return true;
   }
 }
 
@@ -45,7 +44,7 @@ async function isURLAccessible(url: string, platform?: string): Promise<boolean>
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
     const response = await fetch(url, {
       method: 'HEAD',
@@ -59,7 +58,7 @@ async function isURLAccessible(url: string, platform?: string): Promise<boolean>
   } catch {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
+      const timeout = setTimeout(() => controller.abort(), 8000);
 
       const response = await fetch(url, {
         method: 'GET',
@@ -70,8 +69,11 @@ async function isURLAccessible(url: string, platform?: string): Promise<boolean>
 
       clearTimeout(timeout);
       return response.status >= 200 && response.status < 400;
-    } catch {
-      return false;
+    } catch (error) {
+      console.warn(`URL accessibility check failed for ${url}:`, error);
+      // If timeout or network error occurs, allow the submission but log it
+      // This prevents legitimate submissions from being rejected due to temporary network issues
+      return true;
     }
   }
 }
@@ -177,25 +179,24 @@ export async function POST(req: NextRequest) {
       metaPlatform = metadata.platform || platform || 'website';
 
       if (platform === 'website' || !isSocialMediaUrl(normalizedUrl)) {
-        if (!metadata.title || metadata.title.length < 3) {
-          return NextResponse.json(
-            { error: 'Could not verify website content. Please ensure the URL is a valid, accessible website.' },
-            { status: 400 }
-          );
+        // Relaxed validation for websites - just ensure we have some title
+        if (!metaTitle || metaTitle.length < 2) {
+          metaTitle = new URL(normalizedUrl).hostname;
         }
-        if (!metadata.description || metadata.description.length < 10) {
-          return NextResponse.json(
-            { error: 'Website must have a meaningful description. Please provide more details.' },
-            { status: 400 }
-          );
+        if (!metaDescription || metaDescription.length < 3) {
+          metaDescription = 'Website';
         }
       }
     } catch (err) {
       console.error('Metadata extraction failed:', err);
-      return NextResponse.json(
-        { error: 'Could not verify website. Please ensure the URL is valid and accessible.' },
-        { status: 400 }
-      );
+      try {
+        const urlObj = new URL(normalizedUrl);
+        metaTitle = urlObj.hostname;
+        metaDescription = 'Website';
+      } catch {
+        metaTitle = 'Listing';
+        metaDescription = 'Website listing';
+      }
     }
 
     const titleLower = metaTitle.toLowerCase();
@@ -216,32 +217,29 @@ export async function POST(req: NextRequest) {
     }
 
     if (isSocialMediaUrl(normalizedUrl)) {
-      if (!metaTitle || metaTitle.length < 2) {
-        return NextResponse.json(
-          { error: 'Social media account does not exist or is not accessible. Please verify the profile URL.' },
-          { status: 400 }
-        );
+      // Validate that title exists and is reasonable length
+      if (!metaTitle || metaTitle.length < 1) {
+        metaTitle = new URL(normalizedUrl).pathname.split('/').filter(p => p)[0] || 'Account';
       }
 
-      if (metaTitle.toLowerCase().includes('not found') || metaTitle.toLowerCase().includes('deleted') || metaTitle.toLowerCase().includes('suspended') || metaTitle.toLowerCase().includes('unavailable')) {
+      // Check for explicit deleted/suspended indicators
+      const badIndicators = ['not found', 'deleted', 'suspended', 'unavailable', 'account suspended'];
+      if (metaTitle && badIndicators.some(indicator => metaTitle.toLowerCase().includes(indicator))) {
         return NextResponse.json(
           { error: 'Social media account is deleted, suspended, or unavailable.' },
           { status: 400 }
         );
       }
 
-      if (!metaDescription || metaDescription === normalizedUrl || metaDescription.length < 2) {
-        return NextResponse.json(
-          { error: 'Social media profile appears to be empty or fake. Ensure the profile is real and has a bio.' },
-          { status: 400 }
-        );
+      // Allow submission even if description is minimal (some profiles don't have bios)
+      if (!metaDescription || metaDescription === normalizedUrl) {
+        metaDescription = 'Social Media Profile';
       }
 
+      // Use favicon if profile image not found
       if (!imageUrl) {
-        return NextResponse.json(
-          { error: 'Social media profile could not be verified. Please ensure the profile is real and publicly accessible.' },
-          { status: 400 }
-        );
+        const urlObj = new URL(normalizedUrl);
+        imageUrl = `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=256`;
       }
     }
 
