@@ -299,7 +299,7 @@ export default function AdminPage() {
                     <p className="text-gray-600 text-sm font-medium">Total Votes</p>
                     <p className="text-3xl font-black text-[#0F3460]">{stats?.totalVotes || 0}</p>
                   </div>
-                  <TrendingUp className="w-12 h-12 text-orange-200" />
+                  <TrendingUp className="w-12 h-12 text-[#0F3460]/80" />
                 </div>
               </div>
 

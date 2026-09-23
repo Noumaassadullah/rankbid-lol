@@ -129,7 +129,7 @@ export default function ProfilePage() {
               onClick={() => setActiveTab('submissions')}
               className={`py-4 px-1 border-b-2 font-semibold transition-colors ${
                 activeTab === 'submissions'
-                  ? 'border-orange-600 text-[#0F3460]'
+                  ? 'border-[#0F3460]/600 text-[#0F3460]'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -139,7 +139,7 @@ export default function ProfilePage() {
               onClick={() => setActiveTab('votes')}
               className={`py-4 px-1 border-b-2 font-semibold transition-colors ${
                 activeTab === 'votes'
-                  ? 'border-orange-600 text-[#0F3460]'
+                  ? 'border-[#0F3460]/600 text-[#0F3460]'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -149,7 +149,7 @@ export default function ProfilePage() {
               onClick={() => setActiveTab('settings')}
               className={`py-4 px-1 border-b-2 font-semibold transition-colors ${
                 activeTab === 'settings'
-                  ? 'border-orange-600 text-[#0F3460]'
+                  ? 'border-[#0F3460]/600 text-[#0F3460]'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -192,7 +192,7 @@ export default function ProfilePage() {
                       <Link
                         key={listing.id}
                         href={`/product/${listing.id}`}
-                        className="bg-white rounded-lg p-6 border border-gray-200 hover:border-orange-400 hover:shadow-md transition-all"
+                        className="bg-white rounded-lg p-6 border border-gray-200 hover:border-[#0F3460]/400 hover:shadow-md transition-all"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
@@ -207,7 +207,7 @@ export default function ProfilePage() {
                               <span className="text-gray-600">
                                 <span className="font-semibold">{listing.dayVotes}</span> today
                               </span>
-                              <span className="bg-[#0F3460]/10 text-orange-700 px-2 py-1 rounded">
+                              <span className="bg-[#0F3460]/10 text-[#0F3460]/700 px-2 py-1 rounded">
                                 {listing.platform}
                               </span>
                               <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded">
@@ -270,7 +270,7 @@ export default function ProfilePage() {
                           {vote.listing && (
                             <Link
                               href={`/product/${vote.listingId}`}
-                              className="text-[#0F3460] hover:text-orange-700 font-semibold text-sm ml-4"
+                              className="text-[#0F3460] hover:text-[#0F3460]/700 font-semibold text-sm ml-4"
                             >
                               View
                             </Link>

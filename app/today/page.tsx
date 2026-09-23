@@ -64,7 +64,7 @@ export default function TodayPage() {
       <Navbar />
       <div className="bg-white min-h-screen">
       {/* Header */}
-      <section className="bg-white px-4 sm:px-6 py-16 md:py-32 border-b-8 border-orange-600">
+      <section className="bg-white px-4 sm:px-6 py-16 md:py-32 border-b-8 border-[#0F3460]/600">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black mb-6 leading-tight">
             <span className="text-[#0F3460]">🔥 TODAY'S</span><br />
@@ -73,7 +73,7 @@ export default function TodayPage() {
           <p className="text-xl md:text-2xl font-bold text-gray-700 max-w-2xl mb-8">
             Last 24 hours of bidding. See what's trending right now.
           </p>
-          <div className="bg-[#0F3460]/10 border-4 border-orange-600 rounded-xl p-6 inline-block">
+          <div className="bg-[#0F3460]/10 border-4 border-[#0F3460]/600 rounded-xl p-6 inline-block">
             <p className="font-black text-gray-900">
               📊 {topListingsToday.length} products | 🗳️ {topListingsToday.reduce((sum, l) => sum + l.dayVotes, 0)} votes today
             </p>
@@ -95,7 +95,7 @@ export default function TodayPage() {
               <p className="text-xl font-bold text-gray-700 mb-8">Be the first to bid and dominate today's leaderboard!</p>
               <Link
                 href="/#claim"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 text-white font-black rounded-2xl hover:shadow-lg hover:shadow-orange-600/50 transition-all hover:scale-105 text-lg border-4 border-orange-600"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-[#0F3460] to-[#1a5490] text-white font-black rounded-2xl hover:shadow-lg hover:shadow-[#0F3460]/30 transition-all hover:scale-105 text-lg border-4 border-[#0F3460]/600"
               >
                 Claim Rank Now
               </Link>
@@ -134,7 +134,7 @@ export default function TodayPage() {
       </section>
 
       {/* How It Works */}
-      <section className="bg-white px-4 sm:px-6 py-20 md:py-32 border-b-8 border-orange-600">
+      <section className="bg-white px-4 sm:px-6 py-20 md:py-32 border-b-8 border-[#0F3460]/600">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-16 text-center">
             How <span className="text-[#0F3460]">Today's</span> Rankings Work
@@ -179,14 +179,14 @@ export default function TodayPage() {
       <section className="bg-white px-4 sm:px-6 py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-8 leading-tight">
-            <span className="bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent">GET ON TODAY'S</span> RADAR
+            <span className="bg-gradient-to-r from-[#0F3460] to-[#1a5490] bg-clip-text text-transparent">GET ON TODAY'S</span> RADAR
           </h2>
           <p className="text-xl md:text-2xl font-bold text-gray-700 mb-12">
             Today's leaderboard updates every 24 hours. Start bidding now to capture today's active makers.
           </p>
           <Link
             href="/#claim"
-            className="inline-block px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 text-white border-4 border-orange-600 font-black hover:shadow-lg hover:shadow-orange-600/50 transition-all hover:scale-105 text-lg rounded-2xl"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-[#0F3460] to-[#1a5490] text-white border-4 border-[#0F3460]/600 font-black hover:shadow-lg hover:shadow-[#0F3460]/30 transition-all hover:scale-105 text-lg rounded-2xl"
           >
             Claim Your Spot →
           </Link>

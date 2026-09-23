@@ -51,7 +51,7 @@ export default function DashboardPage() {
                   <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Listed Products</p>
                   <p className="text-4xl font-bold text-gray-900 dark:text-white">0</p>
                 </div>
-                <TrendingUp className="w-12 h-12 text-orange-100 dark:text-orange-900" />
+                <TrendingUp className="w-12 h-12 text-white dark:text-[#1F2937]/90" />
               </div>
             </div>
 
@@ -71,20 +71,20 @@ export default function DashboardPage() {
                   <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Best Ranking</p>
                   <p className="text-4xl font-bold text-gray-900 dark:text-white">—</p>
                 </div>
-                <TrendingUp className="w-12 h-12 text-orange-100 dark:text-blue-900" />
+                <TrendingUp className="w-12 h-12 text-white dark:text-blue-900" />
               </div>
             </div>
           </div>
 
           {/* Menu */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <button className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg hover:border-orange-300 dark:hover:border-orange-600 transition-all text-left group">
+            <button className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg hover:border-[#0F3460]/300 dark:hover:border-[#0F3460]/600 transition-all text-left group">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#0F3460]/10 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#0F3460]/10 dark:bg-[#0F3460]/10 rounded-lg flex items-center justify-center">
                   <TrendingUp className="w-6 h-6 text-[#0F3460]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-[#0F3460] dark:group-hover:text-orange-400 transition-colors">
+                  <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-[#0F3460] dark:group-hover:text-[#0F3460]/50 transition-colors">
                     My Products
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Manage your listings</p>
@@ -92,7 +92,7 @@ export default function DashboardPage() {
               </div>
             </button>
 
-            <button className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg hover:border-orange-300 dark:hover:border-orange-600 transition-all text-left group">
+            <button className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg hover:border-[#0F3460]/300 dark:hover:border-[#0F3460]/600 transition-all text-left group">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-[#0F3460]/10 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
                   <Settings className="w-6 h-6 text-[#0F3460]" />
@@ -106,7 +106,7 @@ export default function DashboardPage() {
               </div>
             </button>
 
-            <button className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg hover:border-orange-300 dark:hover:border-orange-600 transition-all text-left group">
+            <button className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg hover:border-[#0F3460]/300 dark:hover:border-[#0F3460]/600 transition-all text-left group">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
                   <DollarSign className="w-6 h-6 text-green-600" />
