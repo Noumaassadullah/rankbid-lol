@@ -24,25 +24,6 @@ model Listing {
   dayVotes      Int       @default(0) @map("day_votes")
   clickCount    Int       @default(0) @map("click_count")
 
-  // Owner/Creator information
-  userId        String?   @map("user_id")
-  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  // Premium/Founder information
-  isPremium     Boolean   @default(false)
-  premiumPosition Int?    @map("premium_position")
-  founderName   String?   @map("founder_name")
-  founderEmail  String?   @map("founder_email")
-  founderPhone  String?   @map("founder_phone")
-  founderWebsite String?  @map("founder_website")
-  founderTwitter String?  @map("founder_twitter")
-  founderLinkedin String?  @map("founder_linkedin")
-  founderInstagram String? @map("founder_instagram")
-  founderFacebook String?  @map("founder_facebook")
-  founderTiktok String?   @map("founder_tiktok")
-  founderYoutube String?  @map("founder_youtube")
-  founderGithub String?   @map("founder_github")
-
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
@@ -52,7 +33,6 @@ model Listing {
   @@index([category])
   @@index([totalVotes])
   @@index([dayVotes])
-  @@index([userId])
   @@index([createdAt])
   @@map("listings")
 }
@@ -120,27 +100,11 @@ model User {
   email     String   @unique
   password  String
   name      String?
-
-  // Subscription tier: 'free' | 'verified' | 'professional'
-  tier      String   @default("free")
-
-  // Contact information
-  phone     String?
-  website   String?
-  twitter   String?
-  linkedin  String?
-  instagram String?
-  facebook  String?
-  tiktok    String?
-  youtube   String?
-  github    String?
-
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  sessions   Session[]
-  votes      UserVote[]
-  listings   Listing[]
+  sessions  Session[]
+  votes     UserVote[]
 
   @@map("users")
 }
