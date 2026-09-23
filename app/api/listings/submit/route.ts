@@ -193,9 +193,25 @@ export async function POST(req: NextRequest) {
         const urlObj = new URL(normalizedUrl);
         metaTitle = urlObj.hostname;
         metaDescription = 'Website';
+        // Preserve the platform field even if metadata extraction fails
+        const hostname = urlObj.hostname.toLowerCase();
+        if (hostname.includes('linkedin.com')) {
+          metaPlatform = 'linkedin';
+        } else if (hostname.includes('twitter.com') || hostname.includes('x.com')) {
+          metaPlatform = 'twitter';
+        } else if (hostname.includes('facebook.com')) {
+          metaPlatform = 'facebook';
+        } else if (hostname.includes('instagram.com')) {
+          metaPlatform = 'instagram';
+        } else if (hostname.includes('tiktok.com')) {
+          metaPlatform = 'tiktok';
+        } else {
+          metaPlatform = platform || 'website';
+        }
       } catch {
         metaTitle = 'Listing';
         metaDescription = 'Website listing';
+        metaPlatform = platform || 'website';
       }
     }
 
