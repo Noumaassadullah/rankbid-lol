@@ -897,7 +897,7 @@ export default function Home() {
                 const platformListings = listings
                   .filter(l => platform === 'twitter' ? ['twitter', 'x'].includes(l.platform) : l.platform === platform)
                   .sort((a, b) => (activeTimeFilter === 'today' ? b.dayVotes - a.dayVotes : b.totalVotes - a.totalVotes))
-                  .slice(0, 5);
+                  .slice(0, 3);
 
                 return (
                   <div
