@@ -108,14 +108,16 @@ export default function WhyRankBid() {
                 <div className="flex gap-4 flex-wrap">
                   <button
                     onClick={() => window.location.href = '/#leaderboard'}
-                    className="flex items-center gap-2 px-8 py-4 bg-[#0F3460] text-white font-black text-sm border-2 md:border-4 border-[#0F3460] hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-[#0F3460] text-white font-black uppercase text-xs md:text-sm border-[#0F3460] border-2 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    style={{boxShadow: 'none'}}
                   >
                     <Icons.TrendingUp />
                     View Rankings
                   </button>
                   <button
                     onClick={() => window.location.href = '/'}
-                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#1F2937] font-black text-sm border border-gray-300 shadow-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-white text-[#1F2937] font-black uppercase text-xs md:text-sm border-gray-300 border-2 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    style={{boxShadow: 'none'}}
                   >
                     <Icons.Upload />
                     Submit Product
@@ -554,14 +556,16 @@ export default function WhyRankBid() {
             <div className="flex gap-4 justify-center flex-wrap">
               <button
                 onClick={() => window.location.href = '/'}
-                className="flex items-center gap-2 px-8 py-4 bg-white text-[#0F3460] font-black border-2 md:border-4 border-white hover:scale-105 active:scale-95 transition-all duration-150 rounded-lg"
+                className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-white text-[#0F3460] font-black uppercase text-xs md:text-sm border-2 md:border-4 border-white hover:scale-105 active:scale-95 transition-all duration-150"
+                style={{boxShadow: 'none'}}
               >
                 <Icons.Upload />
                 Submit Product
               </button>
               <button
                 onClick={() => window.location.href = '/#leaderboard'}
-                className="flex items-center gap-2 px-8 py-4 bg-white/20 text-white font-black border-2 md:border-4 border-white hover:scale-105 active:scale-95 transition-all duration-150 rounded-lg"
+                className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-white/20 text-white font-black uppercase text-xs md:text-sm border-2 md:border-4 border-white hover:scale-105 active:scale-95 transition-all duration-150"
+                style={{boxShadow: 'none'}}
               >
                 <Icons.TrendingUp />
                 View Top Rankings
