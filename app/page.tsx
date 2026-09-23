@@ -902,7 +902,7 @@ export default function Home() {
                 return (
                   <div
                     key={platform}
-                    className={`bg-gradient-to-br ${bgGradient} border-2 md:border-4 border-gray-200 p-4 md:p-6 hover:shadow-2xl hover:border-gray-300 transition-all duration-300 group rounded-2xl backdrop-blur-sm relative overflow-hidden`}
+                    className={`bg-gradient-to-br ${bgGradient} border-2 md:border-4 border-black p-4 md:p-6 hover:shadow-2xl hover:border-black transition-all duration-300 group rounded-2xl backdrop-blur-sm relative overflow-hidden`}
                   >
                     {/* Header */}
                     <div className="flex items-center gap-3 mb-4 md:mb-6 pr-16">
