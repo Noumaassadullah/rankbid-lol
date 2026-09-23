@@ -139,11 +139,9 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     );
   }
 
-  const getTotalScore = (p: Listing) => (p.totalPaid || 0) + (p.totalVotes || 0);
-  const getDayScore = (p: Listing) => (p.dayPaid || 0) + (p.dayVotes || 0);
+  const getTotalScore = (p: Listing) => (p.totalVotes || 0);
 
-  const allTimeRank = allListings.filter(l => getTotalScore(l) > getTotalScore(product)).length + 1;
-  const dayRank = allListings.filter(l => getDayScore(l) > getDayScore(product)).length + 1;
+  const allTimeRank = allListings.filter(l => (l.totalVotes || 0) > (product.totalVotes || 0)).length + 1;
 
   return (
     <>
@@ -227,11 +225,11 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">All-Time Rank</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Current Rank</p>
                   <p className="text-4xl font-bold text-orange-600 mt-2">#{allTimeRank}</p>
                 </div>
                 <TrendingUp className="w-10 h-10 text-orange-200 dark:text-orange-900" />
@@ -241,41 +239,35 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Today's Rank</p>
-                  <p className="text-4xl font-bold text-orange-600 mt-2">#{dayRank}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Votes</p>
+                  <p className="text-4xl font-bold text-blue-600 mt-2">{product.totalVotes || 0}</p>
                 </div>
-                <TrendingUp className="w-10 h-10 text-orange-200 dark:text-orange-900" />
+                <svg className="w-10 h-10 text-blue-200 dark:text-blue-900" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
               </div>
             </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Bid</p>
-                  <p className="text-4xl font-bold text-green-600 mt-2">${((product.totalPaid || 0) / 100).toFixed(0)}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Category</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white mt-2">{product.category}</p>
                 </div>
-                <DollarSign className="w-10 h-10 text-green-200 dark:text-green-900" />
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">Page Views</p>
-                  <p className="text-4xl font-bold text-orange-600 mt-2">{product.clickCount}</p>
-                </div>
-                <Eye className="w-10 h-10 text-blue-200 dark:text-blue-900" />
+                <svg className="w-10 h-10 text-purple-200 dark:text-purple-900" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
               </div>
             </div>
           </div>
 
           {/* Details Section */}
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Product Details</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Details</h2>
             <div className="grid grid-cols-2 gap-8">
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Category</p>
-                <p className="text-lg text-gray-900 dark:text-white font-semibold">{product.category}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Platform</p>
+                <p className="text-lg text-gray-900 dark:text-white font-semibold capitalize">{product.platform}</p>
               </div>
               <div>
                 <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Listed</p>
@@ -284,8 +276,8 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                 </p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Today's Bid</p>
-                <p className="text-lg text-gray-900 dark:text-white font-semibold">${((product.dayPaid || 0) / 100).toFixed(0)}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">Total Votes</p>
+                <p className="text-lg text-gray-900 dark:text-white font-semibold">{product.totalVotes || 0}</p>
               </div>
               <div>
                 <p className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-2">
@@ -304,14 +296,14 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           </div>
 
           {/* Call to Action */}
-          <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-8 text-white">
-            <h3 className="text-2xl font-bold mb-3">Interested in ranking?</h3>
-            <p className="text-orange-100 mb-6">List your own product and start bidding to climb the rankings.</p>
+          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-8 text-white">
+            <h3 className="text-2xl font-bold mb-3">Want to get ranked?</h3>
+            <p className="text-blue-100 mb-6">Submit your product or profile and let the community vote it up the rankings.</p>
             <a
-              href="/#claim"
-              className="inline-block px-6 py-3 bg-white text-orange-600 font-bold rounded-lg hover:bg-gray-100 transition-colors"
+              href="/"
+              className="inline-block px-6 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition-colors"
             >
-              Start Bidding
+              Submit Your Product
             </a>
           </div>
         </div>
