@@ -18,7 +18,7 @@ export default function DashboardPage() {
           {/* User Card */}
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 mb-8">
             <div className="flex items-center gap-6 mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-full flex items-center justify-center text-white">
                 <User className="w-10 h-10" />
               </div>
               <div>
@@ -33,10 +33,10 @@ export default function DashboardPage() {
                 Sign in to view and manage your products
               </p>
               <div className="flex gap-4">
-                <button className="px-6 py-2 bg-orange-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                <button className="px-6 py-2 bg-[#0F3460] text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
                   Sign In
                 </button>
-                <button className="px-6 py-2 bg-white dark:bg-gray-700 text-orange-600 dark:text-blue-300 font-semibold rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border border-blue-200 dark:border-blue-700">
+                <button className="px-6 py-2 bg-white dark:bg-gray-700 text-[#0F3460] dark:text-blue-300 font-semibold rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border border-blue-200 dark:border-blue-700">
                   Create Account
                 </button>
               </div>
@@ -80,11 +80,11 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <button className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg hover:border-orange-300 dark:hover:border-orange-600 transition-all text-left group">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-orange-600" />
+                <div className="w-12 h-12 bg-[#0F3460]/10 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-[#0F3460]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                  <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-[#0F3460] dark:group-hover:text-orange-400 transition-colors">
                     My Products
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Manage your listings</p>
@@ -94,11 +94,11 @@ export default function DashboardPage() {
 
             <button className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg hover:border-orange-300 dark:hover:border-orange-600 transition-all text-left group">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-orange-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                  <Settings className="w-6 h-6 text-orange-600" />
+                <div className="w-12 h-12 bg-[#0F3460]/10 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                  <Settings className="w-6 h-6 text-[#0F3460]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-blue-400 transition-colors">
+                  <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-[#0F3460] dark:group-hover:text-blue-400 transition-colors">
                     Settings
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Account preferences</p>

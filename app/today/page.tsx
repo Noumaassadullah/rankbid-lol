@@ -67,13 +67,13 @@ export default function TodayPage() {
       <section className="bg-white px-4 sm:px-6 py-16 md:py-32 border-b-8 border-orange-600">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black mb-6 leading-tight">
-            <span className="text-orange-600">🔥 TODAY'S</span><br />
+            <span className="text-[#0F3460]">🔥 TODAY'S</span><br />
             <span className="text-gray-900">HOT RANKINGS</span>
           </h1>
           <p className="text-xl md:text-2xl font-bold text-gray-700 max-w-2xl mb-8">
             Last 24 hours of bidding. See what's trending right now.
           </p>
-          <div className="bg-orange-100 border-4 border-orange-600 rounded-xl p-6 inline-block">
+          <div className="bg-[#0F3460]/10 border-4 border-orange-600 rounded-xl p-6 inline-block">
             <p className="font-black text-gray-900">
               📊 {topListingsToday.length} products | 🗳️ {topListingsToday.reduce((sum, l) => sum + l.dayVotes, 0)} votes today
             </p>
@@ -108,7 +108,7 @@ export default function TodayPage() {
                   className="bg-white border-4 border-purple-600 p-6 md:p-8 hover:shadow-xl hover:shadow-purple-600/40 transition-all flex items-center justify-between"
                 >
                   <div className="flex-1 flex items-center gap-6">
-                    <span className="text-5xl font-black text-orange-600 flex-shrink-0">#{idx + 1}</span>
+                    <span className="text-5xl font-black text-[#0F3460] flex-shrink-0">#{idx + 1}</span>
                     <div className="flex-1">
                       <h3 className="text-2xl font-black text-gray-900">{listing.title}</h3>
                       <p className="text-sm font-bold text-gray-600 mt-2">
@@ -117,7 +117,7 @@ export default function TodayPage() {
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-4xl font-black text-orange-600">{listing.dayVotes.toLocaleString()}</p>
+                    <p className="text-4xl font-black text-[#0F3460]">{listing.dayVotes.toLocaleString()}</p>
                     <p className="text-sm font-bold text-gray-600 mt-2">{listing.clickCount} clicks</p>
                     <a
                       href={`/api/click?id=${listing.id}`}
@@ -137,7 +137,7 @@ export default function TodayPage() {
       <section className="bg-white px-4 sm:px-6 py-20 md:py-32 border-b-8 border-orange-600">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-16 text-center">
-            How <span className="text-orange-600">Today's</span> Rankings Work
+            How <span className="text-[#0F3460]">Today's</span> Rankings Work
           </h2>
 
           <div className="space-y-6">

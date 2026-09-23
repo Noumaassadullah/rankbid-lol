@@ -55,9 +55,9 @@ export default function StatsPage() {
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-16">
             {statCards.map((stat, i) => (
-              <div key={i} className="bg-gradient-to-br from-orange-50 to-orange-100/50 border border-orange-200 rounded-lg p-8">
+              <div key={i} className="bg-gradient-to-br from-orange-50 to-orange-100/50 border border-[#0F3460]/20 rounded-lg p-8">
                 <p className="text-gray-600 text-sm font-medium mb-2">{stat.label}</p>
-                <p className="text-4xl font-bold text-orange-600">
+                <p className="text-4xl font-bold text-[#0F3460]">
                   {stat.prefix}{stat.value}{stat.suffix}
                 </p>
               </div>
@@ -107,7 +107,7 @@ export default function StatsPage() {
                   </div>
                   <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
                     <div
-                      className="bg-orange-600 h-full transition-all"
+                      className="bg-[#0F3460] h-full transition-all"
                       style={{ width: `${cat.percentage}%` }}
                     />
                   </div>

@@ -32,7 +32,7 @@ export default function Error() {
       <div className="space-y-3 mb-8">
         <Link
           href="/"
-          className="block px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium"
+          className="block px-6 py-3 bg-[#0F3460]/50 text-white rounded-lg hover:bg-[#0F3460] transition-colors font-medium"
         >
           Try Again
         </Link>

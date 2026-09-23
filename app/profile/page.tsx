@@ -102,7 +102,7 @@ export default function ProfilePage() {
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-full flex items-center justify-center text-white font-bold text-2xl">
                 {(user.name || user.email).charAt(0).toUpperCase()}
               </div>
               <div>
@@ -129,7 +129,7 @@ export default function ProfilePage() {
               onClick={() => setActiveTab('submissions')}
               className={`py-4 px-1 border-b-2 font-semibold transition-colors ${
                 activeTab === 'submissions'
-                  ? 'border-orange-600 text-orange-600'
+                  ? 'border-orange-600 text-[#0F3460]'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -139,7 +139,7 @@ export default function ProfilePage() {
               onClick={() => setActiveTab('votes')}
               className={`py-4 px-1 border-b-2 font-semibold transition-colors ${
                 activeTab === 'votes'
-                  ? 'border-orange-600 text-orange-600'
+                  ? 'border-orange-600 text-[#0F3460]'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -149,7 +149,7 @@ export default function ProfilePage() {
               onClick={() => setActiveTab('settings')}
               className={`py-4 px-1 border-b-2 font-semibold transition-colors ${
                 activeTab === 'settings'
-                  ? 'border-orange-600 text-orange-600'
+                  ? 'border-orange-600 text-[#0F3460]'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -163,7 +163,7 @@ export default function ProfilePage() {
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin text-orange-600 text-2xl">⏳</div>
+            <div className="animate-spin text-[#0F3460] text-2xl">⏳</div>
           </div>
         ) : (
           <>
@@ -180,7 +180,7 @@ export default function ProfilePage() {
                     <p className="text-gray-600 text-lg mb-6">You haven't submitted anything yet.</p>
                     <Link
                       href="/#claim"
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#0F3460] text-white font-semibold rounded-lg hover:bg-[#0D2A50] transition-colors"
                     >
                       Submit Your First Product
                       <ChevronRight className="w-5 h-5" />
@@ -207,7 +207,7 @@ export default function ProfilePage() {
                               <span className="text-gray-600">
                                 <span className="font-semibold">{listing.dayVotes}</span> today
                               </span>
-                              <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded">
+                              <span className="bg-[#0F3460]/10 text-orange-700 px-2 py-1 rounded">
                                 {listing.platform}
                               </span>
                               <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded">
@@ -237,7 +237,7 @@ export default function ProfilePage() {
                     <p className="text-gray-600 text-lg mb-6">You haven't voted yet.</p>
                     <Link
                       href="/"
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 transition-colors"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#0F3460] text-white font-semibold rounded-lg hover:bg-[#0D2A50] transition-colors"
                     >
                       Explore Rankings
                       <ChevronRight className="w-5 h-5" />
@@ -270,7 +270,7 @@ export default function ProfilePage() {
                           {vote.listing && (
                             <Link
                               href={`/product/${vote.listingId}`}
-                              className="text-orange-600 hover:text-orange-700 font-semibold text-sm ml-4"
+                              className="text-[#0F3460] hover:text-orange-700 font-semibold text-sm ml-4"
                             >
                               View
                             </Link>
