@@ -15,16 +15,6 @@ export async function GET(request: NextRequest) {
         id: true,
         email: true,
         name: true,
-        tier: true,
-        phone: true,
-        website: true,
-        twitter: true,
-        linkedin: true,
-        instagram: true,
-        facebook: true,
-        tiktok: true,
-        youtube: true,
-        github: true,
       },
     });
 
@@ -79,16 +69,6 @@ export async function PUT(request: NextRequest) {
         id: true,
         email: true,
         name: true,
-        tier: true,
-        phone: true,
-        website: true,
-        twitter: true,
-        linkedin: true,
-        instagram: true,
-        facebook: true,
-        tiktok: true,
-        youtube: true,
-        github: true,
       },
     });
 
