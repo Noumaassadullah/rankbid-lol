@@ -54,6 +54,25 @@ export async function GET(request: NextRequest) {
     if (timeWindow === 'alltime') {
       listings = await prisma.listing.findMany({
         ...(category !== 'All' && { where: { category: category as any } }),
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              tier: true,
+              phone: true,
+              website: true,
+              twitter: true,
+              linkedin: true,
+              instagram: true,
+              facebook: true,
+              tiktok: true,
+              youtube: true,
+              github: true,
+            },
+          },
+        },
         orderBy: { totalVotes: 'desc' },
         take: limit,
         skip: offset,
@@ -61,6 +80,25 @@ export async function GET(request: NextRequest) {
     } else if (timeWindow === 'today') {
       listings = await prisma.listing.findMany({
         ...(category !== 'All' && { where: { category: category as any } }),
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              tier: true,
+              phone: true,
+              website: true,
+              twitter: true,
+              linkedin: true,
+              instagram: true,
+              facebook: true,
+              tiktok: true,
+              youtube: true,
+              github: true,
+            },
+          },
+        },
         orderBy: { dayVotes: 'desc' },
         take: limit,
         skip: offset,
@@ -71,6 +109,19 @@ export async function GET(request: NextRequest) {
 
     const rankedListings = listings.map((listing, index) => ({
       ...listing,
+      userId: listing.user?.id,
+      userName: listing.user?.name,
+      userEmail: listing.user?.email,
+      userTier: listing.user?.tier,
+      userPhone: listing.user?.phone,
+      userWebsite: listing.user?.website,
+      userTwitter: listing.user?.twitter,
+      userLinkedin: listing.user?.linkedin,
+      userInstagram: listing.user?.instagram,
+      userFacebook: listing.user?.facebook,
+      userTiktok: listing.user?.tiktok,
+      userYoutube: listing.user?.youtube,
+      userGithub: listing.user?.github,
       rank: offset + index + 1,
       votesToOutrank: (timeWindow === 'today' ? listing.dayVotes : listing.totalVotes) + 1,
     }));

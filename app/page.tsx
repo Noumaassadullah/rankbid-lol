@@ -5,6 +5,7 @@ import FAQ from '@/components/FAQ';
 import Pagination from '@/components/Pagination';
 import PlatformIcon from '@/components/PlatformIcon';
 import PremiumListingCard from '@/components/PremiumListingCard';
+import VerifiedListingCard from '@/components/VerifiedListingCard';
 import PremiumListingModal from '@/components/PremiumListingModal';
 import LoginModal from '@/components/LoginModal';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel';
@@ -36,6 +37,20 @@ interface Listing {
   founderTiktok?: string | null;
   founderYoutube?: string | null;
   founderGithub?: string | null;
+  // Verified/Professional user info
+  userId?: string | null;
+  userName?: string | null;
+  userEmail?: string | null;
+  userTier?: string | null;
+  userPhone?: string | null;
+  userWebsite?: string | null;
+  userTwitter?: string | null;
+  userLinkedin?: string | null;
+  userInstagram?: string | null;
+  userFacebook?: string | null;
+  userTiktok?: string | null;
+  userYoutube?: string | null;
+  userGithub?: string | null;
 }
 
 const CATEGORIES = [
@@ -754,6 +769,43 @@ export default function Home() {
             ) : (
               <div className="space-y-2">
                 {listings.map((listing, idx) => {
+                  // Check if this is a verified/professional user listing
+                  if (listing.userTier === 'verified' || listing.userTier === 'professional') {
+                    return (
+                      <VerifiedListingCard
+                        key={listing.id}
+                        listing={{
+                          id: listing.id,
+                          title: listing.title,
+                          url: listing.url,
+                          totalVotes: listing.totalVotes,
+                          dayVotes: listing.dayVotes,
+                          category: listing.category,
+                          platform: listing.platform,
+                        }}
+                        user={{
+                          id: listing.userId || '',
+                          name: listing.userName,
+                          email: listing.userEmail || '',
+                          tier: listing.userTier as 'verified' | 'professional',
+                          phone: listing.userPhone,
+                          website: listing.userWebsite,
+                          twitter: listing.userTwitter,
+                          linkedin: listing.userLinkedin,
+                          instagram: listing.userInstagram,
+                          facebook: listing.userFacebook,
+                          tiktok: listing.userTiktok,
+                          youtube: listing.userYoutube,
+                          github: listing.userGithub,
+                        }}
+                        position={(currentPage - 1) * 15 + idx + 1}
+                        onVote={handleVote}
+                        hasVoted={votedListings.has(listing.id)}
+                      />
+                    );
+                  }
+
+                  // Regular listing card
                   const baseVoteCount = activeTimeFilter === 'today' ? listing.dayVotes : listing.totalVotes;
                   const voteCount = (optimisticVotes[listing.id] || 0) + baseVoteCount;
 
