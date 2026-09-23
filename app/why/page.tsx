@@ -87,35 +87,35 @@ export default function WhyRankBid() {
   return (
     <>
       <Header />
-      <div className="bg-white text-[#18181B]">
+      <div className="bg-white text-[#1F2937]">
 
         {/* HERO SECTION */}
-        <section className="bg-white pt-16 pb-16 border-b-4 border-[#18181B] relative overflow-hidden">
+        <section className="bg-white pt-16 pb-16 border-b border-gray-200 relative overflow-hidden">
           <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-[#D97706] rounded-full blur-3xl"></div>
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#0F3460] rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#059669] rounded-full blur-3xl"></div>
           </div>
 
           <div className="max-w-6xl mx-auto px-6 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div>
-                <h1 className="text-5xl md:text-6xl font-black text-[#18181B] mb-6 leading-tight">
+                <h1 className="text-5xl md:text-6xl font-black text-[#1F2937] mb-6 leading-tight">
                   Why Use RankBid?
                 </h1>
-                <p className="text-lg text-[#18181B]/75 mb-8 leading-relaxed font-medium">
+                <p className="text-lg text-[#1F2937]/75 mb-8 leading-relaxed font-medium">
                   RankBid is the community-driven discovery platform where your product gets ranked based on real user votes - not algorithms, not gatekeepers, not budgets. Just honest community feedback.
                 </p>
                 <div className="flex gap-4 flex-wrap">
                   <button
                     onClick={() => window.location.href = '/#leaderboard'}
-                    className="flex items-center gap-2 px-8 py-4 bg-[#D97706] text-[#18181B] font-black text-sm border-4 border-[#D97706] hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-[#0F3460] text-white font-black text-sm border-2 md:border-4 border-[#0F3460] hover:scale-105 active:scale-95 transition-all duration-150"
                   >
                     <Icons.TrendingUp />
                     View Rankings
                   </button>
                   <button
                     onClick={() => window.location.href = '/'}
-                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black text-sm border shadow-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center gap-2 px-8 py-4 bg-white text-[#1F2937] font-black text-sm border border-gray-300 shadow-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-150"
                   >
                     <Icons.Upload />
                     Submit Product
@@ -124,44 +124,44 @@ export default function WhyRankBid() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="border shadow-sm rounded-lg bg-white p-6 hover:bg-[#D97706]/5 transition-colors">
+                <div className="border border-gray-200 shadow-sm rounded-lg bg-white p-6 hover:bg-[#0F3460]/5 transition-colors">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-[#18181B]">
+                    <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white">
                       <Icons.Vote />
                     </div>
                   </div>
-                  <p className="text-2xl font-black text-[#18181B] mb-1">100%</p>
-                  <p className="text-xs text-[#18181B]/60 font-semibold">Community Voting</p>
+                  <p className="text-2xl font-black text-[#1F2937] mb-1">100%</p>
+                  <p className="text-xs text-[#1F2937]/60 font-semibold">Community Voting</p>
                 </div>
 
-                <div className="border shadow-sm rounded-lg bg-white p-6 hover:bg-[#059669]/5 transition-colors">
+                <div className="border border-gray-200 shadow-sm rounded-lg bg-white p-6 hover:bg-[#059669]/5 transition-colors">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-[#18181B]">
+                    <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white">
                       <Icons.Trophy />
                     </div>
                   </div>
-                  <p className="text-2xl font-black text-[#18181B] mb-1">100K+</p>
-                  <p className="text-xs text-[#18181B]/60 font-semibold">Ranked Products</p>
+                  <p className="text-2xl font-black text-[#1F2937] mb-1">100K+</p>
+                  <p className="text-xs text-[#1F2937]/60 font-semibold">Ranked Products</p>
                 </div>
 
-                <div className="border shadow-sm rounded-lg bg-white p-6 hover:bg-[#D97706]/5 transition-colors">
+                <div className="border border-gray-200 shadow-sm rounded-lg bg-white p-6 hover:bg-[#0F3460]/5 transition-colors">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-[#18181B]">
+                    <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white">
                       <Icons.Zap />
                     </div>
                   </div>
-                  <p className="text-2xl font-black text-[#18181B] mb-1">Real-time</p>
-                  <p className="text-xs text-[#18181B]/60 font-semibold">Live Rankings</p>
+                  <p className="text-2xl font-black text-[#1F2937] mb-1">Real-time</p>
+                  <p className="text-xs text-[#1F2937]/60 font-semibold">Live Rankings</p>
                 </div>
 
-                <div className="border shadow-sm rounded-lg bg-white p-6 hover:bg-[#059669]/5 transition-colors">
+                <div className="border border-gray-200 shadow-sm rounded-lg bg-white p-6 hover:bg-[#059669]/5 transition-colors">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-[#18181B]">
+                    <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white">
                       <Icons.Check />
                     </div>
                   </div>
-                  <p className="text-2xl font-black text-[#18181B] mb-1">Free</p>
-                  <p className="text-xs text-[#18181B]/60 font-semibold">No Cost Ever</p>
+                  <p className="text-2xl font-black text-[#1F2937] mb-1">Free</p>
+                  <p className="text-xs text-[#1F2937]/60 font-semibold">No Cost Ever</p>
                 </div>
               </div>
             </div>
@@ -169,31 +169,31 @@ export default function WhyRankBid() {
         </section>
 
         {/* HOW IT WORKS SECTION */}
-        <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B]">
+        <section className="bg-gray-50 py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] mb-8">How RankBid Works</h2>
+            <h2 className="text-2xl font-black text-[#1F2937] mb-8">How RankBid Works</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
-                <p className="text-5xl font-black text-[#D97706] mb-4">1</p>
-                <h3 className="text-lg font-black text-[#18181B] mb-3">Submit Your Product</h3>
-                <p className="text-sm text-[#18181B]/70 font-medium leading-relaxed">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
+                <p className="text-5xl font-black text-[#0F3460] mb-4">1</p>
+                <h3 className="text-lg font-black text-[#1F2937] mb-3">Submit Your Product</h3>
+                <p className="text-sm text-[#1F2937]/70 font-medium leading-relaxed">
                   Add your product with a URL or handle, select a category, write a description. Takes 2 minutes. No approval needed. Goes live instantly.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
-                <p className="text-5xl font-black text-[#D97706] mb-4">2</p>
-                <h3 className="text-lg font-black text-[#18181B] mb-3">Community Votes</h3>
-                <p className="text-sm text-[#18181B]/70 font-medium leading-relaxed">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
+                <p className="text-5xl font-black text-[#0F3460] mb-4">2</p>
+                <h3 className="text-lg font-black text-[#1F2937] mb-3">Community Votes</h3>
+                <p className="text-sm text-[#1F2937]/70 font-medium leading-relaxed">
                   Real users discover your product and vote for it. Each vote is counted. Vote totals update in real-time. Everyone sees the same numbers.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
-                <p className="text-5xl font-black text-[#D97706] mb-4">3</p>
-                <h3 className="text-lg font-black text-[#18181B] mb-3">Climb Rankings</h3>
-                <p className="text-sm text-[#18181B]/70 font-medium leading-relaxed">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
+                <p className="text-5xl font-black text-[#0F3460] mb-4">3</p>
+                <h3 className="text-lg font-black text-[#1F2937] mb-3">Climb Rankings</h3>
+                <p className="text-sm text-[#1F2937]/70 font-medium leading-relaxed">
                   The more votes you get, the higher you rank. View all-time rankings or today's trending. Filter by 25+ categories. Pure merit-based.
                 </p>
               </div>
@@ -202,52 +202,52 @@ export default function WhyRankBid() {
         </section>
 
         {/* GLOBAL VISIBILITY SECTION */}
-        <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B]">
+        <section className="bg-gray-50 py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] mb-8">Your Products Go Global</h2>
+            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Your Products Go Global</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div>
-                <h3 className="text-3xl font-black text-[#18181B] mb-6">Get Ranked Worldwide</h3>
-                <p className="text-lg text-[#18181B]/75 mb-8 leading-relaxed font-medium">
+                <h3 className="text-3xl font-black text-[#1F2937] mb-6">Get Ranked Worldwide</h3>
+                <p className="text-lg text-[#1F2937]/75 mb-8 leading-relaxed font-medium">
                   When you submit your product, it instantly appears on RankBid's global leaderboard. Your product is seen by thousands of active users across the world looking for solutions. No geography limits. No regional restrictions. Your ranking is worldwide.
                 </p>
 
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#D97706] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 bg-[#0F3460] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <Icons.Check />
                     </div>
                     <div>
-                      <p className="font-black text-[#18181B]">Global Leaderboard</p>
-                      <p className="text-sm text-[#18181B]/70">Your product visible to worldwide audience</p>
+                      <p className="font-black text-[#1F2937]">Global Leaderboard</p>
+                      <p className="text-sm text-[#1F2937]/70">Your product visible to worldwide audience</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#D97706] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 bg-[#0F3460] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <Icons.Check />
                     </div>
                     <div>
-                      <p className="font-black text-[#18181B]">Category Rankings</p>
-                      <p className="text-sm text-[#18181B]/70">Ranked among similar products in 25+ categories</p>
+                      <p className="font-black text-[#1F2937]">Category Rankings</p>
+                      <p className="text-sm text-[#1F2937]/70">Ranked among similar products in 25+ categories</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#D97706] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 bg-[#0F3460] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <Icons.Check />
                     </div>
                     <div>
-                      <p className="font-black text-[#18181B]">Time-Based Rankings</p>
-                      <p className="text-sm text-[#18181B]/70">All-time rankings + today's trending section</p>
+                      <p className="font-black text-[#1F2937]">Time-Based Rankings</p>
+                      <p className="text-sm text-[#1F2937]/70">All-time rankings + today's trending section</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#D97706] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <div className="w-6 h-6 bg-[#0F3460] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <Icons.Check />
                     </div>
                     <div>
-                      <p className="font-black text-[#18181B]">Real-Time Updates</p>
-                      <p className="text-sm text-[#18181B]/70">Your ranking updates live as votes come in</p>
+                      <p className="font-black text-[#1F2937]">Real-Time Updates</p>
+                      <p className="text-sm text-[#1F2937]/70">Your ranking updates live as votes come in</p>
                     </div>
                   </div>
                 </div>
@@ -255,32 +255,32 @@ export default function WhyRankBid() {
 
               <div className="border shadow-sm rounded-lg bg-white p-8">
                 <div className="space-y-4">
-                  <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4 rounded">
-                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Global Rank</p>
+                  <div className="bg-gray-50 border border-gray-200 p-4 rounded">
+                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Global Rank</p>
                     <div className="flex items-center justify-between">
-                      <p className="text-2xl font-black text-[#D97706]">#1</p>
-                      <p className="text-xs font-semibold text-[#18181B]/70">1,234 votes</p>
+                      <p className="text-2xl font-black text-[#0F3460]">#1</p>
+                      <p className="text-xs font-semibold text-[#1F2937]/70">1,234 votes</p>
                     </div>
                   </div>
-                  <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4 rounded">
-                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Marketing Category</p>
+                  <div className="bg-gray-50 border border-gray-200 p-4 rounded">
+                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Marketing Category</p>
                     <div className="flex items-center justify-between">
-                      <p className="text-2xl font-black text-[#D97706]">#3</p>
-                      <p className="text-xs font-semibold text-[#18181B]/70">987 votes</p>
+                      <p className="text-2xl font-black text-[#0F3460]">#3</p>
+                      <p className="text-xs font-semibold text-[#1F2937]/70">987 votes</p>
                     </div>
                   </div>
-                  <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4 rounded">
-                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Today's Trending</p>
+                  <div className="bg-gray-50 border border-gray-200 p-4 rounded">
+                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Today's Trending</p>
                     <div className="flex items-center justify-between">
-                      <p className="text-2xl font-black text-[#D97706]">#7</p>
-                      <p className="text-xs font-semibold text-[#18181B]/70">234 votes today</p>
+                      <p className="text-2xl font-black text-[#0F3460]">#7</p>
+                      <p className="text-xs font-semibold text-[#1F2937]/70">234 votes today</p>
                     </div>
                   </div>
-                  <div className="bg-[#F5F5F5] border-2 border-[#18181B] p-4 rounded">
-                    <p className="text-xs font-black text-[#18181B]/60 mb-2">All Time</p>
+                  <div className="bg-gray-50 border border-gray-200 p-4 rounded">
+                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">All Time</p>
                     <div className="flex items-center justify-between">
-                      <p className="text-2xl font-black text-[#D97706]">#12</p>
-                      <p className="text-xs font-semibold text-[#18181B]/70">2,456 total votes</p>
+                      <p className="text-2xl font-black text-[#0F3460]">#12</p>
+                      <p className="text-xs font-semibold text-[#1F2937]/70">2,456 total votes</p>
                     </div>
                   </div>
                 </div>
@@ -290,36 +290,36 @@ export default function WhyRankBid() {
         </section>
 
         {/* YOUR PROFILE & PRODUCTS SECTION */}
-        <section className="bg-white py-12 border-b-4 border-[#18181B]">
+        <section className="bg-white py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] mb-8">Your Profile & Products Showcase</h2>
+            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Your Profile & Products Showcase</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="border shadow-sm rounded-lg bg-[#F5F5F5] p-8">
+              <div className="border shadow-sm rounded-lg bg-gray-50 p-8">
                 <div className="space-y-4">
                   <div>
-                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Your Creator Profile</p>
-                    <div className="bg-white border-2 border-[#18181B] p-4">
-                      <p className="font-black text-[#18181B] text-lg">Your Brand Name</p>
-                      <p className="text-xs text-[#18181B]/60 mt-1">12 Products Ranked</p>
-                      <p className="text-xs text-[#18181B]/60">3,456 Total Community Votes</p>
+                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Your Creator Profile</p>
+                    <div className="bg-white border border-gray-200 p-4">
+                      <p className="font-black text-[#1F2937] text-lg">Your Brand Name</p>
+                      <p className="text-xs text-[#1F2937]/60 mt-1">12 Products Ranked</p>
+                      <p className="text-xs text-[#1F2937]/60">3,456 Total Community Votes</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs font-black text-[#18181B]/60 mb-2">Your Products</p>
+                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Your Products</p>
                     <div className="space-y-2">
-                      <div className="bg-white border-2 border-[#18181B] p-3 flex justify-between items-center">
-                        <span className="font-semibold text-[#18181B] text-sm">Product #1</span>
-                        <span className="font-black text-[#D97706]">234 votes</span>
+                      <div className="bg-white border border-gray-200 p-3 flex justify-between items-center">
+                        <span className="font-semibold text-[#1F2937] text-sm">Product #1</span>
+                        <span className="font-black text-[#0F3460]">234 votes</span>
                       </div>
-                      <div className="bg-white border-2 border-[#18181B] p-3 flex justify-between items-center">
-                        <span className="font-semibold text-[#18181B] text-sm">Product #2</span>
-                        <span className="font-black text-[#D97706]">189 votes</span>
+                      <div className="bg-white border border-gray-200 p-3 flex justify-between items-center">
+                        <span className="font-semibold text-[#1F2937] text-sm">Product #2</span>
+                        <span className="font-black text-[#0F3460]">189 votes</span>
                       </div>
-                      <div className="bg-white border-2 border-[#18181B] p-3 flex justify-between items-center">
-                        <span className="font-semibold text-[#18181B] text-sm">Product #3</span>
-                        <span className="font-black text-[#D97706]">156 votes</span>
+                      <div className="bg-white border border-gray-200 p-3 flex justify-between items-center">
+                        <span className="font-semibold text-[#1F2937] text-sm">Product #3</span>
+                        <span className="font-black text-[#0F3460]">156 votes</span>
                       </div>
                     </div>
                   </div>
@@ -327,8 +327,8 @@ export default function WhyRankBid() {
               </div>
 
               <div>
-                <h3 className="text-3xl font-black text-[#18181B] mb-6">Build Your Creator Brand</h3>
-                <p className="text-lg text-[#18181B]/75 mb-8 leading-relaxed font-medium">
+                <h3 className="text-3xl font-black text-[#1F2937] mb-6">Build Your Creator Brand</h3>
+                <p className="text-lg text-[#1F2937]/75 mb-8 leading-relaxed font-medium">
                   Your profile on RankBid becomes your public showcase. Every product you submit, every vote you get, every ranking you achieve - all visible to the world. Build credibility. Establish authority. Show what you're capable of building.
                 </p>
 
@@ -338,8 +338,8 @@ export default function WhyRankBid() {
                       <Icons.Check />
                     </div>
                     <div>
-                      <p className="font-black text-[#18181B]">Creator Portfolio</p>
-                      <p className="text-sm text-[#18181B]/70">All your products displayed in one place</p>
+                      <p className="font-black text-[#1F2937]">Creator Portfolio</p>
+                      <p className="text-sm text-[#1F2937]/70">All your products displayed in one place</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -347,8 +347,8 @@ export default function WhyRankBid() {
                       <Icons.Check />
                     </div>
                     <div>
-                      <p className="font-black text-[#18181B]">Cumulative Stats</p>
-                      <p className="text-sm text-[#18181B]/70">Total votes, total products, creator ranking</p>
+                      <p className="font-black text-[#1F2937]">Cumulative Stats</p>
+                      <p className="text-sm text-[#1F2937]/70">Total votes, total products, creator ranking</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -356,8 +356,8 @@ export default function WhyRankBid() {
                       <Icons.Check />
                     </div>
                     <div>
-                      <p className="font-black text-[#18181B]">Public Profile Links</p>
-                      <p className="text-sm text-[#18181B]/70">Share your profile with investors, partners, customers</p>
+                      <p className="font-black text-[#1F2937]">Public Profile Links</p>
+                      <p className="text-sm text-[#1F2937]/70">Share your profile with investors, partners, customers</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -365,8 +365,8 @@ export default function WhyRankBid() {
                       <Icons.Check />
                     </div>
                     <div>
-                      <p className="font-black text-[#18181B]">Social Proof</p>
-                      <p className="text-sm text-[#18181B]/70">Demonstrate community validation for your products</p>
+                      <p className="font-black text-[#1F2937]">Social Proof</p>
+                      <p className="text-sm text-[#1F2937]/70">Demonstrate community validation for your products</p>
                     </div>
                   </div>
                 </div>
@@ -376,79 +376,79 @@ export default function WhyRankBid() {
         </section>
 
         {/* WHY CREATORS LOVE IT SECTION */}
-        <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B]">
+        <section className="bg-gray-50 py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] mb-8">Why Creators Choose RankBid</h2>
+            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Why Creators Choose RankBid</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">It's 100% Free</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">It's 100% Free</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   No submission fees, no listing costs, no featured placement charges. Submit unlimited products at zero cost. Keep everything you earn.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">No Gatekeepers</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">No Gatekeepers</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   Your product goes live instantly. No editor approval needed. No waiting. No rules about what's "worthy." Just launch and see votes come in.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">Real User Feedback</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">Real User Feedback</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   Every vote is genuine. Community voting shows you exactly what real people think. No bots, no algorithms hiding the truth. Pure feedback.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">Level Playing Field</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">Level Playing Field</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   Small indie makers compete fairly with big companies. Your product wins based on quality, not budget. Marketing budget doesn't matter here.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">Instant Global Visibility</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">Instant Global Visibility</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   Join 100K+ products already ranked worldwide. Get seen by global audience actively looking for new products to discover and support.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Check />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">Multiple Ranking Views</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">Multiple Ranking Views</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   Track all-time rankings and today's trending. Filter by categories. See where your product stands and what's trending right now.
                 </p>
               </div>
@@ -457,55 +457,55 @@ export default function WhyRankBid() {
         </section>
 
         {/* WHY USERS LOVE IT SECTION */}
-        <section className="bg-[#F5F5F5] py-12 border-b-4 border-[#18181B]">
+        <section className="bg-gray-50 py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] mb-8">Why Community Members Use RankBid</h2>
+            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Why Community Members Use RankBid</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Globe />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">Discover New Products</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">Discover New Products</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   Browse 100K+ products ranked by real votes. Find tools, apps, and services your community actually loves. No ads, no paid placements clouding results.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Vote />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">Your Vote Counts</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">Your Vote Counts</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   Your vote actually matters. You help shape what's visible to everyone. Be part of the community that decides which products deserve recognition.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Zap />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">Real-Time Rankings</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">Real-Time Rankings</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   Vote counts update live. See what's trending right now vs all-time favorites. Watch your favorite products climb in real-time.
                 </p>
               </div>
 
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#D97706]/5 transition-colors">
+              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
                 <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#D97706] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
+                  <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
                     <Icons.Users />
                   </div>
-                  <h3 className="text-lg font-black text-[#18181B]">Support Quality Makers</h3>
+                  <h3 className="text-lg font-black text-[#1F2937]">Support Quality Makers</h3>
                 </div>
-                <p className="text-sm text-[#18181B]/70 font-medium">
+                <p className="text-sm text-[#1F2937]/70 font-medium">
                   Vote for indie makers and small teams building amazing things. Help them get discovered by giving them visibility through your vote.
                 </p>
               </div>
@@ -514,26 +514,26 @@ export default function WhyRankBid() {
         </section>
 
         {/* FAQ SECTION */}
-        <section className="bg-white py-12 border-b-4 border-[#18181B]">
+        <section className="bg-white py-12 border-b border-gray-200">
           <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#18181B] mb-8">Common Questions</h2>
+            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Common Questions</h2>
 
             <div className="space-y-3">
               {faqs.map((faq, idx) => (
                 <div
                   key={idx}
-                  className="border shadow-sm rounded-lg bg-white cursor-pointer hover:bg-[#D97706]/5 transition-colors"
+                  className="border shadow-sm rounded-lg bg-white cursor-pointer hover:bg-[#0F3460]/5 transition-colors"
                   onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
                 >
                   <div className="p-6 flex items-start justify-between gap-4">
-                    <h3 className="text-lg font-black text-[#18181B] flex-1">{faq.q}</h3>
+                    <h3 className="text-lg font-black text-[#1F2937] flex-1">{faq.q}</h3>
                     <span className={`text-xl flex-shrink-0 transition-transform duration-200 ${expandedFaq === idx ? 'rotate-180' : ''}`}>
                       ▼
                     </span>
                   </div>
                   {expandedFaq === idx && (
-                    <div className="px-6 pb-6 border-t-4 border-[#18181B] pt-6">
-                      <p className="text-sm text-[#18181B]/70 font-medium leading-relaxed">
+                    <div className="px-6 pb-6 border-t border-gray-200 pt-6">
+                      <p className="text-sm text-[#1F2937]/70 font-medium leading-relaxed">
                         {faq.a}
                       </p>
                     </div>
@@ -545,23 +545,23 @@ export default function WhyRankBid() {
         </section>
 
         {/* CTA SECTION */}
-        <section className="bg-[#D97706] py-12 border-b-4 border-[#18181B]">
+        <section className="bg-[#0F3460] py-12 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-6 text-center">
-            <h2 className="text-4xl font-black text-[#18181B] mb-4">Ready to Get Ranked?</h2>
-            <p className="text-lg text-[#18181B] font-medium mb-8 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-black text-white mb-4">Ready to Get Ranked?</h2>
+            <p className="text-lg text-white font-medium mb-8 max-w-2xl mx-auto">
               Submit your product today and let the community decide. It takes 2 minutes and it's completely free.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
               <button
                 onClick={() => window.location.href = '/'}
-                className="flex items-center gap-2 px-8 py-4 bg-[#18181B] text-[#D97706] font-black border shadow-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-150"
+                className="flex items-center gap-2 px-8 py-4 bg-white text-[#0F3460] font-black border-2 md:border-4 border-white hover:scale-105 active:scale-95 transition-all duration-150 rounded-lg"
               >
                 <Icons.Upload />
                 Submit Product
               </button>
               <button
                 onClick={() => window.location.href = '/#leaderboard'}
-                className="flex items-center gap-2 px-8 py-4 bg-white text-[#18181B] font-black border shadow-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-150"
+                className="flex items-center gap-2 px-8 py-4 bg-white/20 text-white font-black border-2 md:border-4 border-white hover:scale-105 active:scale-95 transition-all duration-150 rounded-lg"
               >
                 <Icons.TrendingUp />
                 View Top Rankings
