@@ -1,6 +1,19 @@
-import { prisma } from '@/lib/prisma';
+import { createClient } from '@supabase/supabase-js';
 import { normalizeURL, isValidPaymentURL, extractDomain } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
+
+function getSupabase() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase credentials');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
 
 async function isURLAccessible(url: string): Promise<boolean> {
   try {
@@ -49,32 +62,44 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get('offset') || '0');
 
   try {
-    let listings: any[] = [];
+    const sb = getSupabase();
+    let query = sb.from('listings').select('*');
 
-    if (timeWindow === 'alltime') {
-      listings = await prisma.listing.findMany({
-        select: { id: true, title: true, description: true, url: true, category: true, platform: true, totalVotes: true, dayVotes: true, clickCount: true, createdAt: true, updatedAt: true },
-        where: category !== 'All' ? { category: category as any } : {},
-        orderBy: { totalVotes: 'desc' },
-        take: limit,
-        skip: offset,
-      });
-    } else if (timeWindow === 'today') {
-      listings = await prisma.listing.findMany({
-        select: { id: true, title: true, description: true, url: true, category: true, platform: true, totalVotes: true, dayVotes: true, clickCount: true, createdAt: true, updatedAt: true },
-        where: category !== 'All' ? { category: category as any } : {},
-        orderBy: { dayVotes: 'desc' },
-        take: limit,
-        skip: offset,
-      });
+    // Filter by category
+    if (category !== 'All') {
+      query = query.eq('category', category);
+    }
+
+    // Order by appropriate field
+    if (timeWindow === 'today') {
+      query = query.order('day_votes', { ascending: false });
+    } else if (timeWindow === 'alltime') {
+      query = query.order('total_votes', { ascending: false });
     } else {
       return NextResponse.json({ error: 'Invalid time window' }, { status: 400 });
     }
 
-    const rankedListings = listings.map((listing, index) => ({
-      ...listing,
+    // Paginate
+    query = query.range(offset, offset + limit - 1);
+
+    const { data: listings, error } = await query;
+
+    if (error) throw error;
+
+    const rankedListings = (listings || []).map((listing: any, index: number) => ({
+      id: listing.id,
+      title: listing.title,
+      description: listing.description,
+      url: listing.url,
+      category: listing.category,
+      platform: listing.platform || 'website',
+      totalVotes: listing.total_votes || 0,
+      dayVotes: listing.day_votes || 0,
+      clickCount: listing.click_count || 0,
+      createdAt: listing.created_at,
+      updatedAt: listing.updated_at,
       rank: offset + index + 1,
-      votesToOutrank: (timeWindow === 'today' ? listing.dayVotes : listing.totalVotes) + 1,
+      votesToOutrank: (timeWindow === 'today' ? (listing.day_votes || 0) : (listing.total_votes || 0)) + 1,
     }));
 
     return NextResponse.json(rankedListings);
