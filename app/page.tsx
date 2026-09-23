@@ -785,18 +785,18 @@ export default function Home() {
                         }}
                         user={{
                           id: listing.userId || '',
-                          name: listing.userName,
+                          name: listing.userName || null,
                           email: listing.userEmail || '',
                           tier: listing.userTier as 'verified' | 'professional',
-                          phone: listing.userPhone,
-                          website: listing.userWebsite,
-                          twitter: listing.userTwitter,
-                          linkedin: listing.userLinkedin,
-                          instagram: listing.userInstagram,
-                          facebook: listing.userFacebook,
-                          tiktok: listing.userTiktok,
-                          youtube: listing.userYoutube,
-                          github: listing.userGithub,
+                          phone: listing.userPhone || null,
+                          website: listing.userWebsite || null,
+                          twitter: listing.userTwitter || null,
+                          linkedin: listing.userLinkedin || null,
+                          instagram: listing.userInstagram || null,
+                          facebook: listing.userFacebook || null,
+                          tiktok: listing.userTiktok || null,
+                          youtube: listing.userYoutube || null,
+                          github: listing.userGithub || null,
                         }}
                         position={(currentPage - 1) * 15 + idx + 1}
                         onVote={handleVote}
