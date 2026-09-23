@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useCart } from '@/contexts/CartContext';
 
 interface PremiumListingModalProps {
   listingId: string;
@@ -39,9 +40,11 @@ export default function PremiumListingModal({
   onClose,
   onSubmit,
 }: PremiumListingModalProps) {
+  const cart = useCart();
   const [position, setPosition] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [formData, setFormData] = useState({
     founderName: '',
     founderEmail: '',
@@ -60,6 +63,57 @@ export default function PremiumListingModal({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddToCart = () => {
+    setError('');
+
+    if (!formData.founderName.trim() || !formData.founderEmail.trim() || !formData.founderPhone.trim()) {
+      setError('Please fill in required fields: Name, Email, and Phone');
+      return;
+    }
+
+    const price = PRICES[position] || 5;
+
+    cart.addItem({
+      listingId,
+      listingTitle,
+      position,
+      price,
+      founderName: formData.founderName,
+      founderEmail: formData.founderEmail,
+      founderPhone: formData.founderPhone,
+      founderWebsite: formData.founderWebsite,
+      founderTwitter: formData.founderTwitter,
+      founderLinkedin: formData.founderLinkedin,
+      founderInstagram: formData.founderInstagram,
+      founderFacebook: formData.founderFacebook,
+      founderTiktok: formData.founderTiktok,
+      founderYoutube: formData.founderYoutube,
+      founderGithub: formData.founderGithub,
+      addedAt: Date.now(),
+    });
+
+    setSuccessMessage(`✓ Added "${listingTitle}" to cart!`);
+    setTimeout(() => {
+      setFormData({
+        founderName: '',
+        founderEmail: '',
+        founderPhone: '',
+        founderWebsite: '',
+        founderTwitter: '',
+        founderLinkedin: '',
+        founderInstagram: '',
+        founderFacebook: '',
+        founderTiktok: '',
+        founderYoutube: '',
+        founderGithub: '',
+        paymentMethod: 'manual',
+      });
+      setPosition(1);
+      setSuccessMessage('');
+      onClose();
+    }, 1500);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -119,6 +173,11 @@ export default function PremiumListingModal({
 
         {/* Content */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {successMessage && (
+            <div className="bg-green-100 border-2 border-green-500 text-green-700 p-4 font-bold text-sm">
+              {successMessage}
+            </div>
+          )}
           {error && (
             <div className="bg-red-100 border-2 border-red-500 text-red-700 p-4 font-bold text-sm">
               {error}
@@ -251,18 +310,27 @@ export default function PremiumListingModal({
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-4 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 px-4 py-3 bg-white text-[#1F2937] font-semibold text-sm border border-gray-300 rounded-lg hover:bg-gray-50 active:scale-95 transition-all duration-200"
-            >
-              Cancel
-            </button>
+          <div className="flex flex-col gap-3 pt-4">
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 px-4 py-3 bg-white text-[#1F2937] font-semibold text-sm border border-gray-300 rounded-lg hover:bg-gray-50 active:scale-95 transition-all duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="flex-1 px-4 py-3 bg-blue-600 text-white font-semibold text-sm rounded-lg hover:bg-blue-700 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+              >
+                🛒 Add to Cart
+              </button>
+            </div>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-3 bg-[orange-600] text-white font-semibold text-sm rounded-lg hover:bg-[orange-700] active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+              className="w-full px-4 py-3 bg-[orange-600] text-white font-semibold text-sm rounded-lg hover:bg-[orange-700] active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
             >
               {loading ? (
                 <>
@@ -270,7 +338,7 @@ export default function PremiumListingModal({
                 </>
               ) : (
                 <>
-                  💳 Pay ${price} & Submit
+                  💳 Pay ${price} & Submit Now
                 </>
               )}
             </button>

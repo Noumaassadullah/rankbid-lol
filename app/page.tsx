@@ -158,7 +158,7 @@ export default function Home() {
   const [user, setUser] = useState<{ id: string; email: string; name?: string } | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(false);
-  const [activeTimeFilter, setActiveTimeFilter] = useState<'alltime' | 'today'>('alltime');
+  const [activeTimeFilter] = useState<'alltime' | 'today'>('alltime');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -712,21 +712,6 @@ export default function Home() {
                 <Icons.Trophy />
                 <h2 className="text-2xl font-black text-[#1F2937] uppercase">Top Rankings</h2>
               </div>
-              <div className="flex gap-2 flex-wrap">
-                {['alltime', 'today'].map(filter => (
-                  <button
-                    key={filter}
-                    onClick={() => setActiveTimeFilter(filter as 'alltime' | 'today')}
-                    className={`px-4 py-2 font-bold text-xs rounded-lg shadow-sm transition-all duration-200 ${
-                      activeTimeFilter === filter
-                        ? 'bg-[#0F3460] text-white shadow-md ring-2 ring-[#0F3460] ring-offset-2'
-                        : 'bg-white text-[#1F2937] border border-gray-300 hover:bg-gray-50'
-                    }`}
-                  >
-                    {filter === 'alltime' ? 'All Time' : 'Today'}
-                  </button>
-                ))}
-              </div>
             </div>
 
             {/* Category filter moved to header navigation */}
@@ -987,115 +972,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* PREMIUM FEATURES SECTION */}
-        <section className="bg-gradient-to-b from-blue-50 to-white py-10 md:py-20 border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-4 md:px-6">
-            <div className="text-center mb-8 md:mb-16">
-              <div className="inline-block mb-2 md:mb-4">
-                <span className="text-3xl md:text-5xl">💎</span>
-              </div>
-              <h2 className="text-2xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4">Premium Features</h2>
-              <p className="text-sm md:text-lg text-[#1F2937]/70 max-w-2xl mx-auto">Boost your product visibility with guaranteed placement and founder spotlight</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-              {[
-                {
-                  price: '$5',
-                  title: 'Top Position',
-                  description: 'Top spot on the leaderboard',
-                  socialCount: 4,
-                  features: [
-                    'PREMIUM badge',
-                    'Founder name display',
-                    'Email (clickable)',
-                    'Phone (clickable)',
-                    '4 social accounts',
-                    'Gradient card design',
-                    'Vote count visible',
-                    'Permanent placement',
-                    'One-time payment'
-                  ]
-                },
-                {
-                  price: '$3',
-                  title: 'Mid Position',
-                  description: 'Second spot on the leaderboard',
-                  socialCount: 1,
-                  features: [
-                    'PREMIUM badge',
-                    'Founder name display',
-                    'Email (clickable)',
-                    'Phone (clickable)',
-                    '1 social account',
-                    'Gradient card design',
-                    'Permanent placement',
-                    'One-time payment'
-                  ]
-                },
-                {
-                  price: '$1',
-                  title: 'Basic Position',
-                  description: 'Third spot on the leaderboard',
-                  socialCount: 0,
-                  features: [
-                    'PREMIUM badge',
-                    'Founder name display',
-                    'Email (clickable)',
-                    'Phone (clickable)',
-                    'Gradient card design',
-                    'Permanent placement',
-                    'One-time payment'
-                  ]
-                }
-              ].map((plan, idx) => (
-                <div
-                  key={idx}
-                  className="shadow-sm border border-gray-200 p-4 md:p-8 hover:shadow-xl hover:bg-blue-50 hover:border-[#0F3460]/30 transition-all duration-300 rounded-lg bg-white flex flex-col justify-between relative"
-                >
-                  <div>
-                    <div className="mb-3 md:mb-4">
-                      <div className={`text-3xl md:text-4xl font-black ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
-                        {plan.price}
-                      </div>
-                    </div>
-
-                    <h3 className={`text-lg md:text-2xl font-black mb-1 md:mb-2 uppercase ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
-                      {plan.title}
-                    </h3>
-                    <p className={`text-xs md:text-sm mb-4 md:mb-6 font-semibold ${idx === 0 ? 'text-[#1F2937]/80' : 'text-[#1F2937]/70'}`}>
-                      {plan.description}
-                    </p>
-
-                    <div className="space-y-2 py-3 md:py-6 border-t-3 border-b-3 border-gray-300/20 mb-4 md:mb-6">
-                      {plan.features.map((feature, i) => (
-                        <div key={i} className={`flex items-center gap-2 text-xs font-bold ${idx === 0 ? 'text-[#1F2937]' : 'text-[#1F2937]'}`}>
-                          <span className={`${idx === 0 ? 'text-[#1F2937]' : 'text-[#0F3460]'}`}>✓</span>
-                          {feature}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      setSelectedListingForPremium(listings[0] || null);
-                      setPremiumModalOpen(true);
-                    }}
-                    className={`w-full py-2 md:py-4 font-bold text-xs md:text-sm rounded-lg hover:scale-105 active:scale-95 transition-all duration-200 border ${
-                      idx === 0
-                        ? 'bg-[#0F3460] text-white border-[#0F3460] hover:bg-[#0D2A50]'
-                        : 'bg-[#0F3460] text-white border-[#0F3460] hover:bg-[#0D2A50]'
-                    }`}
-                  >
-                    Get {plan.title}
-                  </button>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
 
         {/* TESTIMONIALS CAROUSEL SECTION */}
         <section className="py-10 md:py-20 bg-white border-t border-gray-200">
