@@ -40,12 +40,12 @@ export default function Footer() {
 
   return (
     <footer className="bg-white text-[#1F2937] border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 md:py-10">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-gray-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-gray-200">
           {/* Brand */}
           <div>
-            <h3 className="text-sm font-black text-[#1F2937] mb-3 tracking-wider">RankBid</h3>
+            <h3 className="text-xs sm:text-sm font-black text-[#1F2937] mb-2 sm:mb-3 tracking-wider">RankBid</h3>
             <p className="text-xs font-semibold text-[#1F2937]/70 leading-relaxed">
               Community-driven product rankings. No algorithms. Pure voting.
             </p>
@@ -53,11 +53,11 @@ export default function Footer() {
 
           {/* Rankings */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <Icons.Trophy />
-              <h4 className="text-xs font-black text-[#1F2937] tracking-wider">Rankings</h4>
+              <h4 className="text-xs sm:text-xs font-black text-[#1F2937] tracking-wider">Rankings</h4>
             </div>
-            <ul className="space-y-2">
+            <ul className="space-y-1.5 sm:space-y-2">
               <li>
                 <Link href="/" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
                   All Time
@@ -83,11 +83,11 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <Icons.Book />
-              <h4 className="text-xs font-black text-[#1F2937] tracking-wider">Resources</h4>
+              <h4 className="text-xs sm:text-xs font-black text-[#1F2937] tracking-wider">Resources</h4>
             </div>
-            <ul className="space-y-2">
+            <ul className="space-y-1.5 sm:space-y-2">
               <li>
                 <Link href="/about" className="text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors">
                   About
@@ -108,26 +108,26 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <Icons.Mail />
-              <h4 className="text-xs font-black text-[#1F2937] tracking-wider">Contact</h4>
+              <h4 className="text-xs sm:text-xs font-black text-[#1F2937] tracking-wider">Contact</h4>
             </div>
-            <p className="text-xs font-semibold text-[#1F2937]/70 mb-3">
+            <p className="text-xs font-semibold text-[#1F2937]/70 mb-2 sm:mb-3">
               Questions? Reach out.
             </p>
             <a
               href="mailto:support@rankbid.pk"
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-100 text-[orange-600] font-semibold text-xs border border-gray-300 rounded-lg hover:bg-[orange-600] hover:text-white transition-all"
+              className="inline-flex items-center gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-orange-100 text-[orange-600] font-semibold text-xs border border-gray-300 rounded-lg hover:bg-[orange-600] hover:text-white transition-all"
             >
               <Icons.Mail />
-              Email
+              <span>Email</span>
             </a>
           </div>
         </div>
 
         {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-center md:text-left">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
+          <div className="text-center sm:text-left">
             <p className="text-xs font-bold text-[#1F2937]">
               © {currentYear} RankBid Global
             </p>
@@ -137,10 +137,10 @@ export default function Footer() {
           </div>
 
           {/* Social Links */}
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <a
               href="https://twitter.com"
-              className="w-8 h-8 bg-orange-100 text-[orange-600] flex items-center justify-center border border-gray-300 rounded-lg hover:bg-[orange-600] hover:text-white transition-all"
+              className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-[orange-600] flex items-center justify-center border border-gray-300 rounded-lg hover:bg-[orange-600] hover:text-white transition-all flex-shrink-0"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Twitter"
@@ -149,7 +149,7 @@ export default function Footer() {
             </a>
             <a
               href="https://github.com"
-              className="w-8 h-8 bg-orange-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
+              className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all flex-shrink-0"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
@@ -158,7 +158,7 @@ export default function Footer() {
             </a>
             <a
               href="https://discord.com"
-              className="w-8 h-8 bg-orange-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all"
+              className="w-7 h-7 sm:w-8 sm:h-8 bg-orange-100 text-[#1F2937] flex items-center justify-center border border-gray-300 hover:scale-110 transition-all flex-shrink-0"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Discord"

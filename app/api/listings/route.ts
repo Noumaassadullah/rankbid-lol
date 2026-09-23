@@ -53,6 +53,7 @@ export async function GET(request: NextRequest) {
 
     if (timeWindow === 'alltime') {
       listings = await prisma.listing.findMany({
+        select: { id: true, title: true, description: true, url: true, category: true, platform: true, totalVotes: true, dayVotes: true, clickCount: true, createdAt: true, updatedAt: true },
         where: category !== 'All' ? { category: category as any } : {},
         orderBy: { totalVotes: 'desc' },
         take: limit,
@@ -60,6 +61,7 @@ export async function GET(request: NextRequest) {
       });
     } else if (timeWindow === 'today') {
       listings = await prisma.listing.findMany({
+        select: { id: true, title: true, description: true, url: true, category: true, platform: true, totalVotes: true, dayVotes: true, clickCount: true, createdAt: true, updatedAt: true },
         where: category !== 'All' ? { category: category as any } : {},
         orderBy: { dayVotes: 'desc' },
         take: limit,

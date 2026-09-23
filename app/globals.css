@@ -53,12 +53,22 @@
 
 html {
   @apply scroll-smooth;
+  font-size: 16px;
 }
 
 body {
   @apply bg-white text-[#18181B];
   font-family: var(--font-sans);
   font-weight: 500;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
 }
 
 /* Typography */

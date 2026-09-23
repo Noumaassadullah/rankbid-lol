@@ -108,24 +108,24 @@ export default function Header() {
     <>
       {/* Top Header - Professional Corporate */}
       <header className="bg-white text-[#1F2937] shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-3 md:px-6">
+        <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-6">
           {/* Main Header */}
-          <div className="flex items-center justify-between h-14 md:h-16">
+          <div className="flex items-center justify-between h-12 sm:h-14 md:h-16">
             {/* Logo & Hamburger */}
-            <div className="flex items-center gap-2 md:gap-4">
+            <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg"
+                className="lg:hidden p-1.5 sm:p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg flex-shrink-0"
               >
-                {mobileOpen ? <X className="w-5 h-5 md:w-6 md:h-6" /> : <Menu className="w-5 h-5 md:w-6 md:h-6" />}
+                {mobileOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />}
               </button>
               <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-lg md:text-2xl font-bold text-[orange-600]">RankBid</span>
+                <span className="text-base sm:text-lg md:text-2xl font-bold text-[orange-600]">RankBid</span>
               </Link>
             </div>
 
             {/* Stats Pill - Professional */}
-            <div className="hidden md:flex items-center gap-3 md:gap-6 px-3 md:px-6 py-1 md:py-2 bg-gray-50 text-[#1F2937] rounded-lg shadow-xs text-xs md:text-sm font-medium">
+            <div className="hidden md:flex items-center gap-3 md:gap-6 px-3 md:px-6 py-1 md:py-2 bg-gray-50 text-[#1F2937] rounded-lg shadow-xs text-xs md:text-sm font-medium flex-shrink-0">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                 <span>{stats.onlineNow} LIVE</span>
@@ -138,10 +138,10 @@ export default function Header() {
             <div className="flex-1"></div>
 
             {/* Desktop Nav - Right Side */}
-            <nav className="hidden lg:flex items-center gap-2 md:gap-4">
+            <nav className="hidden lg:flex items-center gap-1 md:gap-4 flex-shrink-0">
                 <Link href="/platforms" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors flex items-center gap-1 px-2 py-1">
-                  <TrendingUp className="w-4 h-4" />
-                  Platforms
+                  <TrendingUp className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="hidden xl:inline">Platforms</span>
                 </Link>
                 <Link href="/why" className="text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] transition-colors px-2 py-1">
                   Why
@@ -164,7 +164,7 @@ export default function Header() {
               {user ? (
                 <Link
                   href="/profile"
-                  className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-sm hover:shadow-md transition-all ml-2"
+                  className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm hover:shadow-md transition-all ml-1 sm:ml-2 flex-shrink-0"
                   title={user.name || user.email}
                 >
                   {(user.name || user.email).charAt(0).toUpperCase()}
@@ -179,7 +179,7 @@ export default function Header() {
                     window.location.href = `/search?q=${encodeURIComponent(query)}`;
                   }
                 }}
-                className="p-1.5 md:p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg"
+                className="p-1 sm:p-1.5 md:p-2 text-[#1F2937] hover:bg-gray-100 transition-colors rounded-lg flex-shrink-0"
               >
                 <Search className="w-4 h-4 md:w-5 md:h-5" />
               </button>
@@ -187,9 +187,9 @@ export default function Header() {
 
           {/* Mobile Menu */}
           {mobileOpen && (
-            <div className="lg:hidden py-2 md:py-4 border-t border-gray-200 space-y-2 md:space-y-3">
-              <div className="flex items-center gap-2 md:gap-3 px-2 md:px-4 py-1 md:py-2 bg-gray-50 text-[#1F2937] text-xs md:text-sm font-medium rounded-lg">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <div className="lg:hidden py-2 sm:py-3 border-t border-gray-200 space-y-1.5 sm:space-y-2 pb-2 sm:pb-3">
+              <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-50 text-[#1F2937] text-xs sm:text-sm font-medium rounded-lg">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></span>
                 <span>{stats.onlineNow} LIVE • {stats.allTimeVisitors}K VIEWS</span>
               </div>
 
@@ -197,33 +197,33 @@ export default function Header() {
               {user ? (
                 <Link
                   href="/profile"
-                  className="block px-2 py-1 text-xs md:text-sm font-medium text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                  className="block px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                   onClick={() => setMobileOpen(false)}
                 >
                   My Profile
                 </Link>
               ) : null}
 
-              <Link href="/platforms" className="flex items-center gap-2 text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
-                <TrendingUp className="w-4 h-4" />
+              <Link href="/platforms" className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 sm:px-3 py-1.5 transition-colors">
+                <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                 Platforms
               </Link>
-              <Link href="/why" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
+              <Link href="/why" className="block text-xs sm:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 sm:px-3 py-1.5 transition-colors">
                 Why
               </Link>
-              <Link href="/daily" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
+              <Link href="/daily" className="block text-xs sm:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 sm:px-3 py-1.5 transition-colors">
                 Daily
               </Link>
-              <Link href="/archive" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
+              <Link href="/archive" className="block text-xs sm:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 sm:px-3 py-1.5 transition-colors">
                 Archive
               </Link>
-              <Link href="/categories" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
+              <Link href="/categories" className="block text-xs sm:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 sm:px-3 py-1.5 transition-colors">
                 Categories
               </Link>
-              <Link href="/about" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
+              <Link href="/about" className="block text-xs sm:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 sm:px-3 py-1.5 transition-colors">
                 About
               </Link>
-              <Link href="/stats" className="block text-xs md:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 py-1 transition-colors">
+              <Link href="/stats" className="block text-xs sm:text-sm font-medium text-[#1F2937] hover:text-[orange-600] px-2 sm:px-3 py-1.5 transition-colors">
                 Stats
               </Link>
             </div>
@@ -232,8 +232,8 @@ export default function Header() {
       </header>
 
       {/* Category Filter - Professional */}
-      <div className="bg-gray-50 text-[#1F2937] border-b border-gray-200 sticky top-14 md:top-16 z-30 overflow-x-auto">
-        <div className="max-w-7xl mx-auto px-3 md:px-6 py-2 md:py-3 flex gap-1 md:gap-2 items-center">
+      <div className="bg-gray-50 text-[#1F2937] border-b border-gray-200 sticky top-12 sm:top-14 md:top-16 z-30 overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-6 py-1.5 sm:py-2 md:py-3 flex gap-1 items-center">
           {CATEGORIES.map((cat) => {
             const Icon = cat.Icon;
             const isAll = cat.name === 'All';
@@ -243,13 +243,14 @@ export default function Header() {
               <Link
                 key={cat.name}
                 href={href}
-                className={`flex-shrink-0 px-2 md:px-4 py-1 md:py-2 text-xs md:text-sm font-medium whitespace-nowrap transition-all flex items-center gap-1 md:gap-2 rounded-lg ${
+                className={`flex-shrink-0 px-1.5 sm:px-2.5 md:px-4 py-1 md:py-2 text-xs font-medium whitespace-nowrap transition-all flex items-center gap-0.5 sm:gap-1 md:gap-2 rounded-lg ${
                   isAll
                     ? 'bg-[orange-600] text-white shadow-sm'
                     : 'bg-white text-[#1F2937] hover:bg-[orange-600] hover:text-white shadow-xs'
                 }`}
+                title={cat.name}
               >
-                <Icon className="w-3 h-3 md:w-4 md:h-4" />
+                <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0" />
                 <span className="hidden sm:inline">{cat.name}</span>
               </Link>
             );

@@ -1164,11 +1164,11 @@ export default function Home() {
       />
 
       {/* TOAST NOTIFICATIONS */}
-      <div className="fixed bottom-4 left-4 right-4 md:bottom-6 md:right-6 md:left-auto z-50 space-y-2">
+      <div className="fixed bottom-3 left-3 right-3 sm:bottom-4 md:bottom-6 md:right-6 md:left-auto z-50 space-y-2">
         {toasts.map(toast => (
           <div
             key={toast.id}
-            className={`px-3 md:px-4 py-2 md:py-3 border-2 md:border-3 border-gray-300 font-bold text-xs md:text-sm animate-in fade-in slide-in-from-bottom-2 flex items-center gap-2 ${
+            className={`px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 border-2 sm:border-2 md:border-3 border-gray-300 font-bold text-xs md:text-sm animate-in fade-in slide-in-from-bottom-2 flex items-center gap-2 rounded-lg ${
               toast.type === 'success'
                 ? 'bg-[#86EFAC] text-[#1F2937]'
                 : toast.type === 'error'
@@ -1179,7 +1179,7 @@ export default function Home() {
           >
             {toast.type === 'success' && <Icons.Check />}
             {toast.type === 'error' && <Icons.Zap />}
-            {toast.message}
+            <span>{toast.message}</span>
           </div>
         ))}
       </div>

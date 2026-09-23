@@ -154,32 +154,32 @@ export default function PlatformsPage() {
       <Header />
       <div className="bg-white text-[#1F2937]">
         {/* HERO SECTION */}
-        <section className="bg-gradient-to-b from-[#0F3460] to-[#0D2A50] py-8 md:py-16 text-white">
-          <div className="max-w-6xl mx-auto px-4 md:px-6">
-            <div className="flex items-center gap-3 mb-4 md:mb-6">
+        <section className="bg-gradient-to-b from-[#0F3460] to-[#0D2A50] py-6 sm:py-10 md:py-16 text-white">
+          <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6">
               <Icons.TrendingUp />
-              <h1 className="text-3xl md:text-5xl font-black">Social Platforms</h1>
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-black">Social Platforms</h1>
             </div>
-            <p className="text-base md:text-lg opacity-90 max-w-2xl">Explore top-ranked creators, profiles, and accounts across all major social media platforms. See what's trending in your favorite communities.</p>
+            <p className="text-sm sm:text-base md:text-lg opacity-90 max-w-2xl">Explore top-ranked creators, profiles, and accounts across all major social media platforms. See what's trending in your favorite communities.</p>
           </div>
         </section>
 
         {/* PLATFORM SELECTOR */}
-        <section className="bg-white py-6 md:py-10 border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-4 md:px-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+        <section className="bg-white py-4 sm:py-6 md:py-10 border-b border-gray-200">
+          <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
               {PLATFORMS.map(platform => (
                 <button
                   key={platform.id}
                   onClick={() => setSelectedPlatform(platform.id)}
-                  className={`p-3 md:p-4 rounded-xl transition-all duration-200 border-2 hover:scale-105 active:scale-95 flex flex-col items-center gap-2 text-center ${
+                  className={`p-2 sm:p-3 md:p-4 rounded-xl transition-all duration-200 border-2 hover:scale-105 active:scale-95 flex flex-col items-center gap-1.5 sm:gap-2 text-center ${
                     selectedPlatform === platform.id
                       ? 'bg-[#0F3460] text-white border-[#0F3460] shadow-lg'
                       : 'bg-gray-50 text-[#1F2937] border-gray-200 hover:border-[#0F3460]/50'
                   }`}
                 >
-                  <span className="text-2xl md:text-3xl">{platform.emoji}</span>
-                  <span className="font-black text-xs md:text-sm uppercase">{platform.label}</span>
+                  <span className="text-xl sm:text-2xl md:text-3xl">{platform.emoji}</span>
+                  <span className="font-black text-xs uppercase">{platform.label}</span>
                   <span className={`text-xs font-semibold ${selectedPlatform === platform.id ? 'opacity-80' : 'text-[#1F2937]/60'}`}>
                     {listings.filter(l =>
                       platform.id === 'twitter'
@@ -195,7 +195,7 @@ export default function PlatformsPage() {
 
         {/* PLATFORM HEADER */}
         {selectedPlatformInfo && (
-          <section className={`bg-gradient-to-r py-6 md:py-10 border-b border-gray-200`} style={{
+          <section className={`bg-gradient-to-r py-4 sm:py-6 md:py-10 border-b border-gray-200`} style={{
             backgroundImage: `linear-gradient(135deg, ${selectedPlatformInfo.color}15 0%, ${selectedPlatformInfo.color}05 100%)`
           }}>
             <div className="max-w-6xl mx-auto px-4 md:px-6">

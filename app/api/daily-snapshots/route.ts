@@ -70,7 +70,11 @@ export async function POST(request: NextRequest) {
         date: today,
         data: topListings.map((listing, idx) => ({
           rank: idx + 1,
-          listing: listing,
+          listing: {
+            id: listing.id,
+            title: listing.title,
+            url: listing.url,
+          },
           votes: listing.dayVotes,
         })) as any,
         frozen: true,
