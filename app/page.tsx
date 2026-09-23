@@ -459,52 +459,52 @@ export default function Home() {
       <div className="bg-white text-[#1F2937]">
 
         {/* BANNER HERO SECTION */}
-        <section className="bg-white pt-8 md:pt-16 pb-8 md:pb-16 border-b border-gray-200 relative overflow-hidden fade-in">
+        <section className="bg-white pt-6 sm:pt-10 md:pt-16 pb-6 sm:pb-10 md:pb-16 border-b border-gray-200 relative overflow-hidden fade-in">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-[#0F3460] text-white rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#059669] rounded-full blur-3xl"></div>
+            <div className="absolute top-0 right-0 w-48 sm:w-80 h-48 sm:h-80 md:w-96 md:h-96 bg-[#0F3460] text-white rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-48 sm:w-64 h-48 sm:h-64 md:w-80 md:h-80 bg-[#059669] rounded-full blur-3xl"></div>
           </div>
 
-          <div className="max-w-6xl mx-auto px-4 md:px-6 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
+          <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-12 items-center">
               {/* Left Content */}
               <div className="max-w-2xl">
-                <h1 className="text-3xl md:text-6xl font-black text-[#1F2937] mb-4 md:mb-6 leading-tight">
+                <h1 className="text-2xl sm:text-4xl md:text-6xl font-black text-[#1F2937] mb-3 sm:mb-4 md:mb-6 leading-tight">
                   Rank Everything.
                 </h1>
 
-                <p className="text-base md:text-lg text-[#1F2937]/75 mb-6 md:mb-8 leading-relaxed font-medium">
+                <p className="text-sm sm:text-base md:text-lg text-[#1F2937]/75 mb-4 sm:mb-6 md:mb-8 leading-relaxed font-medium">
                   No algorithms. No gatekeepers. Pure community voting power. Let the world discover your product through transparent, democratic rankings.
                 </p>
 
                 {/* Key Stats */}
-                <div className="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#0F3460] text-white rounded-lg flex items-center justify-center text-white">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#0F3460] text-white rounded-lg flex items-center justify-center text-white flex-shrink-0">
                       <Icons.Users />
                     </div>
-                    <div>
-                      <p className="text-2xl font-black">100K+</p>
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-black">100K+</p>
                       <p className="text-xs text-[#1F2937]/60 font-semibold">Ranked Products</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#059669] rounded-lg flex items-center justify-center text-[#1F2937]">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#059669] rounded-lg flex items-center justify-center text-[#1F2937] flex-shrink-0">
                       <Icons.TrendingUp />
                     </div>
-                    <div>
-                      <p className="text-2xl font-black">Real-time</p>
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-black">Real-time</p>
                       <p className="text-xs text-[#1F2937]/60 font-semibold">Live Updates</p>
                     </div>
                   </div>
                 </div>
 
                 {/* CTA Buttons */}
-                <div className="flex gap-2 md:gap-4 flex-wrap">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-wrap">
                   <button
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-[#0F3460] text-white font-black uppercase text-xs md:text-sm border-[#0F3460] border-2 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-[#0F3460] text-white font-black uppercase text-xs sm:text-sm border-[#0F3460] border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.Upload />
@@ -512,7 +512,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-white text-[#1F2937] font-black uppercase text-xs md:text-sm border-gray-300 border-2 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-white text-[#1F2937] font-black uppercase text-xs sm:text-sm border-gray-300 border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.TrendingUp />
@@ -523,16 +523,16 @@ export default function Home() {
 
               {/* Right Visual */}
               <div className="hidden md:block">
-                <div className="bg-white shadow-sm border border-gray-200 p-8 rounded-lg hover:scale-105 transition-transform duration-300">
-                  <div className="space-y-4">
+                <div className="bg-white shadow-sm border border-gray-200 p-6 md:p-8 rounded-lg hover:scale-105 transition-transform duration-300">
+                  <div className="space-y-3 md:space-y-4">
                     {[1, 2, 3].map(i => (
-                      <div key={i} className="flex items-center gap-3 p-4 bg-gray-50 border-2 border-[#E4E4E7] rounded">
-                        <div className="w-10 h-10 bg-[#0F3460] text-white font-black rounded flex items-center justify-center">{`#${i}`}</div>
-                        <div className="flex-1">
-                          <p className="text-sm font-bold text-[#1F2937]">Top Product {i}</p>
+                      <div key={i} className="flex items-center gap-3 p-3 md:p-4 bg-gray-50 border-2 border-[#E4E4E7] rounded">
+                        <div className="w-8 md:w-10 h-8 md:h-10 bg-[#0F3460] text-white font-black rounded flex items-center justify-center text-sm md:text-base flex-shrink-0">{`#${i}`}</div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs md:text-sm font-bold text-[#1F2937] truncate">Top Product {i}</p>
                           <p className="text-xs text-[#1F2937]/60">Marketing</p>
                         </div>
-                        <p className="font-black text-[#0F3460] text-lg">{1000 - i * 200}</p>
+                        <p className="font-black text-[#0F3460] text-base md:text-lg flex-shrink-0">{1000 - i * 200}</p>
                       </div>
                     ))}
                   </div>
@@ -543,22 +543,22 @@ export default function Home() {
         </section>
 
         {/* FORM SECTION */}
-        <section className="bg-gray-50 py-6 md:py-12 border-b border-gray-200 fade-in">
-          <div className="max-w-4xl mx-auto px-4 md:px-6">
+        <section className="bg-gray-50 py-6 sm:py-10 md:py-12 border-b border-gray-200 fade-in">
+          <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
             {!user ? (
-              <div className="mb-8 p-6 md:p-8 bg-blue-50 border-2 border-blue-200 rounded-lg text-center">
-                <p className="text-lg font-bold text-[#1F2937] mb-4">Login Required to Submit</p>
-                <p className="text-sm text-[#1F2937]/70 mb-6">You need to be logged in to submit your product and vote.</p>
-                <div className="flex gap-3 justify-center flex-wrap">
+              <div className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 bg-blue-50 border-2 border-blue-200 rounded-lg text-center">
+                <p className="text-base sm:text-lg font-bold text-[#1F2937] mb-2 sm:mb-4">Login Required to Submit</p>
+                <p className="text-xs sm:text-sm text-[#1F2937]/70 mb-4 sm:mb-6">You need to be logged in to submit your product and vote.</p>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
                   <a
                     href="/login"
-                    className="px-6 py-3 bg-[#0F3460] text-white font-bold rounded-lg hover:bg-[#0D2A50] transition-colors"
+                    className="px-4 sm:px-6 py-2 sm:py-3 bg-[#0F3460] text-white font-bold text-sm rounded-lg hover:bg-[#0D2A50] transition-colors"
                   >
                     Sign In
                   </a>
                   <a
                     href="/signup"
-                    className="px-6 py-3 bg-white text-[#0F3460] font-bold border-2 border-[#0F3460] rounded-lg hover:bg-[#0F3460]/5 transition-colors"
+                    className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-[#0F3460] font-bold border-2 border-[#0F3460] text-sm rounded-lg hover:bg-[#0F3460]/5 transition-colors"
                   >
                     Create Account
                   </a>
@@ -566,33 +566,34 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <div className="flex items-center gap-3 mb-6 md:mb-8">
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 md:mb-8">
                   <Icons.Upload />
-                  <h2 className="text-lg md:text-2xl font-black text-[#1F2937]">Submit Your Product</h2>
+                  <h2 className="text-base sm:text-lg md:text-2xl font-black text-[#1F2937]">Submit Your Product</h2>
                 </div>
 
             {/* Platform Selection */}
-            <div className="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-6">
+            <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
               {PLATFORMS.map(platform => (
                 <button
                   key={platform.id}
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, platform: platform.id }))}
-                  className={`px-4 py-2 font-bold text-xs rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 ${
+                  className={`px-2 sm:px-4 py-1.5 sm:py-2 font-bold text-xs rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-1 sm:gap-2 ${
                     formData.platform === platform.id
                       ? 'bg-orange-100 text-[#1F2937] border border-gray-300'
                       : 'bg-white text-[#1F2937] border border-gray-300 hover:bg-orange-100'
                   }`}
                 >
                   <Icons.Globe />
-                  {platform.label}
+                  <span className="hidden sm:inline">{platform.label}</span>
+                  <span className="sm:hidden">{platform.label.split('/')[0]}</span>
                 </button>
               ))}
             </div>
 
             {/* Form Fields */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <input
                     type="text"
@@ -600,7 +601,7 @@ export default function Home() {
                     placeholder={formData.platform === 'website' ? 'Product URL' : 'Full profile URL'}
                     value={formData.url}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-sm rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
+                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-xs sm:text-sm rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
                       formErrors.url ? 'border-red-500 shake' : ''
                     }`}
                     required
@@ -624,7 +625,7 @@ export default function Home() {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
+                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-xs sm:text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
                       formErrors.category ? 'border-red-500 shake' : ''
                     }`}
                     required
@@ -643,7 +644,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={formLoading || metadataLoading}
-                className="w-full px-6 py-4 bg-[#0F3460] text-white font-semibold text-sm rounded-lg hover:bg-[#0D2A50] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-[#0F3460] text-white font-semibold text-xs sm:text-sm rounded-lg hover:bg-[#0D2A50] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
               >
                 {formLoading ? (
                   <>
@@ -660,55 +661,55 @@ export default function Home() {
 
             {/* Share Buttons - Show after successful submission */}
             {lastSubmittedProduct && (
-              <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg fade-in">
-                <h3 className="text-lg font-bold text-[#1F2937] mb-4">🎉 Your product is live!</h3>
-                <p className="text-sm text-[#1F2937]/70 mb-4">Share your submission link to get votes:</p>
-                <div className="flex flex-wrap gap-3">
+              <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-blue-50 border border-blue-200 rounded-lg fade-in">
+                <h3 className="text-base sm:text-lg font-bold text-[#1F2937] mb-2 sm:mb-4">🎉 Your product is live!</h3>
+                <p className="text-xs sm:text-sm text-[#1F2937]/70 mb-3 sm:mb-4">Share your submission link to get votes:</p>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-3 sm:mb-4">
                   <button
                     onClick={handleShareTwitter}
-                    className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-bold text-sm"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-bold text-xs sm:text-sm w-full sm:w-auto"
                   >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7" />
                     </svg>
-                    Share on X
+                    <span>Share on X</span>
                   </button>
 
                   <button
                     onClick={handleShareLinkedIn}
-                    className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold text-sm"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-orange-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold text-xs sm:text-sm w-full sm:w-auto"
                   >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
                       <circle cx="4" cy="4" r="2" />
                     </svg>
-                    Share on LinkedIn
+                    <span>Share on LinkedIn</span>
                   </button>
 
                   <button
                     onClick={handleCopyLink}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-bold text-sm"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-bold text-xs sm:text-sm w-full sm:w-auto"
                   >
                     {copied ? (
                       <>
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
-                        Copied!
+                        <span>Copied!</span>
                       </>
                     ) : (
                       <>
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
-                        Copy Link
+                        <span>Copy Link</span>
                       </>
                     )}
                   </button>
                 </div>
                 <button
                   onClick={() => setLastSubmittedProduct(null)}
-                  className="mt-4 text-sm text-[#1F2937]/60 hover:text-[#1F2937] font-semibold"
+                  className="text-xs sm:text-sm text-[#1F2937]/60 hover:text-[#1F2937] font-semibold"
                 >
                   Dismiss
                 </button>
@@ -720,12 +721,12 @@ export default function Home() {
         </section>
 
         {/* LEADERBOARD SECTION */}
-        <section id="leaderboard" className="bg-white py-12 border-b border-gray-200 fade-in">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-              <div className="flex items-center gap-3">
+        <section id="leaderboard" className="bg-white py-6 sm:py-10 md:py-12 border-b border-gray-200 fade-in">
+          <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
+            <div className="flex items-center justify-between mb-6 sm:mb-8 flex-wrap gap-3 sm:gap-4">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Icons.Trophy />
-                <h2 className="text-2xl font-black text-[#1F2937] uppercase">Top Rankings</h2>
+                <h2 className="text-xl sm:text-2xl font-black text-[#1F2937] uppercase">Top Rankings</h2>
               </div>
             </div>
 
@@ -733,10 +734,10 @@ export default function Home() {
 
             {/* PREMIUM LISTINGS SECTION */}
             {!loading && listings.filter(l => l.isPremium).length > 0 && (
-              <div className="mb-8 space-y-4">
-                <div className="flex items-center gap-3">
+              <div className="mb-6 sm:mb-8 space-y-3 sm:space-y-4">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Icons.Star />
-                  <h3 className="text-lg font-black text-[#1F2937] uppercase">Premium Featured</h3>
+                  <h3 className="text-base sm:text-lg font-black text-[#1F2937] uppercase">Premium Featured</h3>
                 </div>
                 {listings.filter(l => l.isPremium).map((listing, idx) => (
                   <PremiumListingCard
@@ -751,23 +752,23 @@ export default function Home() {
             )}
 
             {loading ? (
-              <div className="text-center py-12">
-                <div className="inline-block animate-spin text-4xl">⏳</div>
-                <p className="text-[#1F2937]/60 font-semibold mt-2">Loading rankings...</p>
+              <div className="text-center py-8 sm:py-10 md:py-12">
+                <div className="inline-block animate-spin text-3xl sm:text-4xl">⏳</div>
+                <p className="text-xs sm:text-sm text-[#1F2937]/60 font-semibold mt-2 sm:mt-3">Loading rankings...</p>
               </div>
             ) : listings.length === 0 ? (
-              <div className="text-center py-12 border-gray-300 border-4 bg-gray-50 fade-in">
+              <div className="text-center py-8 sm:py-10 md:py-12 border-gray-300 border-2 sm:border-4 bg-gray-50 fade-in">
                 <Icons.Users />
-                <p className="text-sm font-bold text-[#1F2937] mb-4 mt-4">No rankings yet</p>
+                <p className="text-xs sm:text-sm font-bold text-[#1F2937] mb-3 sm:mb-4 mt-3 sm:mt-4">No rankings yet</p>
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
+                  className="px-4 sm:px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-2 sm:border-3 hover:scale-105 transition-all duration-200"
                 >
                   Be First to Submit
                 </button>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2 sm:space-y-3">
                 {listings.map((listing, idx) => {
                   // Check if this is a verified/professional user listing
                   if (listing.userTier === 'verified' || listing.userTier === 'professional') {
@@ -906,25 +907,25 @@ export default function Home() {
         </section>
 
         {/* TOP RANKINGS BY SOCIAL PLATFORM */}
-        <section className="bg-gradient-to-b from-white via-blue-50 to-white py-8 md:py-16 border-b border-gray-200 fade-in relative overflow-hidden">
+        <section className="bg-gradient-to-b from-white via-blue-50 to-white py-6 sm:py-12 md:py-16 border-b border-gray-200 fade-in relative overflow-hidden">
           {/* Background decoration */}
           <div className="absolute inset-0 opacity-5 pointer-events-none">
-            <div className="absolute top-0 left-10 w-64 h-64 bg-[#0F3460] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-10 w-64 h-64 bg-[#059669] rounded-full blur-3xl"></div>
+            <div className="absolute top-0 left-10 w-40 sm:w-64 h-40 sm:h-64 bg-[#0F3460] rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-10 w-40 sm:w-64 h-40 sm:h-64 bg-[#059669] rounded-full blur-3xl"></div>
           </div>
 
-          <div className="max-w-6xl mx-auto px-4 md:px-6 relative z-10">
+          <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 relative z-10">
             {/* Section Header */}
-            <div className="text-center mb-8 md:mb-16">
-              <div className="inline-flex items-center gap-2 mb-3 md:mb-4 px-4 py-2 bg-[#0F3460]/10 border border-[#0F3460]/20 rounded-full">
+            <div className="text-center mb-6 sm:mb-10 md:mb-16">
+              <div className="inline-flex items-center gap-2 mb-2 sm:mb-3 md:mb-4 px-3 py-1.5 sm:px-4 sm:py-2 bg-[#0F3460]/10 border border-[#0F3460]/20 rounded-full">
                 <Icons.TrendingUp />
                 <span className="text-xs md:text-sm font-bold text-[#0F3460] uppercase">Real-Time Rankings</span>
               </div>
-              <h2 className="text-2xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4">Top by Social Platform</h2>
-              <p className="text-sm md:text-base text-[#1F2937]/70 max-w-2xl mx-auto">Discover trending submissions from Instagram, LinkedIn, and X. See what your community loves right now.</p>
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4">Top by Social Platform</h2>
+              <p className="text-xs sm:text-sm md:text-base text-[#1F2937]/70 max-w-2xl mx-auto px-2">Discover trending submissions from Instagram, LinkedIn, and X. See what your community loves right now.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {['instagram', 'linkedin', 'twitter'].map((platform) => {
                 const platformLabel = platform === 'twitter' ? 'X' : platform.charAt(0).toUpperCase() + platform.slice(1);
                 const platformEmoji = platform === 'instagram' ? '📸' : platform === 'linkedin' ? '💼' : '✕';
@@ -939,21 +940,21 @@ export default function Home() {
                 return (
                   <div
                     key={platform}
-                    className={`bg-gradient-to-br ${bgGradient} border-2 md:border-4 border-black p-4 md:p-6 hover:shadow-2xl hover:border-black transition-all duration-300 group rounded-2xl backdrop-blur-sm relative overflow-hidden`}
+                    className={`bg-gradient-to-br ${bgGradient} border-2 sm:border-3 md:border-4 border-black p-3 sm:p-4 md:p-6 hover:shadow-2xl hover:border-black transition-all duration-300 group rounded-2xl backdrop-blur-sm relative overflow-hidden`}
                   >
                     {/* Header */}
-                    <div className="flex items-center gap-3 mb-4 md:mb-6 pr-16">
-                      <div className="w-8 h-8 md:w-10 md:h-10 flex-shrink-0 rounded-lg flex items-center justify-center" style={{backgroundColor: platformColor + '15', color: platformColor}}>
-                        <PlatformIcon platform={platform} size={20} />
+                    <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6 pr-12 sm:pr-16">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 flex-shrink-0 rounded-lg flex items-center justify-center" style={{backgroundColor: platformColor + '15', color: platformColor}}>
+                        <PlatformIcon platform={platform} size={18} />
                       </div>
-                      <div>
-                        <h3 className="text-base md:text-lg font-black text-[#1F2937] uppercase">{platformLabel}</h3>
+                      <div className="min-w-0">
+                        <h3 className="text-xs sm:text-sm md:text-lg font-black text-[#1F2937] uppercase truncate">{platformLabel}</h3>
                         <p className="text-xs text-[#1F2937]/60">Top Rated This {activeTimeFilter === 'today' ? 'Day' : 'Week'}</p>
                       </div>
                     </div>
 
                     {platformListings.length > 0 ? (
-                      <div className="space-y-2 md:space-y-3">
+                      <div className="space-y-1.5 sm:space-y-2 md:space-y-3">
                         {platformListings.map((item, idx) => {
                           const isTopThree = idx < 3;
                           const voteCount = activeTimeFilter === 'today' ? item.dayVotes : item.totalVotes;
@@ -964,14 +965,14 @@ export default function Home() {
                               href={item.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className={`flex items-center justify-between p-2.5 md:p-3.5 rounded-xl transition-all duration-200 group/item cursor-pointer ${
+                              className={`flex items-center justify-between p-2 sm:p-2.5 md:p-3.5 rounded-xl transition-all duration-200 group/item cursor-pointer ${
                                 isTopThree
                                   ? 'bg-white border-2 border-[#0F3460]/20 shadow-sm hover:shadow-md hover:border-[#0F3460]/40'
                                   : 'bg-white/70 border border-gray-300/50 hover:bg-white hover:border-[#0F3460]/30'
                               }`}
                             >
-                              <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                                <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-black flex-shrink-0 ${
+                              <div className="flex items-center gap-1.5 sm:gap-2.5 flex-1 min-w-0">
+                                <div className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-black flex-shrink-0 ${
                                   isTopThree
                                     ? 'bg-gradient-to-br from-[#0F3460] to-[#0D2A50] text-white shadow-md'
                                     : 'bg-gray-200 text-[#1F2937]'
@@ -979,16 +980,16 @@ export default function Home() {
                                   {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-xs md:text-sm font-bold text-[#1F2937] truncate group-hover/item:text-[#0F3460]">{item.title}</p>
+                                  <p className="text-xs sm:text-xs md:text-sm font-bold text-[#1F2937] truncate group-hover/item:text-[#0F3460]">{item.title}</p>
                                   {item.category && (
-                                    <p className="text-xs text-[#1F2937]/50 mt-0.5">
+                                    <p className="text-xs text-[#1F2937]/50 mt-0.5 truncate">
                                       {getCategoryLabel(item.category)}
                                     </p>
                                   )}
                                 </div>
                               </div>
-                              <div className="flex items-center gap-1.5 ml-2 flex-shrink-0">
-                                <span className={`text-xs md:text-sm font-black px-2 py-1 rounded-lg ${
+                              <div className="flex items-center gap-1 sm:gap-1.5 ml-1 sm:ml-2 flex-shrink-0">
+                                <span className={`text-xs md:text-sm font-black px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${
                                   isTopThree
                                     ? 'bg-[#0F3460]/10 text-[#0F3460]'
                                     : 'bg-gray-100 text-[#1F2937]'
@@ -1002,9 +1003,9 @@ export default function Home() {
                         })}
                       </div>
                     ) : (
-                      <div className="text-center py-6 md:py-8">
-                        <p className="text-3xl mb-2">📭</p>
-                        <p className="text-xs md:text-sm text-[#1F2937]/60 font-semibold mb-3">No {platformLabel} submissions yet</p>
+                      <div className="text-center py-4 sm:py-6 md:py-8">
+                        <p className="text-2xl sm:text-3xl mb-2">📭</p>
+                        <p className="text-xs sm:text-xs md:text-sm text-[#1F2937]/60 font-semibold mb-2 sm:mb-3">No {platformLabel} submissions yet</p>
                         <p className="text-xs text-[#1F2937]/50">Be the first to submit!</p>
                       </div>
                     )}
@@ -1013,7 +1014,7 @@ export default function Home() {
                       onClick={() => {
                         document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className={`w-full mt-4 md:mt-6 px-3 py-2.5 md:py-3 font-bold text-xs md:text-sm rounded-xl transition-all duration-200 active:scale-95 border-2 border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white shadow-sm hover:shadow-md`}
+                      className={`w-full mt-3 sm:mt-4 md:mt-6 px-2 sm:px-3 py-2 sm:py-2.5 md:py-3 font-bold text-xs md:text-sm rounded-xl transition-all duration-200 active:scale-95 border-2 border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white shadow-sm hover:shadow-md`}
                     >
                       Submit for {platformLabel} →
                     </button>
@@ -1026,10 +1027,10 @@ export default function Home() {
 
 
         {/* TESTIMONIALS CAROUSEL SECTION */}
-        <section className="py-10 md:py-20 bg-white border-t border-gray-200">
-          <div className="max-w-4xl mx-auto px-4 md:px-6">
-            <h2 className="text-2xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4 text-center">Trusted by Builders Worldwide</h2>
-            <p className="text-center text-sm md:text-base text-[#1F2937]/70 mb-8 md:mb-12 max-w-2xl mx-auto">Founders, indie hackers, and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
+        <section className="py-6 sm:py-12 md:py-20 bg-white border-t border-gray-200">
+          <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4 text-center">Trusted by Builders Worldwide</h2>
+            <p className="text-center text-xs sm:text-sm md:text-base text-[#1F2937]/70 mb-6 sm:mb-10 md:mb-12 max-w-2xl mx-auto">Founders, indie hackers, and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
 
             <TestimonialsCarousel testimonials={[
               {
@@ -1067,12 +1068,12 @@ export default function Home() {
         </section>
 
         {/* FAQ SECTION */}
-        <section className="py-10 md:py-20 bg-gray-50 border-t border-gray-200">
-          <div className="max-w-4xl mx-auto px-4 md:px-6">
-            <h2 className="text-2xl md:text-3xl font-black text-[#1F2937] mb-2 md:mb-4 text-center">Frequently Asked Questions</h2>
-            <p className="text-xs md:text-sm font-medium text-[#1F2937]/70 mb-8 md:mb-12 text-center max-w-2xl mx-auto">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
+        <section className="py-6 sm:py-12 md:py-20 bg-gray-50 border-t border-gray-200">
+          <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-[#1F2937] mb-2 md:mb-4 text-center">Frequently Asked Questions</h2>
+            <p className="text-xs md:text-sm font-medium text-[#1F2937]/70 mb-6 sm:mb-10 md:mb-12 text-center max-w-2xl mx-auto">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
 
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {[
                 {
                   q: 'How does the voting system work?',
@@ -1114,22 +1115,22 @@ export default function Home() {
         </section>
 
         {/* CTA Section - After FAQ */}
-        <section className="py-10 md:py-20 bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-3 md:px-6">
-            <div className="p-8 md:p-16 bg-gradient-to-r from-[#0F3460] to-[#1a5490] rounded-2xl text-white text-center shadow-lg border-2 border-[#0F3460]/30">
-              <h3 className="text-xl md:text-2xl font-black mb-2 md:mb-3">Get Your Product Ranked</h3>
-              <p className="text-sm md:text-base mb-4 md:mb-6 opacity-95 max-w-xl mx-auto">Submit across all platforms and climb the global rankings. No algorithms. Just community voting power.</p>
-              <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+        <section className="py-6 sm:py-12 md:py-20 bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
+            <div className="p-4 sm:p-8 md:p-16 bg-gradient-to-r from-[#0F3460] to-[#1a5490] rounded-2xl text-white text-center shadow-lg border-2 border-[#0F3460]/30">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-black mb-2 md:mb-3">Get Your Product Ranked</h3>
+              <p className="text-xs sm:text-sm md:text-base mb-4 md:mb-6 opacity-95 max-w-xl mx-auto">Submit across all platforms and climb the global rankings. No algorithms. Just community voting power.</p>
+              <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="inline-flex items-center gap-2 px-6 md:px-8 py-2.5 md:py-3.5 bg-white text-[#0F3460] font-black text-xs md:text-sm rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg"
+                  className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3.5 bg-white text-[#0F3460] font-black text-xs md:text-sm rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg w-full sm:w-auto"
                 >
                   <Icons.Upload />
                   START RANKING NOW
                 </button>
                 <a
                   href="/platforms"
-                  className="inline-flex items-center gap-2 px-6 md:px-8 py-2.5 md:py-3.5 bg-white/20 text-white font-black text-xs md:text-sm rounded-xl hover:bg-white/30 active:scale-95 transition-all duration-200 shadow-lg border-2 border-white/40"
+                  className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3.5 bg-white/20 text-white font-black text-xs md:text-sm rounded-xl hover:bg-white/30 active:scale-95 transition-all duration-200 shadow-lg border-2 border-white/40 w-full sm:w-auto"
                 >
                   <Icons.TrendingUp />
                   EXPLORE PLATFORMS

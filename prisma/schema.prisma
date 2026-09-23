@@ -13,9 +13,9 @@ datasource db {
 model Listing {
   id            String    @id @default(cuid())
 
-  title         String
-  description   String
-  url           String    @unique
+  title         String    @map("title")
+  description   String    @map("description")
+  url           String    @unique @map("url")
   handle        String?   @map("handle")
   category      Category  @default(Other)
   platform      String    @default("website") @map("platform")
