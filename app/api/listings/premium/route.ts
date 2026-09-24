@@ -127,11 +127,20 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error('Error creating premium listing:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create premium listing';
+    console.error('Error details:', {
+      message: errorMessage,
+      stack: error instanceof Error ? error.stack : 'No stack trace'
+    });
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to create premium listing' },
+      { error: errorMessage, timestamp: new Date().toISOString() },
       { status: 500 }
     );
   }
+}
+
+export async function OPTIONS(req: NextRequest) {
+  return NextResponse.json({ ok: true });
 }
 
 export async function GET(req: NextRequest) {

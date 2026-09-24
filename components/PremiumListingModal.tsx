@@ -66,30 +66,32 @@ export default function PremiumListingModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
     setLoading(true);
 
     // Validate required fields
     if (!formData.founderName.trim()) {
-      setError('Please enter founder name');
+      setError('❌ Please enter founder name');
       setLoading(false);
       return;
     }
     if (!formData.founderEmail.trim()) {
-      setError('Please enter founder email');
+      setError('❌ Please enter founder email');
       setLoading(false);
       return;
     }
     if (!formData.founderPhone.trim()) {
-      setError('Please enter founder phone');
+      setError('❌ Please enter founder phone');
       setLoading(false);
       return;
     }
 
     try {
-      console.log('Submitting premium listing:', {
+      console.log('🎯 Submitting premium listing:', {
         position,
-        ...formData,
-        paymentMethod: 'manual',
+        name: formData.founderName,
+        email: formData.founderEmail,
+        phone: formData.founderPhone,
       });
 
       await onSubmit({
@@ -97,26 +99,33 @@ export default function PremiumListingModal({
         ...formData,
         paymentMethod: 'manual',
       });
-      setFormData({
-        founderName: '',
-        founderEmail: '',
-        founderPhone: '',
-        founderWebsite: '',
-        founderTwitter: '',
-        founderLinkedin: '',
-        founderInstagram: '',
-        founderFacebook: '',
-        founderTiktok: '',
-        founderYoutube: '',
-        founderGithub: '',
-        paymentMethod: 'manual',
-      });
-      setPosition(1);
-      onClose();
+
+      console.log('✅ Premium listing submitted successfully');
+      setSuccessMessage('✅ Premium request submitted successfully! Awaiting admin approval.');
+
+      // Reset form after brief delay
+      setTimeout(() => {
+        setFormData({
+          founderName: '',
+          founderEmail: '',
+          founderPhone: '',
+          founderWebsite: '',
+          founderTwitter: '',
+          founderLinkedin: '',
+          founderInstagram: '',
+          founderFacebook: '',
+          founderTiktok: '',
+          founderYoutube: '',
+          founderGithub: '',
+          paymentMethod: 'manual',
+        });
+        setPosition(1);
+        onClose();
+      }, 1500);
     } catch (err: any) {
-      console.error('Premium submission error:', err);
-      setError(err.message || 'Failed to submit premium listing request');
-    } finally {
+      console.error('❌ Premium submission error:', err);
+      const errorMessage = err.message || 'Failed to submit premium listing request';
+      setError(`❌ Error: ${errorMessage}`);
       setLoading(false);
     }
   };

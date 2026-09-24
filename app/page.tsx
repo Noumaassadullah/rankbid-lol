@@ -430,9 +430,16 @@ export default function Home() {
   };
 
   const handlePremiumSubmit = async (data: any) => {
-    if (!selectedListingForPremium) return;
+    if (!selectedListingForPremium) {
+      throw new Error('No listing selected for premium upgrade');
+    }
 
     try {
+      console.log('Sending premium request:', {
+        listingId: selectedListingForPremium.id,
+        ...data,
+      });
+
       const res = await fetch('/api/listings/premium', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -442,14 +449,21 @@ export default function Home() {
         }),
       });
 
+      console.log('Premium API response status:', res.status);
+
       const result = await res.json();
-      if (!res.ok) throw new Error(result.error);
+      console.log('Premium API response:', result);
+
+      if (!res.ok) {
+        throw new Error(result.error || `API error: ${res.status}`);
+      }
 
       addToast('✨ Premium listing request submitted! Admin approval pending.', 'success');
       setPremiumModalOpen(false);
       setSelectedListingForPremium(null);
     } catch (error: any) {
-      throw error;
+      console.error('Premium submission failed:', error);
+      throw new Error(error.message || 'Failed to submit premium listing');
     }
   };
 
