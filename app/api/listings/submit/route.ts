@@ -346,6 +346,7 @@ export async function GET(req: NextRequest) {
     const pageSize = parseInt(searchParams.get('pageSize') || '15');
     const sort = searchParams.get('sort') || 'totalVotes';
     const category = searchParams.get('category') || '';
+    const platforms = searchParams.getAll('platform') || [];
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -364,6 +365,11 @@ export async function GET(req: NextRequest) {
 
     if (category && category !== 'All') {
       queryUrl += `&category=eq.${encodeURIComponent(category)}`;
+    }
+
+    if (platforms.length > 0) {
+      const platformFilter = platforms.map(p => `platform.eq.${encodeURIComponent(p)}`).join(',');
+      queryUrl += `&or=(${platformFilter})`;
     }
 
     const response = await fetch(queryUrl, {
