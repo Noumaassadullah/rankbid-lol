@@ -406,16 +406,24 @@ export async function GET(req: NextRequest) {
       premiumPosition: null,
     }));
 
-    const countResponse = await fetch(
-      `${supabaseUrl}/rest/v1/listings?select=count()`,
-      {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'count=exact',
-        },
-      }
-    );
+    let countUrl = `${supabaseUrl}/rest/v1/listings?select=count()`;
+
+    if (category && category !== 'All') {
+      countUrl += `&category=eq.${encodeURIComponent(category)}`;
+    }
+
+    if (platforms.length > 0) {
+      const platformFilter = platforms.map(p => `platform.eq.${encodeURIComponent(p)}`).join(',');
+      countUrl += `&or=(${platformFilter})`;
+    }
+
+    const countResponse = await fetch(countUrl, {
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Prefer': 'count=exact',
+      },
+    });
 
     let total = 0;
     if (countResponse.ok) {
