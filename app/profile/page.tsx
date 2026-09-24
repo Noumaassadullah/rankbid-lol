@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { LogOut, ChevronRight } from 'lucide-react';
 import Header from '@/components/Header';
+import PlatformIcon from '@/components/PlatformIcon';
 
 interface User {
   id: string;
@@ -245,40 +246,50 @@ export default function ProfilePage() {
                     </Link>
                   </div>
                 ) : (
-                  <div className="grid gap-4">
-                    {votes.map((vote) => (
-                      <div
-                        key={vote.id}
-                        className="bg-white rounded-lg p-6 border border-gray-200"
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <p className="text-sm text-gray-500 mb-1">
-                              Voted on {new Date(vote.votedAt).toLocaleDateString()}
-                            </p>
-                            <h3 className="text-lg font-bold text-gray-900">
-                              {vote.listing?.title || 'Loading...'}
-                            </h3>
-                            {vote.listing && (
-                              <div className="mt-2 text-sm text-gray-600">
-                                <span className="font-semibold text-gray-900">
-                                  {vote.listing.totalVotes}
-                                </span>{' '}
-                                votes
+                  <div className="space-y-3">
+                    {votes.map((vote, idx) => {
+                      const faviconUrl = vote.listing?.id
+                        ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(vote.listing?.title || 'rankbid.com')}&sz=32`
+                        : 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+
+                      return (
+                        <Link
+                          key={vote.id}
+                          href={`/product/${vote.listingId}`}
+                          className="flex items-center justify-between p-4 bg-white border border-gray-200 shadow-sm rounded-lg hover:shadow-md hover:border-[#0F3460]/20 transition-all duration-200 group cursor-pointer"
+                        >
+                          <div className="flex items-center gap-3 flex-1 min-w-0">
+                            <div className="w-8 h-8 bg-[#0F3460] text-white font-semibold text-xs rounded-lg flex items-center justify-center flex-shrink-0">
+                              ♥
+                            </div>
+                            <img
+                              src={faviconUrl}
+                              alt="favicon"
+                              className="w-6 h-6 rounded-md flex-shrink-0"
+                              onError={(e) => {
+                                e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+                              }}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <p className="text-xs font-semibold text-[#1F2937] truncate">
+                                  {vote.listing?.title || 'Product'}
+                                </p>
                               </div>
-                            )}
+                              <p className="text-xs text-[#1F2937]/60 mt-0.5">
+                                Voted on {new Date(vote.votedAt).toLocaleDateString()}
+                              </p>
+                            </div>
                           </div>
-                          {vote.listing && (
-                            <Link
-                              href={`/product/${vote.listingId}`}
-                              className="text-[#0F3460] hover:text-[#0F3460]/700 font-semibold text-sm ml-4"
-                            >
-                              View
-                            </Link>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                          <div className="text-right flex-shrink-0 ml-3">
+                            <p className="text-sm font-black text-[#0F3460]">
+                              {vote.listing?.totalVotes || 0}
+                            </p>
+                            <p className="text-xs text-[#1F2937]/60">votes</p>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
