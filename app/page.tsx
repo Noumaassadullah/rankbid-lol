@@ -297,7 +297,7 @@ export default function Home() {
       });
       addToast('Voting failed, please try again', 'error');
     }
-  }, [voterId, activeTimeFilter]);
+  }, [voterId, activeTimeFilter, selectedCategory, user]);
 
   const fetchListings = useCallback(async (page: number = 1) => {
     setLoading(true);
