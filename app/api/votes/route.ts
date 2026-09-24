@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     const todayIso = today.toISOString();
 
     const countRes = await fetch(
-      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&select=count()`,
+      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&select=id`,
       {
         headers: {
           'apikey': supabaseKey,
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     console.log('Total votes:', totalVoteCount);
 
     const dayCountRes = await fetch(
-      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&voted_at=gte.${todayIso}&select=count()`,
+      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&voted_at=gte.${todayIso}&select=id`,
       {
         headers: {
           'apikey': supabaseKey,
@@ -161,7 +161,7 @@ export async function GET(req: NextRequest) {
 
     // Get vote count
     const countRes = await fetch(
-      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&select=count()`,
+      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&select=id`,
       {
         headers: {
           'apikey': supabaseKey,
