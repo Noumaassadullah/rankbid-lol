@@ -1,33 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function POST(req: NextRequest) {
   try {
     const { listingId, voterId, userId } = await req.json();
 
-    console.log('Vote request received:', { listingId, voterId, userId });
+    console.log('Vote request received:', { listingId, voterId });
 
     if (!listingId || !voterId) {
-      console.log('Missing parameters');
       return NextResponse.json(
         { error: 'Missing listingId or voterId' },
         { status: 400 }
       );
     }
 
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Supabase config missing');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
     // Check if vote already exists
     console.log('Checking for existing vote...');
-    const existingVote = await prisma.vote.findUnique({
-      where: {
-        listingId_voterId: {
-          listingId,
-          voterId,
+    const checkRes = await fetch(
+      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&voter_id=eq.${voterId}`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
         },
-      },
-    });
+      }
+    );
 
-    if (existingVote) {
-      console.log('Vote already exists for this user and listing');
+    const existingVotes = await checkRes.json();
+    if (existingVotes.length > 0) {
+      console.log('Vote already exists');
       return NextResponse.json(
         { error: 'Already voted', voted: true },
         { status: 400 }
@@ -35,65 +46,85 @@ export async function POST(req: NextRequest) {
     }
 
     // Create vote record
-    console.log('Creating new vote record...');
-    const newVote = await prisma.vote.create({
-      data: {
-        listingId,
-        voterId,
-        votedAt: new Date(),
+    console.log('Creating vote...');
+    const voteId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const insertRes = await fetch(`${supabaseUrl}/rest/v1/votes`, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
       },
+      body: JSON.stringify({
+        id: voteId,
+        listing_id: listingId,
+        voter_id: voterId,
+        voted_at: new Date().toISOString(),
+      }),
     });
-    console.log('Vote created:', newVote.id);
 
-    // Record user vote if userId provided
-    if (userId) {
-      try {
-        await prisma.userVote.create({
-          data: {
-            userId,
-            listingId,
-          },
-        });
-        console.log('User vote recorded');
-      } catch (error: any) {
-        if (error.code !== 'P2002') {
-          console.error('Error recording user vote:', error);
-        }
-      }
+    if (!insertRes.ok) {
+      console.error('Failed to insert vote:', await insertRes.text());
+      throw new Error('Failed to insert vote');
     }
+    console.log('Vote created successfully');
 
-    // Calculate vote counts
+    // Get vote counts
     console.log('Counting votes...');
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
+    const todayIso = today.toISOString();
 
-    const dayVoteCount = await prisma.vote.count({
-      where: {
-        listingId,
-        votedAt: { gte: today },
-      },
-    });
-    console.log('Day vote count:', dayVoteCount);
+    const countRes = await fetch(
+      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&select=count()`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'count=exact',
+        },
+      }
+    );
+    const totalVoteCount = parseInt(countRes.headers.get('content-range')?.split('/')[1] || '0');
+    console.log('Total votes:', totalVoteCount);
 
-    const totalVoteCount = await prisma.vote.count({
-      where: {
-        listingId,
-      },
-    });
-    console.log('Total vote count:', totalVoteCount);
+    const dayCountRes = await fetch(
+      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&voted_at=gte.${todayIso}&select=count()`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'count=exact',
+        },
+      }
+    );
+    const dayVoteCount = parseInt(dayCountRes.headers.get('content-range')?.split('/')[1] || '0');
+    console.log('Today votes:', dayVoteCount);
 
-    // Update listing with new vote counts
+    // Update listing
     console.log('Updating listing vote counts...');
-    const updatedListing = await prisma.listing.update({
-      where: { id: listingId },
-      data: {
-        totalVotes: totalVoteCount,
-        dayVotes: dayVoteCount,
-      },
-    });
-    console.log('Listing updated:', updatedListing.id);
+    const updateRes = await fetch(
+      `${supabaseUrl}/rest/v1/listings?id=eq.${listingId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          total_votes: totalVoteCount,
+          day_votes: dayVoteCount,
+        }),
+      }
+    );
 
-    console.log(`Vote recorded for listing ${listingId}. Total: ${totalVoteCount}, Today: ${dayVoteCount}`);
+    if (!updateRes.ok) {
+      console.error('Failed to update listing:', await updateRes.text());
+    }
+    console.log('Listing updated');
 
     return NextResponse.json(
       { success: true, voted: true, totalVotes: totalVoteCount, dayVotes: dayVoteCount },
@@ -102,10 +133,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Error recording vote:', error);
     return NextResponse.json(
-      {
-        error: 'Failed to record vote. Please try again later.',
-        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
-      },
+      { error: 'Failed to record vote. Please try again later.' },
       { status: 500 }
     );
   }
@@ -124,29 +152,46 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    if (!supabaseUrl || !supabaseKey) {
+      return NextResponse.json(
+        { voteCount: 0, userVoted: false },
+        { status: 200 }
+      );
+    }
+
     // Get vote count
-    const voteCount = await prisma.vote.count({
-      where: { listingId },
-    });
+    const countRes = await fetch(
+      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&select=count()`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'count=exact',
+        },
+      }
+    );
+    const voteCount = parseInt(countRes.headers.get('content-range')?.split('/')[1] || '0');
 
     let userVoted = false;
     if (voterId) {
-      const userVote = await prisma.vote.findUnique({
-        where: {
-          listingId_voterId: {
-            listingId,
-            voterId,
+      const checkRes = await fetch(
+        `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&voter_id=eq.${voterId}`,
+        {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
           },
-        },
-      });
-      userVoted = !!userVote;
+        }
+      );
+      const votes = await checkRes.json();
+      userVoted = votes.length > 0;
     }
 
     return NextResponse.json({ voteCount, userVoted });
   } catch (error) {
     console.error('Error fetching votes:', error);
     return NextResponse.json(
-      { voteCount: 0, userVoted: false, error: 'Failed to fetch votes' },
+      { voteCount: 0, userVoted: false },
       { status: 200 }
     );
   }
