@@ -106,7 +106,7 @@ export default function ProfilePage() {
                 {(user.name || user.email).charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <h1 className="text-lg md:text-xl font-black text-gray-900 truncate">{user.name || user.email.split('@')[0]}</h1>
+                <h1 className="font-black text-gray-900 truncate" style={{fontSize: '20px'}}>{user.name || user.email.split('@')[0]}</h1>
                 <p className="text-gray-600 text-sm mt-1 truncate">{user.email}</p>
               </div>
             </div>
