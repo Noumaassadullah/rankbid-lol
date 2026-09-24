@@ -24,18 +24,18 @@ export async function GET(request: NextRequest) {
 
     // Fetch user votes from Supabase
     console.log('Fetching votes for userId:', userId);
-    const votesRes = await fetch(
-      `${supabaseUrl}/rest/v1/user_votes?user_id=eq.${userId}&order=voted_at.desc`,
-      {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-        },
-      }
-    );
+    const queryUrl = `${supabaseUrl}/rest/v1/user_votes?user_id=eq.${userId}&order=voted_at.desc`;
+    console.log('Query URL:', queryUrl);
+
+    const votesRes = await fetch(queryUrl, {
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+      },
+    });
 
     if (!votesRes.ok) {
-      console.error('Failed to fetch votes from Supabase:', votesRes.status);
+      console.error('Failed to fetch votes from Supabase:', votesRes.status, await votesRes.text());
       return NextResponse.json(
         { votes: [] },
         { status: 200 }
@@ -44,6 +44,9 @@ export async function GET(request: NextRequest) {
 
     const userVotes = await votesRes.json();
     console.log('Found user votes:', userVotes.length);
+    if (userVotes.length > 0) {
+      console.log('First vote:', userVotes[0]);
+    }
 
     // Get listing details for each vote
     const formattedVotes = await Promise.all(

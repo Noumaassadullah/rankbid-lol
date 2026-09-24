@@ -73,16 +73,18 @@ export async function POST(req: NextRequest) {
     // Also create UserVote record if userId is provided
     if (userId) {
       try {
-        console.log('Creating UserVote for userId:', userId);
+        console.log('Creating UserVote for userId:', userId, 'listingId:', listingId);
+        const userVoteId = `uv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         const userVoteRes = await fetch(`${supabaseUrl}/rest/v1/user_votes`, {
           method: 'POST',
           headers: {
             'apikey': supabaseKey,
             'Authorization': `Bearer ${supabaseKey}`,
             'Content-Type': 'application/json',
-            'Prefer': 'return=minimal',
+            'Prefer': 'return=representation',
           },
           body: JSON.stringify({
+            id: userVoteId,
             user_id: userId,
             listing_id: listingId,
             voted_at: new Date().toISOString(),
@@ -92,7 +94,12 @@ export async function POST(req: NextRequest) {
         if (userVoteRes.ok) {
           console.log('UserVote created successfully');
         } else {
-          console.error('Failed to insert user vote:', await userVoteRes.text());
+          const errorText = await userVoteRes.text();
+          console.error('Failed to insert user vote:', userVoteRes.status, errorText);
+          // If it's a duplicate key error, that's okay
+          if (!errorText.includes('duplicate') && !errorText.includes('P0001')) {
+            console.warn('UserVote creation had an issue but vote was recorded');
+          }
         }
       } catch (error) {
         console.error('Error creating user vote:', error);
