@@ -262,12 +262,16 @@ export default function Home() {
         addToast('Vote recorded! ✨', 'success');
         setTimeout(async () => {
           const sort = activeTimeFilter === 'today' ? 'dayVotes' : 'totalVotes';
-          const fetchRes = await fetch(`/api/listings/submit?sort=${sort}&limit=100`);
+          const categoryParam = selectedCategory === 'All' ? '' : `&category=${encodeURIComponent(selectedCategory)}`;
+          const timeParam = activeTimeFilter === 'today' ? '&timeFilter=today' : '';
+          const fetchRes = await fetch(`/api/listings/submit?sort=${sort}&page=1&pageSize=15${categoryParam}${timeParam}`);
           if (fetchRes.ok) {
             const text = await fetchRes.text();
             if (text) {
               const data = JSON.parse(text);
               setListings(data.listings || []);
+              setTotalPages(data.pagination?.totalPages || 1);
+              setCurrentPage(1);
               setOptimisticVotes({});
             }
           }

@@ -1,12 +1,11 @@
 import { query } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   try {
     const { listingId, voterId, userId } = await req.json();
+
+    console.log('Vote request received:', { listingId, voterId, userId });
 
     if (!listingId || !voterId) {
       return NextResponse.json(
@@ -16,12 +15,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if vote already exists
+    console.log('Checking for existing vote...');
     const existingResult = await query(
       'SELECT id FROM votes WHERE listing_id = $1 AND voter_id = $2 LIMIT 1',
       [listingId, voterId]
     );
 
     if (existingResult.rows.length > 0) {
+      console.log('Vote already exists for this user and listing');
       return NextResponse.json(
         { error: 'Already voted', voted: true },
         { status: 400 }
@@ -29,48 +30,43 @@ export async function POST(req: NextRequest) {
     }
 
     // Create vote record
+    console.log('Creating new vote record...');
     const voteId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    await query(
+    const insertResult = await query(
       'INSERT INTO votes (id, listing_id, voter_id, voted_at) VALUES ($1, $2, $3, NOW())',
       [voteId, listingId, voterId]
     );
+    console.log('Vote inserted:', insertResult.rowCount);
 
-    // If userId is provided, also record in UserVote table
-    if (userId) {
-      try {
-        await prisma.userVote.create({
-          data: {
-            userId,
-            listingId,
-          },
-        });
-      } catch (error: any) {
-        if (error.code !== 'P2002') {
-          console.error('Error recording user vote:', error);
-        }
-      }
-    }
-
-    // Update listing vote counts
+    // Get counts directly from database
+    console.log('Counting votes...');
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
+    const todayIso = today.toISOString();
 
     const dayVotesResult = await query(
       'SELECT COUNT(*) as count FROM votes WHERE listing_id = $1 AND voted_at >= $2',
-      [listingId, today]
+      [listingId, todayIso]
     );
     const dayVoteCount = parseInt(dayVotesResult.rows[0]?.count || '0');
+    console.log('Day vote count:', dayVoteCount);
 
     const totalVotesResult = await query(
       'SELECT COUNT(*) as count FROM votes WHERE listing_id = $1',
       [listingId]
     );
     const totalVoteCount = parseInt(totalVotesResult.rows[0]?.count || '0');
+    console.log('Total vote count:', totalVoteCount);
 
-    await query(
+    // Update listing with new vote counts
+    console.log('Updating listing vote counts...');
+    const updateResult = await query(
       'UPDATE listings SET total_votes = $1, day_votes = $2 WHERE id = $3',
       [totalVoteCount, dayVoteCount, listingId]
     );
+    console.log('Listing updated:', updateResult.rowCount, 'rows affected');
+
+    console.log(`Vote recorded for listing ${listingId}. Total: ${totalVoteCount}, Today: ${dayVoteCount}`);
 
     return NextResponse.json(
       { success: true, voted: true, totalVotes: totalVoteCount, dayVotes: dayVoteCount },
