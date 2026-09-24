@@ -1,5 +1,5 @@
-import { query } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
     console.log('Vote request received:', { listingId, voterId, userId });
 
     if (!listingId || !voterId) {
+      console.log('Missing parameters');
       return NextResponse.json(
         { error: 'Missing listingId or voterId' },
         { status: 400 }
@@ -16,12 +17,16 @@ export async function POST(req: NextRequest) {
 
     // Check if vote already exists
     console.log('Checking for existing vote...');
-    const existingResult = await query(
-      'SELECT id FROM votes WHERE listing_id = $1 AND voter_id = $2 LIMIT 1',
-      [listingId, voterId]
-    );
+    const existingVote = await prisma.vote.findUnique({
+      where: {
+        listingId_voterId: {
+          listingId,
+          voterId,
+        },
+      },
+    });
 
-    if (existingResult.rows.length > 0) {
+    if (existingVote) {
       console.log('Vote already exists for this user and listing');
       return NextResponse.json(
         { error: 'Already voted', voted: true },
@@ -31,40 +36,62 @@ export async function POST(req: NextRequest) {
 
     // Create vote record
     console.log('Creating new vote record...');
-    const voteId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const insertResult = await query(
-      'INSERT INTO votes (id, listing_id, voter_id, voted_at) VALUES ($1, $2, $3, NOW())',
-      [voteId, listingId, voterId]
-    );
-    console.log('Vote inserted:', insertResult.rowCount);
+    const newVote = await prisma.vote.create({
+      data: {
+        listingId,
+        voterId,
+        votedAt: new Date(),
+      },
+    });
+    console.log('Vote created:', newVote.id);
 
-    // Get counts directly from database
+    // Record user vote if userId provided
+    if (userId) {
+      try {
+        await prisma.userVote.create({
+          data: {
+            userId,
+            listingId,
+          },
+        });
+        console.log('User vote recorded');
+      } catch (error: any) {
+        if (error.code !== 'P2002') {
+          console.error('Error recording user vote:', error);
+        }
+      }
+    }
+
+    // Calculate vote counts
     console.log('Counting votes...');
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
-    const todayIso = today.toISOString();
 
-    const dayVotesResult = await query(
-      'SELECT COUNT(*) as count FROM votes WHERE listing_id = $1 AND voted_at >= $2',
-      [listingId, todayIso]
-    );
-    const dayVoteCount = parseInt(dayVotesResult.rows[0]?.count || '0');
+    const dayVoteCount = await prisma.vote.count({
+      where: {
+        listingId,
+        votedAt: { gte: today },
+      },
+    });
     console.log('Day vote count:', dayVoteCount);
 
-    const totalVotesResult = await query(
-      'SELECT COUNT(*) as count FROM votes WHERE listing_id = $1',
-      [listingId]
-    );
-    const totalVoteCount = parseInt(totalVotesResult.rows[0]?.count || '0');
+    const totalVoteCount = await prisma.vote.count({
+      where: {
+        listingId,
+      },
+    });
     console.log('Total vote count:', totalVoteCount);
 
     // Update listing with new vote counts
     console.log('Updating listing vote counts...');
-    const updateResult = await query(
-      'UPDATE listings SET total_votes = $1, day_votes = $2 WHERE id = $3',
-      [totalVoteCount, dayVoteCount, listingId]
-    );
-    console.log('Listing updated:', updateResult.rowCount, 'rows affected');
+    const updatedListing = await prisma.listing.update({
+      where: { id: listingId },
+      data: {
+        totalVotes: totalVoteCount,
+        dayVotes: dayVoteCount,
+      },
+    });
+    console.log('Listing updated:', updatedListing.id);
 
     console.log(`Vote recorded for listing ${listingId}. Total: ${totalVoteCount}, Today: ${dayVoteCount}`);
 
@@ -98,19 +125,21 @@ export async function GET(req: NextRequest) {
     }
 
     // Get vote count
-    const voteResult = await query(
-      'SELECT COUNT(*) as count FROM votes WHERE listing_id = $1',
-      [listingId]
-    );
-    const voteCount = parseInt(voteResult.rows[0]?.count || '0');
+    const voteCount = await prisma.vote.count({
+      where: { listingId },
+    });
 
     let userVoted = false;
     if (voterId) {
-      const userVoteResult = await query(
-        'SELECT id FROM votes WHERE listing_id = $1 AND voter_id = $2 LIMIT 1',
-        [listingId, voterId]
-      );
-      userVoted = userVoteResult.rows.length > 0;
+      const userVote = await prisma.vote.findUnique({
+        where: {
+          listingId_voterId: {
+            listingId,
+            voterId,
+          },
+        },
+      });
+      userVoted = !!userVote;
     }
 
     return NextResponse.json({ voteCount, userVoted });
