@@ -68,7 +68,30 @@ export default function PremiumListingModal({
     setError('');
     setLoading(true);
 
+    // Validate required fields
+    if (!formData.founderName.trim()) {
+      setError('Please enter founder name');
+      setLoading(false);
+      return;
+    }
+    if (!formData.founderEmail.trim()) {
+      setError('Please enter founder email');
+      setLoading(false);
+      return;
+    }
+    if (!formData.founderPhone.trim()) {
+      setError('Please enter founder phone');
+      setLoading(false);
+      return;
+    }
+
     try {
+      console.log('Submitting premium listing:', {
+        position,
+        ...formData,
+        paymentMethod: 'manual',
+      });
+
       await onSubmit({
         position,
         ...formData,
@@ -91,6 +114,7 @@ export default function PremiumListingModal({
       setPosition(1);
       onClose();
     } catch (err: any) {
+      console.error('Premium submission error:', err);
       setError(err.message || 'Failed to submit premium listing request');
     } finally {
       setLoading(false);
