@@ -126,9 +126,14 @@ export async function POST(request: NextRequest) {
     const normalizedURL = normalizeURL(url);
 
     // Check if URL already exists
-    const existingListing = await prisma.listing.findUnique({
-      where: { url: normalizedURL },
-    });
+    const sb = getSupabase();
+    const { data: existingListing, error: checkError } = await sb
+      .from('listings')
+      .select('id')
+      .eq('url', normalizedURL)
+      .single();
+
+    if (checkError && checkError.code !== 'PGRST116') throw checkError;
 
     if (existingListing) {
       return NextResponse.json({ error: 'URL already listed' }, { status: 409 });
@@ -143,14 +148,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newListing = await prisma.listing.create({
-      data: {
+    const { data: newListing, error: createError } = await sb
+      .from('listings')
+      .insert([{
         title,
         description: description || '',
         url: normalizedURL,
         category,
-      },
-    });
+      }])
+      .select()
+      .single();
+
+    if (createError) throw createError;
 
     return NextResponse.json(newListing, { status: 201 });
   } catch (error) {

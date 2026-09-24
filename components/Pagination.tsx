@@ -6,42 +6,18 @@ interface PaginationProps {
 
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   const pages = [];
-  const maxPagesToShow = 5;
+  const maxPagesToShow = 3;
 
-  let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-  let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-
-  if (endPage - startPage < maxPagesToShow - 1) {
-    startPage = Math.max(1, endPage - maxPagesToShow + 1);
-  }
-
-  if (startPage > 1) {
-    pages.push(
-      <button
-        key="first"
-        onClick={() => onPageChange(1)}
-        className="px-4 py-2 font-black border-2 rounded-lg border-black hover:bg-black hover:text-white transition-all"
-      >
-        « First
-      </button>
-    );
-  }
-
-  if (startPage > 1) {
-    pages.push(
-      <span key="dots-start" className="px-2 py-2 text-black font-bold">...</span>
-    );
-  }
-
-  for (let i = startPage; i <= endPage; i++) {
+  // Show numbered pages (1, 2, 3, etc.)
+  for (let i = 1; i <= Math.min(maxPagesToShow, totalPages); i++) {
     pages.push(
       <button
         key={i}
         onClick={() => onPageChange(i)}
-        className={`px-4 py-2 font-black border-2 transition-all ${
+        className={`w-10 h-10 font-bold border-2 rounded-lg transition-all ${
           i === currentPage
-            ? 'bg-black text-white border-black'
-            : 'border-black text-black hover:bg-black hover:text-white'
+            ? 'bg-[#0F3460] text-white border-[#0F3460]'
+            : 'border-gray-300 text-[#1F2937] hover:border-[#0F3460] hover:bg-[#0F3460] hover:text-white'
         }`}
       >
         {i}
@@ -49,27 +25,18 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
     );
   }
 
-  if (endPage < totalPages) {
-    pages.push(
-      <span key="dots-end" className="px-2 py-2 text-black font-bold">...</span>
-    );
-  }
-
-  if (endPage < totalPages) {
-    pages.push(
-      <button
-        key="last"
-        onClick={() => onPageChange(totalPages)}
-        className="px-4 py-2 font-black border-2 rounded-lg border-black hover:bg-black hover:text-white transition-all"
-      >
-        Last »
-      </button>
-    );
-  }
-
   return (
-    <div className="flex gap-3 justify-center items-center mt-12 flex-wrap">
+    <div className="flex gap-3 justify-center items-center mt-8 sm:mt-12 flex-wrap">
       {pages}
+
+      {currentPage < totalPages && (
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          className="px-4 sm:px-6 py-2 font-bold border-2 border-[#0F3460] text-[#0F3460] rounded-lg hover:bg-[#0F3460] hover:text-white transition-all active:scale-95"
+        >
+          Show More →
+        </button>
+      )}
     </div>
   );
 }
