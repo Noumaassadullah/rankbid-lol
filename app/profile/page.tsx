@@ -44,6 +44,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [submissions, setSubmissions] = useState<Listing[]>([]);
   const [votes, setVotes] = useState<Vote[]>([]);
+  const [allListings, setAllListings] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'submissions' | 'votes' | 'settings'>('submissions');
   const [loading, setLoading] = useState(true);
 
@@ -77,11 +78,22 @@ export default function ProfilePage() {
         const data = await votesRes.json();
         setVotes(data.votes || []);
       }
+
+      // Fetch all listings to calculate rankings
+      const allListingsRes = await fetch(`/api/listings?limit=1000&offset=0`);
+      if (allListingsRes.ok) {
+        const listings = await allListingsRes.json();
+        setAllListings(listings || []);
+      }
     } catch (error) {
       console.error('Failed to fetch user data:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateRank = (totalVotes: number): number => {
+    return allListings.filter(l => (l.totalVotes || 0) > totalVotes).length + 1;
   };
 
   const handleLogout = () => {
@@ -191,37 +203,45 @@ export default function ProfilePage() {
                   </div>
                 ) : (
                   <div className="grid gap-4">
-                    {submissions.map((listing) => (
-                      <Link
-                        key={listing.id}
-                        href={`/product/${listing.id}`}
-                        className="bg-white rounded-lg p-6 border border-gray-200 hover:border-[#0F3460]/400 hover:shadow-md transition-all"
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <h3 className="text-lg font-bold text-gray-900 mb-1">
-                              {listing.title || (listing.handle ? `@${listing.handle}` : listing.url)}
-                            </h3>
-                            <p className="text-gray-600 text-sm mb-3 line-clamp-2">{listing.description}</p>
-                            <div className="flex gap-4 flex-wrap text-sm">
-                              <span className="text-gray-600">
-                                <span className="font-semibold">{listing.totalVotes}</span> total votes
-                              </span>
-                              <span className="text-gray-600">
-                                <span className="font-semibold">{listing.dayVotes}</span> today
-                              </span>
-                              <span className="bg-[#0F3460]/10 text-[#0F3460]/700 px-2 py-1 rounded">
-                                {listing.platform}
-                              </span>
-                              <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                                {listing.category}
-                              </span>
+                    {submissions.map((listing) => {
+                      const rank = calculateRank(listing.totalVotes);
+                      return (
+                        <Link
+                          key={listing.id}
+                          href={`/product/${listing.id}`}
+                          className="bg-white rounded-lg p-6 border border-gray-200 hover:border-[#0F3460]/400 hover:shadow-md transition-all"
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <h3 className="text-lg font-bold text-gray-900">
+                                  {listing.title || (listing.handle ? `@${listing.handle}` : listing.url)}
+                                </h3>
+                                <span className="bg-[#0F3460] text-white px-3 py-1 rounded-lg text-sm font-bold">
+                                  #{rank}
+                                </span>
+                              </div>
+                              <p className="text-gray-600 text-sm mb-3 line-clamp-2">{listing.description}</p>
+                              <div className="flex gap-4 flex-wrap text-sm">
+                                <span className="text-gray-600">
+                                  <span className="font-semibold">{listing.totalVotes}</span> total votes
+                                </span>
+                                <span className="text-gray-600">
+                                  <span className="font-semibold">{listing.dayVotes}</span> today
+                                </span>
+                                <span className="bg-[#0F3460]/10 text-[#0F3460]/700 px-2 py-1 rounded">
+                                  {listing.platform}
+                                </span>
+                                <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                                  {listing.category}
+                                </span>
+                              </div>
                             </div>
+                            <ChevronRight className="w-5 h-5 text-gray-400 ml-4 flex-shrink-0" />
                           </div>
-                          <ChevronRight className="w-5 h-5 text-gray-400 ml-4 flex-shrink-0" />
-                        </div>
-                      </Link>
-                    ))}
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
