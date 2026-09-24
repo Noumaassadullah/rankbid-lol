@@ -22,7 +22,7 @@ export default function Header() {
   const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [stats, setStats] = useState({ onlineNow: 12, allTimeVisitors: 847 }); // Fallback values
+  const [stats, setStats] = useState({ onlineNow: 12, todayVisitors: 0, allTimeVisitors: 847 }); // Fallback values
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<{ id: string; email: string; name?: string } | null>(null);
 
