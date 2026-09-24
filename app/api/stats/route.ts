@@ -27,11 +27,15 @@ export async function GET() {
     // Get online users (active sessions in last 5 minutes)
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
 
-    const { count: onlineCount, error: onlineError } = await sb
+    console.log('[STATS GET] Fetching stats...');
+
+    const { count: onlineCount, error: onlineError, data: onlineData } = await sb
       .from('visitor_sessions')
-      .select('id', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: false })
       .eq('is_active', true)
       .gt('last_activity', fiveMinutesAgo);
+
+    console.log('[STATS GET] Online:', onlineCount, onlineError);
 
     if (onlineError) throw onlineError;
 
@@ -42,6 +46,8 @@ export async function GET() {
       .select('id', { count: 'exact', head: true })
       .gte('created_at', `${today}T00:00:00`);
 
+    console.log('[STATS GET] Today:', todayCount, todayError);
+
     if (todayError) throw todayError;
 
     // Get all-time visitors
@@ -49,18 +55,30 @@ export async function GET() {
       .from('visitor_sessions')
       .select('id', { count: 'exact', head: true });
 
+    console.log('[STATS GET] All time:', allCount, allError);
+
     if (allError) throw allError;
 
-    return NextResponse.json({
+    const result = {
       onlineNow: onlineCount || 0,
       todayVisitors: todayCount || 0,
       allTimeVisitors: allCount || 0,
       timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error('Error fetching stats:', error);
+    };
+
+    console.log('[STATS GET] Result:', result);
+
+    return NextResponse.json(result);
+  } catch (error: any) {
+    console.error('[STATS GET] Error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch stats', onlineNow: 0, todayVisitors: 0, allTimeVisitors: 0 },
+      {
+        error: 'Failed to fetch stats',
+        onlineNow: 0,
+        todayVisitors: 0,
+        allTimeVisitors: 0,
+        details: error.message
+      },
       { status: 500 }
     );
   }
@@ -73,28 +91,35 @@ export async function POST(request: NextRequest) {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
+    console.log('[STATS POST] Tracking:', { sessionId, pageUrl, ip });
+
     // Try to insert or update session
     const { data, error } = await sb
       .from('visitor_sessions')
-      .upsert(
-        {
-          session_id: sessionId,
-          ip_address: ip,
-          user_agent: userAgent,
-          page_url: pageUrl,
-          last_activity: new Date().toISOString(),
-          is_active: true,
-        },
-        { onConflict: 'session_id' }
-      )
+      .insert({
+        session_id: sessionId,
+        ip_address: ip,
+        user_agent: userAgent,
+        page_url: pageUrl,
+        last_activity: new Date().toISOString(),
+        is_active: true,
+      })
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('[STATS POST] Error:', error);
+      throw error;
+    }
 
+    console.log('[STATS POST] Success:', data);
     return NextResponse.json({ success: true, session: data });
-  } catch (error) {
-    console.error('Error tracking visitor:', error);
-    return NextResponse.json({ success: false, error: 'Failed to track visitor' }, { status: 500 });
+  } catch (error: any) {
+    console.error('[STATS POST] Catch error:', error);
+    return NextResponse.json({
+      success: false,
+      error: error.message || 'Failed to track visitor',
+      details: error
+    }, { status: 500 });
   }
 }
