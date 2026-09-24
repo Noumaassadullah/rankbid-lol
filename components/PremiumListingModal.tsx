@@ -103,16 +103,16 @@ export default function PremiumListingModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white shadow-sm border border-gray-200 rounded-lg max-w-2xl w-full my-8">
+      <div className="bg-white shadow-lg border-2 border-gray-300 rounded-lg max-w-2xl w-full my-8">
         {/* Header */}
-        <div className="bg-[orange-600] border-b border-gray-200 p-6 flex items-center justify-between">
+        <div className="bg-orange-600 border-b-4 border-gray-300 p-6 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-black text-[#1F2937]">Boost to Premium</h2>
-            <p className="text-sm text-[#1F2937]/70 font-semibold mt-1">{listingTitle}</p>
+            <h2 className="text-2xl font-black text-white">💎 Boost to Premium</h2>
+            <p className="text-sm text-white/80 font-semibold mt-1">{listingTitle}</p>
           </div>
           <button
             onClick={onClose}
-            className="text-2xl font-black text-[#1F2937] hover:scale-110 transition-transform"
+            className="text-3xl font-black text-white hover:scale-110 transition-transform"
           >
             ✕
           </button>
@@ -133,73 +133,73 @@ export default function PremiumListingModal({
 
           {/* Position Selection */}
           <div>
-            <label className="block text-sm font-black text-[#1F2937] mb-3">
+            <label className="block text-sm font-black text-[#1F2937] mb-4 uppercase">
               Select Position & Price
             </label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-4">
               {[1, 2, 3].map(pos => (
                 <button
                   key={pos}
                   type="button"
                   onClick={() => setPosition(pos)}
-                  className={`py-3 px-3 rounded-lg transition-all duration-200 group ${
+                  className={`py-4 px-4 rounded-lg transition-all duration-200 border-2 font-black ${
                     position === pos
-                      ? 'bg-[orange-600] shadow-md ring-2 ring-[orange-600] ring-offset-2'
-                      : 'bg-white border border-gray-300 hover:bg-blue-50'
+                      ? 'bg-orange-600 border-orange-700 shadow-lg text-white ring-2 ring-orange-400 ring-offset-2'
+                      : 'bg-gray-50 border-gray-300 hover:border-orange-400 text-gray-900 hover:bg-orange-50'
                   }`}
                 >
-                  <p className={`text-xl font-bold ${position === pos ? 'text-white' : 'text-[#1F2937]'}`}>#{pos}</p>
-                  <p className={`text-sm font-semibold mt-1 transition-colors ${
+                  <p className="text-2xl">#{pos}</p>
+                  <p className={`text-lg font-black mt-2 ${
                     position === pos
                       ? 'text-white'
-                      : 'text-[orange-600] group-hover:text-white'
+                      : 'text-orange-600'
                   }`}>${PRICES[pos]}</p>
                 </button>
               ))}
             </div>
-            <p className="text-xs text-[#1F2937]/60 font-semibold mt-2">
+            <p className="text-xs text-gray-600 font-semibold mt-4 bg-blue-50 border border-blue-200 p-3 rounded">
               📌 Your product will be featured at position #{position} for ${price}. Votes can still move it in rankings.
             </p>
           </div>
 
           {/* Founder Information */}
           <div className="border-t-4 border-gray-300 pt-6">
-            <h3 className="text-lg font-black text-[#1F2937] mb-4">Founder Information</h3>
+            <h3 className="text-lg font-black text-gray-900 mb-4 uppercase">👤 Founder Information</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-bold text-[#1F2937] mb-2">Name *</label>
+                <label className="block text-sm font-black text-gray-900 mb-2 uppercase">Name *</label>
                 <input
                   type="text"
                   name="founderName"
                   value={formData.founderName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full px-4 py-3 border-2 border-gray-400 bg-white text-gray-900 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                   placeholder="John Doe"
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-[#1F2937] mb-2">Email *</label>
+                <label className="block text-sm font-black text-gray-900 mb-2 uppercase">Email *</label>
                 <input
                   type="email"
                   name="founderEmail"
                   value={formData.founderEmail}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full px-4 py-3 border-2 border-gray-400 bg-white text-gray-900 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                   placeholder="john@example.com"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-bold text-[#1F2937] mb-2">Phone *</label>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-black text-gray-900 mb-2 uppercase">Phone *</label>
                 <input
                   type="tel"
                   name="founderPhone"
                   value={formData.founderPhone}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full px-4 py-3 border-2 border-gray-400 bg-white text-gray-900 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                   placeholder="+92 300 1234567"
                 />
               </div>
@@ -209,9 +209,9 @@ export default function PremiumListingModal({
           {/* Social Accounts */}
           {position !== 3 && (
             <div className="border-t-4 border-gray-300 pt-6">
-              <h3 className="text-lg font-black text-[#1F2937] mb-4">Social Accounts</h3>
-              <p className="text-xs text-[#1F2937]/60 font-semibold mb-4">
-                {position === 1 ? 'Add up to 4 social profiles to be displayed on your premium listing' : 'Add 1 social profile to be displayed on your premium listing'}
+              <h3 className="text-lg font-black text-gray-900 mb-4 uppercase">🔗 Social Accounts</h3>
+              <p className="text-xs text-gray-600 font-semibold mb-4 bg-gray-50 p-3 rounded border border-gray-300">
+                {position === 1 ? '✓ Add up to 4 social profiles to be displayed on your premium listing' : '✓ Add 1 social profile to be displayed on your premium listing'}
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -232,14 +232,14 @@ export default function PremiumListingModal({
 
                   return (
                     <div key={field.name}>
-                      <label className="block text-xs font-bold text-[#1F2937] mb-2">{field.label}</label>
+                      <label className="block text-xs font-black text-gray-900 mb-2 uppercase">{field.label}</label>
                       <input
                         type="text"
                         name={field.name}
                         value={formData[field.name as keyof typeof formData]}
                         onChange={handleChange}
                         placeholder={field.placeholder}
-                        className="w-full px-4 py-3 border-2 border-gray-300 bg-white text-[#1F2937] font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="w-full px-4 py-3 border-2 border-gray-400 bg-white text-gray-900 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </div>
                   );
@@ -249,28 +249,26 @@ export default function PremiumListingModal({
           )}
 
           {/* Payment Info */}
-          <div className="bg-gray-50 border-2 border-gray-300 p-4">
-            <p className="font-bold text-[#1F2937] mb-2">Payment Method: Manual Verification</p>
-            <p className="text-sm text-[#1F2937]/70">
-              After submission, an admin will verify your payment of <span className="font-black">${price}</span> and activate your premium listing. You'll receive a confirmation email.
+          <div className="bg-yellow-50 border-2 border-yellow-300 p-4 rounded">
+            <p className="font-black text-gray-900 mb-2 uppercase">💰 Payment Method: Manual Verification</p>
+            <p className="text-sm text-gray-700">
+              After submission, an admin will verify your payment of <span className="font-black text-orange-600">${price}</span> and activate your premium listing. You'll receive a confirmation email.
             </p>
           </div>
 
           {/* Buttons */}
-          <div className="flex flex-col gap-3 pt-4">
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 px-4 py-3 bg-white text-[#1F2937] font-semibold text-sm border border-gray-300 rounded-lg hover:bg-gray-50 active:scale-95 transition-all duration-200"
-              >
-                Cancel
-              </button>
-            </div>
+          <div className="flex flex-col gap-3 pt-4 border-t-4 border-gray-300">
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full px-4 py-3 bg-white text-gray-900 font-bold text-sm border-2 border-gray-400 rounded-lg hover:bg-gray-100 active:scale-95 transition-all duration-200 uppercase"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-3 bg-[orange-600] text-white font-semibold text-sm rounded-lg hover:bg-[orange-700] active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+              className="w-full px-4 py-3 bg-orange-600 text-white font-black text-sm rounded-lg hover:bg-orange-700 active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg border-2 border-orange-700 uppercase"
             >
               {loading ? (
                 <>

@@ -31,12 +31,21 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate position is 1, 2, or 3
-    if ([1, 2, 3].indexOf(parseInt(position)) === -1) {
+    const positionNum = parseInt(position);
+    if ([1, 2, 3].indexOf(positionNum) === -1) {
       return NextResponse.json(
         { error: 'Invalid position' },
         { status: 400 }
       );
     }
+
+    // Calculate amount paid based on position
+    const PRICES: { [key: number]: number } = {
+      1: 5,
+      2: 3,
+      3: 1,
+    };
+    const calculatedAmount = PRICES[positionNum] || amountPaid;
 
     // Validate listing exists
     const listingCheck = await query('SELECT id FROM listings WHERE id = $1', [listingId]);
@@ -72,7 +81,7 @@ export async function POST(req: NextRequest) {
       [
         id,
         listingId,
-        position,
+        positionNum,
         founderName,
         founderEmail,
         founderPhone,
@@ -85,7 +94,7 @@ export async function POST(req: NextRequest) {
         founderYoutube || null,
         founderGithub || null,
         paymentMethod || 'manual',
-        amountPaid,
+        calculatedAmount,
         'pending'
       ]
     );
