@@ -98,31 +98,32 @@ export default function ProfilePage() {
       <Header />
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
+        <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-full flex items-center justify-center text-white font-bold text-2xl">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-full flex items-center justify-center text-white font-bold text-2xl flex-shrink-0">
                 {(user.name || user.email).charAt(0).toUpperCase()}
               </div>
-              <div>
-                <h1 className="text-3xl font-black text-gray-900">{user.name || user.email.split('@')[0]}</h1>
-                <p className="text-gray-600 text-sm mt-1">{user.email}</p>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl md:text-3xl font-black text-gray-900 truncate">{user.name || user.email.split('@')[0]}</h1>
+                <p className="text-gray-600 text-sm mt-1 truncate">{user.email}</p>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
+              className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-red-600 text-white font-semibold text-sm md:text-base rounded-lg hover:bg-red-700 transition-colors flex-shrink-0"
             >
-              <LogOut className="w-5 h-5" />
-              Logout
+              <LogOut className="w-4 md:w-5 h-4 md:h-5" />
+              <span className="hidden sm:inline">Logout</span>
+              <span className="sm:hidden">→</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200 sticky top-32 z-40">
+      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <div className="flex gap-8">
             <button
