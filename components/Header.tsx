@@ -84,16 +84,24 @@ export default function Header() {
             pageUrl: window.location.pathname,
           }),
         });
+        console.log('[Header] Track response:', trackRes.status);
 
         // Fetch real-time stats
         const res = await fetch('/api/stats');
+        console.log('[Header] Stats response:', res.status);
         if (res.ok) {
           const data = await res.json();
-          setStats(data);
+          console.log('[Header] Stats data:', data);
+          setStats({
+            onlineNow: data.onlineNow || 0,
+            todayVisitors: data.todayVisitors || 0,
+            allTimeVisitors: data.allTimeVisitors || 0,
+          });
+        } else {
+          console.error('[Header] Stats fetch failed:', res.status);
         }
       } catch (error) {
-        // Silently fail - don't break the app if stats tracking fails
-        console.debug('Stats tracking unavailable');
+        console.error('[Header] Error:', error);
       }
     };
 
