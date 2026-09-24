@@ -376,6 +376,7 @@ export async function GET(req: NextRequest) {
       headers: {
         'apikey': supabaseKey,
         'Authorization': `Bearer ${supabaseKey}`,
+        'Prefer': 'count=exact',
       },
     });
 
@@ -406,31 +407,13 @@ export async function GET(req: NextRequest) {
       premiumPosition: null,
     }));
 
-    let countUrl = `${supabaseUrl}/rest/v1/listings?select=count()`;
-
-    if (category && category !== 'All') {
-      countUrl += `&category=eq.${encodeURIComponent(category)}`;
-    }
-
-    if (platforms.length > 0) {
-      const platformFilter = platforms.map(p => `platform.eq.${encodeURIComponent(p)}`).join(',');
-      countUrl += `&or=(${platformFilter})`;
-    }
-
-    const countResponse = await fetch(countUrl, {
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Prefer': 'count=exact',
-      },
-    });
-
+    // Get total from the content-range header of the main response
     let total = 0;
-    if (countResponse.ok) {
-      const countHeader = countResponse.headers.get('content-range');
-      if (countHeader) {
-        const totalStr = countHeader.split('/')[1];
-        total = parseInt(totalStr) || 0;
+    const contentRange = response.headers.get('content-range');
+    if (contentRange) {
+      const parts = contentRange.split('/');
+      if (parts[1]) {
+        total = parseInt(parts[1]) || 0;
       }
     }
 
