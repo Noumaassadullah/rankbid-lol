@@ -34,6 +34,7 @@ interface Vote {
     id: string;
     title: string;
     description: string;
+    url?: string;
     totalVotes: number;
   };
 }
@@ -248,9 +249,16 @@ export default function ProfilePage() {
                 ) : (
                   <div className="space-y-3">
                     {votes.map((vote, idx) => {
-                      const faviconUrl = vote.listing?.id
-                        ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(vote.listing?.title || 'rankbid.com')}&sz=32`
-                        : 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+                      let faviconUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+
+                      if (vote.listing?.url) {
+                        try {
+                          const urlObj = new URL(vote.listing.url);
+                          faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(urlObj.hostname)}&sz=32`;
+                        } catch {
+                          // If URL parsing fails, use default
+                        }
+                      }
 
                       return (
                         <Link

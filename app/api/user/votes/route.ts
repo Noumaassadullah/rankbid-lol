@@ -72,6 +72,7 @@ export async function GET(request: NextRequest) {
                 id: listingData.id,
                 title: listingData.title,
                 description: listingData.description,
+                url: listingData.location || listingData.url,
                 totalVotes: listingData.total_votes || 0,
               };
             }
