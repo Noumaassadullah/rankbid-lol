@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Header from '@/components/Header';
 
 export default function ClaimPage() {
   const [step, setStep] = useState(1);
@@ -14,6 +15,7 @@ export default function ClaimPage() {
 
   return (
     <div className="bg-white dark:bg-black min-h-screen">
+      <Header />
       <div className="bg-black dark:bg-white px-4 sm:px-6 py-20 md:py-32">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-6xl md:text-7xl font-black text-white dark:text-black mb-4 leading-none">CLAIM YOUR RANK</h1>
@@ -48,7 +50,7 @@ export default function ClaimPage() {
                   placeholder="example.com or @yourproduct"
                   value={formData.url}
                   onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                  className="w-full bg-white dark:bg-black text-black dark:text-white placeholder-gray-600 dark:placeholder-gray-400 px-6 py-4 font-bold text-lg"
+                  className="w-full bg-white dark:bg-black text-black dark:text-white placeholder-gray-600 dark:placeholder-gray-400 px-6 py-4 font-bold text-lg border-4 border-black dark:border-white"
                 />
               </div>
 
@@ -56,7 +58,7 @@ export default function ClaimPage() {
                 <label className="block text-sm font-black text-black dark:text-white mb-3">Description</label>
                 <textarea
                   placeholder="What does it do?"
-                  className="w-full bg-white dark:bg-black text-black dark:text-white placeholder-gray-600 dark:placeholder-gray-400 px-6 py-4 font-bold text-lg"
+                  className="w-full bg-white dark:bg-black text-black dark:text-white placeholder-gray-600 dark:placeholder-gray-400 px-6 py-4 font-bold text-lg border-4 border-black dark:border-white"
                   rows={4}
                 />
               </div>
@@ -133,7 +135,7 @@ export default function ClaimPage() {
                   placeholder="500"
                   value={formData.amount}
                   onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                  className="w-full bg-white dark:bg-black text-black dark:text-white placeholder-gray-600 dark:placeholder-gray-400 pl-16 pr-6 py-4 font-black text-3xl"
+                  className="w-full bg-white dark:bg-black text-black dark:text-white placeholder-gray-600 dark:placeholder-gray-400 pl-16 pr-6 py-4 font-black text-3xl border-4 border-black dark:border-white"
                 />
               </div>
             </div>
@@ -161,25 +163,25 @@ export default function ClaimPage() {
         )}
 
         {/* Benefits */}
-        <div className="mt-20 grid md:grid-cols-3 gap-8">
+        <div className="mt-20 grid md:grid-cols-3 gap-6 md:gap-8">
           {[
             { title: 'INSTANT', desc: 'Appear on leaderboard immediately' },
             { title: 'VISIBLE', desc: 'Seen by thousands daily' },
             { title: 'REAL TRAFFIC', desc: 'Genuine user interest' }
           ].map((benefit, idx) => (
-            <div key={idx} className="card-neobrutalism shadow-neobrutalism text-center">
-              <h3 className="text-3xl font-black text-black dark:text-white mb-3">{benefit.title}</h3>
-              <p className="font-bold text-black dark:text-white">{benefit.desc}</p>
+            <div key={idx} className="card-neobrutalism shadow-neobrutalism text-center p-6 md:p-8">
+              <h3 className="text-2xl md:text-3xl font-black text-black dark:text-white mb-4 leading-tight">{benefit.title}</h3>
+              <p className="text-sm md:text-base font-bold text-black dark:text-white leading-relaxed">{benefit.desc}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* CTA */}
-      <div className="bg-black dark:bg-white px-4 sm:px-6 py-20 mt-20">
+      <div className="bg-black dark:bg-white px-4 sm:px-6 py-20 md:py-28 mt-20 border-t-4 border-black dark:border-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl font-black text-white dark:text-black mb-8 leading-none">THE CLOCK IS TICKING</h2>
-          <p className="text-lg font-bold text-white dark:text-black">Every second someone else is bidding for #1.</p>
+          <h2 className="text-5xl md:text-7xl font-black text-white dark:text-black mb-6 leading-tight">THE CLOCK IS TICKING</h2>
+          <p className="text-lg md:text-xl font-bold text-white dark:text-black">Every second someone else is bidding for #1.</p>
         </div>
       </div>
     </div>
