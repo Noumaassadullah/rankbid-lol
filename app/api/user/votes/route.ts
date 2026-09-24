@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,52 +12,75 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const votes = await prisma.userVote.findMany({
-      where: { userId },
-      orderBy: { votedAt: 'desc' },
-    });
-
-    // Get listing details from Supabase for each vote
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+    if (!supabaseUrl || !supabaseKey) {
+      return NextResponse.json(
+        { votes: [] },
+        { status: 200 }
+      );
+    }
+
+    // Fetch user votes from Supabase
+    console.log('Fetching votes for userId:', userId);
+    const votesRes = await fetch(
+      `${supabaseUrl}/rest/v1/user_votes?user_id=eq.${userId}&order=voted_at.desc`,
+      {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+        },
+      }
+    );
+
+    if (!votesRes.ok) {
+      console.error('Failed to fetch votes from Supabase:', votesRes.status);
+      return NextResponse.json(
+        { votes: [] },
+        { status: 200 }
+      );
+    }
+
+    const userVotes = await votesRes.json();
+    console.log('Found user votes:', userVotes.length);
+
+    // Get listing details for each vote
     const formattedVotes = await Promise.all(
-      votes.map(async (vote) => {
+      userVotes.map(async (vote: any) => {
         let listing = null;
 
-        if (supabaseUrl && supabaseKey) {
-          try {
-            const response = await fetch(
-              `${supabaseUrl}/rest/v1/listings?id=eq.${vote.listingId}`,
-              {
-                headers: {
-                  'apikey': supabaseKey,
-                  'Authorization': `Bearer ${supabaseKey}`,
-                },
-              }
-            );
-
-            if (response.ok) {
-              const listings = await response.json();
-              if (listings.length > 0) {
-                const listingData = listings[0];
-                listing = {
-                  id: listingData.id,
-                  title: listingData.title,
-                  description: listingData.description,
-                  totalVotes: listingData.total_votes || 0,
-                };
-              }
+        try {
+          const response = await fetch(
+            `${supabaseUrl}/rest/v1/listings?id=eq.${vote.listing_id}`,
+            {
+              headers: {
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`,
+              },
             }
-          } catch (err) {
-            console.error('Error fetching listing from Supabase:', err);
+          );
+
+          if (response.ok) {
+            const listings = await response.json();
+            if (listings.length > 0) {
+              const listingData = listings[0];
+              listing = {
+                id: listingData.id,
+                title: listingData.title,
+                description: listingData.description,
+                totalVotes: listingData.total_votes || 0,
+              };
+            }
           }
+        } catch (err) {
+          console.error('Error fetching listing:', err);
         }
 
         return {
           id: vote.id,
-          listingId: vote.listingId,
-          votedAt: vote.votedAt,
+          listingId: vote.listing_id,
+          votedAt: vote.voted_at,
           listing,
         };
       })

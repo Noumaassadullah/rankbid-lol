@@ -70,6 +70,35 @@ export async function POST(req: NextRequest) {
     }
     console.log('Vote created successfully');
 
+    // Also create UserVote record if userId is provided
+    if (userId) {
+      try {
+        console.log('Creating UserVote for userId:', userId);
+        const userVoteRes = await fetch(`${supabaseUrl}/rest/v1/user_votes`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            listing_id: listingId,
+            voted_at: new Date().toISOString(),
+          }),
+        });
+
+        if (userVoteRes.ok) {
+          console.log('UserVote created successfully');
+        } else {
+          console.error('Failed to insert user vote:', await userVoteRes.text());
+        }
+      } catch (error) {
+        console.error('Error creating user vote:', error);
+      }
+    }
+
     // Get vote counts
     console.log('Counting votes...');
     const today = new Date();
