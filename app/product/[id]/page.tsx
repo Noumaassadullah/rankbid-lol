@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import { useState, useEffect } from 'react';
 import { use } from 'react';
 import { ArrowUpRight, TrendingUp, Eye, DollarSign, Share2, Copy, Check } from 'lucide-react';
+import StatusCardModal from '@/components/StatusCardModal';
 
 interface Listing {
   id: string;
@@ -26,6 +27,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
   const [loading, setLoading] = useState(true);
   const [allListings, setAllListings] = useState<Listing[]>([]);
   const [copied, setCopied] = useState(false);
+  const [showStatusCard, setShowStatusCard] = useState(false);
 
   useEffect(() => {
     fetchProduct();
@@ -238,6 +240,14 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                       </>
                     )}
                   </button>
+
+                  <button
+                    onClick={() => setShowStatusCard(true)}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 rounded-xl transition-all font-bold text-xs uppercase active:scale-95 shadow-sm"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    Rank Card
+                  </button>
                 </div>
               </div>
             </div>
@@ -340,6 +350,24 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           </div>
         </div>
       </div>
+
+      {/* Status Card Modal */}
+      {product && (
+        <StatusCardModal
+          isOpen={showStatusCard}
+          onClose={() => setShowStatusCard(false)}
+          product={{
+            id: product.id,
+            title: product.title,
+            description: product.description,
+            category: product.category,
+            platform: product.platform,
+            totalVotes: product.totalVotes,
+            rank: allTimeRank,
+          }}
+          productUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/product/${product.id}`}
+        />
+      )}
     </>
   );
 }
