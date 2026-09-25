@@ -140,10 +140,11 @@ export default function StatusCardModal({ isOpen, onClose, product, productUrl }
                 style={{
                   width: '420px',
                   height: 'auto',
-                  padding: '32px',
+                  padding: '32px 32px 48px 32px',
                   backgroundColor: '#2d3748',
                   borderColor: '#4a5568',
-                  background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)'
+                  background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
+                  boxSizing: 'border-box'
                 }}
               >
                 {/* Top Badge */}
