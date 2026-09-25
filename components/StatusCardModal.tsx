@@ -102,7 +102,7 @@ export default function StatusCardModal({ isOpen, onClose, product, productUrl }
             <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-black">🏆</span>
             </div>
-            <h2 className="text-white font-black text-sm">Share Your Rank Card</h2>
+            <h2 className="text-white font-black" style={{ fontSize: '16px' }}>Share Your Rank Card</h2>
           </div>
           <button
             onClick={onClose}
