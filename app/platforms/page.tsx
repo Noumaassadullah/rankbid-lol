@@ -25,7 +25,7 @@ const PLATFORMS = [
   { id: 'linkedin', label: 'LinkedIn', icon: '/linkedin.png', color: '#0A66C2', description: 'LinkedIn profiles & companies' },
   { id: 'twitter', label: 'X / Twitter', icon: '/twitter.png', color: '#000000', description: 'Twitter/X profiles & accounts' },
   { id: 'facebook', label: 'Facebook', icon: '/facebook.png', color: '#1877F2', description: 'Facebook pages & profiles' },
-  { id: 'tiktok', label: 'TikTok', icon: '/twitter.png', color: '#000000', description: 'TikTok creators & accounts' },
+  { id: 'tiktok', label: 'TikTok', icon: '/tiktok.png', color: '#000000', description: 'TikTok creators & accounts' },
   { id: 'website', label: 'Websites', icon: '/web.png', color: '#0F3460', description: 'Web products & services' },
 ];
 
