@@ -147,7 +147,17 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
   const getTotalScore = (p: Listing) => (p.totalVotes || 0);
 
-  const allTimeRank = allListings.filter(l => (l.totalVotes || 0) > (product.totalVotes || 0)).length + 1;
+  const allTimeRank = allListings.filter(l => {
+    const currentVotes = l.totalVotes || 0;
+    const productVotes = product.totalVotes || 0;
+
+    if (currentVotes !== productVotes) {
+      return currentVotes > productVotes;
+    }
+
+    // Tie-breaker: earlier creation date ranks higher
+    return new Date(l.createdAt).getTime() < new Date(product.createdAt).getTime();
+  }).length + 1;
 
   return (
     <>

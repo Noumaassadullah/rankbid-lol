@@ -21,12 +21,12 @@ interface Listing {
 }
 
 const PLATFORMS = [
-  { id: 'instagram', label: 'Instagram', icon: 'Instagram', color: '#E4405F', description: 'Instagram profiles & creators' },
-  { id: 'linkedin', label: 'LinkedIn', icon: 'LinkedIn', color: '#0A66C2', description: 'LinkedIn profiles & companies' },
-  { id: 'twitter', label: 'X / Twitter', icon: 'Twitter', color: '#000000', description: 'Twitter/X profiles & accounts' },
-  { id: 'facebook', label: 'Facebook', icon: 'Facebook', color: '#1877F2', description: 'Facebook pages & profiles' },
-  { id: 'tiktok', label: 'TikTok', icon: 'TikTok', color: '#000000', description: 'TikTok creators & accounts' },
-  { id: 'website', label: 'Websites', icon: 'Globe', color: '#0F3460', description: 'Web products & services' },
+  { id: 'instagram', label: 'Instagram', icon: '/instagram.png', color: '#E4405F', description: 'Instagram profiles & creators' },
+  { id: 'linkedin', label: 'LinkedIn', icon: '/linkedin.png', color: '#0A66C2', description: 'LinkedIn profiles & companies' },
+  { id: 'twitter', label: 'X / Twitter', icon: '/twitter.png', color: '#000000', description: 'Twitter/X profiles & accounts' },
+  { id: 'facebook', label: 'Facebook', icon: '/facebook.png', color: '#1877F2', description: 'Facebook pages & profiles' },
+  { id: 'tiktok', label: 'TikTok', icon: '/twitter.png', color: '#000000', description: 'TikTok creators & accounts' },
+  { id: 'website', label: 'Websites', icon: '/web.png', color: '#0F3460', description: 'Web products & services' },
 ];
 
 const Icons = {
@@ -198,62 +198,52 @@ export default function PlatformsPage() {
         <section className="bg-white py-4 sm:py-6 md:py-10 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
-              {PLATFORMS.map(platform => {
-                const IconComponent = Icons[platform.icon as keyof typeof Icons];
-                return (
-                  <button
-                    key={platform.id}
-                    onClick={() => setSelectedPlatform(platform.id)}
-                    className={`p-2 sm:p-3 md:p-4 rounded-xl transition-all duration-200 border-2 hover:scale-105 active:scale-95 flex flex-col items-center gap-1.5 sm:gap-2 text-center ${
-                      selectedPlatform === platform.id
-                        ? 'bg-[#0F3460] text-white border-[#0F3460] shadow-lg'
-                        : 'bg-gray-50 text-[#1F2937] border-gray-200 hover:border-[#0F3460]/50'
-                    }`}
-                  >
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10" style={{color: selectedPlatform === platform.id ? 'white' : platform.color}}>
-                      <IconComponent />
-                    </div>
-                    <span className="font-black text-xs uppercase">{platform.label}</span>
-                    <span className={`text-xs font-semibold ${selectedPlatform === platform.id ? 'opacity-80' : 'text-[#1F2937]/60'}`}>
-                      {listings.filter(l =>
-                        platform.id === 'twitter'
-                          ? ['twitter', 'x'].includes(l.platform)
-                          : l.platform === platform.id
-                      ).length} listings
-                    </span>
-                  </button>
-                );
-              })}
+              {PLATFORMS.map(platform => (
+                <button
+                  key={platform.id}
+                  onClick={() => setSelectedPlatform(platform.id)}
+                  className={`p-2 sm:p-3 md:p-4 rounded-xl transition-all duration-200 border-2 hover:scale-105 active:scale-95 flex flex-col items-center gap-1.5 sm:gap-2 text-center ${
+                    selectedPlatform === platform.id
+                      ? 'bg-[#0F3460] text-white border-[#0F3460] shadow-lg'
+                      : 'bg-gray-50 text-[#1F2937] border-gray-200 hover:border-[#0F3460]/50'
+                  }`}
+                >
+                  <img src={platform.icon} alt={platform.label} className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 object-contain" />
+                  <span className="font-black text-xs uppercase">{platform.label}</span>
+                  <span className={`text-xs font-semibold ${selectedPlatform === platform.id ? 'opacity-80' : 'text-[#1F2937]/60'}`}>
+                    {listings.filter(l =>
+                      platform.id === 'twitter'
+                        ? ['twitter', 'x'].includes(l.platform)
+                        : l.platform === platform.id
+                    ).length} listings
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
         </section>
 
         {/* PLATFORM HEADER */}
-        {selectedPlatformInfo && (() => {
-          const IconComponent = Icons[selectedPlatformInfo.icon as keyof typeof Icons];
-          return (
-            <section className={`bg-gradient-to-r py-4 sm:py-6 md:py-10 border-b border-gray-200`} style={{
-              backgroundImage: `linear-gradient(135deg, ${selectedPlatformInfo.color}15 0%, ${selectedPlatformInfo.color}05 100%)`
-            }}>
-              <div className="max-w-6xl mx-auto px-4 md:px-6">
-                <div className="flex items-center gap-4">
-                  <div
-                    className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-md"
-                    style={{backgroundColor: selectedPlatformInfo.color + '20', color: selectedPlatformInfo.color}}
-                  >
-                    <div className="w-8 h-8 md:w-10 md:h-10">
-                      <IconComponent />
-                    </div>
-                  </div>
-                  <div>
-                    <h2 className="text-2xl md:text-3xl font-black text-[#1F2937] mb-1">{selectedPlatformInfo.label}</h2>
-                    <p className="text-sm md:text-base text-[#1F2937]/70">{selectedPlatformInfo.description}</p>
-                  </div>
+        {selectedPlatformInfo && (
+          <section className={`bg-gradient-to-r py-4 sm:py-6 md:py-10 border-b border-gray-200`} style={{
+            backgroundImage: `linear-gradient(135deg, ${selectedPlatformInfo.color}15 0%, ${selectedPlatformInfo.color}05 100%)`
+          }}>
+            <div className="max-w-6xl mx-auto px-4 md:px-6">
+              <div className="flex items-center gap-4">
+                <div
+                  className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-md p-2"
+                  style={{backgroundColor: selectedPlatformInfo.color + '20'}}
+                >
+                  <img src={selectedPlatformInfo.icon} alt={selectedPlatformInfo.label} className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+                </div>
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-black text-[#1F2937] mb-1">{selectedPlatformInfo.label}</h2>
+                  <p className="text-sm md:text-base text-[#1F2937]/70">{selectedPlatformInfo.description}</p>
                 </div>
               </div>
-            </section>
-          );
-        })()}
+            </div>
+          </section>
+        )}
 
         {/* LISTINGS */}
         <section className="bg-white py-8 md:py-12">
