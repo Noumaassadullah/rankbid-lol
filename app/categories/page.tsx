@@ -2,7 +2,7 @@
 
 import Header from '@/components/Header';
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 interface Listing {
   id: string;
@@ -20,6 +20,7 @@ const CATEGORIES = ['Marketing', 'SEO', 'Productivity', 'Agents', 'Crypto', 'Dev
 
 export default function CategoriesPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('Marketing');
@@ -30,6 +31,11 @@ export default function CategoriesPage() {
       setSelectedCategory(categoryParam);
     }
   }, []);
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    router.push(`/categories?category=${encodeURIComponent(category)}`);
+  };
 
   useEffect(() => {
     fetchListings();
@@ -73,7 +79,7 @@ export default function CategoriesPage() {
               {CATEGORIES.map(cat => (
                 <button
                   key={cat}
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => handleCategoryChange(cat)}
                   className={`px-4 py-2 font-bold text-xs border-3 transition-all ${
                     selectedCategory === cat
                       ? 'bg-[#0F3460] text-white border-[#0F3460]'
