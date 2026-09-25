@@ -148,7 +148,7 @@ export default function StatusCardModal({ isOpen, onClose, product, productUrl }
 
                 {/* Product Info */}
                 <div>
-                  <h3 className="text-lg font-black text-white mb-1 line-clamp-2">{product.title}</h3>
+                  <h3 className="font-black text-white mb-1 line-clamp-2" style={{ fontSize: '25px' }}>{product.title}</h3>
                   <p className="text-gray-400 text-xs line-clamp-1">{product.category}</p>
                 </div>
 
