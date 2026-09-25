@@ -92,8 +92,18 @@ export default function ProfilePage() {
     }
   };
 
-  const calculateRank = (totalVotes: number): number => {
-    return allListings.filter(l => (l.totalVotes || 0) > totalVotes).length + 1;
+  const calculateRank = (listing: Listing): number => {
+    return allListings.filter(l => {
+      const currentVotes = l.totalVotes || 0;
+      const listingVotes = listing.totalVotes || 0;
+
+      if (currentVotes !== listingVotes) {
+        return currentVotes > listingVotes;
+      }
+
+      // Tie-breaker: earlier creation date ranks higher
+      return new Date(l.createdAt).getTime() < new Date(listing.createdAt).getTime();
+    }).length + 1;
   };
 
   const handleLogout = () => {
