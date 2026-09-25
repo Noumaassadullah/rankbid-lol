@@ -9,6 +9,7 @@ import VerifiedListingCard from '@/components/VerifiedListingCard';
 import PremiumListingModal from '@/components/PremiumListingModal';
 import LoginModal from '@/components/LoginModal';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel';
+import StatusCardModal from '@/components/StatusCardModal';
 import { getPlatformIcon } from '@/lib/platformIcons';
 import { useState, useEffect, useCallback } from 'react';
 
@@ -182,6 +183,9 @@ export default function Home() {
   const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const [selectedListingForPremium, setSelectedListingForPremium] = useState<Listing | null>(null);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [shareCardOpen, setShareCardOpen] = useState(false);
+  const [selectedListingForShare, setSelectedListingForShare] = useState<Listing | null>(null);
+  const [allListings, setAllListings] = useState<Listing[]>([]);
 
   const [formData, setFormData] = useState({
     url: '',
@@ -231,6 +235,23 @@ export default function Home() {
 
     setCurrentPage(1);
     fetchListings(1);
+
+    // Fetch all listings for rank calculation
+    const fetchAllListings = async () => {
+      try {
+        const res = await fetch('/api/listings/submit?limit=1000&sort=totalVotes');
+        if (res.ok) {
+          const text = await res.text();
+          if (text) {
+            const data = JSON.parse(text);
+            setAllListings(data.listings || []);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch all listings:', error);
+      }
+    };
+    fetchAllListings();
   }, [activeTimeFilter, selectedCategory]);
 
   const handleVote = useCallback(async (listingId: string) => {
@@ -327,6 +348,10 @@ export default function Home() {
       setLoading(false);
     }
   }, [activeTimeFilter, selectedCategory]);
+
+  const calculateRank = (totalVotes: number): number => {
+    return allListings.filter(l => (l.totalVotes || 0) > totalVotes).length + 1;
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -892,6 +917,17 @@ export default function Home() {
                               Login to Vote
                             </a>
                           )}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setSelectedListingForShare(listing);
+                              setShareCardOpen(true);
+                            }}
+                            title="Share this product"
+                            className="text-xs font-semibold px-2 py-1 bg-white border border-orange-300 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
+                          >
+                            📤 Share
+                          </button>
                           {!listing.isPremium && (
                             <button
                               onClick={(e) => {
@@ -1180,6 +1216,27 @@ export default function Home() {
         onClose={() => setLoginModalOpen(false)}
         title="Login Required to Submit"
       />
+
+      {/* STATUS CARD MODAL */}
+      {selectedListingForShare && (
+        <StatusCardModal
+          isOpen={shareCardOpen}
+          onClose={() => {
+            setShareCardOpen(false);
+            setSelectedListingForShare(null);
+          }}
+          product={{
+            id: selectedListingForShare.id,
+            title: selectedListingForShare.title,
+            description: selectedListingForShare.description,
+            category: selectedListingForShare.category,
+            platform: selectedListingForShare.platform,
+            totalVotes: selectedListingForShare.totalVotes,
+            rank: calculateRank(selectedListingForShare.totalVotes || 0),
+          }}
+          productUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/product/${selectedListingForShare.id}`}
+        />
+      )}
 
       {/* TOAST NOTIFICATIONS */}
       <div className="fixed bottom-3 left-3 right-3 sm:bottom-4 md:bottom-6 md:right-6 md:left-auto z-50 space-y-2">

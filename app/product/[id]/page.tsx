@@ -246,7 +246,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                     className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 rounded-xl transition-all font-bold text-xs uppercase active:scale-95 shadow-sm"
                   >
                     <Share2 className="w-4 h-4" />
-                    Rank Card
+                    Share
                   </button>
                 </div>
               </div>
