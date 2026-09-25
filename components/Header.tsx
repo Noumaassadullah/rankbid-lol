@@ -240,7 +240,7 @@ export default function Header() {
       </header>
 
       {/* Category Filter - Professional */}
-      <div className="bg-gray-50 text-[#1F2937] border-b border-gray-200 sticky top-12 sm:top-14 md:top-16 z-30 overflow-x-auto">
+      <div className="bg-black text-white border-b border-gray-800 sticky top-12 sm:top-14 md:top-16 z-30 overflow-x-auto">
         <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-6 py-1.5 sm:py-2 md:py-3 flex gap-1 items-center">
           {CATEGORIES.map((cat) => {
             const Icon = cat.Icon;
@@ -254,7 +254,7 @@ export default function Header() {
                 className={`flex-shrink-0 px-1.5 sm:px-2.5 md:px-4 py-1 md:py-2 text-xs font-medium whitespace-nowrap flex items-center gap-0.5 sm:gap-1 md:gap-2 rounded-lg ${
                   isAll
                     ? 'bg-[orange-600] text-white shadow-sm'
-                    : 'bg-white text-[#1F2937] shadow-xs'
+                    : 'bg-gray-900 text-white shadow-xs'
                 }`}
                 title={cat.name}
               >
