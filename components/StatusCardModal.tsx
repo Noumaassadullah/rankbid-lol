@@ -36,22 +36,24 @@ export default function StatusCardModal({ isOpen, onClose, product, productUrl }
         useCORS: true,
         allowTaint: true,
         logging: false,
+        imageTimeout: 0,
       });
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `rankbid-${product.title.replace(/\s+/g, '-')}-rank-${product.rank}.png`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }
+
+      // Download using dataURL method
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `rankbid-${product.title.replace(/\s+/g, '-')}-rank-${product.rank}.png`;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
         setDownloading(false);
-      });
+      }, 100);
     } catch (error) {
       console.error('Failed to download image:', error);
+      alert('Failed to download image. Please try again.');
       setDownloading(false);
     }
   };
@@ -118,7 +120,7 @@ export default function StatusCardModal({ isOpen, onClose, product, productUrl }
               <div
                 ref={cardRef}
                 className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border-2 border-gray-700 p-4 space-y-3"
-                style={{ width: '320px' }}
+                style={{ width: '320px', height: 'auto' }}
               >
                 {/* Top Badge */}
                 <div className="flex items-center gap-2">
