@@ -9,6 +9,7 @@ import VerifiedListingCard from '@/components/VerifiedListingCard';
 import PremiumListingModal from '@/components/PremiumListingModal';
 import LoginModal from '@/components/LoginModal';
 import TestimonialsCarousel from '@/components/TestimonialsCarousel';
+import { getPlatformIcon } from '@/lib/platformIcons';
 import { useState, useEffect, useCallback } from 'react';
 
 interface Listing {
@@ -86,12 +87,12 @@ const CATEGORIES = [
 ];
 
 const PLATFORMS = [
-  { id: 'website', label: 'Website' },
-  { id: 'twitter', label: 'Twitter/X' },
-  { id: 'linkedin', label: 'LinkedIn' },
-  { id: 'facebook', label: 'Facebook' },
-  { id: 'instagram', label: 'Instagram' },
-  { id: 'tiktok', label: 'TikTok' }
+  { id: 'website', label: 'Website', icon: '/web.png' },
+  { id: 'twitter', label: 'Twitter/X', icon: '/twitter.png' },
+  { id: 'linkedin', label: 'LinkedIn', icon: '/linkedin.png' },
+  { id: 'facebook', label: 'Facebook', icon: '/facebook.png' },
+  { id: 'instagram', label: 'Instagram', icon: '/instagram.png' },
+  { id: 'tiktok', label: 'TikTok', icon: '/tiktok.png' }
 ];
 
 const getCategoryLabel = (categoryValue: string): string => {
@@ -602,7 +603,7 @@ export default function Home() {
                       : 'bg-white text-[#1F2937] border border-gray-300 hover:bg-orange-100'
                   }`}
                 >
-                  <Icons.Globe />
+                  <img src={platform.icon} alt={platform.label} className="w-4 h-4 sm:w-5 sm:h-5 object-contain" />
                   <span className="hidden sm:inline">{platform.label}</span>
                   <span className="sm:hidden">{platform.label.split('/')[0]}</span>
                 </button>

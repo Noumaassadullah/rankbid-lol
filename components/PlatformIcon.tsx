@@ -1,6 +1,6 @@
 'use client';
 
-import { FaTwitter, FaFacebook, FaInstagram, FaTiktok, FaGlobe } from 'react-icons/fa';
+import { getPlatformIcon } from '@/lib/platformIcons';
 
 interface PlatformIconProps {
   platform: string;
@@ -10,32 +10,15 @@ interface PlatformIconProps {
 
 export default function PlatformIcon({ platform, size = 24, className = '' }: PlatformIconProps) {
   const platformLower = (platform || '').toLowerCase();
-  const baseClasses = `transition-transform hover:scale-110 ${className}`;
+  const iconPath = getPlatformIcon(platformLower);
+  const sizeClass = `w-${size} h-${size}`;
 
-  const iconProps = {
-    size,
-    className: baseClasses
-  };
-
-  if (platformLower === 'twitter' || platformLower === 'x') {
-    return <FaTwitter {...iconProps} className={`text-black ${baseClasses}`} />;
-  }
-
-  if (platformLower === 'facebook') {
-    return <FaFacebook {...iconProps} className={`text-[#1877F2] ${baseClasses}`} />;
-  }
-
-  if (platformLower === 'instagram') {
-    return <FaInstagram {...iconProps} className={`text-pink-500 ${baseClasses}`} />;
-  }
-
-  if (platformLower === 'tiktok') {
-    return <FaTiktok {...iconProps} className={`text-black ${baseClasses}`} />;
-  }
-
-  if (platformLower === 'website') {
-    return <FaGlobe {...iconProps} className={`text-[#1F2937] ${baseClasses}`} />;
-  }
-
-  return <FaGlobe {...iconProps} className={`text-[#1F2937] ${baseClasses}`} />;
+  return (
+    <img
+      src={iconPath}
+      alt={platform}
+      className={`object-contain transition-transform hover:scale-110 ${className}`}
+      style={{ width: `${size}px`, height: `${size}px` }}
+    />
+  );
 }
