@@ -109,11 +109,11 @@ export default function CategoriesPage() {
                 <p className="text-[#1F2937]/60 font-semibold mt-2">Loading products...</p>
               </div>
             ) : categoryListings.length === 0 ? (
-              <div className="text-center py-12 border-gray-300 border-4 bg-gray-50">
+              <div className="text-center py-12 border-gray-300 border-4 bg-gray-50 rounded-lg">
                 <p className="text-sm font-bold text-[#1F2937] mb-4">No products yet in {selectedCategory}</p>
                 <button
                   onClick={() => window.location.href = '/'}
-                  className="px-6 py-2 bg-[#0F3460] text-white font-bold text-xs border-[#0F3460] border-3 hover:scale-105 transition-all duration-200"
+                  className="px-6 py-2 bg-[#0F3460] text-white font-bold text-xs border-[#0F3460] border-3 hover:scale-105 transition-all duration-200 rounded-lg"
                 >
                   Submit a Product
                 </button>
@@ -126,7 +126,7 @@ export default function CategoriesPage() {
                     href={listing.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-4 bg-white border-gray-300 border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
+                    className="flex items-center justify-between p-4 bg-white border-gray-300 border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer rounded-lg"
                   >
                     <div className="flex items-center gap-4 flex-1">
                       <div className="w-10 h-10 bg-[#0F3460] text-white font-black rounded-lg flex items-center justify-center text-sm">
