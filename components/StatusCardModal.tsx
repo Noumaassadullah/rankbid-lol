@@ -136,37 +136,43 @@ export default function StatusCardModal({ isOpen, onClose, product, productUrl }
             <div className="flex justify-center">
               <div
                 ref={cardRef}
-                className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border-2 border-gray-700 p-4 space-y-3"
-                style={{ width: '320px', height: 'auto' }}
+                className="rounded-xl border-2 p-4 space-y-3"
+                style={{
+                  width: '320px',
+                  height: 'auto',
+                  backgroundColor: '#2d3748',
+                  borderColor: '#4a5568',
+                  background: 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)'
+                }}
               >
                 {/* Top Badge */}
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-black rounded-full">
+                  <span className="px-2 py-1 text-white text-xs font-black rounded-full" style={{ backgroundColor: '#f97316' }}>
                     🔥 RANKED
                   </span>
                 </div>
 
                 {/* Product Info */}
                 <div>
-                  <h3 className="font-black text-white mb-1 line-clamp-2" style={{ fontSize: '25px' }}>{product.title}</h3>
-                  <p className="text-gray-400 text-xs line-clamp-1">{product.category}</p>
+                  <h3 className="font-black mb-1 line-clamp-2" style={{ fontSize: '25px', color: '#ffffff' }}>{product.title}</h3>
+                  <p className="text-xs line-clamp-1" style={{ color: '#9ca3af' }}>{product.category}</p>
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-700">
+                <div className="grid grid-cols-2 gap-3 pt-3" style={{ borderTopColor: '#4a5568', borderTopWidth: '1px' }}>
                   <div>
-                    <p className="text-gray-500 text-xs font-black mb-1">RANKING</p>
-                    <p className="text-3xl font-black text-orange-500">#{product.rank}</p>
+                    <p className="text-xs font-black mb-1" style={{ color: '#a0aec0' }}>RANKING</p>
+                    <p className="text-3xl font-black" style={{ color: '#f97316' }}>#{product.rank}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs font-black mb-1">VOTES</p>
-                    <p className="text-3xl font-black text-blue-400">{product.totalVotes || 0}</p>
+                    <p className="text-xs font-black mb-1" style={{ color: '#a0aec0' }}>VOTES</p>
+                    <p className="text-3xl font-black" style={{ color: '#60a5fa' }}>{product.totalVotes || 0}</p>
                   </div>
                 </div>
 
                 {/* Footer */}
-                <div className="pt-3 border-t border-gray-700">
-                  <p className="text-gray-500 text-xs font-bold">RANKBID</p>
+                <div className="pt-3" style={{ borderTopColor: '#4a5568', borderTopWidth: '1px' }}>
+                  <p className="text-xs font-bold" style={{ color: '#a0aec0' }}>RANKBID</p>
                 </div>
               </div>
             </div>
