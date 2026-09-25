@@ -39,6 +39,19 @@ interface Vote {
   };
 }
 
+const Icons = {
+  Heart: () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+    </svg>
+  ),
+  Tag: () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+    </svg>
+  ),
+};
+
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -202,42 +215,85 @@ export default function ProfilePage() {
                     </Link>
                   </div>
                 ) : (
-                  <div className="grid gap-4">
+                  <div className="space-y-3">
                     {submissions.map((listing) => {
                       const rank = calculateRank(listing.totalVotes);
+                      let faviconUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+                      try {
+                        if (listing.url) {
+                          const urlObj = new URL(listing.url);
+                          faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(urlObj.hostname)}&sz=32`;
+                        }
+                      } catch {
+                        // If URL parsing fails, use placeholder
+                      }
+
+                      const platformLabel = listing.platform || 'website';
+
                       return (
                         <Link
                           key={listing.id}
                           href={`/product/${listing.id}`}
-                          className="bg-white rounded-lg p-6 border border-gray-200 hover:border-[#0F3460]/400 hover:shadow-md transition-all"
+                          className="flex items-center justify-between p-3 bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md hover:border-[#0F3460]/30 transition-all duration-200 group cursor-pointer gap-4"
                         >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <h3 className="text-lg font-bold text-gray-900">
-                                  {listing.title || (listing.handle ? `@${listing.handle}` : listing.url)}
-                                </h3>
-                                <span className="bg-[#0F3460] text-white px-3 py-1 rounded-lg text-sm font-bold">
-                                  #{rank}
-                                </span>
-                              </div>
-                              <p className="text-gray-600 text-sm mb-3 line-clamp-2">{listing.description}</p>
-                              <div className="flex gap-4 flex-wrap text-sm">
-                                <span className="text-gray-600">
-                                  <span className="font-semibold">{listing.totalVotes}</span> total votes
-                                </span>
-                                <span className="text-gray-600">
-                                  <span className="font-semibold">{listing.dayVotes}</span> today
-                                </span>
-                                <span className="bg-[#0F3460]/10 text-[#0F3460]/700 px-2 py-1 rounded">
-                                  {listing.platform}
-                                </span>
-                                <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                                  {listing.category}
-                                </span>
-                              </div>
+                          {/* Left Section: Position Badge and Favicon */}
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <div className="w-9 h-9 bg-[#0F3460] text-white font-black text-xs rounded-lg flex items-center justify-center flex-shrink-0">
+                              #{rank}
                             </div>
-                            <ChevronRight className="w-5 h-5 text-gray-400 ml-4 flex-shrink-0" />
+                            {listing.url && (
+                              <img src={faviconUrl} alt="favicon" className="w-6 h-6 rounded flex-shrink-0" onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'; }} />
+                            )}
+
+                            {/* Title, Category and Platform Icon - All inline */}
+                            <div className="flex-1 min-w-0 flex items-center gap-2">
+                              <p className="text-xs font-semibold text-[#1F2937] truncate group-hover:text-[#0F3460] transition-colors">
+                                {listing.title || (listing.handle ? `@${listing.handle}` : listing.url)}
+                              </p>
+
+                              {/* Platform Icon */}
+                              <div className="w-4 h-4 flex-shrink-0" title={platformLabel}>
+                                <PlatformIcon platform={platformLabel} size={16} />
+                              </div>
+
+                              {/* Category Tag */}
+                              {listing.category && (
+                                <div className="flex items-center gap-1 flex-shrink-0">
+                                  <Icons.Tag />
+                                  <p className="text-xs text-[#1F2937]/70 font-semibold">{listing.category}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Right Section: Vote Count and Actions */}
+                          <div className="flex items-center gap-3 ml-2 flex-shrink-0">
+                            {/* Vote Count */}
+                            <p className="text-lg font-black text-[#0F3460] min-w-[1.5rem] text-right">
+                              {listing.totalVotes}
+                            </p>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-2 flex-shrink-0">
+                              <button
+                                className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 active:scale-95 flex items-center gap-1 whitespace-nowrap bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white`}
+                              >
+                                <Icons.Heart />
+                                Vote
+                              </button>
+
+                              <button
+                                className="text-xs font-semibold px-3 py-1.5 bg-white border border-orange-300 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
+                              >
+                                📤 Share
+                              </button>
+
+                              <button
+                                className="text-xs font-semibold px-3 py-1.5 bg-white border border-gray-300 text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
+                              >
+                                ⭐ Premium
+                              </button>
+                            </div>
                           </div>
                         </Link>
                       );
@@ -284,36 +340,55 @@ export default function ProfilePage() {
                         <Link
                           key={vote.id}
                           href={`/product/${vote.listingId}`}
-                          className="flex items-center justify-between p-4 bg-white border border-gray-200 shadow-sm rounded-lg hover:shadow-md hover:border-[#0F3460]/20 transition-all duration-200 group cursor-pointer"
+                          className="flex items-center justify-between p-3 bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md hover:border-[#0F3460]/30 transition-all duration-200 group cursor-pointer gap-4"
                         >
-                          <div className="flex items-center gap-3 flex-1 min-w-0">
-                            <div className="w-8 h-8 bg-[#0F3460] text-white font-semibold text-xs rounded-lg flex items-center justify-center flex-shrink-0">
+                          {/* Left Section: Vote Badge and Favicon */}
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <div className="w-9 h-9 bg-[#0F3460] text-white font-black text-xs rounded-lg flex items-center justify-center flex-shrink-0">
                               ♥
                             </div>
                             <img
                               src={faviconUrl}
                               alt="favicon"
-                              className="w-6 h-6 rounded-md flex-shrink-0"
+                              className="w-6 h-6 rounded flex-shrink-0"
                               onError={(e) => {
                                 e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
                               }}
                             />
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
-                                <p className="text-xs font-semibold text-[#1F2937] truncate">
-                                  {vote.listing?.title || 'Product'}
-                                </p>
-                              </div>
-                              <p className="text-xs text-[#1F2937]/60 mt-0.5">
-                                Voted on {new Date(vote.votedAt).toLocaleDateString()}
-                              </p>
-                            </div>
+                            {/* Title */}
+                            <p className="text-xs font-semibold text-[#1F2937] truncate group-hover:text-[#0F3460] transition-colors flex-1 min-w-0">
+                              {vote.listing?.title || 'Product'}
+                            </p>
                           </div>
-                          <div className="text-right flex-shrink-0 ml-3">
-                            <p className="text-sm font-black text-[#0F3460]">
+
+                          {/* Right Section: Vote Count and Actions */}
+                          <div className="flex items-center gap-3 ml-2 flex-shrink-0">
+                            {/* Vote Count */}
+                            <p className="text-lg font-black text-[#0F3460] min-w-[1.5rem] text-right">
                               {vote.listing?.totalVotes || 0}
                             </p>
-                            <p className="text-xs text-[#1F2937]/60">votes</p>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-2 flex-shrink-0">
+                              <button
+                                className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 active:scale-95 flex items-center gap-1 whitespace-nowrap bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white`}
+                              >
+                                <Icons.Heart />
+                                Vote
+                              </button>
+
+                              <button
+                                className="text-xs font-semibold px-3 py-1.5 bg-white border border-orange-300 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
+                              >
+                                📤 Share
+                              </button>
+
+                              <button
+                                className="text-xs font-semibold px-3 py-1.5 bg-white border border-gray-300 text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
+                              >
+                                ⭐ Premium
+                              </button>
+                            </div>
                           </div>
                         </Link>
                       );

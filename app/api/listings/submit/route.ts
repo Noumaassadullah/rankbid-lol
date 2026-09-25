@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { extractMetadata } from '@/lib/metadata';
 import { query } from '@/lib/db';
 import { extractSocialHandle, formatSocialMediaUrl, isSocialMediaUrl } from '@/lib/social-utils';
+import { sendNewSubmissionEmail } from '@/lib/email';
 
 async function verifySocialMediaAccount(url: string): Promise<boolean> {
   try {
@@ -292,6 +293,16 @@ export async function POST(req: NextRequest) {
 
     const listing = await insertResponse.json();
     const responseData = listing[0] || listing;
+
+    await sendNewSubmissionEmail({
+      id: responseData.id,
+      title: metaTitle,
+      description: metaDescription,
+      category: category || 'Other',
+      platform: metaPlatform,
+      url: normalizedUrl,
+      imageUrl: imageUrl || undefined,
+    });
 
     return NextResponse.json(
       {

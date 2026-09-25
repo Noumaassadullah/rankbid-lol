@@ -202,13 +202,13 @@ export default function VerifiedListingCard({
                 {user.tier === 'verified' ? 'Verified Creator' : '⭐ Professional'}
               </p>
             </div>
-            <p className="font-bold text-slate-900 text-sm md:text-base mb-1 md:mb-3 truncate">{user.name || user.email}</p>
+            <p className="font-bold text-slate-900 text-sm md:text-base mb-1 md:mb-3 line-clamp-2 break-words">{user.name || user.email}</p>
 
             <div className="space-y-2 md:space-y-2.5 mb-3 md:mb-4 text-xs md:text-sm">
               {user.email && (
                 <a href={`mailto:${user.email}`} className={`flex items-center gap-2 font-semibold transition-all hover:translate-x-1`} style={{color: user.tier === 'verified' ? '#2563eb' : '#9333ea'}}>
                   <Icons.Mail />
-                  <span className="truncate hover:underline">{user.email}</span>
+                  <span className="truncate min-w-0 hover:underline">{user.email}</span>
                 </a>
               )}
               {user.phone && (

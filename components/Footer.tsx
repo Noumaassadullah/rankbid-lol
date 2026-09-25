@@ -117,7 +117,7 @@ export default function Footer() {
             </p>
             <a
               href="mailto:support@rankbid.pk"
-              className="inline-flex items-center gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-orange-100 text-[orange-600] font-semibold text-xs border border-gray-300 rounded-lg hover:bg-[orange-600] hover:text-white transition-all"
+              className="inline-flex items-center gap-2 text-xs font-bold text-[#1F2937]/70 hover:text-[#FFB28F] transition-colors"
             >
               <Icons.Mail />
               <span>Email</span>

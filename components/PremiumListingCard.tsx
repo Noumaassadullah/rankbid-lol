@@ -171,13 +171,13 @@ export default function PremiumListingCard({
           {/* Founder Info */}
           <div className="bg-white bg-opacity-90 p-3 md:p-4 border border-gray-300 rounded">
             <p className="font-black text-[#1F2937] text-xs md:text-sm mb-2 md:mb-3">Founder</p>
-            <p className="font-bold text-[#1F2937] text-xs md:text-sm mb-1 md:mb-2 truncate">{listing.founderName}</p>
+            <p className="font-bold text-[#1F2937] text-xs md:text-sm mb-1 md:mb-2 line-clamp-2 break-words">{listing.founderName}</p>
 
             <div className="space-y-1 md:space-y-2 mb-2 md:mb-3 text-xs">
               {listing.founderEmail && (
                 <a href={`mailto:${listing.founderEmail}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[orange-600] transition-colors">
                   <Icons.Mail />
-                  <span className="truncate">{listing.founderEmail}</span>
+                  <span className="truncate min-w-0">{listing.founderEmail}</span>
                 </a>
               )}
               {listing.founderPhone && (

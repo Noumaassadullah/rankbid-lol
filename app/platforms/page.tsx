@@ -288,11 +288,19 @@ export default function PlatformsPage() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3 sm:space-y-4">
                 {listings.map((listing, idx) => {
                   const position = (currentPage - 1) * 20 + idx + 1;
-                  const isTopThree = position <= 3;
-                  const medal = position === 1 ? '🥇' : position === 2 ? '🥈' : position === 3 ? '🥉' : '';
+
+                  let faviconUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+                  try {
+                    const urlObj = new URL(listing.url);
+                    faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(urlObj.hostname)}&sz=32`;
+                  } catch {
+                    // If URL parsing fails, use placeholder
+                  }
+
+                  const platformLabel = listing.platform || 'website';
 
                   return (
                     <a
@@ -300,60 +308,73 @@ export default function PlatformsPage() {
                       href={listing.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`flex items-center justify-between p-3 md:p-5 rounded-xl border-2 transition-all duration-200 group hover:scale-102 ${
-                        isTopThree
-                          ? 'bg-gradient-to-r from-[#0F3460]/5 to-[#0F3460]/10 border-[#0F3460]/30 shadow-md hover:shadow-lg hover:border-[#0F3460]/60'
-                          : 'bg-white border-gray-200 shadow-sm hover:shadow-md hover:border-[#0F3460]/30'
-                      }`}
+                      className="flex items-center justify-between p-3 bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md hover:border-[#0F3460]/30 transition-all duration-200 group cursor-pointer gap-4"
                     >
-                      {/* Position */}
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center flex-shrink-0 font-black text-sm md:text-base ${
-                          isTopThree
-                            ? 'bg-gradient-to-br from-[#0F3460] to-[#0D2A50] text-white shadow-md text-2xl'
-                            : 'bg-gray-100 text-[#1F2937]'
-                        }`}>
-                          {medal || `#${position}`}
+                      {/* Left Section: Position Badge and Favicon */}
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <div className="w-9 h-9 bg-[#0F3460] text-white font-black text-xs rounded-lg flex items-center justify-center flex-shrink-0">
+                          #{position}
                         </div>
+                        <img src={faviconUrl} alt="favicon" className="w-6 h-6 rounded flex-shrink-0" onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'; }} />
 
-                        {/* Submission Name */}
-                        <div className="flex-1 min-w-0">
-                          <p className={`font-bold truncate group-hover:text-[#0F3460] transition-colors ${
-                            isTopThree
-                              ? 'text-base md:text-lg text-[#0F3460]'
-                              : 'text-sm md:text-base text-[#1F2937]'
-                          }`}>
+                        {/* Title, Category and Platform Icon - All inline */}
+                        <div className="flex-1 min-w-0 flex items-center gap-2">
+                          <p className="text-xs font-semibold text-[#1F2937] truncate group-hover:text-[#0F3460] transition-colors">
                             {listing.title}
                           </p>
+
+                          {/* Platform Icon */}
+                          <div className="w-4 h-4 flex-shrink-0" title={platformLabel}>
+                            <PlatformIcon platform={platformLabel} size={16} />
+                          </div>
+
+                          {/* Category Tag */}
+                          {listing.category && (
+                            <div className="flex items-center gap-1 flex-shrink-0">
+                              <Icons.Tag />
+                              <p className="text-xs text-[#1F2937]/70 font-semibold">{listing.category}</p>
+                            </div>
+                          )}
                         </div>
                       </div>
 
-                      {/* Votes */}
-                      <div className="flex items-center gap-2 ml-3 flex-shrink-0">
-                        <div className="text-right">
-                          <p className={`font-black transition-colors ${
-                            isTopThree
-                              ? 'text-xl md:text-2xl text-[#0F3460]'
-                              : 'text-base md:text-lg text-[#0F3460]'
-                          }`}>
-                            {listing.totalVotes}
-                          </p>
+                      {/* Right Section: Vote Count and Actions */}
+                      <div className="flex items-center gap-3 ml-2 flex-shrink-0">
+                        {/* Vote Count */}
+                        <p className="text-lg font-black text-[#0F3460] min-w-[1.5rem] text-right">
+                          {listing.totalVotes}
+                        </p>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-2 flex-shrink-0">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleVote(listing.id);
+                            }}
+                            disabled={votedListings.has(listing.id)}
+                            className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 active:scale-95 flex items-center gap-1 whitespace-nowrap ${
+                              votedListings.has(listing.id)
+                                ? 'bg-gray-200 text-gray-600 cursor-not-allowed border border-gray-300'
+                                : 'bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white'
+                            }`}
+                          >
+                            <Icons.Heart />
+                            Vote
+                          </button>
+
+                          <button
+                            className="text-xs font-semibold px-3 py-1.5 bg-white border border-orange-300 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
+                          >
+                            📤 Share
+                          </button>
+
+                          <button
+                            className="text-xs font-semibold px-3 py-1.5 bg-white border border-gray-300 text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
+                          >
+                            ⭐ Premium
+                          </button>
                         </div>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleVote(listing.id);
-                          }}
-                          disabled={votedListings.has(listing.id)}
-                          className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg font-bold transition-all duration-200 active:scale-95 border-2 flex-shrink-0 ${
-                            votedListings.has(listing.id)
-                              ? 'bg-gray-200 text-gray-600 border-gray-300 cursor-not-allowed'
-                              : 'bg-white border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white'
-                          }`}
-                          title={votedListings.has(listing.id) ? 'Already voted' : 'Vote'}
-                        >
-                          <Icons.Heart />
-                        </button>
                       </div>
                     </a>
                   );

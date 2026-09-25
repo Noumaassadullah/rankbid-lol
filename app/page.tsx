@@ -548,7 +548,7 @@ export default function Home() {
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-wrap">
                   <button
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-[#0F3460] text-white font-black uppercase text-xs sm:text-sm border-[#0F3460] border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto rounded-lg"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-[#0F3460] text-white font-black text-xs sm:text-sm border-[#0F3460] border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto rounded-lg"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.Upload />
@@ -556,7 +556,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-white text-[#1F2937] font-black uppercase text-xs sm:text-sm border-gray-300 border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto rounded-lg"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-white text-[#1F2937] font-black text-xs sm:text-sm border-gray-300 border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto rounded-lg"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.TrendingUp />
@@ -697,7 +697,7 @@ export default function Home() {
                 ) : (
                   <>
                     <Icons.Upload />
-                    SUBMIT
+                    Submit
                   </>
                 )}
               </button>
@@ -806,7 +806,7 @@ export default function Home() {
                 <p className="text-xs sm:text-sm font-bold text-[#1F2937] mb-3 sm:mb-4 mt-3 sm:mt-4">No rankings yet</p>
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-4 sm:px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-2 sm:border-3 hover:scale-105 transition-all duration-200 rounded-lg"
+                  className="px-4 sm:px-6 py-2 bg-[#0F3460] text-white font-bold text-xs border-[#0F3460] border-2 sm:border-3 hover:scale-105 transition-all duration-200 rounded-lg"
                 >
                   Be First to Submit
                 </button>
@@ -890,7 +890,10 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0 ml-3 flex flex-col items-center gap-2">
-                        <p className="text-lg font-black text-[#0F3460] group-hover:text-[#0D2A50] transition-colors">{voteCount}</p>
+                        <div className="text-center">
+                          <p className="text-lg font-black text-[#0F3460] group-hover:text-[#0D2A50] transition-colors">{voteCount}</p>
+                          <p className="text-xs text-[#1F2937]/60 font-semibold">Votes</p>
+                        </div>
                         <div className="flex gap-1 w-full">
                           {user ? (
                             <button
@@ -974,7 +977,7 @@ export default function Home() {
             <div className="text-center mb-6 sm:mb-10 md:mb-16">
               <div className="inline-flex items-center gap-2 mb-2 sm:mb-3 md:mb-4 px-3 py-1.5 sm:px-4 sm:py-2 bg-[#0F3460]/10 border border-[#0F3460]/20 rounded-full">
                 <Icons.TrendingUp />
-                <span className="text-xs md:text-sm font-bold text-[#0F3460] uppercase">Real-Time Rankings</span>
+                <span className="text-xs md:text-sm font-bold text-[#0F3460]">Real-time rankings</span>
               </div>
               <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4">Top by Social Platform</h2>
               <p className="text-xs sm:text-sm md:text-base text-[#1F2937]/70 max-w-2xl mx-auto px-2">Discover trending submissions from Instagram, LinkedIn, and X. See what your community loves right now.</p>
@@ -995,7 +998,7 @@ export default function Home() {
                 return (
                   <div
                     key={platform}
-                    className={`bg-gradient-to-br ${bgGradient} border-2 sm:border-3 md:border-4 border-black p-3 sm:p-4 md:p-6 hover:shadow-2xl hover:border-black transition-all duration-300 group rounded-2xl backdrop-blur-sm relative overflow-hidden`}
+                    className={`bg-gradient-to-br ${bgGradient} border-2 sm:border-3 md:border-4 border-black p-3 sm:p-4 md:p-6 hover:shadow-2xl hover:border-black transition-all duration-300 group rounded-2xl backdrop-blur-sm relative overflow-hidden flex flex-col`}
                   >
                     {/* Header */}
                     <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6 pr-12 sm:pr-16">
@@ -1008,7 +1011,7 @@ export default function Home() {
                     </div>
 
                     {platformListings.length > 0 ? (
-                      <div className="space-y-1.5 sm:space-y-2 md:space-y-3">
+                      <div className="space-y-1.5 sm:space-y-2 md:space-y-3 flex-1">
                         {platformListings.map((item, idx) => {
                           const isTopThree = idx < 3;
                           const voteCount = activeTimeFilter === 'today' ? item.dayVotes : item.totalVotes;
@@ -1057,10 +1060,12 @@ export default function Home() {
                         })}
                       </div>
                     ) : (
-                      <div className="text-center py-4 sm:py-6 md:py-8">
-                        <p className="text-2xl sm:text-3xl mb-2">📭</p>
-                        <p className="text-xs sm:text-xs md:text-sm text-[#1F2937]/60 font-semibold mb-2 sm:mb-3">No submissions yet</p>
-                        <p className="text-xs text-[#1F2937]/50">Be the first to submit!</p>
+                      <div className="text-center py-4 sm:py-6 md:py-8 flex-1 flex items-center justify-center">
+                        <div>
+                          <p className="text-2xl sm:text-3xl mb-2">📭</p>
+                          <p className="text-xs sm:text-xs md:text-sm text-[#1F2937]/60 font-semibold mb-2 sm:mb-3">No submissions yet</p>
+                          <p className="text-xs text-[#1F2937]/50">Be the first to submit!</p>
+                        </div>
                       </div>
                     )}
 
@@ -1180,14 +1185,14 @@ export default function Home() {
                   className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3.5 bg-white text-[#0F3460] font-black text-xs md:text-sm rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg w-full sm:w-auto"
                 >
                   <Icons.Upload />
-                  START RANKING NOW
+                  Start Ranking Now
                 </button>
                 <a
                   href="/platforms"
                   className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3.5 bg-white/20 text-white font-black text-xs md:text-sm rounded-xl hover:bg-white/30 active:scale-95 transition-all duration-200 shadow-lg border-2 border-white/40 w-full sm:w-auto"
                 >
                   <Icons.TrendingUp />
-                  EXPLORE PLATFORMS
+                  Explore Platforms
                 </a>
               </div>
             </div>
