@@ -27,33 +27,50 @@ export default function StatusCardModal({ isOpen, onClose, product, productUrl }
   if (!isOpen) return null;
 
   const handleDownloadImage = async () => {
-    if (!cardRef.current) return;
+    if (!cardRef.current) {
+      alert('Card not found. Please refresh and try again.');
+      return;
+    }
     setDownloading(true);
     try {
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: '#1F2937',
         scale: 2,
         useCORS: true,
-        allowTaint: true,
         logging: false,
-        imageTimeout: 0,
+        imageTimeout: 15000,
+        allowTaint: false,
       });
 
-      // Download using dataURL method
-      const image = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = image;
-      link.download = `rankbid-${product.title.replace(/\s+/g, '-')}-rank-${product.rank}.png`;
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      setTimeout(() => {
-        document.body.removeChild(link);
-        setDownloading(false);
-      }, 100);
+      if (!canvas) {
+        throw new Error('Canvas creation failed');
+      }
+
+      // Convert to blob for better browser support
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert('Failed to create image. Please try again.');
+          setDownloading(false);
+          return;
+        }
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `rankbid-${product.title.replace(/\s+/g, '-')}-rank-${product.rank}.png`;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          setDownloading(false);
+        }, 100);
+      }, 'image/png');
     } catch (error) {
       console.error('Failed to download image:', error);
-      alert('Failed to download image. Please try again.');
+      alert(`Failed to download image: ${error instanceof Error ? error.message : 'Unknown error'}`);
       setDownloading(false);
     }
   };
