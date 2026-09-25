@@ -72,7 +72,7 @@ function SearchContent() {
             <p className="text-[#1F2937]/60 font-semibold mt-2">Searching products...</p>
           </div>
         ) : results.length === 0 ? (
-          <div className="text-center py-16 border-gray-300 border-4 bg-gray-50">
+          <div className="text-center py-16 border-gray-300 border-4 bg-gray-50 rounded-lg">
             <h2 className="text-2xl font-black text-[#1F2937] mb-2">
               {query ? 'No products found' : 'Start Searching'}
             </h2>
@@ -83,7 +83,7 @@ function SearchContent() {
             </p>
             <button
               onClick={() => window.location.href = '/'}
-              className="inline-block px-6 py-2 bg-[#0F3460] text-white font-bold text-xs border-[#0F3460] border-3 hover:scale-105 transition-all"
+              className="inline-block px-6 py-2 bg-[#0F3460] text-white font-bold text-xs border-[#0F3460] border-3 hover:scale-105 transition-all rounded-lg"
             >
               Browse All Products
             </button>
@@ -100,7 +100,7 @@ function SearchContent() {
                   href={listing.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 bg-white border-gray-300 border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer"
+                  className="flex items-center justify-between p-4 bg-white border-gray-300 border-3 hover:bg-[#0F3460]/10 hover:scale-101 transition-all duration-200 group cursor-pointer rounded-lg"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-[#1F2937] truncate">{listing.title}</p>
