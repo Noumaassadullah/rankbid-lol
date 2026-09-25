@@ -115,7 +115,7 @@ export default function Header() {
   return (
     <>
       {/* Top Header - Professional Corporate */}
-      <header className="bg-black text-white shadow-sm sticky top-0 z-40">
+      <header className="bg-white text-[#1F2937] shadow-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-6">
           {/* Main Header */}
           <div className="flex items-center justify-between h-12 sm:h-14 md:h-16">
@@ -123,22 +123,22 @@ export default function Header() {
             <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden p-1.5 sm:p-2 text-white rounded-lg flex-shrink-0"
+                className="lg:hidden p-1.5 sm:p-2 text-[#1F2937] rounded-lg flex-shrink-0"
               >
                 {mobileOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />}
               </button>
               <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-base sm:text-lg md:text-2xl font-bold text-white">RankBid</span>
+                <span className="text-base sm:text-lg md:text-2xl font-bold text-[orange-600]">RankBid</span>
               </Link>
             </div>
 
             {/* Stats Pill - Professional */}
-            <div className="hidden md:flex items-center gap-3 md:gap-6 px-3 md:px-6 py-1 md:py-2 bg-gray-900 text-white rounded-lg shadow-xs text-xs md:text-sm font-medium flex-shrink-0">
+            <div className="hidden md:flex items-center gap-3 md:gap-6 px-3 md:px-6 py-1 md:py-2 bg-gray-50 text-[#1F2937] rounded-lg shadow-xs text-xs md:text-sm font-medium flex-shrink-0">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                 <span>{stats.onlineNow} LIVE</span>
               </div>
-              <span className="text-gray-600">•</span>
+              <span className="text-gray-300">•</span>
               <span>{stats.allTimeVisitors}K VIEWS</span>
             </div>
 
@@ -147,23 +147,23 @@ export default function Header() {
 
             {/* Desktop Nav - Right Side */}
             <nav className="hidden lg:flex items-center gap-1 md:gap-4 flex-shrink-0">
-                <Link href="/platforms" className="text-xs md:text-sm font-medium text-white flex items-center gap-1 px-2 py-1">
+                <Link href="/platforms" className="text-xs md:text-sm font-medium text-[#1F2937] flex items-center gap-1 px-2 py-1">
                   <TrendingUp className="w-3 h-3 md:w-4 md:h-4" />
                   <span className="hidden xl:inline">Platforms</span>
                 </Link>
-                <Link href="/why" className="text-xs md:text-sm font-medium text-white px-2 py-1">
+                <Link href="/why" className="text-xs md:text-sm font-medium text-[#1F2937] px-2 py-1">
                   Why
                 </Link>
-                <Link href="/daily" className="text-xs md:text-sm font-medium text-white px-2 py-1">
+                <Link href="/daily" className="text-xs md:text-sm font-medium text-[#1F2937] px-2 py-1">
                   Daily
                 </Link>
-                <Link href="/archive" className="text-xs md:text-sm font-medium text-white px-2 py-1">
+                <Link href="/archive" className="text-xs md:text-sm font-medium text-[#1F2937] px-2 py-1">
                   Archive
                 </Link>
-                <Link href="/categories" className="text-xs md:text-sm font-medium text-white px-2 py-1">
+                <Link href="/categories" className="text-xs md:text-sm font-medium text-[#1F2937] px-2 py-1">
                   Categories
                 </Link>
-                <Link href="/about" className="text-xs md:text-sm font-medium text-white px-2 py-1">
+                <Link href="/about" className="text-xs md:text-sm font-medium text-[#1F2937] px-2 py-1">
                   About
                 </Link>
               </nav>
@@ -187,7 +187,7 @@ export default function Header() {
                     window.location.href = `/search?q=${encodeURIComponent(query)}`;
                   }
                 }}
-                className="p-1 sm:p-1.5 md:p-2 text-white rounded-lg flex-shrink-0"
+                className="p-1 sm:p-1.5 md:p-2 text-[#1F2937] rounded-lg flex-shrink-0"
               >
                 <Search className="w-4 h-4 md:w-5 md:h-5" />
               </button>
@@ -195,8 +195,8 @@ export default function Header() {
 
           {/* Mobile Menu */}
           {mobileOpen && (
-            <div className="lg:hidden py-2 sm:py-3 border-t border-gray-800 space-y-1.5 sm:space-y-2 pb-2 sm:pb-3">
-              <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-900 text-white text-xs sm:text-sm font-medium rounded-lg">
+            <div className="lg:hidden py-2 sm:py-3 border-t border-gray-200 space-y-1.5 sm:space-y-2 pb-2 sm:pb-3">
+              <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-50 text-[#1F2937] text-xs sm:text-sm font-medium rounded-lg">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></span>
                 <span>{stats.onlineNow} LIVE • {stats.allTimeVisitors}K VIEWS</span>
               </div>
@@ -205,33 +205,33 @@ export default function Header() {
               {user ? (
                 <Link
                   href="/profile"
-                  className="block px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-orange-400 rounded-lg"
+                  className="block px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-orange-600 rounded-lg"
                   onClick={() => setMobileOpen(false)}
                 >
                   My Profile
                 </Link>
               ) : null}
 
-              <Link href="/platforms" className="flex items-center gap-2 text-xs sm:text-sm font-medium text-white px-2 sm:px-3 py-1.5">
+              <Link href="/platforms" className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
                 <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                 Platforms
               </Link>
-              <Link href="/why" className="block text-xs sm:text-sm font-medium text-white px-2 sm:px-3 py-1.5">
+              <Link href="/why" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
                 Why
               </Link>
-              <Link href="/daily" className="block text-xs sm:text-sm font-medium text-white px-2 sm:px-3 py-1.5">
+              <Link href="/daily" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
                 Daily
               </Link>
-              <Link href="/archive" className="block text-xs sm:text-sm font-medium text-white px-2 sm:px-3 py-1.5">
+              <Link href="/archive" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
                 Archive
               </Link>
-              <Link href="/categories" className="block text-xs sm:text-sm font-medium text-white px-2 sm:px-3 py-1.5">
+              <Link href="/categories" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
                 Categories
               </Link>
-              <Link href="/about" className="block text-xs sm:text-sm font-medium text-white px-2 sm:px-3 py-1.5">
+              <Link href="/about" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
                 About
               </Link>
-              <Link href="/stats" className="block text-xs sm:text-sm font-medium text-white px-2 sm:px-3 py-1.5">
+              <Link href="/stats" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
                 Stats
               </Link>
             </div>
@@ -240,7 +240,7 @@ export default function Header() {
       </header>
 
       {/* Category Filter - Professional */}
-      <div className="bg-black text-white border-b border-gray-800 sticky top-12 sm:top-14 md:top-16 z-30 overflow-x-auto">
+      <div className="bg-gray-50 text-[#1F2937] border-b border-gray-200 sticky top-12 sm:top-14 md:top-16 z-30 overflow-x-auto">
         <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-6 py-1.5 sm:py-2 md:py-3 flex gap-1 items-center">
           {CATEGORIES.map((cat) => {
             const Icon = cat.Icon;
@@ -254,7 +254,7 @@ export default function Header() {
                 className={`flex-shrink-0 px-1.5 sm:px-2.5 md:px-4 py-1 md:py-2 text-xs font-medium whitespace-nowrap flex items-center gap-0.5 sm:gap-1 md:gap-2 rounded-lg ${
                   isAll
                     ? 'bg-[orange-600] text-white shadow-sm'
-                    : 'bg-gray-900 text-white shadow-xs'
+                    : 'bg-white text-[#1F2937] shadow-xs'
                 }`}
                 title={cat.name}
               >
