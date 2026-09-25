@@ -108,9 +108,31 @@ export default function PlatformsPage() {
   }, []);
 
   useEffect(() => {
-    setCurrentPage(1);
-    fetchListings(1);
+    if (currentPage === 1) {
+      fetchListings(1);
+    }
   }, [selectedPlatform]);
+
+  useEffect(() => {
+    // Fetch all listings on initial mount to populate counts
+    fetchAllListingsForCounts();
+  }, []);
+
+  const fetchAllListingsForCounts = useCallback(async () => {
+    try {
+      const params = new URLSearchParams();
+      params.append('limit', '1000');
+      params.append('offset', '0');
+
+      const res = await fetch(`/api/listings?${params.toString()}`);
+      if (!res.ok) return;
+
+      const allListings = await res.json();
+      setListings(allListings || []);
+    } catch (error) {
+      console.error('Failed to fetch all listings for counts:', error);
+    }
+  }, []);
 
   const fetchListings = useCallback(async (page: number = 1) => {
     setLoading(true);
