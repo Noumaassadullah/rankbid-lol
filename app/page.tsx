@@ -967,7 +967,6 @@ export default function Home() {
                         <PlatformIcon platform={platform} size={18} />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-xs sm:text-sm md:text-lg font-black text-[#1F2937] uppercase truncate">{platformLabel}</h3>
                         <p className="text-xs text-[#1F2937]/60">Top Rated This {activeTimeFilter === 'today' ? 'Day' : 'Week'}</p>
                       </div>
                     </div>
@@ -1024,7 +1023,7 @@ export default function Home() {
                     ) : (
                       <div className="text-center py-4 sm:py-6 md:py-8">
                         <p className="text-2xl sm:text-3xl mb-2">📭</p>
-                        <p className="text-xs sm:text-xs md:text-sm text-[#1F2937]/60 font-semibold mb-2 sm:mb-3">No {platformLabel} submissions yet</p>
+                        <p className="text-xs sm:text-xs md:text-sm text-[#1F2937]/60 font-semibold mb-2 sm:mb-3">No submissions yet</p>
                         <p className="text-xs text-[#1F2937]/50">Be the first to submit!</p>
                       </div>
                     )}
