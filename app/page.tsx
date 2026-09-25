@@ -523,7 +523,7 @@ export default function Home() {
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-wrap">
                   <button
                     onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-[#0F3460] text-white font-black uppercase text-xs sm:text-sm border-[#0F3460] border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-[#0F3460] text-white font-black uppercase text-xs sm:text-sm border-[#0F3460] border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto rounded-lg"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.Upload />
@@ -531,7 +531,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-white text-[#1F2937] font-black uppercase text-xs sm:text-sm border-gray-300 border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-white text-[#1F2937] font-black uppercase text-xs sm:text-sm border-gray-300 border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto rounded-lg"
                     style={{boxShadow: 'none'}}
                   >
                     <Icons.TrendingUp />
@@ -565,7 +565,7 @@ export default function Home() {
         <section className="bg-gray-50 py-6 sm:py-10 md:py-12 border-b border-gray-200 fade-in">
           <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
             {!user ? (
-              <div className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 bg-blue-50 border-2 border-blue-200 rounded-lg text-center">
+              <div className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 bg-blue-50 border-2 border-blue-200 rounded-xl text-center">
                 <p className="text-base sm:text-lg font-bold text-[#1F2937] mb-2 sm:mb-4">Login Required to Submit</p>
                 <p className="text-xs sm:text-sm text-[#1F2937]/70 mb-4 sm:mb-6">You need to be logged in to submit your product and vote.</p>
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
@@ -776,12 +776,12 @@ export default function Home() {
                 <p className="text-xs sm:text-sm text-[#1F2937]/60 font-semibold mt-2 sm:mt-3">Loading rankings...</p>
               </div>
             ) : listings.length === 0 ? (
-              <div className="text-center py-8 sm:py-10 md:py-12 border-gray-300 border-2 sm:border-4 bg-gray-50 fade-in">
+              <div className="text-center py-8 sm:py-10 md:py-12 border-gray-300 border-2 sm:border-4 bg-gray-50 fade-in rounded-lg">
                 <Icons.Users />
                 <p className="text-xs sm:text-sm font-bold text-[#1F2937] mb-3 sm:mb-4 mt-3 sm:mt-4">No rankings yet</p>
                 <button
                   onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-4 sm:px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-2 sm:border-3 hover:scale-105 transition-all duration-200"
+                  className="px-4 sm:px-6 py-2 bg-[#0F3460] text-white font-bold text-xs uppercase border-[#0F3460] border-2 sm:border-3 hover:scale-105 transition-all duration-200 rounded-lg"
                 >
                   Be First to Submit
                 </button>
