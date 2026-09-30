@@ -69,6 +69,17 @@ export default function Header() {
     router.push('/');
   };
 
+  // Format large numbers for display
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    }
+    return num.toString();
+  };
+
   // Fetch stats and track visitor
   useEffect(() => {
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -137,13 +148,17 @@ export default function Header() {
             </div>
 
             {/* Stats Pill - Professional */}
-            <div className="hidden md:flex items-center gap-3 md:gap-6 px-3 md:px-6 py-1 md:py-2 bg-gray-50 text-[#1F2937] rounded-lg shadow-xs text-xs md:text-sm font-medium flex-shrink-0">
+            <div className="hidden md:flex items-center gap-3 md:gap-6 px-3 md:px-6 py-1 md:py-2 bg-gradient-to-r from-gray-50 to-gray-100 text-[#1F2937] rounded-lg shadow-sm text-xs md:text-sm font-bold flex-shrink-0 border border-gray-200">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <span>{stats.onlineNow} LIVE</span>
+                <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
+                <span className="text-red-600">{stats.onlineNow}</span>
+                <span className="text-gray-500 font-medium">LIVE</span>
               </div>
               <span className="text-gray-300">•</span>
-              <span>{stats.allTimeVisitors}K VIEWS</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-blue-600">{formatNumber(stats.allTimeVisitors)}</span>
+                <span className="text-gray-500 font-medium">VIEWS</span>
+              </div>
             </div>
 
             {/* Spacer */}
@@ -200,9 +215,13 @@ export default function Header() {
           {/* Mobile Menu */}
           {mobileOpen && (
             <div className="lg:hidden py-2 sm:py-3 border-t border-gray-200 space-y-1.5 sm:space-y-2 pb-2 sm:pb-3">
-              <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-50 text-[#1F2937] text-xs sm:text-sm font-medium rounded-lg">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></span>
-                <span>{stats.onlineNow} LIVE • {stats.allTimeVisitors}K VIEWS</span>
+              <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-gray-50 to-gray-100 text-[#1F2937] text-xs sm:text-sm font-bold rounded-lg border border-gray-200">
+                <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse flex-shrink-0"></span>
+                <span className="text-red-600">{stats.onlineNow}</span>
+                <span className="text-gray-500 font-medium">LIVE</span>
+                <span className="text-gray-300">•</span>
+                <span className="text-blue-600">{formatNumber(stats.allTimeVisitors)}</span>
+                <span className="text-gray-500 font-medium">VIEWS</span>
               </div>
 
               {/* Mobile Auth Buttons */}
