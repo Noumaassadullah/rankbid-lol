@@ -80,10 +80,13 @@ export default function Header() {
         const dailyData = await dailyRes.json();
         const totalData = await totalRes.json();
 
-        console.log('[Stats] Updated:', { live: liveData.liveViewers, today: dailyData.visitors, views: totalData.totalPageViews });
+        // Use today's visitors as fallback for live if no active sessions
+        const liveCount = liveData.liveViewers > 0 ? liveData.liveViewers : (dailyData.visitors || 0);
+
+        console.log('[Stats] Live:', liveData.liveViewers, 'Today:', dailyData.visitors, 'Views:', totalData.totalPageViews, 'Final Live:', liveCount);
 
         setStats({
-          live: liveData.liveViewers || 0,
+          live: liveCount,
           today: dailyData.visitors || 0,
           views: totalData.totalPageViews || 0,
         });
