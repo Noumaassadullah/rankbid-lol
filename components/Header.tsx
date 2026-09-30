@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp, LogOut } from 'lucide-react';
-import { AnalyticsCompact } from './analytics-compact';
 
 const CATEGORIES = [
   { name: 'All', Icon: Grid3x3 },
@@ -100,9 +99,6 @@ export default function Header() {
 
   return (
     <>
-      {/* Live Traffic Stats Bar */}
-      <AnalyticsCompact />
-
       {/* Top Header - Professional Corporate */}
       <header className="bg-white text-[#1F2937] shadow-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-6">
