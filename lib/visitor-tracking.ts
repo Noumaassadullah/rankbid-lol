@@ -12,8 +12,12 @@ export async function trackVisitor(
   pageUrl: string
 ) {
   try {
+    const now = new Date().toISOString();
+    const today = now.split('T')[0];
+    let isNewSession = false;
+
     // Check if session exists
-    const { data: existingSession } = await supabase
+    const { data: existingSession, error: checkError } = await supabase
       .from('visitor_sessions')
       .select('id')
       .eq('session_id', sessionId)
@@ -21,58 +25,81 @@ export async function trackVisitor(
 
     if (existingSession) {
       // Update last activity
-      await supabase
+      const { error: updateError } = await supabase
         .from('visitor_sessions')
         .update({
-          last_activity: new Date().toISOString(),
+          last_activity: now,
           page_url: pageUrl,
           is_active: true,
         })
         .eq('session_id', sessionId);
+
+      if (updateError) {
+        console.error('Error updating session:', updateError);
+      }
     } else {
       // Create new session
-      await supabase
+      isNewSession = true;
+      const { error: insertError } = await supabase
         .from('visitor_sessions')
         .insert({
           session_id: sessionId,
           user_agent: userAgent,
           ip_address: ipAddress,
           page_url: pageUrl,
-          last_activity: new Date().toISOString(),
+          last_activity: now,
           is_active: true,
         });
+
+      if (insertError) {
+        console.error('Error creating session:', insertError);
+      }
     }
 
-    // Update daily analytics
-    const today = new Date().toISOString().split('T')[0];
-    const { data: analyticsData } = await supabase
-      .from('visitor_analytics')
-      .select('*')
-      .eq('date', today)
-      .single();
+    // Update daily analytics - only increment when new session created
+    if (isNewSession) {
+      const { data: analyticsData, error: selectError } = await supabase
+        .from('visitor_analytics')
+        .select('id, total_visitors, page_views')
+        .eq('date', today)
+        .single();
 
-    if (analyticsData) {
-      // Update existing day record
-      await supabase
-        .from('visitor_analytics')
-        .update({
-          total_visitors: (analyticsData.total_visitors || 0) + 1,
-          page_views: (analyticsData.page_views || 0) + 1,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('date', today);
-    } else {
-      // Create new day record
-      await supabase
-        .from('visitor_analytics')
-        .insert({
-          date: today,
-          total_visitors: 1,
-          unique_visitors: 1,
-          page_views: 1,
-        });
+      if (selectError && selectError.code !== 'PGRST116') {
+        console.error('Error selecting analytics:', selectError);
+      }
+
+      if (analyticsData) {
+        // Update existing day record
+        const { error: updateError } = await supabase
+          .from('visitor_analytics')
+          .update({
+            total_visitors: (analyticsData.total_visitors || 0) + 1,
+            page_views: (analyticsData.page_views || 0) + 1,
+            updated_at: now,
+          })
+          .eq('date', today);
+
+        if (updateError) {
+          console.error('Error updating analytics:', updateError);
+        }
+      } else {
+        // Create new day record
+        const { error: insertError } = await supabase
+          .from('visitor_analytics')
+          .insert({
+            date: today,
+            total_visitors: 1,
+            unique_visitors: 1,
+            page_views: 1,
+          });
+
+        if (insertError) {
+          console.error('Error creating analytics:', insertError);
+        }
+      }
     }
 
+    console.log('[TRACKING] Session:', sessionId, 'New:', isNewSession, 'Date:', today);
     return { success: true };
   } catch (error) {
     console.error('Visitor tracking error:', error);
