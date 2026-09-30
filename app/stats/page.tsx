@@ -1,6 +1,7 @@
 'use client';
 
 import Header from '@/components/Header';
+import { AnalyticsWidget } from '@/components/analytics-widget';
 import { useState, useEffect } from 'react';
 
 export default function StatsPage() {
@@ -51,6 +52,12 @@ export default function StatsPage() {
         <div className="max-w-6xl mx-auto px-6 py-16">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">RankBid Statistics</h1>
           <p className="text-xl text-gray-600 mb-12">Real-time platform analytics and metrics</p>
+
+          {/* Live Traffic Stats */}
+          <div className="mb-16">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Live Traffic</h2>
+            <AnalyticsWidget />
+          </div>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-16">

@@ -3,24 +3,39 @@
 import { useEffect, useState } from 'react';
 import { Activity, Eye } from 'lucide-react';
 
+interface FilteredStats {
+  period: string;
+  visitors: number;
+  pageViews: number;
+  averageVisitorsPerDay?: number;
+}
+
 export function AnalyticsCompact() {
   const [liveViewers, setLiveViewers] = useState<number>(0);
   const [totalViews, setTotalViews] = useState<number>(0);
+  const [dailyStats, setDailyStats] = useState<FilteredStats>({
+    period: 'daily',
+    visitors: 0,
+    pageViews: 0,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const [liveRes, statsRes] = await Promise.all([
+        const [liveRes, statsRes, dailyRes] = await Promise.all([
           fetch('/api/analytics/live-viewers'),
           fetch('/api/analytics/total-stats'),
+          fetch('/api/analytics/filtered-stats?period=daily'),
         ]);
 
         const liveData = await liveRes.json();
         const statsData = await statsRes.json();
+        const dailyData = await dailyRes.json();
 
         setLiveViewers(liveData.liveViewers || 0);
         setTotalViews(statsData.totalPageViews || 0);
+        setDailyStats(dailyData);
       } catch (error) {
         console.error('Failed to fetch analytics:', error);
       } finally {
@@ -60,7 +75,7 @@ export function AnalyticsCompact() {
   }
 
   return (
-    <div className="flex items-center gap-8 px-6 py-3 bg-white border-b border-gray-200">
+    <div className="flex items-center gap-8 px-6 py-3 bg-white border-b border-gray-200 flex-wrap">
       {/* Live Viewers */}
       <div className="flex items-center gap-2 group cursor-pointer hover:opacity-75 transition">
         <div className="flex items-center gap-1.5">
@@ -70,6 +85,15 @@ export function AnalyticsCompact() {
             <span className="text-xs font-normal text-gray-500 ml-1">LIVE</span>
           </span>
         </div>
+      </div>
+
+      {/* Today's Visitors */}
+      <div className="flex items-center gap-2 group cursor-pointer hover:opacity-75 transition">
+        <Activity className="w-4 h-4 text-blue-600" />
+        <span className="text-sm font-bold text-gray-900">
+          {dailyStats.visitors}
+          <span className="text-xs font-normal text-gray-500 ml-1">TODAY</span>
+        </span>
       </div>
 
       {/* Views */}
