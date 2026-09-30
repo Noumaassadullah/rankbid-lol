@@ -25,7 +25,6 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<{ id: string; email: string; name?: string } | null>(null);
-  const [headerStats, setHeaderStats] = useState({ live: 0, today: 0, views: 0 });
 
   // Initialize dark mode and check user login from localStorage
   useEffect(() => {
@@ -62,35 +61,6 @@ export default function Header() {
     }
   }, [darkMode, mounted]);
 
-  // Fetch header stats
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const [liveRes, dailyRes, totalRes] = await Promise.all([
-          fetch('/api/analytics/live-viewers'),
-          fetch('/api/analytics/filtered-stats?period=daily'),
-          fetch('/api/analytics/total-stats'),
-        ]);
-
-        const liveData = await liveRes.json();
-        const dailyData = await dailyRes.json();
-        const totalData = await totalRes.json();
-
-        setHeaderStats({
-          live: liveData.liveViewers || 0,
-          today: dailyData.visitors || 0,
-          views: totalData.totalPageViews || 0,
-        });
-      } catch (error) {
-        console.error('[Header] Stats error:', error);
-      }
-    };
-
-    fetchStats();
-    const interval = setInterval(fetchStats, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('auth_token');
@@ -119,22 +89,6 @@ export default function Header() {
               <Link href="/" className="flex items-center gap-2 flex-shrink-0">
                 <span className="text-base sm:text-lg md:text-2xl font-bold text-[orange-600]">RankBid</span>
               </Link>
-            </div>
-
-            {/* Center Stats */}
-            <div className="hidden sm:flex items-center justify-center gap-6 md:gap-8 flex-1">
-              <div className="text-center">
-                <div className="text-xs text-gray-500 font-medium">LIVE</div>
-                <div className="text-lg md:text-xl font-bold text-gray-900">{headerStats.live}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-gray-500 font-medium">TODAY</div>
-                <div className="text-lg md:text-xl font-bold text-gray-900">{headerStats.today}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-xs text-gray-500 font-medium">VIEWS</div>
-                <div className="text-lg md:text-xl font-bold text-gray-900">{headerStats.views}</div>
-              </div>
             </div>
 
             {/* Spacer */}
