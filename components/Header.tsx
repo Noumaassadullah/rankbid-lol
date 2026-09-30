@@ -71,9 +71,16 @@ export default function Header() {
           fetch('/api/analytics/total-stats'),
         ]);
 
+        if (!liveRes.ok || !dailyRes.ok || !totalRes.ok) {
+          console.error('[Stats] API error:', { liveRes: liveRes.status, dailyRes: dailyRes.status, totalRes: totalRes.status });
+          return;
+        }
+
         const liveData = await liveRes.json();
         const dailyData = await dailyRes.json();
         const totalData = await totalRes.json();
+
+        console.log('[Stats] Updated:', { live: liveData.liveViewers, today: dailyData.visitors, views: totalData.totalPageViews });
 
         setStats({
           live: liveData.liveViewers || 0,
@@ -81,12 +88,15 @@ export default function Header() {
           views: totalData.totalPageViews || 0,
         });
       } catch (error) {
-        console.error('Failed to fetch stats:', error);
+        console.error('[Stats] Fetch error:', error);
       }
     };
 
+    // Fetch immediately on mount
     fetchStats();
-    const interval = setInterval(fetchStats, 10000);
+
+    // Then update every 5 seconds for real-time updates
+    const interval = setInterval(fetchStats, 5000);
     return () => clearInterval(interval);
   }, []);
 
