@@ -1,7 +1,6 @@
 'use client';
 
 import Header from '@/components/Header';
-import { useState } from 'react';
 
 const Icons = {
   Vote: () => (
@@ -47,42 +46,6 @@ const Icons = {
 };
 
 export default function WhyRankBid() {
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
-
-  const faqs = [
-    {
-      q: 'How do I submit my product?',
-      a: 'Simply fill out the submission form with your product URL or handle, select a category, add a description, and submit. It\'s completely free and takes less than 2 minutes. Your product goes live immediately with no approval delays.'
-    },
-    {
-      q: 'How does voting work?',
-      a: 'Each user can vote once per product. Vote counts update in real-time on the leaderboard. The more votes your product gets, the higher it ranks. It\'s transparent - everyone can see the vote count and community preference.'
-    },
-    {
-      q: 'Can I see rankings in different time periods?',
-      a: 'Yes! RankBid offers multiple ranking views: All-Time rankings show the highest voted products ever, while Today rankings show what\'s trending right now. You can also filter by 25+ categories to find products in specific areas.'
-    },
-    {
-      q: 'What products can I submit?',
-      a: 'RankBid accepts products across 25+ categories including Marketing, SEO, Productivity, Agents, Crypto, Developer Tools, Health, Games, Business, Ecommerce, Travel, Design, Hiring, Security, Sales, Writing, Analytics, and many more.'
-    },
-    {
-      q: 'Is there really no cost?',
-      a: 'Correct. Submitting on RankBid is 100% free. No listing fees, no featured placement costs, no hidden charges. Everyone gets the same fair opportunity to be discovered by the community.'
-    },
-    {
-      q: 'How is this different from other platforms?',
-      a: 'RankBid uses pure community voting instead of algorithms or editorial gatekeeping. Your product\'s ranking depends on real people voting for it, not on advertising budgets or editor approval. It\'s transparent, democratic, and merit-based.'
-    },
-    {
-      q: 'Why would I use RankBid over paid platforms?',
-      a: 'You keep 100% of your discovery without paying fees. RankBid gives you access to a community of active users looking for new products. No gatekeepers deciding what\'s "worthy" - just real people voting for what they love.'
-    },
-    {
-      q: 'Can I share my product\'s RankBid link?',
-      a: 'Yes! Each product has its own page on RankBid. You can share the link with your community to drive votes. Built-in share buttons make it easy to spread the word across social platforms.'
-    }
-  ];
 
   return (
     <>
@@ -511,37 +474,6 @@ export default function WhyRankBid() {
                   Vote for indie makers and small teams building amazing things. Help them get discovered by giving them visibility through your vote.
                 </p>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ SECTION */}
-        <section className="bg-white py-12 border-b border-gray-200">
-          <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Common Questions</h2>
-
-            <div className="space-y-3">
-              {faqs.map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="border shadow-sm rounded-lg bg-white cursor-pointer hover:bg-[#0F3460]/5 transition-colors"
-                  onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
-                >
-                  <div className="p-6 flex items-start justify-between gap-4">
-                    <h3 className="text-lg font-black text-[#1F2937] flex-1">{faq.q}</h3>
-                    <span className={`text-xl flex-shrink-0 transition-transform duration-200 ${expandedFaq === idx ? 'rotate-180' : ''}`}>
-                      ▼
-                    </span>
-                  </div>
-                  {expandedFaq === idx && (
-                    <div className="px-6 pb-6 border-t border-gray-200 pt-6">
-                      <p className="text-sm text-[#1F2937]/70 font-medium leading-relaxed">
-                        {faq.a}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
             </div>
           </div>
         </section>
