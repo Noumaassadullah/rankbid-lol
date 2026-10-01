@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export function VisitorTracker() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const trackVisit = async () => {
       try {
@@ -13,26 +16,45 @@ export function VisitorTracker() {
           localStorage.setItem('sessionId', sessionId);
         }
 
-        const pageUrl = window.location.pathname;
-
         const response = await fetch('/api/track-visitor', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             sessionId,
-            pageUrl,
+            pageUrl: pathname,
           }),
         });
 
         const data = await response.json();
-        console.log('[CLIENT] Visitor tracked:', data);
+        console.log('[CLIENT] Visitor tracked on', pathname, ':', data);
       } catch (error) {
         console.error('[CLIENT] Failed to track visitor:', error);
       }
     };
 
-    // Track on page load
+    // Track every page navigation
     trackVisit();
+  }, [pathname]);
+
+  // Periodic tracking for idle time
+  useEffect(() => {
+    const trackVisit = async () => {
+      try {
+        const sessionId = localStorage.getItem('sessionId');
+        if (sessionId) {
+          await fetch('/api/track-visitor', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sessionId,
+              pageUrl: pathname,
+            }),
+          });
+        }
+      } catch (error) {
+        console.error('[CLIENT] Periodic tracking failed:', error);
+      }
+    };
 
     // Track every 5 minutes
     const interval = setInterval(trackVisit, 5 * 60 * 1000);
@@ -50,7 +72,7 @@ export function VisitorTracker() {
       clearInterval(interval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

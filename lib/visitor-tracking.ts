@@ -56,58 +56,61 @@ export async function trackVisitor(
       }
     }
 
-    // Update daily analytics - only increment when new session created
-    if (isNewSession) {
-      try {
-        // First, try to get existing record
-        const { data: existing, error: getError } = await supabase
-          .from('visitor_analytics')
-          .select('total_visitors, page_views')
-          .eq('date', today)
-          .maybeSingle();
+    // Update daily analytics - increment page_views for every hit, total_visitors only for new sessions
+    try {
+      // First, try to get existing record
+      const { data: existing, error: getError } = await supabase
+        .from('visitor_analytics')
+        .select('total_visitors, page_views')
+        .eq('date', today)
+        .maybeSingle();
 
-        if (getError && getError.code !== 'PGRST116') {
-          throw getError;
-        }
-
-        if (existing) {
-          // Record exists - increment it
-          console.log('[TRACKING] Found existing analytics, incrementing...');
-          const { error: updateError } = await supabase
-            .from('visitor_analytics')
-            .update({
-              total_visitors: existing.total_visitors + 1,
-              page_views: existing.page_views + 1,
-              updated_at: now,
-            })
-            .eq('date', today);
-
-          if (updateError) {
-            console.error('[TRACKING] Error incrementing:', updateError);
-          } else {
-            console.log('[TRACKING] Incremented views to', existing.page_views + 1);
-          }
-        } else {
-          // Record doesn't exist - create it
-          console.log('[TRACKING] Creating new analytics record...');
-          const { error: createError } = await supabase
-            .from('visitor_analytics')
-            .insert({
-              date: today,
-              total_visitors: 1,
-              unique_visitors: 1,
-              page_views: 1,
-            });
-
-          if (createError) {
-            console.error('[TRACKING] Error creating analytics:', createError);
-          } else {
-            console.log('[TRACKING] Created new analytics record');
-          }
-        }
-      } catch (analyticsError) {
-        console.error('[TRACKING] Analytics tracking error:', analyticsError);
+      if (getError && getError.code !== 'PGRST116') {
+        throw getError;
       }
+
+      if (existing) {
+        // Record exists - increment page_views on every hit, total_visitors only for new sessions
+        console.log('[TRACKING] Found existing analytics, incrementing...');
+        const updateData: any = {
+          page_views: existing.page_views + 1,
+          updated_at: now,
+        };
+
+        if (isNewSession) {
+          updateData.total_visitors = existing.total_visitors + 1;
+        }
+
+        const { error: updateError } = await supabase
+          .from('visitor_analytics')
+          .update(updateData)
+          .eq('date', today);
+
+        if (updateError) {
+          console.error('[TRACKING] Error incrementing:', updateError);
+        } else {
+          console.log('[TRACKING] Incremented page_views to', existing.page_views + 1);
+        }
+      } else {
+        // Record doesn't exist - create it
+        console.log('[TRACKING] Creating new analytics record...');
+        const { error: createError } = await supabase
+          .from('visitor_analytics')
+          .insert({
+            date: today,
+            total_visitors: isNewSession ? 1 : 0,
+            unique_visitors: isNewSession ? 1 : 0,
+            page_views: 1,
+          });
+
+        if (createError) {
+          console.error('[TRACKING] Error creating analytics:', createError);
+        } else {
+          console.log('[TRACKING] Created new analytics record');
+        }
+      }
+    } catch (analyticsError) {
+      console.error('[TRACKING] Analytics tracking error:', analyticsError);
     }
 
     console.log('[TRACKING] Session:', sessionId, 'New:', isNewSession, 'Date:', today);
