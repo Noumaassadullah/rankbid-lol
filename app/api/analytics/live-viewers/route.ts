@@ -13,9 +13,9 @@ export async function GET() {
     // Get active sessions in the last 30 minutes
     const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
 
-    const { data: activeSessions, error } = await supabase
+    const { count, error } = await supabase
       .from('visitor_sessions')
-      .select('id', { count: 'exact', head: true })
+      .select('*', { count: 'exact', head: true })
       .gte('last_activity', thirtyMinutesAgo)
       .eq('is_active', true);
 
@@ -24,11 +24,11 @@ export async function GET() {
       throw error;
     }
 
-    const count = activeSessions?.length || 0;
-    console.log(`[LIVE VIEWERS] Current: ${count}`);
+    const liveCount = count || 0;
+    console.log(`[LIVE VIEWERS] Current: ${liveCount}`);
 
     return NextResponse.json({
-      liveViewers: count,
+      liveViewers: liveCount,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

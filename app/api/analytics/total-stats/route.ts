@@ -13,15 +13,26 @@ export async function GET() {
     // Get all historical stats
     const { data: stats, error } = await supabase
       .from('visitor_analytics')
-      .select('total_visitors, page_views, date');
+      .select('*')
+      .order('date', { ascending: false });
 
     if (error) {
       console.error('Error fetching stats:', error);
       throw error;
     }
 
-    const totalVisitors = stats?.reduce((sum, day) => sum + (day.total_visitors || 0), 0) || 0;
     const totalPageViews = stats?.reduce((sum, day) => sum + (day.page_views || 0), 0) || 0;
+
+    // For unique visitors, count unique session IDs instead of summing daily counts
+    const { data: uniqueSessions, error: sessionError } = await supabase
+      .from('visitor_sessions')
+      .select('session_id', { count: 'exact', head: true });
+
+    if (sessionError) {
+      console.error('Error fetching unique sessions:', sessionError);
+    }
+
+    const totalVisitors = uniqueSessions?.length || 0;
 
     // Get today's stats
     const today = new Date().toISOString().split('T')[0];
@@ -39,7 +50,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
     };
 
-    console.log('[STATS]', result);
+    console.log('[TOTAL STATS]', result);
 
     return NextResponse.json(result);
   } catch (error) {
