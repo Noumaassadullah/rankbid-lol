@@ -65,29 +65,27 @@ export default function Header() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [liveRes, dailyRes, totalRes] = await Promise.all([
+        const [liveRes, totalRes] = await Promise.all([
           fetch('/api/analytics/live-viewers'),
-          fetch('/api/analytics/filtered-stats?period=daily'),
           fetch('/api/analytics/total-stats'),
         ]);
 
-        if (!liveRes.ok || !dailyRes.ok || !totalRes.ok) {
-          console.error('[Stats] API error:', { liveRes: liveRes.status, dailyRes: dailyRes.status, totalRes: totalRes.status });
+        if (!liveRes.ok || !totalRes.ok) {
+          console.error('[Stats] API error:', { liveRes: liveRes.status, totalRes: totalRes.status });
           return;
         }
 
         const liveData = await liveRes.json();
-        const dailyData = await dailyRes.json();
         const totalData = await totalRes.json();
 
-        // Use today's visitors as fallback for live if no active sessions
-        const liveCount = liveData.liveViewers > 0 ? liveData.liveViewers : (dailyData.visitors || 0);
+        // Use all-time visitors
+        const liveCount = liveData.liveViewers > 0 ? liveData.liveViewers : (totalData.totalVisitors || 0);
 
-        console.log('[Stats] Live:', liveData.liveViewers, 'Today:', dailyData.visitors, 'Views:', totalData.totalPageViews, 'Final Live:', liveCount);
+        console.log('[Stats] Live:', liveData.liveViewers, 'All-time Visitors:', totalData.totalVisitors, 'Views:', totalData.totalPageViews, 'Final Live:', liveCount);
 
         setStats({
           live: liveCount,
-          today: dailyData.visitors || 0,
+          today: totalData.totalVisitors || 0,
           views: totalData.totalPageViews || 0,
         });
       } catch (error) {
@@ -139,9 +137,9 @@ export default function Header() {
               </div>
               <span className="text-gray-300 text-xs">•</span>
               <div className="flex items-center gap-1">
-                <Activity className="w-4 h-4 text-blue-500" />
+                <Users className="w-4 h-4 text-blue-500" />
                 <span className="text-xs font-semibold text-gray-900">{stats.today}</span>
-                <span className="text-xs text-gray-500">TODAY</span>
+                <span className="text-xs text-gray-500">VISITORS</span>
               </div>
               <span className="text-gray-300 text-xs">•</span>
               <div className="flex items-center gap-1">
