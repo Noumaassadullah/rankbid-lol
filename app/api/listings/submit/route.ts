@@ -358,6 +358,8 @@ export async function GET(req: NextRequest) {
     const sort = searchParams.get('sort') || 'totalVotes';
     const category = searchParams.get('category') || '';
     const platforms = searchParams.getAll('platform') || [];
+    const timeFilter = searchParams.get('timeFilter') || '';
+    const limit = parseInt(searchParams.get('limit') || '100');
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -372,7 +374,22 @@ export async function GET(req: NextRequest) {
     const orderColumn = sort === 'dayVotes' ? 'day_votes' : 'total_votes';
     const offset = (page - 1) * pageSize;
 
-    let queryUrl = `${supabaseUrl}/rest/v1/listings?order=${orderColumn}.desc&limit=${pageSize}&offset=${offset}`;
+    let queryUrl = `${supabaseUrl}/rest/v1/listings?order=${orderColumn}.desc&limit=${limit || pageSize}&offset=${offset}`;
+
+    // Filter by time - only today's submissions for daily page
+    if (timeFilter === 'today') {
+      const now = new Date();
+      const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+      const today = new Date(utcNow.getFullYear(), utcNow.getMonth(), utcNow.getDate());
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const todayISO = today.toISOString();
+      const tomorrowISO = tomorrow.toISOString();
+
+      // Use AND filter syntax for multiple conditions
+      queryUrl += `&created_at=gte.${encodeURIComponent(todayISO)}&created_at=lt.${encodeURIComponent(tomorrowISO)}`;
+    }
 
     if (category && category !== 'All') {
       queryUrl += `&category=eq.${encodeURIComponent(category)}`;
@@ -392,6 +409,13 @@ export async function GET(req: NextRequest) {
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Supabase fetch failed:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: queryUrl,
+        error: errorText,
+      });
       return NextResponse.json(
         { listings: [], listing: null, error: 'Failed to fetch listings' },
         { status: 500 }

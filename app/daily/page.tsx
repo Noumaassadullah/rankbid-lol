@@ -56,12 +56,23 @@ export default function DailyPage() {
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
       setCountdown({ hours, minutes, seconds });
+
+      // Refresh listings when countdown reaches 0 (day changed)
+      if (diff <= 0) {
+        fetchListings();
+      }
     };
 
     calculateCountdown();
     const timer = setInterval(calculateCountdown, 1000);
 
-    return () => clearInterval(timer);
+    // Refresh listings every 30 seconds for real-time updates
+    const refreshTimer = setInterval(fetchListings, 30000);
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(refreshTimer);
+    };
   }, []);
 
   const fetchListings = async () => {

@@ -4,6 +4,10 @@
     {
       "path": "/api/daily-snapshots",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/reset-daily-votes",
+      "schedule": "0 0 * * *"
     }
   ]
 }
