@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
 export async function GET(req: NextRequest) {
   try {
@@ -10,6 +11,67 @@ export async function GET(req: NextRequest) {
         { error: 'Database not configured' },
         { status: 500 }
       );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+
+    // Get yesterday's date (since this runs at midnight)
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setUTCHours(0, 0, 0, 0);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+    // Save yesterday's snapshot before resetting
+    try {
+      // Fetch yesterday's top listings
+      const { data: allListings } = await supabase
+        .from('listings')
+        .select('id, title, location, day_votes')
+        .order('day_votes', { ascending: false })
+        .limit(100);
+
+      if (allListings && allListings.length > 0) {
+        const snapshotData = allListings
+          .filter((l: any) => (l.day_votes || 0) > 0)
+          .map((listing: any, idx: number) => ({
+            rank: idx + 1,
+            listing: {
+              id: listing.id,
+              title: listing.title,
+              url: listing.location,
+            },
+            votes: listing.day_votes || 0,
+          }));
+
+        if (snapshotData.length > 0) {
+          // Check if snapshot already exists for this date
+          const { data: existing } = await supabase
+            .from('daily_snapshots')
+            .select('id')
+            .eq('date', yesterdayStr)
+            .single();
+
+          if (!existing) {
+            // Insert new snapshot
+            const { error: insertError } = await supabase
+              .from('daily_snapshots')
+              .insert({
+                date: yesterdayStr,
+                snapshot_data: snapshotData,
+              });
+
+            if (insertError) {
+              console.error('Error saving snapshot:', insertError);
+            } else {
+              console.log(`Saved snapshot for ${yesterdayStr}`);
+            }
+          }
+        }
+      }
+    } catch (snapshotError) {
+      console.error('Error creating snapshot:', snapshotError);
     }
 
     // Reset day_votes to 0 for all listings
@@ -43,7 +105,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: `Reset day_votes for ${updatedCount} listings`,
+        message: `Saved snapshot for ${yesterdayStr} and reset day_votes for ${updatedCount} listings`,
         timestamp: new Date().toISOString(),
       },
       { status: 200 }

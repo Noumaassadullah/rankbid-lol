@@ -1,4 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+export const revalidate = 0; // Don't cache
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,15 +15,36 @@ export async function GET(request: NextRequest) {
 
     let snapshots: any[] = [];
 
-    // Get today's date
+    // Get today's date and start date
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split('T')[0];
+
+    const startDate = new Date(today);
+    startDate.setDate(startDate.getDate() - daysBack);
+    const startDateStr = startDate.toISOString().split('T')[0];
 
     try {
-      // Fetch listings from the submissions API which includes URLs
+      // Fetch historical snapshots from database
+      const { data: historicalSnapshots, error: dbError } = await supabase
+        .from('daily_snapshots')
+        .select('*')
+        .gte('date', startDateStr)
+        .order('date', { ascending: false });
+
+      if (!dbError && historicalSnapshots) {
+        snapshots = historicalSnapshots.map((snapshot: any) => ({
+          id: snapshot.id,
+          date: snapshot.date,
+          data: snapshot.snapshot_data || [],
+          frozen: true,
+        }));
+      }
+
+      // Fetch today's live data
       const origin = new URL(request.url).origin;
       const listingsRes = await fetch(
-        `${origin}/api/listings/submit?limit=1000&sort=dayVotes`,
+        `${origin}/api/listings/submit?limit=1000&sort=dayVotes&timeFilter=today`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -23,44 +52,49 @@ export async function GET(request: NextRequest) {
         }
       );
 
-      if (!listingsRes.ok) {
-        console.warn('Failed to fetch listings');
-        return NextResponse.json({ snapshots: [], totalDays: 0 });
-      }
+      if (listingsRes.ok) {
+        const data = await listingsRes.json();
+        const listings = data.listings || [];
 
-      const data = await listingsRes.json();
-      const listings = data.listings || [];
+        // Filter listings with day_votes > 0 and sort by day_votes descending
+        const topListingsToday = listings
+          .filter((l: any) => (l.dayVotes || 0) > 0)
+          .sort((a: any, b: any) => (b.dayVotes || 0) - (a.dayVotes || 0))
+          .slice(0, 100);
 
-      // Filter listings with day_votes > 0 and sort by day_votes descending
-      const topListingsToday = listings
-        .filter((l: any) => (l.dayVotes || 0) > 0)
-        .sort((a: any, b: any) => (b.dayVotes || 0) - (a.dayVotes || 0))
-        .slice(0, 100);
+        // If there are listings with votes, create today's snapshot
+        if (topListingsToday && topListingsToday.length > 0) {
+          const todaySnapshotData = {
+            id: 'today-live',
+            date: todayStr,
+            data: topListingsToday.map((listing: any, idx: number) => ({
+              rank: idx + 1,
+              listing: {
+                id: listing.id,
+                title: listing.title,
+                url: listing.url || `https://rankbid-lol.vercel.app/listing/${listing.id}`,
+              },
+              votes: listing.dayVotes || 0,
+            })),
+            frozen: false,
+          };
 
-      // If there are listings with votes, create today's snapshot
-      if (topListingsToday && topListingsToday.length > 0) {
-        const todaySnapshotData = {
-          id: 'today-temp',
-          date: today,
-          data: topListingsToday.map((listing: any, idx: number) => ({
-            rank: idx + 1,
-            listing: {
-              id: listing.id,
-              title: listing.title,
-              url: listing.url || `https://rankbid-lol.vercel.app/listing/${listing.id}`,
-            },
-            votes: listing.dayVotes || 0,
-          })),
-          frozen: false,
-          createdAt: today,
-          updatedAt: today,
-        };
+          // Check if today's snapshot already exists in DB
+          const todayExists = snapshots.some(s => s.date === todayStr);
 
-        snapshots = [todaySnapshotData];
+          if (!todayExists) {
+            // Add today's live snapshot at the beginning
+            snapshots.unshift(todaySnapshotData);
+          } else {
+            // Replace the stored today's snapshot with fresh data
+            snapshots = snapshots.map(s =>
+              s.date === todayStr ? todaySnapshotData : s
+            );
+          }
+        }
       }
     } catch (error) {
-      console.error('Error fetching listings:', error);
-      return NextResponse.json({ snapshots: [], totalDays: 0 });
+      console.error('Error fetching snapshots:', error);
     }
 
     return NextResponse.json({
