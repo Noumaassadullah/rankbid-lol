@@ -15,22 +15,34 @@ export default function StatsPage() {
 
   useEffect(() => {
     fetchStats();
+
+    // Refresh stats every 10 seconds for real-time updates
+    const interval = setInterval(fetchStats, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('/api/listings/submit?limit=1000');
-      if (!res.ok) return;
+      // Fetch listings
+      const listingsRes = await fetch('/api/listings/submit?limit=1000');
+      const listingsData = listingsRes.ok ? await listingsRes.json() : { listings: [] };
+      const listings = listingsData.listings || [];
 
-      const data = await res.json();
-      const listings = data.listings || [];
+      // Fetch analytics stats
+      const statsRes = await fetch('/api/analytics/total-stats');
+      const statsData = statsRes.ok ? await statsRes.json() : { totalVisitors: 0, totalPageViews: 0 };
+
+      // Fetch live viewers
+      const liveRes = await fetch('/api/analytics/live-viewers');
+      const liveData = liveRes.ok ? await liveRes.json() : { liveViewers: 0 };
 
       setStats({
         totalProducts: listings.length,
         totalBids: listings.reduce((sum: number, l: any) => sum + (Math.floor(l.totalPaid / 100) || 0), 0),
         totalRevenue: listings.reduce((sum: number, l: any) => sum + (l.totalPaid || 0), 0),
-        totalVisitors: 1528484,
-        onlineUsers: 245,
+        totalVisitors: statsData.totalVisitors || 0,
+        onlineUsers: liveData.liveViewers || 0,
       });
     } catch (error) {
       console.error('Failed to fetch stats:', error);
@@ -41,7 +53,11 @@ export default function StatsPage() {
     { label: 'Products Listed', value: stats.totalProducts, suffix: '' },
     { label: 'Total Bids Placed', value: stats.totalBids, suffix: '' },
     { label: 'Total Revenue', value: (stats.totalRevenue / 100).toFixed(0), prefix: '$', suffix: '' },
-    { label: 'Platform Visitors', value: (stats.totalVisitors / 1000).toFixed(1), suffix: 'K' },
+    {
+      label: 'Platform Visitors',
+      value: stats.totalVisitors > 0 ? (stats.totalVisitors >= 1000 ? (stats.totalVisitors / 1000).toFixed(1) : stats.totalVisitors) : 0,
+      suffix: stats.totalVisitors >= 1000 ? 'K' : ''
+    },
     { label: 'Online Now', value: stats.onlineUsers, suffix: '' },
   ];
 
