@@ -9,6 +9,7 @@ const PUBLIC_ROUTES = [
   '/coming-soon',
   '/login',
   '/signup',
+  '/admin',
   '/api/waitlist',
   '/api/waitlist/count',
 ];
