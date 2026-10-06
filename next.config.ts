@@ -1,7 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "rankbid-lol.vercel.app",
+          },
+        ],
+        destination: "https://www.rankbid.click/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
