@@ -43,6 +43,7 @@ export default function PremiumListingModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<'rapid-gateway' | 'jazzcash' | 'easypaisa' | 'manual'>('rapid-gateway');
   const [formData, setFormData] = useState({
     founderName: '',
     founderEmail: '',
@@ -55,7 +56,6 @@ export default function PremiumListingModal({
     founderTiktok: '',
     founderYoutube: '',
     founderGithub: '',
-    paymentMethod: 'manual',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -97,7 +97,7 @@ export default function PremiumListingModal({
       await onSubmit({
         position,
         ...formData,
-        paymentMethod: 'manual',
+        paymentMethod,
       });
 
       console.log('✅ Premium listing submitted successfully');
@@ -117,9 +117,9 @@ export default function PremiumListingModal({
           founderTiktok: '',
           founderYoutube: '',
           founderGithub: '',
-          paymentMethod: 'manual',
         });
         setPosition(1);
+        setPaymentMethod('rapid-gateway');
         onClose();
       }, 1500);
     } catch (err: any) {
@@ -281,11 +281,45 @@ export default function PremiumListingModal({
             </div>
           )}
 
+          {/* Payment Method Selection */}
+          <div className="border-t-4 border-gray-300 pt-6">
+            <label className="block text-sm font-black text-gray-900 mb-4 uppercase">💳 Select Payment Method</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {[
+                { id: 'rapid-gateway', label: '🚀 Rapid Gateway', desc: 'Instant payment' },
+                { id: 'jazzcash', label: '💰 JazzCash', desc: 'Pakistani mobile money' },
+                { id: 'easypaisa', label: '📱 EasyPaisa', desc: 'Pakistani mobile money' },
+                { id: 'manual', label: '📋 Manual Verification', desc: 'Admin will verify' },
+              ].map((method) => (
+                <button
+                  key={method.id}
+                  type="button"
+                  onClick={() => setPaymentMethod(method.id as any)}
+                  className={`p-3 rounded-lg border-2 text-left transition-all ${
+                    paymentMethod === method.id
+                      ? 'bg-orange-600 border-orange-700 text-white'
+                      : 'bg-white border-gray-300 text-gray-900 hover:border-orange-400'
+                  }`}
+                >
+                  <p className="font-black text-sm">{method.label}</p>
+                  <p className={`text-xs ${paymentMethod === method.id ? 'text-orange-100' : 'text-gray-600'}`}>
+                    {method.desc}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Payment Info */}
-          <div className="bg-yellow-50 border-2 border-yellow-300 p-4 rounded">
-            <p className="font-black text-gray-900 mb-2 uppercase">💰 Payment Method: Manual Verification</p>
+          <div className="bg-blue-50 border-2 border-blue-300 p-4 rounded">
+            <p className="font-black text-gray-900 mb-2 uppercase">
+              💰 Total: ${price} {paymentMethod === 'manual' ? '(Pending Verification)' : '(Instant Payment)'}
+            </p>
             <p className="text-sm text-gray-700">
-              After submission, an admin will verify your payment of <span className="font-black text-orange-600">${price}</span> and activate your premium listing. You'll receive a confirmation email.
+              {paymentMethod === 'rapid-gateway' && 'You will be redirected to Rapid Gateway for secure payment.'}
+              {paymentMethod === 'jazzcash' && 'You will be redirected to JazzCash for payment.'}
+              {paymentMethod === 'easypaisa' && 'You will be redirected to EasyPaisa for payment.'}
+              {paymentMethod === 'manual' && 'After submission, an admin will verify your payment and activate your premium listing.'}
             </p>
           </div>
 
@@ -307,9 +341,21 @@ export default function PremiumListingModal({
                 <>
                   <span className="animate-spin">⏳</span> Processing...
                 </>
+              ) : paymentMethod === 'rapid-gateway' ? (
+                <>
+                  🚀 Pay ${price} via Rapid Gateway
+                </>
+              ) : paymentMethod === 'jazzcash' ? (
+                <>
+                  💰 Pay ${price} via JazzCash
+                </>
+              ) : paymentMethod === 'easypaisa' ? (
+                <>
+                  📱 Pay ${price} via EasyPaisa
+                </>
               ) : (
                 <>
-                  💳 Pay ${price} & Submit Now
+                  📋 Submit for ${price} Verification
                 </>
               )}
             </button>

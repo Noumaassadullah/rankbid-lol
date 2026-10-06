@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RankBid - Complete Business Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0F3460;
+            --primary-dark: #0D2A50;
+            --secondary: #059669;
+            --accent: #F97316;
+            --white: #FFFFFF;
+            --light-bg: #F9FAFB;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .slide {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            border-radius: 16px;
+            padding: 60px;
+            min-height: 600px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide.white-theme {
+            background: var(--white);
+            color: var(--primary);
+            border: 3px solid var(--primary);
+        }
+
+        .slide.green-theme {
+            background: linear-gradient(135deg, var(--secondary) 0%, #047857 100%);
+            color: var(--white);
+        }
+
+        .slide.orange-theme {
+            background: linear-gradient(135deg, var(--accent) 0%, #EA580C 100%);
+            color: var(--white);
+        }
+
+        .slide h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .slide h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .slide p {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .slide ul {
+            font-size: 1.3rem;
+            text-align: left;
+            display: inline-block;
+            line-height: 2;
+            margin: 1rem 0;
+        }
+
+        .slide li {
+            list-style: none;
+            margin-bottom: 0.8rem;
+            padding-left: 3rem;
+            position: relative;
+        }
+
+        .slide li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-size: 1.8rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .white-theme li:before {
+            color: var(--secondary);
+        }
+
+        .green-theme li:before {
+            color: var(--accent);
+        }
+
+        .orange-theme li:before {
+            color: var(--white);
+        }
+
+        .icon-large {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1rem auto;
+            display: inline-block;
+            min-width: 250px;
+        }
+
+        .stat-box .number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            display: block;
+        }
+
+        .stat-box .label {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+        }
+
+        .white-theme .feature-card {
+            background: rgba(15, 52, 96, 0.1);
+        }
+
+        .green-theme .feature-card {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .vs-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .vs-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+        }
+
+        .white-theme .vs-box {
+            background: rgba(15, 52, 96, 0.1);
+        }
+
+        .highlight-text {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-left: 4px solid var(--accent);
+        }
+
+        .white-theme .highlight-text {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--primary);
+            border-left-color: var(--secondary);
+        }
+
+        .comparison-table {
+            width: 100%;
+            margin: 2rem 0;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .comparison-table th {
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .white-theme .comparison-table th, .white-theme .comparison-table td {
+            border-bottom-color: rgba(15, 52, 96, 0.2);
+        }
+
+        .white-theme .comparison-table th {
+            background: rgba(15, 52, 96, 0.1);
+        }
+
+        .check-mark {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .white-theme .check-mark {
+            color: var(--secondary);
+        }
+
+        .cross-mark {
+            color: #EF4444;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        button:hover {
+            background: #047857;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .slide-counter {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .white-theme .slide-counter {
+            color: var(--primary);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .two-col-item {
+            text-align: left;
+        }
+
+        .two-col-item h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .value-proposition {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .white-theme .value-proposition {
+            background: rgba(15, 52, 96, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 30px;
+                min-height: 500px;
+            }
+
+            .slide h1 {
+                font-size: 2.2rem;
+            }
+
+            .slide h2 {
+                font-size: 1.8rem;
+            }
+
+            .slide p {
+                font-size: 1.2rem;
+            }
+
+            .slide ul {
+                font-size: 1.1rem;
+            }
+
+            .feature-grid, .vs-container, .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .icon-large {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- SLIDE 1: TITLE -->
+        <div class="slide active green-theme">
+            <div class="icon-large">🚀</div>
+            <h1>RankBid</h1>
+            <p style="font-size: 2rem; margin-top: 2rem;">Fair Product Discovery for Everyone</p>
+            <p style="font-size: 1.3rem; opacity: 0.9; margin-top: 2rem;">Free Backlinks • Quality Traffic • Multi-Product Sales</p>
+        </div>
+
+        <!-- SLIDE 2: PURPOSE -->
+        <div class="slide white-theme">
+            <div class="icon-large">🎯</div>
+            <h2>What is RankBid?</h2>
+            <ul style="margin-top: 2rem;">
+                <li>Free community-driven ranking platform</li>
+                <li>Get discovered without paying ads</li>
+                <li>Free backlinks for SEO</li>
+                <li>List multiple products</li>
+                <li>Transparent voting (no algorithms)</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 3: WHY WE BUILT IT -->
+        <div class="slide">
+            <div class="icon-large">💡</div>
+            <h2>Why We Built RankBid</h2>
+            <p style="margin-top: 2rem; font-size: 1.4rem;">Indie makers were struggling...</p>
+            <ul style="margin-top: 2rem;">
+                <li>Big platforms favor established companies</li>
+                <li>Need huge budget to get seen</li>
+                <li>Hidden algorithms decide winners</li>
+                <li>Creators can't compete fairly</li>
+                <li>No fair way to rank all product types</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 4: OUR MISSION -->
+        <div class="slide orange-theme">
+            <h2>Our Mission</h2>
+            <div class="highlight-text" style="background: rgba(0, 0, 0, 0.3); border-left-color: var(--white);">
+                Create a platform where quality matters more than budget.<br>Where community votes decide, not algorithms.
+            </div>
+            <p style="margin-top: 2rem;">Everyone deserves a fair chance to be discovered.</p>
+        </div>
+
+        <!-- SLIDE 5: PROBLEM 1 -->
+        <div class="slide white-theme">
+            <h2>Problem #1</h2>
+            <h3 style="color: var(--secondary); margin: 1.5rem 0;">Algorithmic Gatekeeping</h3>
+            <ul style="margin: 2rem 0;">
+                <li>Platforms control visibility secretly</li>
+                <li>No idea why product isn't seen</li>
+                <li>Algorithms change anytime</li>
+                <li>Zero transparency</li>
+            </ul>
+            <h3 style="color: var(--primary); margin-top: 2rem;">✓ RankBid Solution</h3>
+            <p style="margin-top: 1rem; font-size: 1.2rem;">Pure voting = Pure transparency. Ranking = Total votes.</p>
+        </div>
+
+        <!-- SLIDE 6: PROBLEM 2 -->
+        <div class="slide white-theme">
+            <h2>Problem #2</h2>
+            <h3 style="color: var(--secondary); margin: 1.5rem 0;">Pay-to-Play Discovery</h3>
+            <ul style="margin: 2rem 0;">
+                <li>Most platforms require paid promotion</li>
+                <li>Indie makers can't compete</li>
+                <li>Product quality doesn't matter</li>
+                <li>Unfair advantage for big budgets</li>
+            </ul>
+            <h3 style="color: var(--primary); margin-top: 2rem;">✓ RankBid Solution</h3>
+            <p style="margin-top: 1rem; font-size: 1.2rem;">Completely FREE to submit. Premium optional ($1-$5).</p>
+        </div>
+
+        <!-- SLIDE 7: PROBLEM 3 -->
+        <div class="slide white-theme">
+            <h2>Problem #3</h2>
+            <h3 style="color: var(--secondary); margin: 1.5rem 0;">Limited Platform Support</h3>
+            <ul style="margin: 2rem 0;">
+                <li>Most sites only rank web products</li>
+                <li>TikTok creators can't rank</li>
+                <li>Instagram influencers excluded</li>
+                <li>Social-first businesses left out</li>
+            </ul>
+            <h3 style="color: var(--primary); margin-top: 2rem;">✓ RankBid Solution</h3>
+            <p style="margin-top: 1rem; font-size: 1.2rem;">Support 6+ platforms. All treated equally.</p>
+        </div>
+
+        <!-- SLIDE 8: PROBLEM 4 - THE BIG ONE! -->
+        <div class="slide">
+            <div class="icon-large">🔗</div>
+            <h2>Problem #4 (CRITICAL!)</h2>
+            <h3 style="margin: 1.5rem 0;">No Backlinks = No SEO Value</h3>
+            <p style="margin-top: 2rem; font-size: 1.4rem;">Other platforms provide NO backlink benefit</p>
+            <ul style="margin: 2rem 0;">
+                <li>Get listed ≠ SEO improvement</li>
+                <li>Lose value from discovery</li>
+                <li>Traffic comes in, no Google boost</li>
+                <li>Wasted SEO opportunity</li>
+            </ul>
+            <div class="highlight-text" style="background: rgba(255, 255, 255, 0.2); border-left-color: var(--accent); margin-top: 2rem;">
+                ✓ RankBid = FREE Dofollow Backlinks!
+            </div>
+        </div>
+
+        <!-- SLIDE 9: BACKLINKS VALUE -->
+        <div class="slide green-theme">
+            <h2>The Backlink Advantage</h2>
+            <div class="value-proposition">
+                <h3 style="text-align: center;">Each RankBid listing gives you:</h3>
+                <p>✓ Dofollow backlink (Google counts it)</p>
+                <p>✓ Improves domain authority</p>
+                <p>✓ Boosts search rankings</p>
+                <p>✓ Drives quality traffic</p>
+                <p>✓ Permanent link (not temporary)</p>
+            </div>
+            <p style="margin-top: 2rem; font-size: 1.4rem;">Average backlink value: $50-$200</p>
+            <p style="font-size: 1.3rem; font-weight: 600;">RankBid gives them for FREE! 🎁</p>
+        </div>
+
+        <!-- SLIDE 10: PROBLEM 5 -->
+        <div class="slide white-theme">
+            <h2>Problem #5</h2>
+            <h3 style="color: var(--secondary); margin: 1.5rem 0;">Can't Cross-Sell</h3>
+            <ul style="margin: 2rem 0;">
+                <li>Rank one product = one traffic stream</li>
+                <li>Can't showcase multiple offerings</li>
+                <li>Visitors only see one product</li>
+                <li>No upsell opportunity</li>
+            </ul>
+            <h3 style="color: var(--primary); margin-top: 2rem;">✓ RankBid Solution</h3>
+            <p style="margin-top: 1rem; font-size: 1.2rem;">List MULTIPLE products. Visitors see ALL of them.</p>
+        </div>
+
+        <!-- SLIDE 11: MULTI-PRODUCT STRATEGY -->
+        <div class="slide">
+            <h2>Multiple Products = Multiple Sales</h2>
+            <div class="vs-container" style="margin-top: 2rem;">
+                <div class="vs-box">
+                    <h3 style="margin-bottom: 1rem;">Other Platforms</h3>
+                    <p style="font-size: 1.1rem;">Product A</p>
+                    <p style="font-size: 1.1rem;">↓</p>
+                    <p style="font-size: 1.1rem;">Visitor</p>
+                    <p style="font-size: 1.1rem;">↓</p>
+                    <p style="font-size: 1.1rem;">1 Sale</p>
+                </div>
+                <div class="vs-box">
+                    <h3 style="margin-bottom: 1rem;">RankBid</h3>
+                    <p style="font-size: 1.1rem;">Product A, B, C, D, E</p>
+                    <p style="font-size: 1.1rem;">↓</p>
+                    <p style="font-size: 1.1rem;">Visitor</p>
+                    <p style="font-size: 1.1rem;">↓</p>
+                    <p style="font-size: 1.1rem;">3-5 Sales</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: COMPETITORS -->
+        <div class="slide white-theme">
+            <h2>Competitors in Market</h2>
+            <ul style="margin: 2rem 0; font-size: 1.2rem;">
+                <li><strong>Product Hunt:</strong> Algorithm-based, approval needed, websites only</li>
+                <li><strong>Hacker News:</strong> Tech community, no backlinks, limited reach</li>
+                <li><strong>BetaList:</strong> Early stage only, minimal traffic</li>
+                <li><strong>Alternatives.to:</strong> Software alternatives only, niche</li>
+            </ul>
+            <div class="highlight-text" style="margin-top: 2rem; background: rgba(5, 150, 105, 0.2); border-left-color: var(--secondary);">
+                RankBid beats ALL of them!
+            </div>
+        </div>
+
+        <!-- SLIDE 13: COMPARISON TABLE -->
+        <div class="slide">
+            <h2>Why RankBid Wins</h2>
+            <table class="comparison-table" style="margin-top: 2rem;">
+                <tr>
+                    <th>Feature</th>
+                    <th>Hunt</th>
+                    <th>News</th>
+                    <th>Beta</th>
+                    <th>Alt.to</th>
+                    <th style="color: var(--accent);">RankBid</th>
+                </tr>
+                <tr>
+                    <td>Free</td>
+                    <td class="check-mark">✓</td>
+                    <td class="check-mark">✓</td>
+                    <td class="check-mark">✓</td>
+                    <td class="check-mark">✓</td>
+                    <td class="check-mark">✓</td>
+                </tr>
+                <tr>
+                    <td>No Algorithm</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="check-mark">✓</td>
+                    <td class="check-mark">✓</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="check-mark">✓</td>
+                </tr>
+                <tr>
+                    <td>Backlinks</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="check-mark">✓</td>
+                    <td class="check-mark">✓</td>
+                </tr>
+                <tr>
+                    <td>Multi-Platform</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="check-mark">✓</td>
+                </tr>
+                <tr>
+                    <td>Multi-Product</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="cross-mark">✗</td>
+                    <td class="check-mark">✓</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- SLIDE 14: FEATURES PART 1 -->
+        <div class="slide white-theme">
+            <h2>RankBid Features (Part 1)</h2>
+            <div class="feature-grid" style="margin-top: 2rem;">
+                <div class="feature-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🌐</div>
+                    <h3>Multi-Platform</h3>
+                    <p>6+ platforms supported equally</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📁</div>
+                    <h3>30+ Categories</h3>
+                    <p>All types of products</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🗳️</div>
+                    <h3>Real-Time Voting</h3>
+                    <p>Live vote counts & rankings</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📊</div>
+                    <h3>Time-Based Rankings</h3>
+                    <p>Today, All-Time, Weekly</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: FEATURES PART 2 -->
+        <div class="slide white-theme">
+            <h2>RankBid Features (Part 2)</h2>
+            <div class="feature-grid" style="margin-top: 2rem;">
+                <div class="feature-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔗</div>
+                    <h3>FREE Backlinks</h3>
+                    <p>Dofollow links for SEO</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📦</div>
+                    <h3>Multi-Product</h3>
+                    <p>List all your products</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📤</div>
+                    <h3>Social Sharing</h3>
+                    <p>Share to Twitter, LinkedIn</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👤</div>
+                    <h3>Profile Display</h3>
+                    <p>Show team info & contact</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 16: PREMIUM LISTINGS -->
+        <div class="slide orange-theme">
+            <h2>Premium Listings (Optional)</h2>
+            <p style="margin-top: 2rem; font-size: 1.4rem;">Boost visibility when needed:</p>
+            <div class="feature-grid" style="margin-top: 2rem;">
+                <div class="feature-card">
+                    <p style="font-size: 2rem; font-weight: 900;">🥇</p>
+                    <p style="font-size: 1.5rem;">#1 Position</p>
+                    <p>$5</p>
+                </div>
+                <div class="feature-card">
+                    <p style="font-size: 2rem; font-weight: 900;">🥈</p>
+                    <p style="font-size: 1.5rem;">#2 Position</p>
+                    <p>$3</p>
+                </div>
+                <div class="feature-card">
+                    <p style="font-size: 2rem; font-weight: 900;">🥉</p>
+                    <p style="font-size: 1.5rem;">#3 Position</p>
+                    <p>$1</p>
+                </div>
+            </div>
+            <p style="margin-top: 2rem; font-size: 1.2rem;">Premium = Optional, not required</p>
+        </div>
+
+        <!-- SLIDE 17: WHAT YOU CAN SELL -->
+        <div class="slide white-theme">
+            <h2>You Can Sell</h2>
+            <ul style="margin: 2rem 0; font-size: 1.2rem;">
+                <li>SaaS products & apps</li>
+                <li>Digital products (e-books, courses)</li>
+                <li>Design & code resources</li>
+                <li>Services & consulting</li>
+                <li>Physical products & e-commerce</li>
+                <li>Social profiles & personal brand</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 18: TRAFFIC FUNNEL -->
+        <div class="slide">
+            <h2>How RankBid Drives Sales</h2>
+            <div style="font-size: 1.2rem; line-height: 2.5; margin-top: 2rem;">
+                <p>1. Get Listed 📋</p>
+                <p>↓</p>
+                <p>2. Get Votes 🗳️</p>
+                <p>↓</p>
+                <p>3. Get Traffic 👥</p>
+                <p>↓</p>
+                <p>4. Visitors See ALL Products 🎯</p>
+                <p>↓</p>
+                <p>5. Multiple Sales 💰</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 19: SEO VALUE CALC -->
+        <div class="slide green-theme">
+            <h2>Real Money Value</h2>
+            <p style="margin-top: 2rem; font-size: 1.3rem;">If you sell 3 products:</p>
+            <div class="stat-grid" style="margin-top: 2rem;">
+                <div class="stat-box">
+                    <span class="number">$75</span>
+                    <span class="label">Product 1 Backlink</span>
+                </div>
+                <div class="stat-box">
+                    <span class="number">$75</span>
+                    <span class="label">Product 2 Backlink</span>
+                </div>
+                <div class="stat-box">
+                    <span class="number">$75</span>
+                    <span class="label">Product 3 Backlink</span>
+                </div>
+            </div>
+            <div class="highlight-text" style="background: rgba(0, 0, 0, 0.3); border-left-color: var(--white); margin-top: 2rem;">
+                Total FREE Value: $225+
+            </div>
+        </div>
+
+        <!-- SLIDE 20: COMPETITIVE ADVANTAGES -->
+        <div class="slide white-theme">
+            <h2>Our Advantages</h2>
+            <ul style="margin: 2rem 0;">
+                <li><strong>✓ Free Core Experience</strong> - No mandatory payment</li>
+                <li><strong>✓ FREE Dofollow Backlinks</strong> - Direct SEO benefit</li>
+                <li><strong>✓ Multi-Product Support</strong> - Showcase entire ecosystem</li>
+                <li><strong>✓ No Algorithms</strong> - Pure community voting</li>
+                <li><strong>✓ Social Platform Equality</strong> - TikTok = Websites</li>
+                <li><strong>✓ No Approval Process</strong> - Go live instantly</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 21: MONETIZATION -->
+        <div class="slide">
+            <h2>How We Make Money</h2>
+            <div class="feature-grid" style="margin-top: 2rem;">
+                <div class="feature-card">
+                    <h3>Premium Listings</h3>
+                    <p>Optional $1-$5/month</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Analytics Pro</h3>
+                    <p>Detailed traffic data</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Enterprise</h3>
+                    <p>White-label solutions</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Marketplace</h3>
+                    <p>Transaction fees (future)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 22: KEY STATISTICS -->
+        <div class="slide white-theme">
+            <h2>RankBid by Numbers</h2>
+            <div class="stat-grid" style="margin-top: 2rem;">
+                <div class="stat-box" style="background: rgba(5, 150, 105, 0.2); color: var(--primary);">
+                    <span class="number">100K+</span>
+                    <span class="label">Products Ranked</span>
+                </div>
+                <div class="stat-box" style="background: rgba(5, 150, 105, 0.2); color: var(--primary);">
+                    <span class="number">30+</span>
+                    <span class="label">Categories</span>
+                </div>
+                <div class="stat-box" style="background: rgba(5, 150, 105, 0.2); color: var(--primary);">
+                    <span class="number">6</span>
+                    <span class="label">Platforms</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 23: KEY MESSAGES -->
+        <div class="slide orange-theme">
+            <h2>Remember These</h2>
+            <ul style="margin: 2rem 0; font-size: 1.3rem;">
+                <li>✓ No Algorithms - Community votes!</li>
+                <li>✓ No Gatekeepers - No approval!</li>
+                <li>✓ FREE Backlinks - Real SEO value!</li>
+                <li>✓ Multi-Platform - All types welcome!</li>
+                <li>✓ Fair Competition - Quality wins!</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 24: CALL TO ACTION -->
+        <div class="slide">
+            <div class="icon-large">🎯</div>
+            <h2>Join RankBid Today</h2>
+            <p style="margin-top: 2rem; font-size: 1.4rem;">For Makers</p>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">Submit your product. Get discovered. Get backlinks. Sell more.</p>
+            <p style="font-size: 1.4rem;">For Creators</p>
+            <p style="font-size: 1.2rem; opacity: 0.9;">Your TikTok, Instagram, YouTube finally rank fairly.</p>
+        </div>
+
+        <!-- SLIDE 25: FINAL SLIDE -->
+        <div class="slide green-theme">
+            <div class="icon-large">⭐</div>
+            <h1 style="font-size: 2.8rem;">RankBid</h1>
+            <div class="highlight-text" style="background: rgba(0, 0, 0, 0.3); border-left-color: var(--white); margin-top: 2rem;">
+                Discovery + SEO + Traffic + Sales
+                <br><br>
+                = Complete Solution
+            </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="controls">
+            <button onclick="previousSlide()">← Previous</button>
+            <button onclick="nextSlide()">Next →</button>
+        </div>
+
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">25</span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            document.getElementById('current-slide').textContent = n + 1;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>

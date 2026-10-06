@@ -40,7 +40,7 @@ export const CATEGORIES = [
 ] as const;
 
 // Payment methods
-export const PAYMENT_METHODS = ['jazzcash', 'easypaisa', 'stripe'] as const;
+export const PAYMENT_METHODS = ['rapid-gateway', 'jazzcash', 'easypaisa', 'stripe'] as const;
 
 // URLs that are blocked
 export const BLOCKED_DOMAINS = [

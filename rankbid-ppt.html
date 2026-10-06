@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RankBid - PowerPoint Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0F3460;
+            --primary-dark: #0D2A50;
+            --secondary: #059669;
+            --accent: #F97316;
+            --white: #FFFFFF;
+            --light-bg: #F9FAFB;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .slide {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            border-radius: 16px;
+            padding: 60px;
+            min-height: 600px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide.white-theme {
+            background: var(--white);
+            color: var(--primary);
+            border: 3px solid var(--primary);
+        }
+
+        .slide.green-theme {
+            background: linear-gradient(135deg, var(--secondary) 0%, #047857 100%);
+            color: var(--white);
+        }
+
+        .slide h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .slide h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .slide p {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .slide ul {
+            font-size: 1.3rem;
+            text-align: left;
+            display: inline-block;
+            line-height: 2.2;
+        }
+
+        .slide li {
+            list-style: none;
+            margin-bottom: 0.8rem;
+            padding-left: 3rem;
+            position: relative;
+        }
+
+        .slide li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-size: 1.8rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .white-theme li:before {
+            color: var(--secondary);
+        }
+
+        .green-theme li:before {
+            color: var(--accent);
+        }
+
+        .icon-large {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1rem auto;
+            display: inline-block;
+            min-width: 250px;
+        }
+
+        .stat-box .number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            display: block;
+        }
+
+        .stat-box .label {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+        }
+
+        .white-theme .feature-card {
+            background: rgba(15, 52, 96, 0.1);
+        }
+
+        .green-theme .feature-card {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .vs-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .vs-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+        }
+
+        .white-theme .vs-box {
+            background: rgba(15, 52, 96, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        button:hover {
+            background: #047857;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .slide-counter {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .white-theme .slide-counter {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 30px;
+                min-height: 500px;
+            }
+
+            .slide h1 {
+                font-size: 2.2rem;
+            }
+
+            .slide h2 {
+                font-size: 1.8rem;
+            }
+
+            .slide p {
+                font-size: 1.2rem;
+            }
+
+            .slide ul {
+                font-size: 1.1rem;
+            }
+
+            .feature-grid, .vs-container {
+                grid-template-columns: 1fr;
+            }
+
+            .icon-large {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- SLIDE 1: TITLE -->
+        <div class="slide active green-theme">
+            <div class="icon-large">🚀</div>
+            <h1>RankBid</h1>
+            <p style="font-size: 2rem; margin-top: 2rem;">Fair Product Discovery for Everyone</p>
+            <p style="font-size: 1.3rem; opacity: 0.9; margin-top: 2rem;">No Algorithms. No Gatekeepers.<br>Just Community Voting Power.</p>
+        </div>
+
+        <!-- SLIDE 2: THE PROBLEM -->
+        <div class="slide white-theme">
+            <div class="icon-large">❌</div>
+            <h2>The Problem Today</h2>
+            <ul>
+                <li>Big platforms control who sees what</li>
+                <li>Pay more = get more visibility</li>
+                <li>Hidden algorithms decide winners</li>
+                <li>Social creators can't rank fairly</li>
+                <li>Indie makers get left behind</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 3: THE SOLUTION -->
+        <div class="slide">
+            <div class="icon-large">✨</div>
+            <h2>Our Solution</h2>
+            <p style="margin-bottom: 2rem;">RankBid = Community Power</p>
+            <div class="vs-container">
+                <div class="vs-box">
+                    <h3 style="margin-bottom: 1rem;">❌ Old Way</h3>
+                    <p>Algorithms pick winners</p>
+                </div>
+                <div class="vs-box">
+                    <h3 style="margin-bottom: 1rem;">✓ RankBid Way</h3>
+                    <p>Community votes = Rankings</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: KEY FEATURES 1 -->
+        <div class="slide white-theme">
+            <h2>What You Can Do</h2>
+            <ul style="margin-top: 2rem;">
+                <li>Submit your website, TikTok, Instagram, Twitter, LinkedIn</li>
+                <li>Vote for products you love</li>
+                <li>See real-time vote counts</li>
+                <li>Share with one click</li>
+                <li>No payment needed</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 5: MULTI-PLATFORM -->
+        <div class="slide">
+            <h2>Works Everywhere</h2>
+            <div class="feature-grid" style="margin-top: 2rem;">
+                <div class="feature-card">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">🌐</div>
+                    <p>Websites</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">𝕏</div>
+                    <p>Twitter/X</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">💼</div>
+                    <p>LinkedIn</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">📸</div>
+                    <p>Instagram</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎵</div>
+                    <p>TikTok</p>
+                </div>
+                <div class="feature-card">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">f</div>
+                    <p>Facebook</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: CATEGORIES -->
+        <div class="slide white-theme">
+            <h2>30+ Categories</h2>
+            <p style="font-size: 1.3rem; margin-top: 2rem; line-height: 2;">
+                Marketing • SEO • Productivity • AI Agents • Crypto<br>
+                Developer Tools • Health • Games • Business • E-commerce<br>
+                Travel • Design • Education • Social • News • And More...
+            </p>
+        </div>
+
+        <!-- SLIDE 7: STATISTICS -->
+        <div class="slide green-theme">
+            <h2>RankBid by Numbers</h2>
+            <div class="stat-grid" style="margin-top: 2rem;">
+                <div class="stat-box">
+                    <span class="number">100K+</span>
+                    <span class="label">Products Ranked</span>
+                </div>
+                <div class="stat-box">
+                    <span class="number">30+</span>
+                    <span class="label">Categories</span>
+                </div>
+                <div class="stat-box">
+                    <span class="number">6</span>
+                    <span class="label">Platforms</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: VS COMPETITORS -->
+        <div class="slide">
+            <h2>Why RankBid Wins</h2>
+            <div class="vs-container" style="margin-top: 2rem;">
+                <div class="vs-box">
+                    <h3 style="margin-bottom: 1rem;">Other Platforms</h3>
+                    <ul style="text-align: left;">
+                        <li>Curated selection</li>
+                        <li>Hidden algorithms</li>
+                        <li>Mostly websites only</li>
+                        <li>Approval process</li>
+                    </ul>
+                </div>
+                <div class="vs-box">
+                    <h3 style="margin-bottom: 1rem;">RankBid</h3>
+                    <ul style="text-align: left;">
+                        <li>Pure voting</li>
+                        <li>Transparent ranking</li>
+                        <li>All platforms equal</li>
+                        <li>No approval needed</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: PREMIUM LISTINGS -->
+        <div class="slide white-theme">
+            <h2>Premium Listings (Optional)</h2>
+            <p style="margin-top: 2rem; font-size: 1.3rem;">Boost your product visibility:</p>
+            <div class="feature-grid" style="margin-top: 2rem;">
+                <div class="feature-card">
+                    <p style="font-size: 1.8rem; font-weight: 900; color: #F59E0B;">🥇 #1</p>
+                    <p>$5</p>
+                </div>
+                <div class="feature-card">
+                    <p style="font-size: 1.8rem; font-weight: 900; color: #A78BFA;">🥈 #2</p>
+                    <p>$3</p>
+                </div>
+                <div class="feature-card">
+                    <p style="font-size: 1.8rem; font-weight: 900; color: #F97316;">🥉 #3</p>
+                    <p>$1</p>
+                </div>
+            </div>
+            <p style="margin-top: 2rem; font-size: 1.1rem;">+ Show your team info</p>
+        </div>
+
+        <!-- SLIDE 10: BENEFITS FOR MAKERS -->
+        <div class="slide">
+            <div class="icon-large">🎯</div>
+            <h2>Perfect For Indie Makers</h2>
+            <ul style="margin-top: 2rem;">
+                <li>Get seen without big budget</li>
+                <li>Fair competition</li>
+                <li>No gatekeepers deciding your fate</li>
+                <li>Real community feedback</li>
+                <li>Grow organically</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 11: BENEFITS FOR CREATORS -->
+        <div class="slide white-theme">
+            <div class="icon-large">⭐</div>
+            <h2>Perfect For Social Creators</h2>
+            <ul style="margin-top: 2rem;">
+                <li>TikTok ranks with websites</li>
+                <li>Instagram = Web apps</li>
+                <li>Your Twitter worth something</li>
+                <li>Fair visibility for everyone</li>
+                <li>Community votes on quality</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 12: WHY WE BUILT IT -->
+        <div class="slide green-theme">
+            <div class="icon-large">💡</div>
+            <h2>Why RankBid Exists</h2>
+            <p style="margin-top: 2rem; font-size: 1.4rem;">Discovery should be fair.</p>
+            <p style="font-size: 1.4rem; opacity: 0.95;">Not expensive. Not mysterious.<p>
+            <p style="font-size: 1.4rem; opacity: 0.95;">Just pure community power.</p>
+        </div>
+
+        <!-- SLIDE 13: KEY ADVANTAGES -->
+        <div class="slide">
+            <h2>RankBid Advantages</h2>
+            <ul style="margin-top: 2rem;">
+                <li>✓ No hidden algorithms</li>
+                <li>✓ Completely free to use</li>
+                <li>✓ Real-time vote transparency</li>
+                <li>✓ Multi-platform support</li>
+                <li>✓ Fair ranking for all</li>
+                <li>✓ Community-driven decisions</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 14: ROADMAP -->
+        <div class="slide white-theme">
+            <h2>What's Next</h2>
+            <ul style="margin-top: 2rem;">
+                <li>✓ Multi-platform support</li>
+                <li>✓ Premium listings</li>
+                <li>🔄 Global expansion</li>
+                <li>🔄 Community features</li>
+                <li>🔄 Enterprise solutions</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 15: CALL TO ACTION -->
+        <div class="slide">
+            <div class="icon-large">🚀</div>
+            <h2>Join RankBid Today</h2>
+            <p style="margin-top: 2rem; font-size: 1.4rem;">
+                Submit your product.<br>
+                Vote for what you love.<br>
+                Let community decide.
+            </p>
+            <p style="font-size: 1.2rem; margin-top: 3rem; opacity: 0.95;">
+                No Algorithms. No Gatekeepers.<br>
+                Just Pure Community Power.
+            </p>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="controls">
+            <button onclick="previousSlide()">← Previous</button>
+            <button onclick="nextSlide()">Next →</button>
+        </div>
+
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">15</span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            document.getElementById('current-slide').textContent = n + 1;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>

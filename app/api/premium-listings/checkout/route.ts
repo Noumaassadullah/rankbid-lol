@@ -17,6 +17,11 @@ interface CartItem {
   founderGithub?: string;
 }
 
+interface CheckoutRequest {
+  items: CartItem[];
+  paymentMethod: 'rapid-gateway' | 'jazzcash' | 'easypaisa' | 'stripe' | 'manual';
+}
+
 const PRICES: { [key: number]: number } = {
   1: 5,
   2: 3,
@@ -25,7 +30,7 @@ const PRICES: { [key: number]: number } = {
 
 export async function POST(req: NextRequest) {
   try {
-    const { items } = await req.json();
+    const { items, paymentMethod = 'manual' } = await req.json() as CheckoutRequest;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
@@ -136,8 +141,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Handle different payment methods
+    if (paymentMethod === 'rapid-gateway') {
+      // For Rapid Gateway, return payment initiation data
+      const firstItem = items[0];
+      return NextResponse.json({
+        success: true,
+        paymentRequired: true,
+        paymentMethod: 'rapid-gateway',
+        initiatePaymentUrl: '/api/payment/rapid-gateway/initiate',
+        paymentData: {
+          premiumListingId: results[0].id,
+          amount: totalPrice,
+          email: firstItem.founderEmail,
+          phone: firstItem.founderPhone,
+          name: firstItem.founderName,
+        },
+        premiumListings: results,
+        totalPrice,
+        itemCount: results.length,
+      });
+    }
+
     return NextResponse.json({
       success: true,
+      paymentRequired: false,
       message: `Successfully submitted ${results.length} premium listing${results.length !== 1 ? 's' : ''} for review`,
       premiumListings: results,
       totalPrice,

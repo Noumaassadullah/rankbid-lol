@@ -465,29 +465,71 @@ export default function Home() {
     }
 
     try {
-      console.log('Sending premium request:', {
+      console.log('🎯 Submitting premium listing:', {
         listingId: selectedListingForPremium.id,
         ...data,
       });
 
-      const res = await fetch('/api/listings/premium', {
+      const cartItem = {
+        listingId: selectedListingForPremium.id,
+        position: data.position,
+        founderName: data.founderName,
+        founderEmail: data.founderEmail,
+        founderPhone: data.founderPhone,
+        founderWebsite: data.founderWebsite,
+        founderTwitter: data.founderTwitter,
+        founderLinkedin: data.founderLinkedin,
+        founderInstagram: data.founderInstagram,
+        founderFacebook: data.founderFacebook,
+        founderTiktok: data.founderTiktok,
+        founderYoutube: data.founderYoutube,
+        founderGithub: data.founderGithub,
+      };
+
+      const res = await fetch('/api/premium-listings/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          listingId: selectedListingForPremium.id,
-          ...data,
+          items: [cartItem],
+          paymentMethod: data.paymentMethod || 'manual',
         }),
       });
 
-      console.log('Premium API response status:', res.status);
+      console.log('Checkout API response status:', res.status);
 
       const result = await res.json();
-      console.log('Premium API response:', result);
+      console.log('Checkout API response:', result);
 
       if (!res.ok) {
         throw new Error(result.error || `API error: ${res.status}`);
       }
 
+      // Handle payment flow
+      if (result.paymentRequired && result.paymentMethod === 'rapid-gateway' && result.paymentData) {
+        console.log('🚀 Initiating Rapid Gateway payment...');
+        addToast('💳 Redirecting to Rapid Gateway...', 'info');
+
+        const paymentRes = await fetch('/api/payment/rapid-gateway/initiate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(result.paymentData),
+        });
+
+        if (!paymentRes.ok) {
+          const errorData = await paymentRes.json();
+          throw new Error(errorData.error || 'Failed to initiate payment');
+        }
+
+        const paymentData = await paymentRes.json();
+
+        // Redirect to Rapid Gateway
+        if (paymentData.redirectUrl) {
+          window.location.href = paymentData.redirectUrl;
+          return;
+        }
+      }
+
+      // For manual and other payment methods
       addToast('✨ Premium listing request submitted! Admin approval pending.', 'success');
       setPremiumModalOpen(false);
       setSelectedListingForPremium(null);

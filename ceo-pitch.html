@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RankBid - CEO Investment Pitch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0F3460;
+            --primary-dark: #0D2A50;
+            --secondary: #059669;
+            --accent: #F97316;
+            --white: #FFFFFF;
+            --light-bg: #F9FAFB;
+            --text-dark: #1F2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .slide {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            border-radius: 16px;
+            padding: 60px;
+            min-height: 600px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide.white-bg {
+            background: var(--white);
+            color: var(--primary);
+            border: 3px solid var(--primary);
+        }
+
+        .slide.green-bg {
+            background: linear-gradient(135deg, var(--secondary) 0%, #047857 100%);
+            color: var(--white);
+        }
+
+        .slide h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        .slide h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .slide p {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .slide ul {
+            font-size: 1.3rem;
+            text-align: left;
+            display: inline-block;
+            line-height: 2;
+            margin: 1rem 0;
+        }
+
+        .slide li {
+            list-style: none;
+            margin-bottom: 0.8rem;
+            padding-left: 3rem;
+            position: relative;
+        }
+
+        .slide li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-size: 1.8rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .white-bg li:before {
+            color: var(--secondary);
+        }
+
+        .metric-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1rem;
+            display: inline-block;
+            min-width: 280px;
+        }
+
+        .white-bg .metric-box {
+            background: rgba(15, 52, 96, 0.1);
+            color: var(--primary);
+        }
+
+        .metric-box .big-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .white-bg .metric-box .big-number {
+            color: var(--secondary);
+        }
+
+        .metric-box .label {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .white-bg .chart-container {
+            background: rgba(15, 52, 96, 0.05);
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 250px;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--accent) 0%, #EA580C 100%);
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-top: 1rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .white-bg .bar {
+            background: linear-gradient(180deg, var(--secondary) 0%, #047857 100%);
+        }
+
+        .bar-value {
+            color: var(--accent);
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .white-bg .bar-value {
+            color: var(--secondary);
+        }
+
+        .bar-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .comparison-table {
+            width: 100%;
+            margin: 2rem 0;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .comparison-table th {
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .white-bg .comparison-table th, .white-bg .comparison-table td {
+            border-bottom-color: rgba(15, 52, 96, 0.2);
+        }
+
+        .white-bg .comparison-table th {
+            background: rgba(15, 52, 96, 0.1);
+            color: var(--primary);
+        }
+
+        .white-bg .comparison-table td {
+            color: var(--primary);
+        }
+
+        .highlight-text {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-left: 4px solid var(--accent);
+        }
+
+        .white-bg .highlight-text {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--primary);
+            border-left-color: var(--secondary);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        button:hover {
+            background: #047857;
+            transform: scale(1.05);
+        }
+
+        .slide-counter {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .column-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .white-bg .column-item {
+            background: rgba(15, 52, 96, 0.1);
+            color: var(--primary);
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 30px;
+                min-height: 500px;
+            }
+
+            .slide h1 {
+                font-size: 2.2rem;
+            }
+
+            .slide h2 {
+                font-size: 1.8rem;
+            }
+
+            .slide p {
+                font-size: 1.2rem;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- SLIDE 1: TITLE -->
+        <div class="slide active green-bg">
+            <div class="icon">💼</div>
+            <h1>RankBid</h1>
+            <p style="font-size: 2rem; margin-top: 2rem;">Investment Opportunity</p>
+            <p style="font-size: 1.4rem; opacity: 0.9; margin-top: 2rem;">$2.3B Market Opportunity | $250K Investment | 5-10x Return</p>
+        </div>
+
+        <!-- SLIDE 2: THE OPPORTUNITY -->
+        <div class="slide white-bg">
+            <h2>The $2.3B Opportunity</h2>
+            <div class="metrics-grid" style="margin-top: 2rem;">
+                <div class="metric-box">
+                    <span class="big-number">$2.3B</span>
+                    <span class="label">Total Addressable Market</span>
+                </div>
+                <div class="metric-box">
+                    <span class="big-number">5M+</span>
+                    <span class="label">Products Launched Yearly</span>
+                </div>
+                <div class="metric-box">
+                    <span class="big-number">35%</span>
+                    <span class="label">Creator Economy Growth</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: MARKET PROBLEM -->
+        <div class="slide">
+            <h2>Market Problem</h2>
+            <div class="two-column" style="margin-top: 2rem;">
+                <div class="column-item">
+                    <h3>For Creators/Makers</h3>
+                    <p>87% say discovery is biggest challenge</p>
+                    <p>Spend $500-5000/month on ads</p>
+                    <p>Get zero SEO value</p>
+                    <p>Can't list multiple products</p>
+                </div>
+                <div class="column-item">
+                    <h3>Market Inefficiency</h3>
+                    <p>Gatekeepers monopolize 95% of traffic</p>
+                    <p>No fair alternatives exist</p>
+                    <p>Value leak = $1B+ annually</p>
+                    <p>Creators trapped paying for placement</p>
+                </div>
+            </div>
+            <div class="highlight-text" style="margin-top: 2rem;">
+                This is not just a product problem. This is a REVENUE OPPORTUNITY.
+            </div>
+        </div>
+
+        <!-- SLIDE 4: OUR SOLUTION -->
+        <div class="slide white-bg">
+            <h2>RankBid = Category Disruptor</h2>
+            <ul style="margin-top: 2rem;">
+                <li>Free user acquisition (vs paid for competitors)</li>
+                <li>Multiple revenue streams (not just ads)</li>
+                <li>Defensible moats (network effects + data)</li>
+                <li>Higher LTV than any competitor</li>
+                <li>First-mover in "fair play" discovery</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 5: UNIT ECONOMICS (KEY SLIDE!) -->
+        <div class="slide">
+            <div class="icon">📊</div>
+            <h2>World-Class Unit Economics</h2>
+
+            <div class="metrics-grid" style="margin-top: 2rem; font-size: 1.2rem;">
+                <div class="metric-box">
+                    <span class="big-number">$0</span>
+                    <span class="label">Customer Acquisition Cost</span>
+                </div>
+                <div class="metric-box">
+                    <span class="big-number">$234</span>
+                    <span class="label">Avg Customer LTV</span>
+                </div>
+                <div class="metric-box">
+                    <span class="big-number">600:1</span>
+                    <span class="label">LTV:CAC Ratio</span>
+                </div>
+            </div>
+
+            <p style="margin-top: 2rem; font-size: 1.2rem; opacity: 0.95;">
+                Industry standard: 3:1 is good<br>
+                We're 200x above industry average
+            </p>
+        </div>
+
+        <!-- SLIDE 6: REVENUE STREAMS -->
+        <div class="slide white-bg">
+            <h2>Multiple Revenue Streams</h2>
+
+            <div style="margin-top: 2rem;">
+                <h3 style="text-align: left; margin-bottom: 1rem;">Stream 1: Premium Listings</h3>
+                <p style="text-align: left; font-size: 1.2rem; margin-left: 2rem;">$1-10/month per product position | 90%+ margin</p>
+
+                <h3 style="text-align: left; margin-top: 2rem; margin-bottom: 1rem;">Stream 2: Analytics Pro</h3>
+                <p style="text-align: left; font-size: 1.2rem; margin-left: 2rem;">$19-99/month for dashboards | 85%+ margin</p>
+
+                <h3 style="text-align: left; margin-top: 2rem; margin-bottom: 1rem;">Stream 3: White-Label</h3>
+                <p style="text-align: left; font-size: 1.2rem; margin-left: 2rem;">$5-50K/month for enterprises | 70-80% margin</p>
+
+                <h3 style="text-align: left; margin-top: 2rem; margin-bottom: 1rem;">Stream 4: Transaction Fees</h3>
+                <p style="text-align: left; font-size: 1.2rem; margin-left: 2rem;">5% on direct sales (future)</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: FINANCIAL PROJECTIONS -->
+        <div class="slide">
+            <h2>Revenue Projections (Conservative)</h2>
+
+            <div class="chart-container" style="margin-top: 2rem;">
+                <div class="bar-chart">
+                    <div class="bar" style="height: 120px;">
+                        <div class="bar-value">$215K</div>
+                        <div class="bar-label">Year 1</div>
+                    </div>
+                    <div class="bar" style="height: 300px;">
+                        <div class="bar-value">$850K</div>
+                        <div class="bar-label">Year 2</div>
+                    </div>
+                    <div class="bar" style="height: 500px;">
+                        <div class="bar-value">$3.45M</div>
+                        <div class="bar-label">Year 3</div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 2rem; font-size: 1.3rem; font-weight: 600;">
+                Profitable by Month 12 | 77% margins by Year 3
+            </p>
+        </div>
+
+        <!-- SLIDE 8: AGGRESSIVE PROJECTIONS -->
+        <div class="slide">
+            <h2>Revenue Projections (Aggressive)</h2>
+
+            <div class="chart-container" style="margin-top: 2rem;">
+                <div class="bar-chart">
+                    <div class="bar" style="height: 150px;">
+                        <div class="bar-value">$350K</div>
+                        <div class="bar-label">Year 1</div>
+                    </div>
+                    <div class="bar" style="height: 380px;">
+                        <div class="bar-value">$1.6M</div>
+                        <div class="bar-label">Year 2</div>
+                    </div>
+                    <div class="bar" style="height: 580px;">
+                        <div class="bar-value">$5.45M</div>
+                        <div class="bar-label">Year 3</div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 2rem; font-size: 1.3rem; font-weight: 600;">
+                Profitable by Month 8 | 73% margins by Year 3
+            </p>
+        </div>
+
+        <!-- SLIDE 9: COMPETITIVE ADVANTAGE -->
+        <div class="slide white-bg">
+            <h2>Why We Beat Product Hunt</h2>
+
+            <table class="comparison-table" style="margin-top: 2rem;">
+                <tr>
+                    <th>Factor</th>
+                    <th>Product Hunt</th>
+                    <th>RankBid</th>
+                </tr>
+                <tr>
+                    <td>User Acquisition</td>
+                    <td>$50-200 per user</td>
+                    <td>$0 (organic)</td>
+                </tr>
+                <tr>
+                    <td>Revenue Per User</td>
+                    <td>$3-5/year</td>
+                    <td>$15-50/year</td>
+                </tr>
+                <tr>
+                    <td>Churn Rate</td>
+                    <td>25%+</td>
+                    <td>5% (predicted)</td>
+                </tr>
+                <tr>
+                    <td>LTV:CAC Ratio</td>
+                    <td>2:1</td>
+                    <td>600:1</td>
+                </tr>
+                <tr>
+                    <td>Network Effects</td>
+                    <td>Weak</td>
+                    <td>Strong</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- SLIDE 10: DEFENSIBLE MOATS -->
+        <div class="slide">
+            <h2>Strong Competitive Moats</h2>
+
+            <ul style="margin-top: 2rem;">
+                <li><strong>Network Effects:</strong> More creators → better for voters → more voters → better for creators</li>
+                <li><strong>Data Advantage:</strong> 3 years of ranking insights = predictive intelligence</li>
+                <li><strong>Community Trust:</strong> "Fair platform" brand = high switching cost</li>
+                <li><strong>First-Mover:</strong> Only platform doing fair play RIGHT</li>
+                <li><strong>Multi-Product Lock-in:</strong> Creators list all products here</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 11: INVESTMENT ASK -->
+        <div class="slide white-bg">
+            <h2>Investment Ask</h2>
+
+            <div class="metric-box" style="margin-top: 2rem; min-width: 400px;">
+                <span class="big-number">$250K</span>
+                <span class="label">Seed Investment</span>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: left; font-size: 1.2rem;">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">Use of Funds:</h3>
+                <p style="margin-bottom: 0.8rem;">🔧 <strong>Engineering (40%):</strong> $100K - Senior engineers + infrastructure</p>
+                <p style="margin-bottom: 0.8rem;">📈 <strong>Growth (30%):</strong> $75K - Community building + user acquisition</p>
+                <p style="margin-bottom: 0.8rem;">📋 <strong>Operations (20%):</strong> $50K - Payments + legal + overhead</p>
+                <p>🛡️ <strong>Contingency (10%):</strong> $25K - Buffer for iteration</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: TIMELINE & MILESTONES -->
+        <div class="slide">
+            <h2>12-Month Execution Plan</h2>
+
+            <div style="text-align: left; font-size: 1.2rem; line-height: 2.5; margin-top: 2rem;">
+                <p>📅 <strong>Month 1-2:</strong> MVP launch, 100 products</p>
+                <p>📅 <strong>Month 3:</strong> 1,000 products, $2K MRR, first premium users</p>
+                <p>📅 <strong>Month 6:</strong> 5,000 products, $15K MRR, analytics launch</p>
+                <p>📅 <strong>Month 9:</strong> 10,000 products, $20K MRR, first white-label deal</p>
+                <p>📅 <strong>Month 12:</strong> 20,000 products, $30K MRR, profitability clear</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: EXIT OPPORTUNITY -->
+        <div class="slide green-bg">
+            <h2>Exit Path & ROI</h2>
+
+            <div class="metrics-grid" style="margin-top: 2rem;">
+                <div class="metric-box">
+                    <span class="big-number">$50M-100M</span>
+                    <span class="label">Acquisition Valuation</span>
+                </div>
+                <div class="metric-box">
+                    <span class="big-number">5-10x</span>
+                    <span class="label">Return on Investment</span>
+                </div>
+                <div class="metric-box">
+                    <span class="big-number">2025-2026</span>
+                    <span class="label">Expected Exit Timeline</span>
+                </div>
+            </div>
+
+            <p style="margin-top: 2rem; font-size: 1.2rem;">
+                Likely acquirers: Stripe, HubSpot, AWS, GitHub, Indie Hackers
+            </p>
+        </div>
+
+        <!-- SLIDE 14: RISK & MITIGATION -->
+        <div class="slide white-bg">
+            <h2>Risk Mitigation Strategy</h2>
+
+            <div style="margin-top: 2rem; text-align: left; font-size: 1.1rem;">
+                <p style="margin-bottom: 1.5rem;">
+                    <strong style="color: var(--secondary);">Market Adoption Risk:</strong><br>
+                    → Start with crypto/AI communities (proven early adopters)
+                </p>
+                <p style="margin-bottom: 1.5rem;">
+                    <strong style="color: var(--secondary);">Competitor Response:</strong><br>
+                    → Our moats (network effects) hard to copy. First-mover advantage is real.
+                </p>
+                <p style="margin-bottom: 1.5rem;">
+                    <strong style="color: var(--secondary);">Monetization Failure:</strong><br>
+                    → Multiple revenue streams + 600:1 LTV:CAC makes this unlikely
+                </p>
+                <p>
+                    <strong style="color: var(--secondary);">Execution Risk:</strong><br>
+                    → Experienced team + clear roadmap + external advisors
+                </p>
+            </div>
+        </div>
+
+        <!-- SLIDE 15: KEY METRICS TO TRACK -->
+        <div class="slide">
+            <h2>Monthly KPIs (We'll Report These)</h2>
+
+            <ul style="margin-top: 2rem; font-size: 1.2rem;">
+                <li>Active products listed</li>
+                <li>Total votes cast</li>
+                <li>Premium subscription rate</li>
+                <li>Monthly recurring revenue (MRR)</li>
+                <li>Customer churn rate</li>
+                <li>Organic growth rate</li>
+                <li>Cost per acquisition (should stay $0)</li>
+                <li>Customer lifetime value tracking</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 16: WHY NOW -->
+        <div class="slide white-bg">
+            <h2>Why The Window Is Now</h2>
+
+            <ul style="margin-top: 2rem;">
+                <li><strong>Market Timing:</strong> Creator economy at peak, dissatisfaction with Product Hunt high</li>
+                <li><strong>AI Explosion:</strong> 1000+ AI products/month = demand surge</li>
+                <li><strong>Competitive Window:</strong> First-mover advantage disappears in 12 months</li>
+                <li><strong>Team Ready:</strong> You've built products before, network is ready</li>
+                <li><strong>Infrastructure Ready:</strong> Payment processors, hosting mature</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 17: THE ASK -->
+        <div class="slide">
+            <div class="icon">🚀</div>
+            <h2>The Decision</h2>
+
+            <div class="highlight-text" style="margin-top: 3rem; background: rgba(0, 0, 0, 0.3); border-left-color: var(--white);">
+                <p style="font-size: 1.4rem; margin-bottom: 1rem;">
+                    $250K Investment
+                </p>
+                <p style="font-size: 1.3rem; margin-bottom: 1rem;">
+                    → $3.45M Revenue (Year 3)
+                </p>
+                <p style="font-size: 1.3rem;">
+                    → $50M-100M Exit Value
+                </p>
+            </div>
+
+            <p style="margin-top: 2rem; font-size: 1.3rem; font-weight: 600;">
+                The question isn't "Should we build this?"<br>
+                The question is "How fast can we move?"
+            </p>
+        </div>
+
+        <!-- SLIDE 18: CLOSING -->
+        <div class="slide green-bg">
+            <h1>Let's Build the Fair Discovery Platform</h1>
+            <p style="margin-top: 3rem; font-size: 1.4rem;">
+                ✓ $2.3B Market<br>
+                ✓ Exceptional Unit Economics<br>
+                ✓ 5-10x ROI in 2-3 years<br>
+                ✓ Clear Path to Profitability<br>
+                ✓ Strong Competitive Moats
+            </p>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="controls">
+            <button onclick="previousSlide()">← Previous</button>
+            <button onclick="nextSlide()">Next →</button>
+        </div>
+
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">18</span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+            document.getElementById('current-slide').textContent = n + 1;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        showSlide(0);
+    </script>
+</body>
+</html>

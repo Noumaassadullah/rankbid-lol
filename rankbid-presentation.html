@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RankBid - Product Presentation</title>
+    <style>
+        :root {
+            --primary: #0F3460;
+            --primary-dark: #0D2A50;
+            --secondary: #059669;
+            --accent: #F97316;
+            --bg: #FFFFFF;
+            --fg: #1F2937;
+            --fg-light: #6B7280;
+            --border: #E5E7EB;
+            --card-bg: #F9FAFB;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #0F172A;
+                --fg: #F3F4F6;
+                --fg-light: #D1D5DB;
+                --card-bg: #1E293B;
+                --border: #334155;
+                color-scheme: dark;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #0F172A;
+            --fg: #F3F4F6;
+            --fg-light: #D1D5DB;
+            --card-bg: #1E293B;
+            --border: #334155;
+            color-scheme: dark;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+        }
+
+        p {
+            font-size: 1rem;
+            color: var(--fg);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            font-size: 1.8rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .feature-list li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .screenshot {
+            margin: 2rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .screenshot img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--card-bg);
+        }
+
+        .comparison-table .check {
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .comparison-table .cross {
+            color: #EF4444;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .stat-box .number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-box .label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #047857;
+            transform: scale(1.05);
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, rgba(15, 52, 96, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .timeline {
+            margin: 2rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-left: 2px solid var(--secondary);
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .timeline-item:before {
+            content: "";
+            position: absolute;
+            left: -9px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: var(--secondary);
+            border-radius: 50%;
+        }
+
+        .timeline-item h4 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .pros, .cons {
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+
+        .pros {
+            background: rgba(5, 150, 105, 0.1);
+            border-color: var(--secondary);
+        }
+
+        .cons {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: #EF4444;
+        }
+
+        .pros h4, .cons h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .comparison-table th, .comparison-table td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚀 RankBid</h1>
+        <p>Democratic Product Discovery Platform - Complete Presentation</p>
+    </header>
+
+    <div class="container">
+        <!-- EXECUTIVE SUMMARY -->
+        <section>
+            <h2>Executive Summary</h2>
+            <p><strong>RankBid</strong> is a free, community-driven product ranking platform that eliminates algorithmic gatekeeping and lets builders reach audiences through transparent, democratic voting. No paid placement, no hidden algorithms—just pure community power determining what gets discovered.</p>
+            <div class="highlight">
+                <p><strong>Core Vision:</strong> "Rank Everything" - Empower communities to discover products based on genuine interest, not platform algorithms or paid prioritization.</p>
+            </div>
+        </section>
+
+        <!-- PROBLEM STATEMENT -->
+        <section>
+            <h2>🎯 The Problem: Why We Need This</h2>
+            <h3>Current Market Challenges</h3>
+
+            <div class="grid">
+                <div class="card">
+                    <h3><span class="icon">🔐</span> Algorithmic Gatekeeping</h3>
+                    <p>Platforms like Product Hunt control visibility through opaque algorithms. New products struggle to get seen regardless of quality.</p>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">💰</span> Pay-to-Play Discovery</h3>
+                    <p>Existing platforms favor paid promotions over organic merit. Indie makers and bootstrapped startups get overshadowed by those with larger budgets.</p>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">❌</span> Limited Platforms</h3>
+                    <p>Current ranking sites focus on single platforms (mostly websites). Social-first products on TikTok, Instagram, or Twitter lack fair ranking systems.</p>
+                </div>
+            </div>
+
+            <h3>Impact on Builders</h3>
+            <ul class="feature-list">
+                <li><strong>Fair Visibility Gap:</strong> Quality products from unknown makers don't get discovered</li>
+                <li><strong>Financial Barrier:</strong> Paid promotions favor well-funded companies</li>
+                <li><strong>Algorithmic Frustration:</strong> No transparency on why products fail to gain traction</li>
+                <li><strong>Platform Limitation:</strong> Social creators can't showcase their work fairly</li>
+            </ul>
+        </section>
+
+        <!-- SOLUTION -->
+        <section>
+            <h2>✨ The Solution: RankBid</h2>
+            <p>RankBid introduces a revolutionary approach to product discovery:</p>
+
+            <div class="grid">
+                <div class="card">
+                    <h3><span class="icon">🗳️</span> Pure Democracy</h3>
+                    <p>Rankings are 100% community-driven. Every vote counts equally. No algorithms. No black boxes. Transparent voting determines everything.</p>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">💯</span> Completely Free</h3>
+                    <p>Submit your product for free. Vote for free. Share for free. No payment required to compete or discover.</p>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">🌍</span> Multi-Platform Support</h3>
+                    <p>Submit websites, Twitter/X profiles, LinkedIn content, TikTok, Instagram, or Facebook. All platforms get fair ranking.</p>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">📊</span> Real-Time Rankings</h3>
+                    <p>Live vote counts and instant ranking updates. See your product climb in real-time as the community votes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREENSHOT -->
+        <section>
+            <h2>📸 Product in Action</h2>
+            <p>Here's what RankBid looks like in the real world:</p>
+            <div class="screenshot">
+                <img src="rankbid-hero.png" alt="RankBid Platform Screenshot">
+            </div>
+        </section>
+
+        <!-- KEY FEATURES -->
+        <section>
+            <h2>🎁 Key Features</h2>
+
+            <h3>1. Multi-Platform Submission</h3>
+            <ul class="feature-list">
+                <li>Submit websites with direct links</li>
+                <li>Submit Twitter/X profiles and content</li>
+                <li>LinkedIn profiles and posts</li>
+                <li>Instagram, TikTok, Facebook handles</li>
+                <li>Automatic platform detection</li>
+            </ul>
+
+            <h3>2. 30+ Categories</h3>
+            <p>Organize products across diverse industries:</p>
+            <p style="color: var(--fg-light);">Marketing, SEO, Productivity, Agents, Crypto, Developer Tools, Health, Games, Business, E-commerce, Travel, Directories, AI Media, Agencies, Social, Education, People, Design, Hiring, Domains, Security, Sales, News, Real Estate, Writing, Audio, Analytics, and more...</p>
+
+            <h3>3. Real-Time Voting System</h3>
+            <ul class="feature-list">
+                <li>One vote per user per product</li>
+                <li>Instant vote count updates</li>
+                <li>No duplicate voting protection</li>
+                <li>Community transparency</li>
+            </ul>
+
+            <h3>4. Multiple Time-Based Rankings</h3>
+            <ul class="feature-list">
+                <li>Today's Top (24-hour rankings)</li>
+                <li>All-Time Top (lifetime rankings)</li>
+                <li>Filter by category</li>
+                <li>Platform-specific leaderboards</li>
+            </ul>
+
+            <h3>5. Premium Listings Feature (NEW)</h3>
+            <p>Optional paid feature to boost visibility:</p>
+            <ul class="feature-list">
+                <li><strong>#1 Position:</strong> $5 - Premium featured spot</li>
+                <li><strong>#2 Position:</strong> $3 - High visibility placement</li>
+                <li><strong>#3 Position:</strong> $1 - Entry-level premium spot</li>
+                <li>Display founder/team information</li>
+                <li>Contact details (email, phone, social)</li>
+                <li>Rapid Gateway payment integration</li>
+            </ul>
+
+            <h3>6. Social Sharing</h3>
+            <ul class="feature-list">
+                <li>Share to Twitter/X directly</li>
+                <li>LinkedIn sharing integration</li>
+                <li>Copy unique product link</li>
+                <li>Download status cards with vote counts</li>
+                <li>Download product images in PNG format</li>
+            </ul>
+
+            <h3>7. User Authentication</h3>
+            <ul class="feature-list">
+                <li>Email/password signup and login</li>
+                <li>Submit your own products</li>
+                <li>Vote on community products</li>
+                <li>Track your submissions</li>
+            </ul>
+        </section>
+
+        <!-- MARKET ANALYSIS -->
+        <section>
+            <h2>📈 Market Analysis</h2>
+
+            <h3>What Already Exists in the Market</h3>
+
+            <div class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>Algorithm-Based</th>
+                        <th>Free Submission</th>
+                        <th>Multi-Platform</th>
+                        <th>Transparent Voting</th>
+                        <th>Real-Time Rankings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Product Hunt</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hacker News</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BetaList</strong></td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                        <td class="cross">✗</td>
+                        <td class="cross">✗</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Alternatives.to</strong></td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                    </tr>
+                    <tr style="background: var(--card-bg);">
+                        <td><strong>RankBid</strong></td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                </tbody>
+            </div>
+
+            <h3>RankBid's Unique Position</h3>
+            <div class="pros-cons">
+                <div class="pros">
+                    <h4>✓ Competitive Advantages</h4>
+                    <p><strong>Only platform with:</strong></p>
+                    <ul class="feature-list">
+                        <li>No algorithms - pure democracy</li>
+                        <li>True multi-platform support</li>
+                        <li>Social-first product ranking</li>
+                        <li>Real-time vote visibility</li>
+                        <li>Transparent ranking mechanism</li>
+                        <li>Optional premium (not required)</li>
+                    </ul>
+                </div>
+                <div class="cons">
+                    <h4>Competitors' Limitations</h4>
+                    <ul class="feature-list">
+                        <li>Most use curated selection</li>
+                        <li>Limited to website products</li>
+                        <li>Opaque ranking criteria</li>
+                        <li>No social creator support</li>
+                        <li>High friction for submission</li>
+                        <li>Limited voting transparency</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Market Size & Opportunity</h3>
+            <div class="grid">
+                <div class="stat-box">
+                    <div class="number">100K+</div>
+                    <div class="label">Products Ranked</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">30+</div>
+                    <div class="label">Categories Covered</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">6</div>
+                    <div class="label">Platform Types Supported</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY RANKBID IS BETTER -->
+        <section>
+            <h2>🏆 Why RankBid is Better Than Competitors</h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div>
+                        <h4>1. True Democratic Voting</h4>
+                        <p>Unlike Product Hunt's editorial curation or algorithms, RankBid is pure community voting. Every vote has equal weight. Ranking = total votes. That's it.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div>
+                        <h4>2. No Gatekeepers</h4>
+                        <p>No approval process. No editorial team deciding what's "worthy." Submit your product and it's instantly live. The community decides if it's good.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div>
+                        <h4>3. Multi-Platform Equality</h4>
+                        <p>Your TikTok profile ranks equally with websites. Your Instagram handle competes fairly with SaaS tools. All platforms get the same visibility opportunity.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div>
+                        <h4>4. Real-Time Transparency</h4>
+                        <p>See exact vote counts and rankings update in real-time. No hidden metrics. No "secret sauce." Everything is visible to everyone.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div>
+                        <h4>5. Completely Free Core Experience</h4>
+                        <p>Submit, vote, and rank for free. Premium listings are optional. Core platform is 100% free to use. No payment required to participate.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div>
+                        <h4>6. Social Creator Friendly</h4>
+                        <p>First platform to fairly rank social media creators alongside tech products. Your Twitter following, TikTok account, and Instagram profile deserve ranking too.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MONETIZATION & SUSTAINABILITY -->
+        <section>
+            <h2>💼 How RankBid Makes Money</h2>
+
+            <h3>Revenue Streams</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3><span class="icon">⭐</span> Premium Listings</h3>
+                    <p>Optional paid positions (#1/$5, #2/$3, #3/$1) with founder profile display. Sustainable revenue without compromising free platform access.</p>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">🏢</span> Enterprise Solutions</h3>
+                    <p>White-label ranking systems for companies and communities wanting their own product discovery platform.</p>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">📊</span> Analytics & Data</h3>
+                    <p>Insights into trending products, category performance, and market trends for researchers and investors.</p>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Key Philosophy:</strong> Revenue model never compromises the core promise—free, transparent, democratic rankings for all. Premium is optional, not required.</p>
+            </div>
+        </section>
+
+        <!-- WHY KEEP BUILDING -->
+        <section>
+            <h2>🎯 Why We Keep Building RankBid</h2>
+
+            <h3>Long-Term Vision</h3>
+            <p>We're building RankBid because we believe discovery should be democratic. Current platforms have failed indie makers, creators, and bootstrapped startups. They've prioritized profit over fairness.</p>
+
+            <h3>Our Mission</h3>
+            <ul class="feature-list">
+                <li><strong>Democratize Discovery:</strong> Empower communities to choose what matters, not algorithms or money</li>
+                <li><strong>Support Indie Makers:</strong> Give fair visibility to solo builders and small teams</li>
+                <li><strong>Celebrate All Platforms:</strong> Web, mobile, social, AI—all products deserve fair ranking</li>
+                <li><strong>Build Transparently:</strong> No hidden metrics, no surprises, just honest community voting</li>
+                <li><strong>Scale Globally:</strong> Expand to serve creators, builders, and communities worldwide</li>
+            </ul>
+
+            <h3>Expansion Roadmap</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div>
+                        <h4>Phase 1: Multi-Platform Support ✓ Complete</h4>
+                        <p>Support websites, social platforms, and diverse product types</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div>
+                        <h4>Phase 2: Premium Features ✓ Complete</h4>
+                        <p>Optional paid listings with founder profiles and flexible pricing</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div>
+                        <h4>Phase 3: Global Expansion (In Progress)</h4>
+                        <p>Pakistan expansion with Urdu UI and localized payment methods</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div>
+                        <h4>Phase 4: Community Features (Planned)</h4>
+                        <p>User profiles, product pages, detailed analytics, and community engagement tools</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div>
+                        <h4>Phase 5: Enterprise Solutions (Planned)</h4>
+                        <p>White-label platform for companies to run their own product discovery ecosystem</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Impact We're Creating</h3>
+            <ul class="feature-list">
+                <li>Thousands of indie developers getting discovered monthly</li>
+                <li>Social creators competing fairly with tech products</li>
+                <li>Transparent rankings building community trust</li>
+                <li>Fair discovery without paid prioritization</li>
+                <li>Global communities valuing quality over marketing budgets</li>
+            </ul>
+        </section>
+
+        <!-- COMPETITIVE SUMMARY -->
+        <section>
+            <h2>🎖️ Why Choose RankBid Over Competitors?</h2>
+
+            <div class="highlight">
+                <h3 style="margin-top: 0; color: var(--primary);">The Bottom Line</h3>
+                <p><strong>RankBid is the only platform that combines:</strong></p>
+                <ul class="feature-list">
+                    <li><strong>Pure Democracy:</strong> No algorithms, no gatekeepers, no paid prioritization</li>
+                    <li><strong>Multi-Platform:</strong> Websites, social, creators—all treated equally</li>
+                    <li><strong>Real-Time:</strong> Live vote counts and instant ranking updates</li>
+                    <li><strong>Transparent:</strong> See exactly why products rank where they do</li>
+                    <li><strong>Free Core:</strong> No payment required to submit or vote</li>
+                    <li><strong>Global:</strong> Supporting creators and makers worldwide</li>
+                </ul>
+            </div>
+
+            <h3>For Different Users</h3>
+            <div class="grid">
+                <div class="card">
+                    <h3>For Indie Makers</h3>
+                    <p>Get fair visibility without marketing budgets. Your product competes on merit, not money.</p>
+                </div>
+
+                <div class="card">
+                    <h3>For Social Creators</h3>
+                    <p>Finally a platform where your TikTok, Instagram, or Twitter account gets equal ranking treatment.</p>
+                </div>
+
+                <div class="card">
+                    <h3>For Communities</h3>
+                    <p>See what your peers genuinely love through transparent voting, not algorithms.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CALL TO ACTION -->
+        <section style="text-align: center; padding: 4rem 0;">
+            <h2>Ready to Discover or Launch?</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem;">Join thousands of makers and creators ranking products fairly on RankBid.</p>
+            <a href="http://localhost:3000" class="cta-button">Launch RankBid →</a>
+        </section>
+    </div>
+
+    <footer style="background: var(--card-bg); padding: 2rem; text-align: center; border-top: 1px solid var(--border); margin-top: 4rem;">
+        <p style="margin: 0; color: var(--fg-light);">RankBid - Democratic Product Discovery | Pure Community Power | No Algorithms</p>
+    </footer>
+</body>
+</html>
