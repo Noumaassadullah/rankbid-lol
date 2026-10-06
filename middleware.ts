@@ -33,7 +33,7 @@ export async function middleware(request: NextRequest) {
   const authToken = request.cookies.get('auth_token')?.value;
 
   // If user has valid admin key, allow access
-  if (adminKey === process.env.NEXT_PUBLIC_ADMIN_KEY || adminKey === process.env.ADMIN_KEY) {
+  if (adminKey && (adminKey === process.env.NEXT_PUBLIC_ADMIN_KEY || adminKey === process.env.ADMIN_KEY)) {
     const response = NextResponse.next();
     response.cookies.set('adminKey', adminKey, {
       httpOnly: true,

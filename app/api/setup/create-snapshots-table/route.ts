@@ -31,10 +31,18 @@ export async function GET() {
     `;
 
     // Execute the SQL
-    const { error } = await supabase.rpc('exec', { sql: sql }).catch(() => {
+    let error;
+    try {
+      const result = await supabase.rpc('exec', { sql: sql });
+      error = result.error;
+    } catch (e) {
       // If exec doesn't work, try direct table creation
-      return supabase.from('daily_snapshots').select('id').limit(1);
-    });
+      try {
+        await supabase.from('daily_snapshots').select('id').limit(1);
+      } catch (fallbackError) {
+        error = fallbackError;
+      }
+    }
 
     if (error && error.code !== '23505') { // Ignore "already exists" error
       console.error('Error creating table:', error);
