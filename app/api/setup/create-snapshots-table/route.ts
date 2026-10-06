@@ -31,7 +31,7 @@ export async function GET() {
     `;
 
     // Execute the SQL
-    let error;
+    let error: any = null;
     try {
       const result = await supabase.rpc('exec', { sql: sql });
       error = result.error;
@@ -39,12 +39,12 @@ export async function GET() {
       // If exec doesn't work, try direct table creation
       try {
         await supabase.from('daily_snapshots').select('id').limit(1);
-      } catch (fallbackError) {
+      } catch (fallbackError: any) {
         error = fallbackError;
       }
     }
 
-    if (error && error.code !== '23505') { // Ignore "already exists" error
+    if (error && error?.code !== '23505') { // Ignore "already exists" error
       console.error('Error creating table:', error);
       throw error;
     }
