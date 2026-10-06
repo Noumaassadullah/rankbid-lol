@@ -45,19 +45,24 @@ export async function POST(request: Request) {
     // Add to waitlist
     const { data, error } = await supabase
       .from('waitlist')
-      .insert([
-        {
-          email: email,
-          createdAt: new Date().toISOString(),
-        },
-      ])
-      .select('id')
-      .single();
+      .insert({
+        email: email,
+        createdAt: new Date().toISOString(),
+      })
+      .select();
 
     if (error) {
       console.error('Insert error:', error);
       return NextResponse.json(
-        { error: error.message || 'Failed to join waitlist' },
+        { error: error.message || 'Failed to join waitlist', details: error.details },
+        { status: 500 }
+      );
+    }
+
+    if (!data || data.length === 0) {
+      console.error('Insert succeeded but no data returned');
+      return NextResponse.json(
+        { error: 'Email was not saved. Please try again.' },
         { status: 500 }
       );
     }
