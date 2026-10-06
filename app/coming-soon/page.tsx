@@ -14,8 +14,7 @@ export default function ComingSoon() {
         const res = await fetch('/api/waitlist/count');
         if (res.ok) {
           const data = await res.json();
-          // Use fetched count if greater than 0, otherwise use demo count
-          setWaitlistCount(Math.max(data.count || 0, 1182));
+          setWaitlistCount(data.count || 1182);
         }
       } catch (error) {
         console.error('Failed to fetch waitlist count:', error);
@@ -46,8 +45,7 @@ export default function ComingSoon() {
         fetch('/api/waitlist/count')
           .then(r => r.json())
           .then(d => {
-            const newCount = Math.max(d.count || 0, 1182);
-            setWaitlistCount(newCount);
+            setWaitlistCount(d.count || 1182);
           })
           .catch(() => {
             // If fetch fails, increment optimistically
