@@ -13,8 +13,9 @@ export async function GET() {
       .select('*', { count: 'exact', head: true });
 
     if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json({ count: 0 });
+      console.error('Supabase count error:', error.message);
+      // Return a reasonable default if table doesn't exist
+      return NextResponse.json({ count: 0, error: error.message });
     }
 
     return NextResponse.json({ count: count || 0 });

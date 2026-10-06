@@ -10,7 +10,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const body = await request.json();
+    const email = body.email?.trim().toLowerCase();
 
     if (!email || !email.includes('@')) {
       return NextResponse.json(
@@ -20,11 +21,19 @@ export async function POST(request: Request) {
     }
 
     // Check if email already exists
-    const { data: existing } = await supabase
+    const { data: existing, error: checkError } = await supabase
       .from('waitlist')
-      .select('*')
-      .eq('email', email.toLowerCase())
-      .single();
+      .select('id')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error('Check error:', checkError);
+      return NextResponse.json(
+        { error: `Database error: ${checkError.message}` },
+        { status: 500 }
+      );
+    }
 
     if (existing) {
       return NextResponse.json(
@@ -38,17 +47,17 @@ export async function POST(request: Request) {
       .from('waitlist')
       .insert([
         {
-          email: email.toLowerCase(),
+          email: email,
           createdAt: new Date().toISOString(),
         },
       ])
-      .select()
+      .select('id')
       .single();
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('Insert error:', error);
       return NextResponse.json(
-        { error: 'Failed to join waitlist' },
+        { error: error.message || 'Failed to join waitlist' },
         { status: 500 }
       );
     }
