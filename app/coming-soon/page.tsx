@@ -41,10 +41,19 @@ export default function ComingSoon() {
       if (res.ok) {
         setSubmitted(true);
         setEmail('');
+        // Increment counter immediately for UX
         setWaitlistCount(prev => prev + 1);
+        // Re-fetch count after 2 seconds to sync with backend
+        setTimeout(() => {
+          fetch('/api/waitlist/count')
+            .then(r => r.json())
+            .then(d => setWaitlistCount(Math.max(d.count || 0, 1182)))
+            .catch(() => {});
+        }, 2000);
         setTimeout(() => setSubmitted(false), 5000);
       } else {
         alert(data.error || 'Failed to join waitlist');
+        setEmail('');
       }
     } catch (error) {
       console.error('Waitlist submission error:', error);
