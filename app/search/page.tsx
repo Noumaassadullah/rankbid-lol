@@ -111,7 +111,7 @@ function SearchContent() {
             <p className="text-xs sm:text-sm text-[#1F2937]/60 font-semibold mb-4">
               Found <span className="font-black text-[#1F2937]">{results.length}</span> product{results.length !== 1 ? 's' : ''}
             </p>
-            <div className="space-y-2.5 sm:space-y-3">
+            <div className="curve-list space-y-2.5 sm:space-y-3">
               {results.map((listing, idx) => (
                 <RankingRow key={listing.id} listing={listing} rank={idx + 1} votes={listing.totalVotes || 0} votesLabel="votes" />
               ))}

@@ -306,7 +306,7 @@ export default function ProductView({ id, initialProduct, initialAllListings }: 
                     All {getCategoryLabel(product.category)} rankings →
                   </Link>
                 </div>
-                <div className="space-y-2.5 sm:space-y-3">
+                <div className="curve-list space-y-2.5 sm:space-y-3">
                   {relatedListings.map((l, i) => (
                     <RankingRow key={l.id} listing={l} rank={i + 1} votes={l.totalVotes || 0} />
                   ))}

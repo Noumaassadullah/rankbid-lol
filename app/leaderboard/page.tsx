@@ -164,7 +164,7 @@ export default function LeaderboardPage() {
                     <p className="text-sm text-[#1F2937]/60 font-semibold">{activeTab === 'today' ? 'No votes yet today' : 'No products ranked yet'}</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="curve-list space-y-3">
                     {sortedListings.map((listing, idx) => (
                       <RankingRow key={listing.id} listing={listing} rank={idx + 1} votes={votesFor(listing) || 0} votesLabel={activeTab === 'today' ? 'today' : 'votes'} />
                     ))}

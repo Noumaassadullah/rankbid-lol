@@ -125,7 +125,7 @@ export default function DailyPage() {
                 </Link>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="curve-list space-y-3">
                 {listings.map((listing, idx) => (
                   <RankingRow key={listing.id} listing={listing} rank={idx + 1} votes={listing.dayVotes || 0} votesLabel="today" />
                 ))}

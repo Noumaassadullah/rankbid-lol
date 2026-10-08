@@ -202,7 +202,7 @@ export default function ProfilePage() {
                     </Link>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="curve-list space-y-3">
                     {submissions.map((listing) => (
                       <RankingRow
                         key={listing.id}

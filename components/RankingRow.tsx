@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import PlatformIcon from '@/components/PlatformIcon';
 import StatusCardModal from '@/components/StatusCardModal';
@@ -153,7 +154,8 @@ export default function RankingRow({
         </div>
       </div>
 
-      {shareOpen && (
+      {/* Portaled to <body> so a transformed list row (e.g. .curve-list) can't trap the fixed overlay */}
+      {shareOpen && createPortal(
         <StatusCardModal
           isOpen={shareOpen}
           onClose={() => setShareOpen(false)}
@@ -167,7 +169,8 @@ export default function RankingRow({
             rank,
           }}
           productUrl={supportUrl(listing.id)}
-        />
+        />,
+        document.body
       )}
     </>
   );

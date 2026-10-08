@@ -174,7 +174,7 @@ export default function PlatformsPage() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-3 sm:space-y-4">
+              <div className="curve-list space-y-3 sm:space-y-4">
                 {listings.map((listing, idx) => (
                   <RankingRow key={listing.id} listing={listing} rank={(currentPage - 1) * 20 + idx + 1} votes={listing.totalVotes || 0} />
                 ))}

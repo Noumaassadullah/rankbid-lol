@@ -87,7 +87,7 @@ export default function CategoryBrowser({ selected, listings, counts, intro }: {
                 </Link>
               </div>
             ) : (
-              <ol className="space-y-3 sm:space-y-4">
+              <ol className="curve-list space-y-3 sm:space-y-4">
                 {listings.map((listing, idx) => (
                   <li key={listing.id}>
                     <RankingRow listing={listing} rank={idx + 1} votes={listing.totalVotes} votesLabel="votes" />
