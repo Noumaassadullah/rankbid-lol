@@ -15,6 +15,7 @@ import { IconTile, PremiumIcons } from '@/components/PremiumIcons';
 import RankingRow from '@/components/RankingRow';
 import LivePodium from '@/components/LivePodium';
 import SelectionHeading from '@/components/SelectionHeading';
+import RankingsSignpost from '@/components/RankingsSignpost';
 import TrustedBy from '@/components/TrustedBy';
 import WhyMakersIllustration from '@/components/WhyMakersIllustration';import { getCategoryLabel as formatCategory } from '@/lib/categories';
 
@@ -802,12 +803,15 @@ export default function Home() {
         {/* LEADERBOARD SECTION */}
         <section id="leaderboard" className="bg-white py-12 sm:py-16 md:py-20 border-b border-gray-200 fade-in">
           <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
-            <SelectionHeading
-              lead="the top"
-              highlight="rankings"
-              sub="Every product, ordered by real community votes."
-              className="mb-10 sm:mb-12"
-            />
+            <div className="mb-10 sm:mb-12 flex items-center justify-between gap-3 sm:gap-6">
+              <SelectionHeading
+                lead="the top"
+                highlight="rankings"
+                sub="Every product, ordered by real community votes."
+                className="min-w-0"
+              />
+              <RankingsSignpost className="shrink-0 w-32 min-[400px]:w-36 sm:w-48 md:w-64 lg:w-72 h-auto" />
+            </div>
 
             {/* Category filter moved to header navigation */}
 
