@@ -72,9 +72,10 @@ export async function trackVisitor(
       if (existing) {
         // Record exists - increment page_views on every hit, total_visitors only for new sessions
         console.log('[TRACKING] Found existing analytics, incrementing...');
+        // No updated_at here: the production visitor_analytics table doesn't have that
+        // column, and sending it makes every increment fail (PGRST204).
         const updateData: any = {
           page_views: existing.page_views + 1,
-          updated_at: now,
         };
 
         if (isNewSession) {

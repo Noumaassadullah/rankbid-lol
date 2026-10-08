@@ -3,6 +3,8 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Header from '@/components/Header';
+import { IconTile, PremiumIcons } from '@/components/PremiumIcons';
 
 export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
@@ -25,32 +27,37 @@ export default function PaymentSuccessPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-        <div className="text-center">
-          <div className="animate-spin text-6xl mb-4">✨</div>
-          <p className="text-xl font-black text-gray-900">Processing your payment...</p>
+      <>
+        <Header />
+        <div className="min-h-[70vh] bg-gray-50 flex items-center justify-center p-4">
+          <div className="text-center">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-full border-4 border-[#0F3460] border-t-transparent animate-spin" />
+            <p className="text-base sm:text-lg font-black text-[#1F2937]">Processing your payment…</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
+    <>
+    <Header />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-3 sm:px-4 py-8 sm:py-12">
+      <div className="max-w-2xl w-full slide-up">
         {/* Success Card */}
-        <div className="bg-white shadow-2xl rounded-xl border-4 border-green-500 overflow-hidden">
+        <div className="bg-white shadow-xl rounded-2xl border border-gray-200 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-8 text-center text-white">
-            <div className="text-7xl mb-4 animate-bounce">✅</div>
-            <h1 className="text-4xl font-black mb-2">Payment Successful!</h1>
-            <p className="text-lg opacity-90">Your premium listing is now active</p>
+          <div className="bg-gradient-to-br from-[#059669] to-[#10B981] p-6 sm:p-8 text-center text-white">
+            <div className="text-5xl sm:text-6xl mb-4 animate-bounce">✅</div>
+            <h1 className="text-2xl sm:text-4xl font-black mb-2">Payment Successful!</h1>
+            <p className="text-sm sm:text-lg opacity-90">Your premium listing is now active</p>
           </div>
 
           {/* Content */}
-          <div className="p-8 space-y-8">
+          <div className="p-5 sm:p-8 space-y-6 sm:space-y-8">
             {/* Transaction Details */}
             <div className="bg-gray-50 rounded-lg p-6 border-2 border-gray-200">
-              <h2 className="text-xl font-black text-gray-900 mb-4 uppercase">📋 Transaction Details</h2>
+              <h2 className="text-xl font-black text-gray-900 mb-4">📋 Transaction Details</h2>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-gray-300">
                   <span className="font-bold text-gray-700">Transaction ID:</span>
@@ -76,7 +83,7 @@ export default function PaymentSuccessPage() {
 
             {/* What's Next */}
             <div className="bg-blue-50 rounded-lg p-6 border-2 border-blue-300">
-              <h2 className="text-lg font-black text-gray-900 mb-4 uppercase">🎯 What's Next?</h2>
+              <h2 className="text-lg font-black text-gray-900 mb-4">🎯 What's Next?</h2>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
                   <span className="text-2xl flex-shrink-0">📧</span>
@@ -111,26 +118,26 @@ export default function PaymentSuccessPage() {
 
             {/* Important Notes */}
             <div className="bg-yellow-50 rounded-lg p-6 border-2 border-yellow-300">
-              <h3 className="font-black text-gray-900 mb-3 uppercase">⚠️ Important</h3>
-              <ul className="text-sm text-gray-700 space-y-2">
-                <li>✓ Your premium listing is active immediately</li>
-                <li>✓ The position # is your guaranteed minimum placement</li>
-                <li>✓ Votes can move your listing higher in the rankings</li>
-                <li>✓ After 30 days, your listing returns to the regular voting system</li>
+              <h3 className="font-black text-gray-900 mb-3">⚠️ Important</h3>
+              <ul className="text-sm text-gray-700 space-y-3">
+                <li className="flex items-start gap-2"><IconTile size="sm" tone="green"><PremiumIcons.Bolt className="w-4 h-4" /></IconTile><span className="pt-1">Your premium listing is active immediately</span></li>
+                <li className="flex items-start gap-2"><IconTile size="sm" tone="green"><PremiumIcons.Shield className="w-4 h-4" /></IconTile><span className="pt-1">The position # is your guaranteed minimum placement</span></li>
+                <li className="flex items-start gap-2"><IconTile size="sm" tone="green"><PremiumIcons.Trophy className="w-4 h-4" /></IconTile><span className="pt-1">Votes can move your listing higher in the rankings</span></li>
+                <li className="flex items-start gap-2"><IconTile size="sm" tone="green"><PremiumIcons.Calendar className="w-4 h-4" /></IconTile><span className="pt-1">After 30 days, your listing returns to the regular voting system</span></li>
               </ul>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col gap-3 pt-6 border-t-4 border-gray-200">
+            <div className="flex flex-col gap-3 pt-6 border-t border-gray-200">
               <Link
                 href="/"
-                className="w-full px-6 py-4 bg-orange-600 text-white font-black rounded-lg hover:bg-orange-700 active:scale-95 transition-all duration-200 text-center shadow-lg border-2 border-orange-700 uppercase"
+                className="w-full px-6 py-4 bg-[#0F3460] text-white font-black rounded-lg hover:bg-[#0D2A50] active:scale-95 transition-all duration-200 text-center shadow-lg border-2 border-[#0F3460]"
               >
                 🏠 Back to Leaderboard
               </Link>
               <Link
-                href="/dashboard"
-                className="w-full px-6 py-4 bg-white text-gray-900 font-black rounded-lg hover:bg-gray-100 active:scale-95 transition-all duration-200 text-center border-2 border-gray-400 uppercase"
+                href="/profile"
+                className="w-full px-6 py-4 bg-white text-gray-900 font-black rounded-lg hover:bg-gray-100 active:scale-95 transition-all duration-200 text-center border-2 border-gray-400"
               >
                 📊 View My Listings
               </Link>
@@ -146,5 +153,6 @@ export default function PaymentSuccessPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

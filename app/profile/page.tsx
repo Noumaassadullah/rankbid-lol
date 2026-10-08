@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { LogOut, ChevronRight } from 'lucide-react';
 import Header from '@/components/Header';
-import PlatformIcon from '@/components/PlatformIcon';
+import RankingRow from '@/components/RankingRow';
 
 interface User {
   id: string;
@@ -39,18 +39,6 @@ interface Vote {
   };
 }
 
-const Icons = {
-  Heart: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-    </svg>
-  ),
-  Tag: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-    </svg>
-  ),
-};
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -124,71 +112,70 @@ export default function ProfilePage() {
     <>
       <Header />
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-full flex items-center justify-center text-white font-bold text-2xl flex-shrink-0">
-                {(user.name || user.email).charAt(0).toUpperCase()}
+        {/* Profile band */}
+        <section className="spotlight relative overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white">
+          <div className="absolute inset-0 opacity-20 pointer-events-none" aria-hidden="true">
+            <div className="absolute -top-24 -right-16 w-72 h-72 bg-[#1a5490] rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-24 -left-16 w-72 h-72 bg-[#059669] rounded-full blur-3xl"></div>
+          </div>
+          <div className="relative max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-10">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0 slide-up">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white text-[#0F3460] rounded-2xl flex items-center justify-center font-black text-xl sm:text-2xl flex-shrink-0 shadow-lg">
+                  {(user.name || user.email).charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0">
+                  <h1 className="text-xl sm:text-3xl font-black truncate">{user.name || user.email.split('@')[0]}</h1>
+                  <p className="text-xs sm:text-sm text-white/65 truncate">{user.email}</p>
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="font-black text-gray-900 truncate" style={{fontSize: '20px'}}>{user.name || user.email.split('@')[0]}</h1>
-                <p className="text-gray-600 text-sm mt-1 truncate">{user.email}</p>
-              </div>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/10 border border-white/20 text-white text-xs sm:text-sm font-bold rounded-lg hover:bg-white/20 transition-colors flex-shrink-0"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">Log out</span>
+              </button>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-red-600 text-white font-semibold text-sm md:text-base rounded-lg hover:bg-red-700 transition-colors flex-shrink-0"
-            >
-              <LogOut className="w-4 md:w-5 h-4 md:h-5" />
-              <span className="hidden sm:inline">Logout</span>
-              <span className="sm:hidden">→</span>
-            </button>
-          </div>
-        </div>
-      </div>
 
-      {/* Tabs */}
-      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <div className="flex gap-8">
-            <button
-              onClick={() => setActiveTab('submissions')}
-              className={`py-4 px-1 border-b-2 font-semibold transition-colors ${
-                activeTab === 'submissions'
-                  ? 'border-[#0F3460]/600 text-[#0F3460]'
-                  : 'border-transparent text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              My Submissions ({submissions.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('votes')}
-              className={`py-4 px-1 border-b-2 font-semibold transition-colors ${
-                activeTab === 'votes'
-                  ? 'border-[#0F3460]/600 text-[#0F3460]'
-                  : 'border-transparent text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              My Votes ({votes.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('settings')}
-              className={`py-4 px-1 border-b-2 font-semibold transition-colors ${
-                activeTab === 'settings'
-                  ? 'border-[#0F3460]/600 text-[#0F3460]'
-                  : 'border-transparent text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Settings
-            </button>
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-5 sm:mt-7 max-w-lg slide-up" style={{ '--d': '120ms' } as CSSProperties}>
+              {[
+                { label: 'Submissions', value: submissions.length },
+                { label: 'Votes received', value: submissions.reduce((sum, l) => sum + (l.totalVotes || 0), 0) },
+                { label: 'Votes given', value: votes.length },
+              ].map(stat => (
+                <div key={stat.label} className="bg-white/10 border border-white/15 rounded-xl px-3 py-2.5 backdrop-blur-sm">
+                  <p className="text-lg sm:text-2xl font-black leading-tight">{loading ? '—' : stat.value}</p>
+                  <p className="text-[11px] sm:text-xs text-white/65 font-semibold">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Tabs */}
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 pt-5 sm:pt-6">
+          <div className="inline-flex p-1 bg-white border border-gray-200 shadow-sm rounded-full max-w-full overflow-x-auto">
+            {[
+              { id: 'submissions' as const, label: 'My Submissions', count: submissions.length },
+              { id: 'votes' as const, label: 'My Votes', count: votes.length },
+              { id: 'settings' as const, label: 'Settings', count: null },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full whitespace-nowrap transition-all ${
+                  activeTab === tab.id ? 'bg-[#0F3460] text-white shadow-sm' : 'text-[#1F2937]/65 hover:text-[#0F3460]'
+                }`}
+              >
+                {tab.label}{tab.count !== null && <span className={activeTab === tab.id ? 'text-white/70' : 'text-[#1F2937]/40'}> ({tab.count})</span>}
+              </button>
+            ))}
           </div>
         </div>
-      </div>
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-5 sm:py-8">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin text-[#0F3460] text-2xl">⏳</div>
@@ -199,16 +186,16 @@ export default function ProfilePage() {
             {activeTab === 'submissions' && (
               <div>
                 <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">My Submissions</h2>
-                  <p className="text-gray-600">Products and services you've submitted to RankBid</p>
+                  <h2 className="text-lg sm:text-2xl font-black text-[#1F2937] mb-1">My Submissions</h2>
+                  <p className="text-xs sm:text-sm text-[#1F2937]/60">Products and services you&apos;ve submitted to RankBid</p>
                 </div>
 
                 {submissions.length === 0 ? (
-                  <div className="bg-white rounded-lg p-12 text-center border border-gray-200">
-                    <p className="text-gray-600 text-lg mb-6">You haven't submitted anything yet.</p>
+                  <div className="bg-white rounded-xl p-8 sm:p-12 text-center border border-gray-200 shadow-sm">
+                    <p className="text-sm sm:text-base text-[#1F2937]/70 mb-5">You haven&apos;t submitted anything yet.</p>
                     <Link
-                      href="/#claim"
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#0F3460] text-white font-semibold rounded-lg hover:bg-[#0D2A50] transition-colors"
+                      href="/#submit"
+                      className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-[#0F3460] text-white font-black text-xs sm:text-sm rounded-lg hover:bg-[#0D2A50] active:scale-95 transition-all"
                     >
                       Submit Your First Product
                       <ChevronRight className="w-5 h-5" />
@@ -216,88 +203,14 @@ export default function ProfilePage() {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {submissions.map((listing) => {
-                      const rank = calculateRank(listing.totalVotes);
-                      let faviconUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
-                      try {
-                        if (listing.url) {
-                          const urlObj = new URL(listing.url);
-                          faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(urlObj.hostname)}&sz=32`;
-                        }
-                      } catch {
-                        // If URL parsing fails, use placeholder
-                      }
-
-                      const platformLabel = listing.platform || 'website';
-
-                      return (
-                        <Link
-                          key={listing.id}
-                          href={`/product/${listing.id}`}
-                          className="flex items-center justify-between p-3 bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md hover:border-[#0F3460]/30 transition-all duration-200 group cursor-pointer gap-4"
-                        >
-                          {/* Left Section: Position Badge and Favicon */}
-                          <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <div className="w-9 h-9 bg-[#0F3460] text-white font-black text-xs rounded-lg flex items-center justify-center flex-shrink-0">
-                              #{rank}
-                            </div>
-                            {listing.url && (
-                              <img src={faviconUrl} alt="favicon" className="w-6 h-6 rounded flex-shrink-0" onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'; }} />
-                            )}
-
-                            {/* Title, Category and Platform Icon - All inline */}
-                            <div className="flex-1 min-w-0 flex items-center gap-2">
-                              <p className="text-xs font-semibold text-[#1F2937] truncate group-hover:text-[#0F3460] transition-colors">
-                                {listing.title || (listing.handle ? `@${listing.handle}` : listing.url)}
-                              </p>
-
-                              {/* Platform Icon */}
-                              <div className="w-4 h-4 flex-shrink-0" title={platformLabel}>
-                                <PlatformIcon platform={platformLabel} size={16} />
-                              </div>
-
-                              {/* Category Tag */}
-                              {listing.category && (
-                                <div className="flex items-center gap-1 flex-shrink-0">
-                                  <Icons.Tag />
-                                  <p className="text-xs text-[#1F2937]/70 font-semibold">{listing.category}</p>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Right Section: Vote Count and Actions */}
-                          <div className="flex items-center gap-3 ml-2 flex-shrink-0">
-                            {/* Vote Count */}
-                            <p className="text-lg font-black text-[#0F3460] min-w-[1.5rem] text-right">
-                              {listing.totalVotes}
-                            </p>
-
-                            {/* Action Buttons */}
-                            <div className="flex gap-2 flex-shrink-0">
-                              <button
-                                className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 active:scale-95 flex items-center gap-1 whitespace-nowrap bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white`}
-                              >
-                                <Icons.Heart />
-                                Vote
-                              </button>
-
-                              <button
-                                className="text-xs font-semibold px-3 py-1.5 bg-white border border-orange-300 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
-                              >
-                                📤 Share
-                              </button>
-
-                              <button
-                                className="text-xs font-semibold px-3 py-1.5 bg-white border border-gray-300 text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
-                              >
-                                ⭐ Premium
-                              </button>
-                            </div>
-                          </div>
-                        </Link>
-                      );
-                    })}
+                    {submissions.map((listing) => (
+                      <RankingRow
+                        key={listing.id}
+                        listing={{ ...listing, url: listing.url || '', title: listing.title || (listing.handle ? `@${listing.handle}` : listing.url || 'Untitled') }}
+                        rank={calculateRank(listing.totalVotes)}
+                        votes={listing.totalVotes || 0}
+                      />
+                    ))}
                   </div>
                 )}
               </div>
@@ -307,16 +220,16 @@ export default function ProfilePage() {
             {activeTab === 'votes' && (
               <div>
                 <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">My Votes</h2>
-                  <p className="text-gray-600">Products and services you've voted for</p>
+                  <h2 className="text-lg sm:text-2xl font-black text-[#1F2937] mb-1">My Votes</h2>
+                  <p className="text-xs sm:text-sm text-[#1F2937]/60">Products and services you&apos;ve voted for</p>
                 </div>
 
                 {votes.length === 0 ? (
-                  <div className="bg-white rounded-lg p-12 text-center border border-gray-200">
-                    <p className="text-gray-600 text-lg mb-6">You haven't voted yet.</p>
+                  <div className="bg-white rounded-xl p-8 sm:p-12 text-center border border-gray-200 shadow-sm">
+                    <p className="text-sm sm:text-base text-[#1F2937]/70 mb-5">You haven&apos;t voted yet.</p>
                     <Link
                       href="/"
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#0F3460] text-white font-semibold rounded-lg hover:bg-[#0D2A50] transition-colors"
+                      className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-[#0F3460] text-white font-black text-xs sm:text-sm rounded-lg hover:bg-[#0D2A50] active:scale-95 transition-all"
                     >
                       Explore Rankings
                       <ChevronRight className="w-5 h-5" />
@@ -344,8 +257,8 @@ export default function ProfilePage() {
                         >
                           {/* Left Section: Vote Badge and Favicon */}
                           <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <div className="w-9 h-9 bg-[#0F3460] text-white font-black text-xs rounded-lg flex items-center justify-center flex-shrink-0">
-                              ♥
+                            <div className="w-9 h-9 bg-[#059669]/10 text-[#059669] rounded-lg flex items-center justify-center flex-shrink-0">
+                              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.5s-8.5-4.8-8.5-11A4.5 4.5 0 0112 7a4.5 4.5 0 018.5 2.5c0 6.2-8.5 11-8.5 11z" /></svg>
                             </div>
                             <img
                               src={faviconUrl}
@@ -368,27 +281,7 @@ export default function ProfilePage() {
                               {vote.listing?.totalVotes || 0}
                             </p>
 
-                            {/* Action Buttons */}
-                            <div className="flex gap-2 flex-shrink-0">
-                              <button
-                                className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 active:scale-95 flex items-center gap-1 whitespace-nowrap bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white`}
-                              >
-                                <Icons.Heart />
-                                Vote
-                              </button>
-
-                              <button
-                                className="text-xs font-semibold px-3 py-1.5 bg-white border border-orange-300 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
-                              >
-                                📤 Share
-                              </button>
-
-                              <button
-                                className="text-xs font-semibold px-3 py-1.5 bg-white border border-gray-300 text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
-                              >
-                                ⭐ Premium
-                              </button>
-                            </div>
+                            <ChevronRight className="w-4 h-4 text-[#1F2937]/30 group-hover:text-[#0F3460] transition-colors" />
                           </div>
                         </Link>
                       );
@@ -402,8 +295,8 @@ export default function ProfilePage() {
             {activeTab === 'settings' && (
               <div>
                 <div className="mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Settings</h2>
-                  <p className="text-gray-600">Manage your account settings and preferences</p>
+                  <h2 className="text-lg sm:text-2xl font-black text-[#1F2937] mb-1">Settings</h2>
+                  <p className="text-xs sm:text-sm text-[#1F2937]/60">Manage your account settings and preferences</p>
                 </div>
 
                 <div className="bg-white rounded-lg p-8 border border-gray-200">

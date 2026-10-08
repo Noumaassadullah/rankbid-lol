@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { recordVote } from '@/lib/server/votes';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -24,51 +25,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if vote already exists
-    console.log('Checking for existing vote...');
-    const checkRes = await fetch(
-      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&voter_id=eq.${voterId}`,
-      {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-        },
-      }
-    );
-
-    const existingVotes = await checkRes.json();
-    if (existingVotes.length > 0) {
-      console.log('Vote already exists');
+    const result = await recordVote(listingId, voterId);
+    if (result.status === 'duplicate') {
       return NextResponse.json(
         { error: 'Already voted', voted: true },
         { status: 400 }
       );
     }
-
-    // Create vote record
-    console.log('Creating vote...');
-    const voteId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const insertRes = await fetch(`${supabaseUrl}/rest/v1/votes`, {
-      method: 'POST',
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal',
-      },
-      body: JSON.stringify({
-        id: voteId,
-        listing_id: listingId,
-        voter_id: voterId,
-        voted_at: new Date().toISOString(),
-      }),
-    });
-
-    if (!insertRes.ok) {
-      console.error('Failed to insert vote:', await insertRes.text());
-      throw new Error('Failed to insert vote');
-    }
-    console.log('Vote created successfully');
 
     // Also create UserVote record if userId is provided
     if (userId) {
@@ -106,64 +69,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Get vote counts
-    console.log('Counting votes...');
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-    const todayIso = today.toISOString();
-
-    const countRes = await fetch(
-      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&select=id`,
-      {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'count=exact',
-        },
-      }
-    );
-    const totalVoteCount = parseInt(countRes.headers.get('content-range')?.split('/')[1] || '0');
-    console.log('Total votes:', totalVoteCount);
-
-    const dayCountRes = await fetch(
-      `${supabaseUrl}/rest/v1/votes?listing_id=eq.${listingId}&voted_at=gte.${todayIso}&select=id`,
-      {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'count=exact',
-        },
-      }
-    );
-    const dayVoteCount = parseInt(dayCountRes.headers.get('content-range')?.split('/')[1] || '0');
-    console.log('Today votes:', dayVoteCount);
-
-    // Update listing
-    console.log('Updating listing vote counts...');
-    const updateRes = await fetch(
-      `${supabaseUrl}/rest/v1/listings?id=eq.${listingId}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal',
-        },
-        body: JSON.stringify({
-          total_votes: totalVoteCount,
-          day_votes: dayVoteCount,
-        }),
-      }
-    );
-
-    if (!updateRes.ok) {
-      console.error('Failed to update listing:', await updateRes.text());
-    }
-    console.log('Listing updated');
-
     return NextResponse.json(
-      { success: true, voted: true, totalVotes: totalVoteCount, dayVotes: dayVoteCount },
+      { success: true, voted: true, totalVotes: result.totalVotes, dayVotes: result.dayVotes },
       { status: 201 }
     );
   } catch (error) {

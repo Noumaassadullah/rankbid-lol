@@ -5,6 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { GoogleLogin } from '@react-oauth/google';
 
+// Where to go after login: ?next=/some/path (same-site paths only, never //host or full URLs).
+function nextPath(): string {
+  const next = new URLSearchParams(window.location.search).get('next');
+  return next && next.startsWith('/') && !next.startsWith('//') ? next : '/';
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -35,8 +41,7 @@ export default function LoginPage() {
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('auth_token', data.token);
 
-      // Redirect to home page
-      router.push('/');
+      router.push(nextPath());
     } catch (err) {
       setError('An error occurred. Please try again.');
     } finally {
@@ -66,8 +71,7 @@ export default function LoginPage() {
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('auth_token', data.token);
 
-      // Redirect to home page
-      router.push('/');
+      router.push(nextPath());
     } catch (err) {
       setError('An error occurred during Google login');
     } finally {
@@ -76,15 +80,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-lg p-8 md:p-10 border border-gray-200">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-gray-900 flex items-center justify-center px-4 py-10">
+      <div className="absolute -top-32 -right-24 w-96 h-96 bg-[#1a5490] rounded-full blur-3xl opacity-40 pointer-events-none" aria-hidden="true" />
+      <div className="absolute -bottom-32 -left-24 w-96 h-96 bg-[#059669] rounded-full blur-3xl opacity-25 pointer-events-none" aria-hidden="true" />
+      <div className="relative w-full max-w-md slide-up">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 md:p-10 border border-white/20">
           {/* Logo */}
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-lg flex items-center justify-center text-white font-black text-xl">
-                ⚡
-              </div>
+              <div className="w-11 h-11 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md">R</div>
               <span className="text-3xl font-black text-[#0F3460]">RankBid</span>
             </Link>
             <p className="text-gray-600 text-sm mt-4">Sign in to your account</p>
@@ -159,27 +163,15 @@ export default function LoginPage() {
                 size="large"
               />
             )}
-            {!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID && (
-              <p className="text-xs text-gray-500">Google login not configured</p>
-            )}
           </div>
 
           <div className="mt-6 text-center">
             <p className="text-gray-600 text-sm">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/signup" className="text-[#0F3460] font-bold hover:underline">
                 Sign up
               </Link>
             </p>
-          </div>
-
-          {/* Demo Credentials */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center mb-3">Demo Account:</p>
-            <div className="space-y-1 text-xs text-gray-600">
-              <p><span className="font-semibold">Email:</span> demo@rankbid.com</p>
-              <p><span className="font-semibold">Password:</span> demo123</p>
-            </div>
           </div>
         </div>
       </div>

@@ -6,7 +6,8 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Only create the client when a key is set; constructing it without one throws and breaks builds.
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export async function POST(request: Request) {
   try {
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
     }
 
     // Send email notification to admin
-    if (process.env.RESEND_API_KEY && process.env.ADMIN_EMAIL) {
+    if (resend && process.env.ADMIN_EMAIL) {
       try {
         await resend.emails.send({
           from: 'RankBid <noreply@rankbid.click>',

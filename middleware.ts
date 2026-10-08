@@ -10,12 +10,21 @@ const PUBLIC_ROUTES = [
   '/login',
   '/signup',
   '/admin',
+  '/support', // shareable vote links: guests vote with name + email
+  '/tos',
+  '/privacy',
+  '/cookies',
   '/api/waitlist',
   '/api/waitlist/count',
 ];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Allow static files from /public (logos, platform icons) so public pages render correctly
+  if (/\.(png|jpe?g|gif|svg|webp|ico|txt|xml)$/i.test(pathname)) {
+    return NextResponse.next();
+  }
 
   // Allow public routes
   if (PUBLIC_ROUTES.some(route => pathname.startsWith(route))) {

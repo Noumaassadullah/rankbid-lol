@@ -1,196 +1,136 @@
 'use client';
 
+import type { ReactNode } from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
+import PageHero from '@/components/PageHero';
+import { SUPPORT_EMAIL } from '@/lib/site';
+
+const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
+  {
+    id: 'about',
+    title: 'What RankBid Is',
+    body: (
+      <p>
+        RankBid is a community-driven discovery platform. Makers submit products and profiles for free, and
+        the community decides the rankings by voting. There are no hidden algorithms: more votes means a higher rank.
+      </p>
+    ),
+  },
+  {
+    id: 'accounts',
+    title: 'Accounts & Voting',
+    body: (
+      <ul>
+        <li>You need an account to submit products and to vote.</li>
+        <li>Each person may vote once per product. Using multiple accounts, bots or paid votes is not allowed.</li>
+        <li>You are responsible for activity on your account and for keeping your login secure.</li>
+      </ul>
+    ),
+  },
+  {
+    id: 'listings',
+    title: 'Listings & Content',
+    body: (
+      <>
+        <p>Your listing must point to a real, working product or profile, with an accurate title, description and category. By submitting, you confirm you have the right to represent it, and you allow us to display its title, description, logo and link on RankBid and in promotional material.</p>
+        <p>Prohibited: chat/group invite links, adult content, URL shorteners, phishing or malware, scams, counterfeit or illegal products. Full details are in our <Link href="/rules">Rules & Guidelines</Link>.</p>
+      </>
+    ),
+  },
+  {
+    id: 'rankings',
+    title: 'Rankings',
+    body: (
+      <ul>
+        <li><strong>All-time</strong> rankings are based on total votes.</li>
+        <li><strong>Today</strong> rankings are based on votes from the last 24 hours, and daily top products are saved to the Archive.</li>
+        <li>We may remove votes we believe are fraudulent, which can change rankings.</li>
+      </ul>
+    ),
+  },
+  {
+    id: 'premium',
+    title: 'Premium Listings & Payments',
+    body: (
+      <ul>
+        <li>Premium listings are optional. They feature your product in a chosen position (#1, #2 or #3) for 30 days; votes still apply on top.</li>
+        <li>Payments are processed by our payment providers (card gateway, JazzCash, EasyPaisa). Prices are shown before you pay.</li>
+        <li>Once a premium listing is active, payment is final and non-refundable, except where required by law.</li>
+        <li>You are responsible for any taxes or fees in your jurisdiction.</li>
+      </ul>
+    ),
+  },
+  {
+    id: 'removal',
+    title: 'Removal & Bans',
+    body: (
+      <p>
+        We may remove any listing or suspend any account that breaks these terms or our rules, manipulates rankings,
+        uses misleading information or is involved in illegal activity. Premium fees are not refunded for listings
+        removed for violations.
+      </p>
+    ),
+  },
+  {
+    id: 'liability',
+    title: 'No Guarantees & Liability',
+    body: (
+      <p>
+        RankBid is provided &ldquo;as is&rdquo;. A ranking or premium placement does not guarantee traffic, users or sales. We are
+        not liable for indirect or consequential damages, and our total liability is limited to the amount you paid us
+        in the last 30 days.
+      </p>
+    ),
+  },
+  {
+    id: 'changes',
+    title: 'Changes to These Terms',
+    body: <p>We may update these terms. Changes take effect when posted, and continued use of RankBid means you accept them.</p>,
+  },
+];
 
 export default function ToSPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-white">
-        <div className="max-w-3xl mx-auto px-6 py-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Terms of Service</h1>
-          <p className="text-gray-600 mb-12 text-lg">Last updated: September 2024</p>
+      <div className="bg-white min-h-screen">
+        <PageHero title="Terms of Service" subtitle="Last updated: October 2026" />
 
-          <div className="space-y-10">
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">1. What is RankBid?</h2>
-              <p className="text-gray-700 leading-relaxed">
-                RankBid is a transparent, pay-to-rank leaderboard platform where product creators and makers compete fairly to gain visibility. It operates on a simple principle: the more you bid, the higher your rank. There are no algorithms, no politics, no hidden factors—just pure, merit-based competition.
-              </p>
-            </section>
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-10 md:py-12 grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 lg:gap-10">
+          {/* Table of contents */}
+          <nav className="hidden lg:block">
+            <div className="sticky top-36 border-l-2 border-gray-200 pl-4">
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#1F2937]/40 mb-3">On this page</p>
+              <ol className="space-y-2">
+                {SECTIONS.map((s, i) => (
+                  <li key={s.id}>
+                    <a href={`#${s.id}`} className="text-xs font-semibold text-[#1F2937]/70 hover:text-[#0F3460] transition-colors">
+                      {i + 1}. {s.title}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </nav>
 
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">2. How Pay-to-Rank Works</h2>
-              <div className="space-y-4 text-gray-700">
-                <p>
-                  <span className="font-semibold">Submit Your Product:</span> Create a listing by providing your product URL, title, description, and category.
-                </p>
-                <p>
-                  <span className="font-semibold">Place Your Bid:</span> Pay the minimum amount (₨2,800 or ~$10 USD) to enter the leaderboard. Your listing starts at rank #N based on your bid amount.
-                </p>
-                <p>
-                  <span className="font-semibold">Real-Time Rankings:</span> Your rank updates instantly based on your bid compared to other listings. To rank #1, bid more than the current #1 listing.
-                </p>
-                <p>
-                  <span className="font-semibold">Boost Anytime:</span> Use our "Boost" feature to add funds to your existing listing at any time to increase your rank without creating a new listing.
-                </p>
-                <p>
-                  <span className="font-semibold">Daily Reset:</span> A separate daily leaderboard resets every day at UTC midnight, allowing new products to compete fresh each day.
-                </p>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Bidding & Payments</h2>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">Minimum Bid:</span> ₨2,800 (~$10 USD) per listing or boost</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">Final & Non-Refundable:</span> All bids are final. Once you place a bid and payment is confirmed, it cannot be refunded or transferred</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">Multiple Listings:</span> You can create multiple listings for different products</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">Payment Methods:</span> We accept payments via JazzCash, EasyPaisa, and other secure payment providers</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">Tax Responsibility:</span> You are responsible for any applicable taxes or fees in your jurisdiction</span>
-                </li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Listing Requirements & Content Policy</h2>
-              <div className="space-y-4 text-gray-700">
-                <div>
-                  <p className="font-semibold mb-2">Your listing must:</p>
-                  <ul className="space-y-2 ml-4">
-                    <li>• Have a valid, working URL</li>
-                    <li>• Represent a real product or service</li>
-                    <li>• Have an accurate title and description</li>
-                    <li>• Be in the correct category</li>
-                  </ul>
+          <div className="divide-y divide-gray-200">
+            {SECTIONS.map((s, i) => (
+              <section key={s.id} id={s.id} className="scroll-mt-36 py-6 sm:py-8 first:pt-0">
+                <h2 className="text-base sm:text-lg font-black text-[#1F2937] mb-2 sm:mb-3 flex items-center gap-2.5">
+                  <span className="text-sm font-black text-[#0F3460]/35 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+                  {s.title}
+                </h2>
+                <div className="text-sm sm:text-[15px] text-[#1F2937]/75 leading-relaxed space-y-2 [&_ul]:space-y-1.5 [&_ul]:list-disc [&_ul]:pl-5 [&_a]:text-[#0F3460] [&_a]:font-semibold [&_a:hover]:underline [&_strong]:text-[#1F2937]">
+                  {s.body}
                 </div>
+              </section>
+            ))}
 
-                <div>
-                  <p className="font-semibold mb-2">Prohibited content includes:</p>
-                  <ul className="space-y-2 ml-4">
-                    <li>• Chat links (Discord, Telegram, WhatsApp, etc.)</li>
-                    <li>• Adult or NSFW content</li>
-                    <li>• URL shorteners (use direct links only)</li>
-                    <li>• Phishing or malicious content</li>
-                    <li>• Spam or scams</li>
-                    <li>• Counterfeit products</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Rankings & Leaderboards</h2>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">All-Time Rankings:</span> Based on your total cumulative bids across all payments</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">Daily Rankings:</span> Based on bids placed in the current UTC day (resets at midnight)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">Ranking Calculation:</span> Simple and transparent—higher bid = higher rank. Ties are broken by earliest bid timestamp</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">Click Tracking:</span> We track how many times your listing is clicked. View this data on your listing</span>
-                </li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">6. User Rights & Responsibilities</h2>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">You own your content:</span> By listing on RankBid, you confirm you have the right to represent this product</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">We can display your content:</span> We may display your listing title, description, and URL on our platform and in promotional materials</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">No guarantee of results:</span> Payment does not guarantee sales, users, or traffic—rankings are determined purely by bid amount</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-[#0F3460]">•</span>
-                  <span><span className="font-semibold">Respect other users:</span> No spam, manipulation, or abuse toward other listings or users</span>
-                </li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Removal & Bans</h2>
-              <p className="text-gray-700 mb-4">
-                We reserve the right to remove any listing or ban any user without refund if they:
-              </p>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-red-600">×</span>
-                  <span>Violate our content policy or community guidelines</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-red-600">×</span>
-                  <span>Attempt to manipulate rankings through fraud or abuse</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-red-600">×</span>
-                  <span>Use fake or misleading information</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="font-bold text-red-600">×</span>
-                  <span>Engage in illegal activities</span>
-                </li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Limitation of Liability</h2>
-              <p className="text-gray-700 leading-relaxed">
-                RankBid is provided "as is" without warranties. We are not liable for any indirect, incidental, or consequential damages. Your total liability is limited to the amount you paid for your bids. We do not guarantee uptime, accuracy, or results from your listings.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Changes to Terms</h2>
-              <p className="text-gray-700 leading-relaxed">
-                We may update these terms at any time. Changes are effective immediately upon posting. Your continued use of RankBid constitutes acceptance of updated terms. We recommend reviewing this page periodically.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Contact Us</h2>
-              <p className="text-gray-700 mb-4">
-                If you have questions about these Terms of Service or need support:
-              </p>
-              <ul className="space-y-2 text-gray-700">
-                <li>Email: <a href="mailto:support@rankbid.com" className="text-[#0F3460] font-semibold hover:underline">support@rankbid.com</a></li>
-                <li>Visit our <a href="/rules" className="text-[#0F3460] font-semibold hover:underline">Rules & Guidelines</a></li>
-              </ul>
-            </section>
-
-            <section className="bg-[#0F3460]/5 border border-[#0F3460]/20 rounded-lg p-6 mt-12">
-              <h3 className="text-lg font-bold text-gray-900 mb-3">Agreement</h3>
-              <p className="text-gray-700">
-                By creating a listing on RankBid, you agree to these Terms of Service. If you do not agree, please do not use our platform. Thank you for being part of the RankBid community!
+            <section className="!border-t-0 mt-4 bg-gradient-to-r from-[#0F3460] to-[#1a5490] rounded-2xl p-5 sm:p-7 text-white">
+              <h2 className="text-base sm:text-lg font-black mb-1">Questions about these terms?</h2>
+              <p className="text-xs sm:text-sm text-white/80">
+                Email us at <a href={`mailto:${SUPPORT_EMAIL}`} className="font-bold text-white underline underline-offset-2">{SUPPORT_EMAIL}</a>. By using RankBid you agree to these terms.
               </p>
             </section>
           </div>

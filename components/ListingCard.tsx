@@ -69,7 +69,7 @@ export default function ListingCard({
         <div className="flex-shrink-0 text-right">
           <div className="text-sm font-bold text-orange-600 dark:text-orange-400 mb-2">{formatCurrency(totalPaid)}</div>
           <Link
-            href={`/claim?listing=${id}`}
+            href="/#submit"
             className="inline-block px-3 py-1 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 transition-colors"
           >
             Claim

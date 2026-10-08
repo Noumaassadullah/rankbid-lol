@@ -1,512 +1,177 @@
 'use client';
 
+import type { CSSProperties, ReactNode } from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
+import { PremiumIcons } from '@/components/PremiumIcons';
 
-const Icons = {
-  Vote: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  ),
-  Users: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-2a6 6 0 0112 0v2zm0 0h6v-2a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-    </svg>
-  ),
-  TrendingUp: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-    </svg>
-  ),
-  Globe: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20H7m6-4h.01M9 20h6" />
-    </svg>
-  ),
-  Zap: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-    </svg>
-  ),
-  Trophy: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  ),
-  Upload: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-    </svg>
-  ),
-  Check: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-    </svg>
-  ),
-};
+const d = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
+
+const STEPS = [
+  { title: 'Submit', text: 'Paste your website or social profile, pick a category. Live in two minutes, no approval queue.' },
+  { title: 'Collect votes', text: 'Share your support link. Anyone can vote with just a name and email.' },
+  { title: 'Climb the ranks', text: 'More votes, higher rank. All-time, today and every category update live.' },
+];
+
+const MAKER_POINTS: { icon: ReactNode; title: string; text: string }[] = [
+  { icon: <PremiumIcons.Gift />, title: 'Free, forever', text: 'No listing fees. Submit as many products as you like.' },
+  { icon: <PremiumIcons.Rocket />, title: 'No gatekeepers', text: 'Your product goes live instantly. No editors, no waiting.' },
+  { icon: <PremiumIcons.Scale />, title: 'A fair playing field', text: 'Indie makers compete with big teams on votes, not ad budgets.' },
+  { icon: <PremiumIcons.Feedback />, title: 'Honest feedback', text: 'See exactly how real people respond to what you built.' },
+];
+
+const VOTER_POINTS: { icon: ReactNode; title: string; text: string }[] = [
+  { icon: <PremiumIcons.Compass />, title: 'Discover what’s good', text: 'Browse products ranked by real people, not paid placements.' },
+  { icon: <PremiumIcons.Ballot />, title: 'Your vote matters', text: 'Every vote moves the rankings everyone else sees.' },
+  { icon: <PremiumIcons.Pulse />, title: 'Live rankings', text: 'Watch today’s trending products change in real time.' },
+  { icon: <PremiumIcons.Heart />, title: 'Back real makers', text: 'Help indie founders and small teams get discovered.' },
+];
+
+function PointList({ items }: { items: typeof MAKER_POINTS }) {
+  return (
+    <ul className="space-y-5 sm:space-y-6">
+      {items.map(item => (
+        <li key={item.title} className="flex items-start gap-3.5 sm:gap-4">
+          <span className="w-10 h-10 rounded-xl bg-[#0F3460]/5 text-[#0F3460] flex items-center justify-center flex-shrink-0">{item.icon}</span>
+          <div>
+            <h3 className="text-sm sm:text-base font-black text-[#1F2937]">{item.title}</h3>
+            <p className="text-xs sm:text-sm text-[#1F2937]/65 leading-relaxed mt-0.5">{item.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function WhyRankBid() {
-
   return (
     <>
       <Header />
-      <div className="bg-white text-[#1F2937]">
+      <main className="bg-white text-[#1F2937] overflow-x-hidden">
+        {/* HERO */}
+        <section className="spotlight relative overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white">
+          <div className="absolute -top-32 -right-24 w-[28rem] h-[28rem] bg-[#1a5490] rounded-full blur-3xl opacity-40 pointer-events-none" aria-hidden="true" />
+          <div className="absolute -bottom-40 -left-24 w-[28rem] h-[28rem] bg-[#059669] rounded-full blur-3xl opacity-25 pointer-events-none" aria-hidden="true" />
 
-        {/* HERO SECTION */}
-        <section className="bg-white pt-16 pb-16 border-b border-gray-200 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-[#0F3460] rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#059669] rounded-full blur-3xl"></div>
-          </div>
-
-          <div className="max-w-6xl mx-auto px-6 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h1 className="text-5xl md:text-6xl font-black text-[#1F2937] mb-6 leading-tight">
-                  Why Use RankBid?
-                </h1>
-                <p className="text-lg text-[#1F2937]/75 mb-8 leading-relaxed font-medium">
-                  RankBid is the community-driven discovery platform where your product gets ranked based on real user votes - not algorithms, not gatekeepers, not budgets. Just honest community feedback.
-                </p>
-                <div className="flex gap-4 flex-wrap">
-                  <button
-                    onClick={() => window.location.href = '/#leaderboard'}
-                    className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-[#0F3460] text-white font-black uppercase text-xs md:text-sm border-[#0F3460] border-2 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150"
-                    style={{boxShadow: 'none'}}
-                  >
-                    <Icons.TrendingUp />
-                    View Rankings
-                  </button>
-                  <button
-                    onClick={() => window.location.href = '/'}
-                    className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-white text-[#1F2937] font-black uppercase text-xs md:text-sm border-gray-300 border-2 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150"
-                    style={{boxShadow: 'none'}}
-                  >
-                    <Icons.Upload />
-                    Submit Product
-                  </button>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="border border-gray-200 shadow-sm rounded-lg bg-white p-6 hover:bg-[#0F3460]/5 transition-colors">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white">
-                      <Icons.Vote />
-                    </div>
-                  </div>
-                  <p className="text-2xl font-black text-[#1F2937] mb-1">100%</p>
-                  <p className="text-xs text-[#1F2937]/60 font-semibold">Community Voting</p>
-                </div>
-
-                <div className="border border-gray-200 shadow-sm rounded-lg bg-white p-6 hover:bg-[#059669]/5 transition-colors">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white">
-                      <Icons.Trophy />
-                    </div>
-                  </div>
-                  <p className="text-2xl font-black text-[#1F2937] mb-1">100K+</p>
-                  <p className="text-xs text-[#1F2937]/60 font-semibold">Ranked Products</p>
-                </div>
-
-                <div className="border border-gray-200 shadow-sm rounded-lg bg-white p-6 hover:bg-[#0F3460]/5 transition-colors">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white">
-                      <Icons.Zap />
-                    </div>
-                  </div>
-                  <p className="text-2xl font-black text-[#1F2937] mb-1">Real-time</p>
-                  <p className="text-xs text-[#1F2937]/60 font-semibold">Live Rankings</p>
-                </div>
-
-                <div className="border border-gray-200 shadow-sm rounded-lg bg-white p-6 hover:bg-[#059669]/5 transition-colors">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white">
-                      <Icons.Check />
-                    </div>
-                  </div>
-                  <p className="text-2xl font-black text-[#1F2937] mb-1">Free</p>
-                  <p className="text-xs text-[#1F2937]/60 font-semibold">No Cost Ever</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* HOW IT WORKS SECTION */}
-        <section className="bg-gray-50 py-12 border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#1F2937] mb-8">How RankBid Works</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <p className="text-5xl font-black text-[#0F3460] mb-4">1</p>
-                <h3 className="text-lg font-black text-[#1F2937] mb-3">Submit Your Product</h3>
-                <p className="text-sm text-[#1F2937]/70 font-medium leading-relaxed">
-                  Add your product with a URL or handle, select a category, write a description. Takes 2 minutes. No approval needed. Goes live instantly.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <p className="text-5xl font-black text-[#0F3460] mb-4">2</p>
-                <h3 className="text-lg font-black text-[#1F2937] mb-3">Community Votes</h3>
-                <p className="text-sm text-[#1F2937]/70 font-medium leading-relaxed">
-                  Real users discover your product and vote for it. Each vote is counted. Vote totals update in real-time. Everyone sees the same numbers.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <p className="text-5xl font-black text-[#0F3460] mb-4">3</p>
-                <h3 className="text-lg font-black text-[#1F2937] mb-3">Climb Rankings</h3>
-                <p className="text-sm text-[#1F2937]/70 font-medium leading-relaxed">
-                  The more votes you get, the higher you rank. View all-time rankings or today's trending. Filter by 25+ categories. Pure merit-based.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* GLOBAL VISIBILITY SECTION */}
-        <section className="bg-gray-50 py-12 border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Your Products Go Global</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h3 className="text-3xl font-black text-[#1F2937] mb-6">Get Ranked Worldwide</h3>
-                <p className="text-lg text-[#1F2937]/75 mb-8 leading-relaxed font-medium">
-                  When you submit your product, it instantly appears on RankBid's global leaderboard. Your product is seen by thousands of active users across the world looking for solutions. No geography limits. No regional restrictions. Your ranking is worldwide.
-                </p>
-
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#0F3460] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Icons.Check />
-                    </div>
-                    <div>
-                      <p className="font-black text-[#1F2937]">Global Leaderboard</p>
-                      <p className="text-sm text-[#1F2937]/70">Your product visible to worldwide audience</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#0F3460] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Icons.Check />
-                    </div>
-                    <div>
-                      <p className="font-black text-[#1F2937]">Category Rankings</p>
-                      <p className="text-sm text-[#1F2937]/70">Ranked among similar products in 25+ categories</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#0F3460] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Icons.Check />
-                    </div>
-                    <div>
-                      <p className="font-black text-[#1F2937]">Time-Based Rankings</p>
-                      <p className="text-sm text-[#1F2937]/70">All-time rankings + today's trending section</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#0F3460] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Icons.Check />
-                    </div>
-                    <div>
-                      <p className="font-black text-[#1F2937]">Real-Time Updates</p>
-                      <p className="text-sm text-[#1F2937]/70">Your ranking updates live as votes come in</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8">
-                <div className="space-y-4">
-                  <div className="bg-gray-50 border border-gray-200 p-4 rounded">
-                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Global Rank</p>
-                    <div className="flex items-center justify-between">
-                      <p className="text-2xl font-black text-[#0F3460]">#1</p>
-                      <p className="text-xs font-semibold text-[#1F2937]/70">1,234 votes</p>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 border border-gray-200 p-4 rounded">
-                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Marketing Category</p>
-                    <div className="flex items-center justify-between">
-                      <p className="text-2xl font-black text-[#0F3460]">#3</p>
-                      <p className="text-xs font-semibold text-[#1F2937]/70">987 votes</p>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 border border-gray-200 p-4 rounded">
-                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Today's Trending</p>
-                    <div className="flex items-center justify-between">
-                      <p className="text-2xl font-black text-[#0F3460]">#7</p>
-                      <p className="text-xs font-semibold text-[#1F2937]/70">234 votes today</p>
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 border border-gray-200 p-4 rounded">
-                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">All Time</p>
-                    <div className="flex items-center justify-between">
-                      <p className="text-2xl font-black text-[#0F3460]">#12</p>
-                      <p className="text-xs font-semibold text-[#1F2937]/70">2,456 total votes</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* YOUR PROFILE & PRODUCTS SECTION */}
-        <section className="bg-white py-12 border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Your Profile & Products Showcase</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="border shadow-sm rounded-lg bg-gray-50 p-8">
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Your Creator Profile</p>
-                    <div className="bg-white border border-gray-200 p-4">
-                      <p className="font-black text-[#1F2937] text-lg">Your Brand Name</p>
-                      <p className="text-xs text-[#1F2937]/60 mt-1">12 Products Ranked</p>
-                      <p className="text-xs text-[#1F2937]/60">3,456 Total Community Votes</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-black text-[#1F2937]/60 mb-2">Your Products</p>
-                    <div className="space-y-2">
-                      <div className="bg-white border border-gray-200 p-3 flex justify-between items-center">
-                        <span className="font-semibold text-[#1F2937] text-sm">Product #1</span>
-                        <span className="font-black text-[#0F3460]">234 votes</span>
-                      </div>
-                      <div className="bg-white border border-gray-200 p-3 flex justify-between items-center">
-                        <span className="font-semibold text-[#1F2937] text-sm">Product #2</span>
-                        <span className="font-black text-[#0F3460]">189 votes</span>
-                      </div>
-                      <div className="bg-white border border-gray-200 p-3 flex justify-between items-center">
-                        <span className="font-semibold text-[#1F2937] text-sm">Product #3</span>
-                        <span className="font-black text-[#0F3460]">156 votes</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-3xl font-black text-[#1F2937] mb-6">Build Your Creator Brand</h3>
-                <p className="text-lg text-[#1F2937]/75 mb-8 leading-relaxed font-medium">
-                  Your profile on RankBid becomes your public showcase. Every product you submit, every vote you get, every ranking you achieve - all visible to the world. Build credibility. Establish authority. Show what you're capable of building.
-                </p>
-
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#059669] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Icons.Check />
-                    </div>
-                    <div>
-                      <p className="font-black text-[#1F2937]">Creator Portfolio</p>
-                      <p className="text-sm text-[#1F2937]/70">All your products displayed in one place</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#059669] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Icons.Check />
-                    </div>
-                    <div>
-                      <p className="font-black text-[#1F2937]">Cumulative Stats</p>
-                      <p className="text-sm text-[#1F2937]/70">Total votes, total products, creator ranking</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#059669] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Icons.Check />
-                    </div>
-                    <div>
-                      <p className="font-black text-[#1F2937]">Public Profile Links</p>
-                      <p className="text-sm text-[#1F2937]/70">Share your profile with investors, partners, customers</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-6 h-6 bg-[#059669] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <Icons.Check />
-                    </div>
-                    <div>
-                      <p className="font-black text-[#1F2937]">Social Proof</p>
-                      <p className="text-sm text-[#1F2937]/70">Demonstrate community validation for your products</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* WHY CREATORS LOVE IT SECTION */}
-        <section className="bg-gray-50 py-12 border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Why Creators Choose RankBid</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Check />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">It's 100% Free</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  No submission fees, no listing costs, no featured placement charges. Submit unlimited products at zero cost. Keep everything you earn.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Check />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">No Gatekeepers</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  Your product goes live instantly. No editor approval needed. No waiting. No rules about what's "worthy." Just launch and see votes come in.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Check />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">Real User Feedback</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  Every vote is genuine. Community voting shows you exactly what real people think. No bots, no algorithms hiding the truth. Pure feedback.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Check />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">Level Playing Field</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  Small indie makers compete fairly with big companies. Your product wins based on quality, not budget. Marketing budget doesn't matter here.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Check />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">Instant Global Visibility</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  Join 100K+ products already ranked worldwide. Get seen by global audience actively looking for new products to discover and support.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#059669] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Check />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">Multiple Ranking Views</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  Track all-time rankings and today's trending. Filter by categories. See where your product stands and what's trending right now.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* WHY USERS LOVE IT SECTION */}
-        <section className="bg-gray-50 py-12 border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6">
-            <h2 className="text-2xl font-black text-[#1F2937] mb-8">Why Community Members Use RankBid</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Globe />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">Discover New Products</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  Browse 100K+ products ranked by real votes. Find tools, apps, and services your community actually loves. No ads, no paid placements clouding results.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Vote />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">Your Vote Counts</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  Your vote actually matters. You help shape what's visible to everyone. Be part of the community that decides which products deserve recognition.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Zap />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">Real-Time Rankings</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  Vote counts update live. See what's trending right now vs all-time favorites. Watch your favorite products climb in real-time.
-                </p>
-              </div>
-
-              <div className="border shadow-sm rounded-lg bg-white p-8 hover:bg-[#0F3460]/5 transition-colors">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-8 h-8 bg-[#0F3460] rounded flex items-center justify-center text-white flex-shrink-0 mt-1">
-                    <Icons.Users />
-                  </div>
-                  <h3 className="text-lg font-black text-[#1F2937]">Support Quality Makers</h3>
-                </div>
-                <p className="text-sm text-[#1F2937]/70 font-medium">
-                  Vote for indie makers and small teams building amazing things. Help them get discovered by giving them visibility through your vote.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA SECTION */}
-        <section className="bg-[#0F3460] py-12 border-b border-gray-200">
-          <div className="max-w-6xl mx-auto px-6 text-center">
-            <h2 className="text-4xl font-black text-white mb-4">Ready to Get Ranked?</h2>
-            <p className="text-lg text-white font-medium mb-8 max-w-2xl mx-auto">
-              Submit your product today and let the community decide. It takes 2 minutes and it's completely free.
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 md:pt-24 pb-12 sm:pb-16 md:pb-20 text-center">
+            <p style={d(0)} className="slide-up inline-block text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-white/60 mb-4 sm:mb-5">Why RankBid</p>
+            <h1 style={d(100)} className="slide-up text-3xl sm:text-5xl md:text-6xl font-black leading-[1.08] tracking-tight mb-4 sm:mb-6">
+              Votes, not budgets,
+              <span className="block text-emerald-300">decide who rises.</span>
+            </h1>
+            <p style={d(220)} className="slide-up text-sm sm:text-base md:text-lg text-white/75 leading-relaxed max-w-2xl mx-auto mb-7 sm:mb-9">
+              RankBid is a free, community-driven launchpad. Real people vote, and the best products climb. No algorithms, no gatekeepers, no paid shortcuts to the top.
             </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              <button
-                onClick={() => window.location.href = '/'}
-                className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-white text-[#0F3460] font-black uppercase text-xs md:text-sm border-2 md:border-4 border-white hover:scale-105 active:scale-95 transition-all duration-150"
-                style={{boxShadow: 'none'}}
-              >
-                <Icons.Upload />
-                Submit Product
-              </button>
-              <button
-                onClick={() => window.location.href = '/#leaderboard'}
-                className="flex items-center gap-2 px-4 md:px-8 py-2 md:py-4 bg-white/20 text-white font-black uppercase text-xs md:text-sm border-2 md:border-4 border-white hover:scale-105 active:scale-95 transition-all duration-150"
-                style={{boxShadow: 'none'}}
-              >
-                <Icons.TrendingUp />
-                View Top Rankings
-              </button>
+            <div style={d(340)} className="slide-up flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3">
+              <Link href="/#submit" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-[#0F3460] font-black text-sm rounded-xl shadow-lg shadow-black/20 hover:-translate-y-0.5 transition-all">
+                Submit your product →
+              </Link>
+              <Link href="/leaderboard" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-white/10 border border-white/25 text-white font-black text-sm rounded-xl hover:bg-white/20 transition-all">
+                See the rankings
+              </Link>
+            </div>
+
+            {/* Inline facts (text, not boxes) */}
+            <div style={d(460)} className="slide-up mt-10 sm:mt-14 flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-10 gap-y-3 text-xs sm:text-sm text-white/70">
+              {['100% free to submit', 'Ranked by real votes', 'Live, real-time rankings', '25+ categories'].map(fact => (
+                <span key={fact} className="inline-flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-300" />
+                  {fact}
+                </span>
+              ))}
             </div>
           </div>
         </section>
 
-      </div>
+        {/* HOW IT WORKS: timeline, no cards */}
+        <section className="py-14 sm:py-20 md:py-24">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-10 sm:mb-14">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-2 sm:mb-3">How it works</h2>
+              <p className="text-sm sm:text-base text-[#1F2937]/60">Three steps from launch to leaderboard.</p>
+            </div>
+
+            <ol className="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+              {/* connector line (desktop) */}
+              <div className="hidden md:block absolute top-6 left-[16.6%] right-[16.6%] h-0.5 bg-gradient-to-r from-[#0F3460]/20 via-[#0F3460]/40 to-[#059669]/40" aria-hidden="true" />
+              {STEPS.map((step, i) => (
+                <li key={step.title} className="relative flex md:flex-col items-start md:items-center gap-4 md:gap-0 md:text-center">
+                  <span className="relative z-10 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0F3460] to-[#1a5490] text-white font-black text-lg flex items-center justify-center shadow-lg shadow-[#0F3460]/25 flex-shrink-0 md:mb-5">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-black mb-1">{step.title}</h3>
+                    <p className="text-sm text-[#1F2937]/65 leading-relaxed md:max-w-xs">{step.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* MAKERS & VOTERS: two open columns */}
+        <section className="py-14 sm:py-20 bg-gray-50 border-y border-gray-200">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+            <div>
+              <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#059669] mb-2">For makers</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black mb-6 sm:mb-8">Launch without asking permission</h2>
+              <PointList items={MAKER_POINTS} />
+            </div>
+            <div>
+              <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#0F3460] mb-2">For the community</p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-black mb-6 sm:mb-8">Find what people actually love</h2>
+              <PointList items={VOTER_POINTS} />
+            </div>
+          </div>
+        </section>
+
+        {/* SHOWCASE: one visual */}
+        <section className="py-14 sm:py-20 md:py-24">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            <div className="order-2 lg:order-1">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4">Your rank, everywhere</h2>
+              <p className="text-sm sm:text-base text-[#1F2937]/65 leading-relaxed mb-6">
+                Every product gets a public page with its live rank, a shareable support link and a rank card made for X, LinkedIn and WhatsApp. Share once and let your community do the rest.
+              </p>
+              <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-[#1F2937]/75">
+                <span className="inline-flex items-center gap-2"><PremiumIcons.Globe className="w-5 h-5 text-[#0F3460]" /> Global leaderboard</span>
+                <span className="inline-flex items-center gap-2"><PremiumIcons.Layers className="w-5 h-5 text-[#0F3460]" /> Category ranks</span>
+                <span className="inline-flex items-center gap-2"><PremiumIcons.Share className="w-5 h-5 text-[#0F3460]" /> One-click sharing</span>
+              </div>
+            </div>
+
+            {/* Mock rank card */}
+            <div className="order-1 lg:order-2 flex justify-center">
+              <div className="relative w-full max-w-sm">
+                <div className="absolute -inset-4 bg-gradient-to-br from-[#0F3460]/15 to-[#059669]/15 rounded-[2rem] blur-2xl" aria-hidden="true" />
+                <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white p-6 sm:p-7 shadow-2xl rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+                  <div className="absolute -top-16 -right-12 w-44 h-44 bg-emerald-400/30 rounded-full blur-3xl" aria-hidden="true" />
+                  <div className="relative">
+                    <div className="flex items-center gap-2 mb-7">
+                      <span className="w-7 h-7 rounded-lg bg-white text-[#0F3460] flex items-center justify-center font-black text-sm">R</span>
+                      <span className="font-black text-sm">RankBid</span>
+                      <span className="ml-auto text-[10px] font-black tracking-wider px-2.5 py-1 rounded-full bg-amber-400 text-[#0B2545]">TOP 3</span>
+                    </div>
+                    <p className="text-[10px] font-bold tracking-[0.15em] text-white/55 mb-1">PRODUCT</p>
+                    <p className="text-2xl font-black mb-6">Your Product</p>
+                    <div className="flex items-end justify-between rounded-2xl bg-white/10 border border-white/15 px-5 py-4">
+                      <div>
+                        <p className="text-[10px] font-bold tracking-[0.15em] text-white/55">RANK</p>
+                        <p className="text-4xl font-black text-amber-300 leading-none mt-1">#2</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] font-bold tracking-[0.15em] text-white/55">VOTES</p>
+                        <p className="text-4xl font-black text-emerald-300 leading-none mt-1">248</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
     </>
   );
 }

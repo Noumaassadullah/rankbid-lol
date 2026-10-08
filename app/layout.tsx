@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 import { Providers } from '@/components/Providers';
 import Footer from '@/components/Footer';
 import { VisitorTracker } from '@/components/visitor-tracker';
+import InteractionEffects from '@/components/InteractionEffects';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${inter.className} bg-white text-gray-900 flex flex-col min-h-screen`}>
         <VisitorTracker />
+        <InteractionEffects />
         <Providers>
           <main className="flex-1">{children}</main>
           <Footer />

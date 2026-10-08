@@ -359,7 +359,9 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get('category') || '';
     const platforms = searchParams.getAll('platform') || [];
     const timeFilter = searchParams.get('timeFilter') || '';
-    const limit = parseInt(searchParams.get('limit') || '100');
+    // An explicit ?limit= returns that many rows (non-paged views); otherwise return one page of pageSize.
+    const limitParam = searchParams.get('limit');
+    const rowLimit = limitParam ? parseInt(limitParam) : pageSize;
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -374,7 +376,7 @@ export async function GET(req: NextRequest) {
     const orderColumn = sort === 'dayVotes' ? 'day_votes' : 'total_votes';
     const offset = (page - 1) * pageSize;
 
-    let queryUrl = `${supabaseUrl}/rest/v1/listings?order=${orderColumn}.desc&limit=${limit || pageSize}&offset=${offset}`;
+    let queryUrl = `${supabaseUrl}/rest/v1/listings?order=${orderColumn}.desc&limit=${rowLimit}&offset=${offset}`;
 
     // Filter by time - only today's submissions for daily page
     if (timeFilter === 'today') {

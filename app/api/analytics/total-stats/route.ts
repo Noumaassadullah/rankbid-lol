@@ -24,7 +24,8 @@ export async function GET() {
     const totalPageViews = stats?.reduce((sum, day) => sum + (day.page_views || 0), 0) || 0;
 
     // For unique visitors, count unique session IDs instead of summing daily counts
-    const { data: uniqueSessions, error: sessionError } = await supabase
+    // head: true returns no rows, only the count, so read `count` rather than data.length.
+    const { count: sessionCount, error: sessionError } = await supabase
       .from('visitor_sessions')
       .select('session_id', { count: 'exact', head: true });
 
@@ -32,7 +33,7 @@ export async function GET() {
       console.error('Error fetching unique sessions:', sessionError);
     }
 
-    const totalVisitors = uniqueSessions?.length || 0;
+    const totalVisitors = sessionCount || 0;
 
     // Get today's stats
     const today = new Date().toISOString().split('T')[0];

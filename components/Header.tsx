@@ -1,42 +1,72 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Search, Moon, Sun, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, MoreHorizontal, Activity, Eye, TrendingUp, LogOut } from 'lucide-react';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { Search, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, Code2, Compass, Activity, Eye, TrendingUp, LogOut } from 'lucide-react';
 
+// `category` must match the stored listing category values (see CATEGORIES in app/page.tsx).
+// Tabs without one link to their own page instead.
 const CATEGORIES = [
-  { name: 'All', Icon: Grid3x3 },
-  { name: 'Leaderboards', Icon: Trophy },
-  { name: 'AI', Icon: Sparkles },
-  { name: 'Marketing', Icon: LineChart },
-  { name: 'Productivity', Icon: Zap },
-  { name: 'Agents', Icon: Users },
-  { name: 'Crypto', Icon: Bitcoin },
-  { name: 'Design', Icon: Palette },
-  { name: 'Developer', Icon: MoreHorizontal },
-  { name: 'Explore', Icon: MoreHorizontal }
+  { name: 'All', Icon: Grid3x3, href: '/' },
+  { name: 'Leaderboards', Icon: Trophy, href: '/leaderboard' },
+  { name: 'AI', Icon: Sparkles, category: 'AIMedia' },
+  { name: 'Marketing', Icon: LineChart, category: 'Marketing' },
+  { name: 'Productivity', Icon: Zap, category: 'Productivity' },
+  { name: 'Agents', Icon: Users, category: 'Agents' },
+  { name: 'Crypto', Icon: Bitcoin, category: 'Crypto' },
+  { name: 'Design', Icon: Palette, category: 'Design' },
+  { name: 'Developer', Icon: Code2, category: 'Developer' },
+  { name: 'Explore', Icon: Compass, href: '/categories' }
 ];
+
+function CategoryBar({ withActive = true }: { withActive?: boolean }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeCategory = withActive && pathname === '/categories' ? searchParams.get('category') : null;
+
+  return (
+    <>
+      {CATEGORIES.map((cat) => {
+        const Icon = cat.Icon;
+        const href = cat.category ? `/categories?category=${encodeURIComponent(cat.category)}` : cat.href!;
+        const isActive = withActive && (cat.category
+          ? activeCategory === cat.category
+          : cat.href === '/categories'
+            ? pathname === '/categories' && !activeCategory
+            : pathname === cat.href);
+
+        return (
+          <Link
+            key={cat.name}
+            href={href}
+            aria-current={isActive ? 'page' : undefined}
+            className={`flex-shrink-0 px-3 md:px-4 py-2 min-h-[36px] text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 md:gap-2 rounded-lg transition-colors ${
+              isActive
+                ? 'bg-[#0F3460] text-white shadow-sm'
+                : 'bg-white text-[#1F2937] shadow-xs hover:bg-[#0F3460]/10'
+            }`}
+            title={cat.name}
+          >
+            <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0" />
+            <span>{cat.name}</span>
+          </Link>
+        );
+      })}
+    </>
+  );
+}
 
 export default function Header() {
   const router = useRouter();
-  const [darkMode, setDarkMode] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<{ id: string; email: string; name?: string } | null>(null);
   const [stats, setStats] = useState({ live: 0, today: 0, views: 0 });
 
-  // Initialize dark mode and check user login from localStorage
+  // The site is light-only; clear any dark class left from earlier visits.
   useEffect(() => {
-    setMounted(true);
-    const savedTheme = localStorage.getItem('theme');
-    const isDark = savedTheme === 'dark' || (savedTheme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    setDarkMode(isDark);
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.remove('dark');
+    localStorage.removeItem('theme');
 
     // Check if user is logged in
     const savedUser = localStorage.getItem('user');
@@ -48,18 +78,6 @@ export default function Header() {
       }
     }
   }, []);
-
-  // Update dark mode class and localStorage when darkMode changes
-  useEffect(() => {
-    if (!mounted) return;
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode, mounted]);
 
   // Fetch stats for header display
   useEffect(() => {
@@ -78,13 +96,8 @@ export default function Header() {
         const liveData = await liveRes.json();
         const totalData = await totalRes.json();
 
-        // Use all-time visitors
-        const liveCount = liveData.liveViewers > 0 ? liveData.liveViewers : (totalData.totalVisitors || 0);
-
-        console.log('[Stats] Live:', liveData.liveViewers, 'All-time Visitors:', totalData.totalVisitors, 'Views:', totalData.totalPageViews, 'Final Live:', liveCount);
-
         setStats({
-          live: liveCount,
+          live: liveData.liveViewers || 0,
           today: totalData.totalVisitors || 0,
           views: totalData.totalPageViews || 0,
         });
@@ -119,17 +132,18 @@ export default function Header() {
             <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4">
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden p-1.5 sm:p-2 text-[#1F2937] rounded-lg flex-shrink-0"
+                className="lg:hidden p-2 -ml-1 text-[#1F2937] rounded-lg flex-shrink-0 hover:bg-gray-100"
               >
                 {mobileOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />}
               </button>
               <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                <span className="text-base sm:text-lg md:text-2xl font-bold text-[orange-600]">RankBid</span>
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-[#0F3460] to-[#1a5490] text-white flex items-center justify-center font-black text-xs sm:text-sm shadow-sm">R</span>
+                <span className="text-base sm:text-lg md:text-xl font-black text-[#0F3460] tracking-tight">RankBid</span>
               </Link>
             </div>
 
             {/* Center Stats */}
-            <div className="hidden md:flex items-center gap-4 flex-1 justify-center">
+            <div className="hidden md:flex items-center gap-3 ml-4 lg:ml-6 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-200">
               <div className="flex items-center gap-1">
                 <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
                 <span className="text-xs font-semibold text-gray-900">{stats.live}</span>
@@ -179,7 +193,7 @@ export default function Header() {
               {user ? (
                 <Link
                   href="/profile"
-                  className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm ml-1 sm:ml-2 flex-shrink-0"
+                  className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm ml-1 sm:ml-2 flex-shrink-0"
                   title={user.name || user.email}
                 >
                   {(user.name || user.email).charAt(0).toUpperCase()}
@@ -207,33 +221,33 @@ export default function Header() {
               {user ? (
                 <Link
                   href="/profile"
-                  className="block px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-orange-600 rounded-lg"
+                  className="block px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-semibold text-[#0F3460] rounded-lg"
                   onClick={() => setMobileOpen(false)}
                 >
                   My Profile
                 </Link>
               ) : null}
 
-              <Link href="/platforms" className="flex items-center gap-2 text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
+              <Link href="/platforms" className="flex items-center gap-2 text-sm font-semibold text-[#1F2937] px-3 py-2.5 rounded-lg hover:bg-gray-50">
                 <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                 Platforms
               </Link>
-              <Link href="/why" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
+              <Link href="/why" className="block text-sm font-semibold text-[#1F2937] px-3 py-2.5 rounded-lg hover:bg-gray-50">
                 Why
               </Link>
-              <Link href="/daily" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
+              <Link href="/daily" className="block text-sm font-semibold text-[#1F2937] px-3 py-2.5 rounded-lg hover:bg-gray-50">
                 Daily
               </Link>
-              <Link href="/archive" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
+              <Link href="/archive" className="block text-sm font-semibold text-[#1F2937] px-3 py-2.5 rounded-lg hover:bg-gray-50">
                 Archive
               </Link>
-              <Link href="/categories" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
+              <Link href="/categories" className="block text-sm font-semibold text-[#1F2937] px-3 py-2.5 rounded-lg hover:bg-gray-50">
                 Categories
               </Link>
-              <Link href="/about" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
+              <Link href="/about" className="block text-sm font-semibold text-[#1F2937] px-3 py-2.5 rounded-lg hover:bg-gray-50">
                 About
               </Link>
-              <Link href="/stats" className="block text-xs sm:text-sm font-medium text-[#1F2937] px-2 sm:px-3 py-1.5">
+              <Link href="/stats" className="block text-sm font-semibold text-[#1F2937] px-3 py-2.5 rounded-lg hover:bg-gray-50">
                 Stats
               </Link>
             </div>
@@ -242,29 +256,12 @@ export default function Header() {
       </header>
 
       {/* Category Filter - Professional */}
-      <div className="bg-gray-50 text-[#1F2937] border-b border-gray-200 sticky top-12 sm:top-14 md:top-16 z-30 overflow-x-auto">
+      <div className="bg-gray-50 text-[#1F2937] border-b border-gray-200 sticky top-12 sm:top-14 md:top-16 z-30 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-6 py-1.5 sm:py-2 md:py-3 flex gap-1 items-center">
-          {CATEGORIES.map((cat) => {
-            const Icon = cat.Icon;
-            const isAll = cat.name === 'All';
-            const href = isAll ? '/' : `/categories?category=${encodeURIComponent(cat.name)}`;
-
-            return (
-              <Link
-                key={cat.name}
-                href={href}
-                className={`flex-shrink-0 px-1.5 sm:px-2.5 md:px-4 py-1 md:py-2 text-xs font-medium whitespace-nowrap flex items-center gap-0.5 sm:gap-1 md:gap-2 rounded-lg ${
-                  isAll
-                    ? 'bg-black text-white shadow-sm'
-                    : 'bg-white text-[#1F2937] shadow-xs'
-                }`}
-                title={cat.name}
-              >
-                <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 flex-shrink-0" />
-                <span className="hidden sm:inline">{cat.name}</span>
-              </Link>
-            );
-          })}
+          {/* useSearchParams needs a Suspense boundary so pages using Header can still prerender */}
+          <Suspense fallback={<CategoryBar withActive={false} />}>
+            <CategoryBar />
+          </Suspense>
         </div>
       </div>
     </>

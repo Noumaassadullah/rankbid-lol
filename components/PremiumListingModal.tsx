@@ -134,234 +134,179 @@ export default function PremiumListingModal({
 
   const price = PRICES[position] || 5;
 
+  const PERKS: Record<number, string> = { 1: 'Top spot · 4 social links', 2: 'Featured · 1 social link', 3: 'Featured listing' };
+  const SOCIALS = [
+    { name: 'founderWebsite', label: 'Website', placeholder: 'https://example.com' },
+    { name: 'founderTwitter', label: 'X / Twitter', placeholder: '@handle' },
+    { name: 'founderLinkedin', label: 'LinkedIn', placeholder: 'linkedin.com/in/…' },
+    { name: 'founderInstagram', label: 'Instagram', placeholder: '@handle' },
+  ];
+  // #1 shows 4 social fields, #2 shows 1, #3 shows none.
+  const visibleSocials = position === 1 ? SOCIALS : position === 2 ? SOCIALS.slice(0, 1) : [];
+  const METHODS = [
+    { id: 'rapid-gateway', label: 'Card', desc: 'Rapid Gateway' },
+    { id: 'jazzcash', label: 'JazzCash', desc: 'Mobile wallet' },
+    { id: 'easypaisa', label: 'EasyPaisa', desc: 'Mobile wallet' },
+    { id: 'manual', label: 'Manual', desc: 'Admin verifies' },
+  ] as const;
+  const methodName = paymentMethod === 'rapid-gateway' ? 'Card' : paymentMethod === 'jazzcash' ? 'JazzCash' : paymentMethod === 'easypaisa' ? 'EasyPaisa' : '';
+
+  const input = 'w-full px-3 py-2 text-sm bg-white text-[#1F2937] border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0F3460]/25 focus:border-[#0F3460] transition';
+  const fieldLabel = 'block text-xs font-bold text-[#1F2937]/70 mb-1';
+  const sectionTitle = 'text-xs font-black text-[#1F2937] mb-2.5';
+
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white shadow-lg border-2 border-gray-300 rounded-lg max-w-2xl w-full my-8">
+    <div className="fixed inset-0 bg-[#0B2545]/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4" onClick={onClose}>
+      <form
+        onSubmit={handleSubmit}
+        onClick={e => e.stopPropagation()}
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[92vh] flex flex-col overflow-hidden slide-up"
+      >
         {/* Header */}
-        <div className="bg-orange-600 border-b-4 border-gray-300 p-6 flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-black text-white">💎 Boost to Premium</h2>
-            <p className="text-sm text-white/80 font-semibold mt-1">{listingTitle}</p>
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white px-4 sm:px-5 py-3.5 flex items-center justify-between gap-3 flex-shrink-0">
+          <div className="absolute -top-16 -right-10 w-40 h-40 bg-[#059669]/30 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+          <div className="relative min-w-0 flex items-center gap-3">
+            <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-300 to-amber-500 text-[#0B2545] flex items-center justify-center flex-shrink-0 shadow-md">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9L12 2.5z" /></svg>
+            </span>
+            <div className="min-w-0">
+              <h2 className="text-base sm:text-lg font-black leading-tight">Boost to Premium</h2>
+              <p className="text-xs text-white/65 truncate">{listingTitle}</p>
+            </div>
           </div>
-          <button
-            onClick={onClose}
-            className="text-3xl font-black text-white hover:scale-110 transition-transform"
-          >
-            ✕
+          <button type="button" onClick={onClose} aria-label="Close" className="relative w-8 h-8 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition flex-shrink-0">
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
           </button>
         </div>
 
-        {/* Content */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {successMessage && (
-            <div className="bg-green-100 border-2 border-green-500 text-green-700 p-4 font-bold text-sm">
-              {successMessage}
-            </div>
-          )}
-          {error && (
-            <div className="bg-red-100 border-2 border-red-500 text-red-700 p-4 font-bold text-sm">
-              {error}
-            </div>
-          )}
+        {/* Body */}
+        <div className="overflow-y-auto px-4 sm:px-5 py-4 space-y-5">
+          {successMessage && <div className="bg-[#059669]/10 border border-[#059669]/30 text-[#047857] px-3 py-2.5 rounded-lg text-sm font-semibold">{successMessage}</div>}
+          {error && <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2.5 rounded-lg text-sm font-semibold">{error}</div>}
 
-          {/* Position Selection */}
+          {/* Position */}
           <div>
-            <label className="block text-sm font-black text-[#1F2937] mb-4 uppercase">
-              Select Position & Price
-            </label>
-            <div className="grid grid-cols-3 gap-4">
-              {[1, 2, 3].map(pos => (
-                <button
-                  key={pos}
-                  type="button"
-                  onClick={() => setPosition(pos)}
-                  className={`py-4 px-4 rounded-lg transition-all duration-200 border-2 font-black ${
-                    position === pos
-                      ? 'bg-orange-600 border-orange-700 shadow-lg text-white ring-2 ring-orange-400 ring-offset-2'
-                      : 'bg-gray-50 border-gray-300 hover:border-orange-400 text-gray-900 hover:bg-orange-50'
-                  }`}
-                >
-                  <p className="text-2xl">#{pos}</p>
-                  <p className={`text-lg font-black mt-2 ${
-                    position === pos
-                      ? 'text-white'
-                      : 'text-orange-600'
-                  }`}>${PRICES[pos]}</p>
-                </button>
-              ))}
-            </div>
-            <p className="text-xs text-gray-600 font-semibold mt-4 bg-blue-50 border border-blue-200 p-3 rounded">
-              📌 Your product will be featured at position #{position} for ${price}. Votes can still move it in rankings.
-            </p>
-          </div>
-
-          {/* Founder Information */}
-          <div className="border-t-4 border-gray-300 pt-6">
-            <h3 className="text-lg font-black text-gray-900 mb-4 uppercase">👤 Founder Information</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-black text-gray-900 mb-2 uppercase">Name *</label>
-                <input
-                  type="text"
-                  name="founderName"
-                  value={formData.founderName}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border-2 border-gray-400 bg-white text-gray-900 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-                  placeholder="John Doe"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-black text-gray-900 mb-2 uppercase">Email *</label>
-                <input
-                  type="email"
-                  name="founderEmail"
-                  value={formData.founderEmail}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border-2 border-gray-400 bg-white text-gray-900 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-                  placeholder="john@example.com"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-black text-gray-900 mb-2 uppercase">Phone *</label>
-                <input
-                  type="tel"
-                  name="founderPhone"
-                  value={formData.founderPhone}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 border-2 border-gray-400 bg-white text-gray-900 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-                  placeholder="+92 300 1234567"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Social Accounts */}
-          {position !== 3 && (
-            <div className="border-t-4 border-gray-300 pt-6">
-              <h3 className="text-lg font-black text-gray-900 mb-4 uppercase">🔗 Social Accounts</h3>
-              <p className="text-xs text-gray-600 font-semibold mb-4 bg-gray-50 p-3 rounded border border-gray-300">
-                {position === 1 ? '✓ Add up to 4 social profiles to be displayed on your premium listing' : '✓ Add 1 social profile to be displayed on your premium listing'}
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  { name: 'founderWebsite', label: 'Website', placeholder: 'https://example.com' },
-                  { name: 'founderTwitter', label: 'Twitter/X', placeholder: '@handle' },
-                  { name: 'founderLinkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/in/...' },
-                  { name: 'founderInstagram', label: 'Instagram', placeholder: '@handle' },
-                  { name: 'founderFacebook', label: 'Facebook', placeholder: 'https://facebook.com/...' },
-                  { name: 'founderTiktok', label: 'TikTok', placeholder: '@handle' },
-                  { name: 'founderYoutube', label: 'YouTube', placeholder: 'https://youtube.com/c/...' },
-                  { name: 'founderGithub', label: 'GitHub', placeholder: '@username' },
-                ].map((field, idx) => {
-                  // Plan #1: Show first 4 socials
-                  // Plan #2: Show only first 1 social
-                  if (position === 1 && idx >= 4) return null;
-                  if (position === 2 && idx >= 1) return null;
-
-                  return (
-                    <div key={field.name}>
-                      <label className="block text-xs font-black text-gray-900 mb-2 uppercase">{field.label}</label>
-                      <input
-                        type="text"
-                        name={field.name}
-                        value={formData[field.name as keyof typeof formData]}
-                        onChange={handleChange}
-                        placeholder={field.placeholder}
-                        className="w-full px-4 py-3 border-2 border-gray-400 bg-white text-gray-900 font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-                      />
+            <p className={sectionTitle}>Choose your spot</p>
+            <div className="grid grid-cols-3 gap-2">
+              {[1, 2, 3].map(pos => {
+                const active = position === pos;
+                return (
+                  <button
+                    key={pos}
+                    type="button"
+                    onClick={() => setPosition(pos)}
+                    aria-pressed={active}
+                    className={`relative rounded-xl border p-2.5 text-left transition-all active:scale-[0.98] ${
+                      active ? 'border-[#0F3460] bg-[#0F3460] text-white shadow-md' : 'border-gray-200 bg-white hover:border-[#0F3460]/40'
+                    }`}
+                  >
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-base font-black">#{pos}</span>
+                      <span className={`text-sm font-black ${active ? 'text-amber-300' : 'text-[#0F3460]'}`}>${PRICES[pos]}</span>
                     </div>
-                  );
-                })}
+                    <p className={`text-[10px] sm:text-[11px] leading-snug mt-1 ${active ? 'text-white/75' : 'text-[#1F2937]/55'}`}>{PERKS[pos]}</p>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[11px] text-[#1F2937]/55 mt-2">Featured at #{position} for 30 days. Votes can still move it up.</p>
+          </div>
+
+          {/* Founder */}
+          <div>
+            <p className={sectionTitle}>Founder details</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <label className="block">
+                <span className={fieldLabel}>Name *</span>
+                <input type="text" name="founderName" value={formData.founderName} onChange={handleChange} required className={input} placeholder="Your name" />
+              </label>
+              <label className="block">
+                <span className={fieldLabel}>Email *</span>
+                <input type="email" name="founderEmail" value={formData.founderEmail} onChange={handleChange} required className={input} placeholder="you@example.com" />
+              </label>
+              <label className="block sm:col-span-2">
+                <span className={fieldLabel}>Phone *</span>
+                <input type="tel" name="founderPhone" value={formData.founderPhone} onChange={handleChange} required className={input} placeholder="+92 300 1234567" />
+              </label>
+            </div>
+          </div>
+
+          {/* Socials */}
+          {visibleSocials.length > 0 && (
+            <div>
+              <p className={sectionTitle}>
+                Social links <span className="font-semibold text-[#1F2937]/45">· shown on your listing ({visibleSocials.length === 1 ? '1 link' : `up to ${visibleSocials.length}`})</span>
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {visibleSocials.map(field => (
+                  <label key={field.name} className="block">
+                    <span className={fieldLabel}>{field.label}</span>
+                    <input
+                      type="text"
+                      name={field.name}
+                      value={formData[field.name as keyof typeof formData]}
+                      onChange={handleChange}
+                      placeholder={field.placeholder}
+                      className={input}
+                    />
+                  </label>
+                ))}
               </div>
             </div>
           )}
 
-          {/* Payment Method Selection */}
-          <div className="border-t-4 border-gray-300 pt-6">
-            <label className="block text-sm font-black text-gray-900 mb-4 uppercase">💳 Select Payment Method</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {[
-                { id: 'rapid-gateway', label: '🚀 Rapid Gateway', desc: 'Instant payment' },
-                { id: 'jazzcash', label: '💰 JazzCash', desc: 'Pakistani mobile money' },
-                { id: 'easypaisa', label: '📱 EasyPaisa', desc: 'Pakistani mobile money' },
-                { id: 'manual', label: '📋 Manual Verification', desc: 'Admin will verify' },
-              ].map((method) => (
-                <button
-                  key={method.id}
-                  type="button"
-                  onClick={() => setPaymentMethod(method.id as any)}
-                  className={`p-3 rounded-lg border-2 text-left transition-all ${
-                    paymentMethod === method.id
-                      ? 'bg-orange-600 border-orange-700 text-white'
-                      : 'bg-white border-gray-300 text-gray-900 hover:border-orange-400'
-                  }`}
-                >
-                  <p className="font-black text-sm">{method.label}</p>
-                  <p className={`text-xs ${paymentMethod === method.id ? 'text-orange-100' : 'text-gray-600'}`}>
-                    {method.desc}
-                  </p>
-                </button>
-              ))}
+          {/* Payment */}
+          <div>
+            <p className={sectionTitle}>Payment method</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {METHODS.map(method => {
+                const active = paymentMethod === method.id;
+                return (
+                  <button
+                    key={method.id}
+                    type="button"
+                    onClick={() => setPaymentMethod(method.id)}
+                    aria-pressed={active}
+                    className={`rounded-lg border px-2.5 py-2 text-left transition-all ${
+                      active ? 'border-[#0F3460] bg-[#0F3460]/5 ring-1 ring-[#0F3460]' : 'border-gray-200 hover:border-[#0F3460]/40'
+                    }`}
+                  >
+                    <p className="text-xs font-black text-[#1F2937]">{method.label}</p>
+                    <p className="text-[10px] text-[#1F2937]/50">{method.desc}</p>
+                  </button>
+                );
+              })}
             </div>
-          </div>
-
-          {/* Payment Info */}
-          <div className="bg-blue-50 border-2 border-blue-300 p-4 rounded">
-            <p className="font-black text-gray-900 mb-2 uppercase">
-              💰 Total: ${price} {paymentMethod === 'manual' ? '(Pending Verification)' : '(Instant Payment)'}
-            </p>
-            <p className="text-sm text-gray-700">
-              {paymentMethod === 'rapid-gateway' && 'You will be redirected to Rapid Gateway for secure payment.'}
-              {paymentMethod === 'jazzcash' && 'You will be redirected to JazzCash for payment.'}
-              {paymentMethod === 'easypaisa' && 'You will be redirected to EasyPaisa for payment.'}
-              {paymentMethod === 'manual' && 'After submission, an admin will verify your payment and activate your premium listing.'}
+            <p className="text-[11px] text-[#1F2937]/55 mt-2">
+              {paymentMethod === 'manual'
+                ? 'After you submit, an admin verifies your payment and activates the listing.'
+                : `You’ll be redirected to ${paymentMethod === 'rapid-gateway' ? 'Rapid Gateway' : methodName} to pay securely.`}
             </p>
           </div>
+        </div>
 
-          {/* Buttons */}
-          <div className="flex flex-col gap-3 pt-4 border-t-4 border-gray-300">
-            <button
-              type="button"
-              onClick={onClose}
-              className="w-full px-4 py-3 bg-white text-gray-900 font-bold text-sm border-2 border-gray-400 rounded-lg hover:bg-gray-100 active:scale-95 transition-all duration-200 uppercase"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full px-4 py-3 bg-orange-600 text-white font-black text-sm rounded-lg hover:bg-orange-700 active:scale-95 disabled:opacity-50 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg border-2 border-orange-700 uppercase"
-            >
-              {loading ? (
-                <>
-                  <span className="animate-spin">⏳</span> Processing...
-                </>
-              ) : paymentMethod === 'rapid-gateway' ? (
-                <>
-                  🚀 Pay ${price} via Rapid Gateway
-                </>
-              ) : paymentMethod === 'jazzcash' ? (
-                <>
-                  💰 Pay ${price} via JazzCash
-                </>
-              ) : paymentMethod === 'easypaisa' ? (
-                <>
-                  📱 Pay ${price} via EasyPaisa
-                </>
-              ) : (
-                <>
-                  📋 Submit for ${price} Verification
-                </>
-              )}
-            </button>
+        {/* Footer */}
+        <div className="border-t border-gray-100 bg-gray-50 px-4 sm:px-5 py-3 flex items-center gap-3 flex-shrink-0">
+          <div className="min-w-0">
+            <p className="text-[11px] font-bold text-[#1F2937]/50 leading-none">Total</p>
+            <p className="text-xl font-black text-[#0F3460] leading-tight">${price}</p>
           </div>
-        </form>
-      </div>
+          <button type="button" onClick={onClose} className="ml-auto px-3 py-2 text-sm font-bold text-[#1F2937]/60 hover:text-[#1F2937] transition">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-[#0F3460] to-[#1a5490] text-white text-sm font-black rounded-xl shadow-lg shadow-[#0F3460]/25 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none transition-all whitespace-nowrap"
+          >
+            {loading
+              ? 'Processing…'
+              : paymentMethod === 'manual'
+                ? `Submit $${price} request`
+                : `Pay $${price}${methodName ? ` with ${methodName}` : ''}`}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

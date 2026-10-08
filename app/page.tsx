@@ -8,10 +8,25 @@ import PremiumListingCard from '@/components/PremiumListingCard';
 import VerifiedListingCard from '@/components/VerifiedListingCard';
 import PremiumListingModal from '@/components/PremiumListingModal';
 import LoginModal from '@/components/LoginModal';
-import TestimonialsCarousel from '@/components/TestimonialsCarousel';
 import StatusCardModal from '@/components/StatusCardModal';
+import { IconTile, PremiumIcons } from '@/components/PremiumIcons';
+import RankingRow from '@/components/RankingRow';
+import { getCategoryLabel as formatCategory } from '@/lib/categories';
+
+// Stagger delay for the .slide-up entrance animation (see globals.css).
+const slideDelay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
+
+const HERO_PLATFORMS = [
+  { key: 'website', label: 'Websites' },
+  { key: 'x', label: 'X' },
+  { key: 'linkedin', label: 'LinkedIn' },
+  { key: 'instagram', label: 'Instagram' },
+  { key: 'tiktok', label: 'TikTok' },
+  { key: 'facebook', label: 'Facebook' },
+];
 import { getPlatformIcon } from '@/lib/platformIcons';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, type CSSProperties } from 'react';
+import { supportUrl } from '@/lib/site';
 
 interface Listing {
   id: string;
@@ -96,9 +111,10 @@ const PLATFORMS = [
   { id: 'tiktok', label: 'TikTok', icon: '/tiktok.png' }
 ];
 
+// Known labels first, then the shared CamelCase splitter ("DigitalMarketing" -> "Digital Marketing").
 const getCategoryLabel = (categoryValue: string): string => {
   const category = CATEGORIES.find(cat => cat.value === categoryValue);
-  return category ? category.label : categoryValue;
+  return category ? category.label : formatCategory(categoryValue);
 };
 
 interface Toast {
@@ -434,7 +450,7 @@ export default function Home() {
 
   const handleShareTwitter = () => {
     if (!lastSubmittedProduct) return;
-    const productUrl = `https://rankbid-lol.vercel.app/product/${lastSubmittedProduct.id}`;
+    const productUrl = supportUrl(lastSubmittedProduct.id);
     const text = `Just submitted ${lastSubmittedProduct.title} on RankBid! 🚀 Vote for my product and help it climb the global rankings. No algorithms, just pure community voting. #RankBid`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(productUrl)}`;
     window.open(twitterUrl, '_blank', 'width=550,height=420');
@@ -442,14 +458,14 @@ export default function Home() {
 
   const handleShareLinkedIn = () => {
     if (!lastSubmittedProduct) return;
-    const productUrl = `https://rankbid-lol.vercel.app/product/${lastSubmittedProduct.id}`;
+    const productUrl = supportUrl(lastSubmittedProduct.id);
     const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(productUrl)}`;
     window.open(linkedInUrl, '_blank', 'width=550,height=420');
   };
 
   const handleCopyLink = async () => {
     if (!lastSubmittedProduct) return;
-    const productUrl = `https://rankbid-lol.vercel.app/product/${lastSubmittedProduct.id}`;
+    const productUrl = supportUrl(lastSubmittedProduct.id);
     try {
       await navigator.clipboard.writeText(productUrl);
       setCopied(true);
@@ -539,122 +555,181 @@ export default function Home() {
     }
   };
 
+  // Hero logo slider: one tile per unique site, most-voted first, repeated so each row fills the screen.
+  const heroLogos = (() => {
+    const seen = new Set<string>();
+    const tiles: { id: string; title: string; votes: number; icon: string; platform: string }[] = [];
+    for (const l of [...allListings].sort((a, b) => (b.totalVotes || 0) - (a.totalVotes || 0))) {
+      let host = '';
+      try { host = new URL(l.url).hostname.replace(/^www\./, ''); } catch {}
+      const key = host || l.id;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      tiles.push({
+        id: l.id,
+        title: l.title,
+        votes: l.totalVotes || 0,
+        icon: host ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=128` : '',
+        platform: l.platform,
+      });
+    }
+    if (!tiles.length) return [[], []] as (typeof tiles)[];
+    const fill = (list: typeof tiles) => {
+      const out = [...list];
+      while (out.length < 12) out.push(...list);
+      return out;
+    };
+    const half = Math.ceil(tiles.length / 2);
+    return [fill(tiles.slice(0, half)), fill(tiles.length > 1 ? tiles.slice(half) : tiles)];
+  })();
+  const totalVotes = allListings.reduce((n, l) => n + (l.totalVotes || 0), 0);
+
   return (
     <>
       <Header />
       <div className="bg-white text-[#1F2937]">
 
-        {/* BANNER HERO SECTION */}
-        <section className="bg-white pt-6 sm:pt-10 md:pt-16 pb-6 sm:pb-10 md:pb-16 border-b border-gray-200 relative overflow-hidden fade-in">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 right-0 w-48 sm:w-80 h-48 sm:h-80 md:w-96 md:h-96 bg-[#0F3460] text-white rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-48 sm:w-64 h-48 sm:h-64 md:w-80 md:h-80 bg-[#059669] rounded-full blur-3xl"></div>
+        {/* HERO: short centered copy + sliding wall of real product logos */}
+        <section className="relative overflow-hidden bg-[#FAFBFD] border-b border-gray-200">
+          {/* Soft dotted backdrop */}
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-[0.5] [background-image:radial-gradient(#0F3460_0.6px,transparent_0.6px)] [background-size:22px_22px] [mask-image:radial-gradient(ellipse_at_top,#000_20%,transparent_70%)]"
+          />
+
+          <div className="relative max-w-3xl mx-auto px-4 sm:px-6 pt-14 sm:pt-20 md:pt-24 text-center">
+            <a
+              href="/leaderboard"
+              style={slideDelay(0)}
+              className="slide-up inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#1F2937]/70 shadow-sm hover:border-gray-300 transition-colors"
+            >
+              <span className="relative flex w-2 h-2">
+                <span className="absolute inset-0 rounded-full bg-[#059669] animate-ping opacity-60" />
+                <span className="relative w-2 h-2 rounded-full bg-[#059669]" />
+              </span>
+              <span className="tabular-nums">{allListings.length ? `${allListings.length} products · ${totalVotes} votes` : 'Live rankings'}</span>
+              <span className="text-[#1F2937]/40">→</span>
+            </a>
+
+            <h1 style={slideDelay(80)} className="slide-up mt-6 text-[2.6rem] leading-[1.02] sm:text-6xl md:text-7xl font-black tracking-[-0.04em] text-[#0B2545]">
+              Ranked by people.
+              <span className="block text-[#1F2937]/30">Not algorithms.</span>
+            </h1>
+
+            <p style={slideDelay(160)} className="slide-up mt-5 sm:mt-6 text-base sm:text-lg text-[#1F2937]/60">
+              List free. Share your link. Let votes decide.
+            </p>
+
+            <div style={slideDelay(240)} className="slide-up mt-8 flex flex-wrap items-center justify-center gap-3">
+              <button
+                onClick={() => document.getElementById('submit')?.scrollIntoView({ behavior: 'smooth' })}
+                className="inline-flex items-center px-6 py-3 bg-[#0F3460] text-white text-sm font-bold rounded-full hover:bg-[#0B2545] transition-colors"
+              >
+                Submit your product
+              </button>
+              <button
+                onClick={() => document.getElementById('leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
+                className="group inline-flex items-center gap-1.5 px-6 py-3 rounded-full border border-gray-200 bg-white text-sm font-bold text-[#0F3460] hover:border-gray-300 transition-colors"
+              >
+                See rankings
+                <span className="transition-transform group-hover:translate-x-0.5">→</span>
+              </button>
+            </div>
           </div>
 
-          <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-12 items-center">
-              {/* Left Content */}
-              <div className="max-w-2xl">
-                <h1 className="text-2xl sm:text-4xl md:text-6xl font-black text-[#1F2937] mb-3 sm:mb-4 md:mb-6 leading-tight">
-                  Rank Everything.
-                </h1>
-
-                <p className="text-sm sm:text-base md:text-lg text-[#1F2937]/75 mb-4 sm:mb-6 md:mb-8 leading-relaxed font-medium">
-                  No algorithms. No gatekeepers. Pure community voting power. Let the world discover your product through transparent, democratic rankings.
-                </p>
-
-                {/* Key Stats */}
-                <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#0F3460] text-white rounded-lg flex items-center justify-center text-white flex-shrink-0">
-                      <Icons.Users />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-2xl font-black">100K+</p>
-                      <p className="text-xs text-[#1F2937]/60 font-semibold">Ranked Products</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#059669] rounded-lg flex items-center justify-center text-[#1F2937] flex-shrink-0">
-                      <Icons.TrendingUp />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-2xl font-black">Real-time</p>
-                      <p className="text-xs text-[#1F2937]/60 font-semibold">Live Updates</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-wrap">
-                  <button
-                    onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-[#0F3460] text-white font-black text-xs sm:text-sm border-[#0F3460] border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto rounded-lg"
-                    style={{boxShadow: 'none'}}
-                  >
-                    <Icons.Upload />
-                    Submit Now
-                  </button>
-                  <button
-                    onClick={() => document.querySelector('#leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="flex items-center justify-center gap-2 px-3 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-white text-[#1F2937] font-black text-xs sm:text-sm border-gray-300 border-2 sm:border-3 md:border-4 hover:scale-105 active:scale-95 transition-all duration-150 w-full sm:w-auto rounded-lg"
-                    style={{boxShadow: 'none'}}
-                  >
-                    <Icons.TrendingUp />
-                    View Rankings
-                  </button>
+          {/* Moving logos: two rows sliding in opposite directions, pause on hover */}
+          <div style={slideDelay(320)} className="slide-up relative mt-14 sm:mt-16 pb-14 sm:pb-20 space-y-4 marquee-fade">
+            {heroLogos.map((row, r) => (
+              <div key={r} className="marquee overflow-hidden">
+                <div className={`${r === 0 ? 'marquee-track' : 'marquee-track-reverse'} flex w-max gap-4`}>
+                  {(row.length ? [...row, ...row] : Array.from({ length: 24 })).map((item, i) => {
+                    const t = item as (typeof row)[number] | undefined;
+                    if (!t) {
+                      return <span key={i} className="w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] rounded-2xl bg-white border border-gray-100 animate-pulse flex-shrink-0" />;
+                    }
+                    return (
+                      <a
+                        key={`${t.id}-${i}`}
+                        href={`/product/${t.id}`}
+                        title={`${t.title} · ${t.votes} votes`}
+                        aria-hidden={i >= row.length}
+                        tabIndex={i >= row.length ? -1 : undefined}
+                        className="group relative w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] flex-shrink-0 rounded-2xl bg-white border border-gray-200/80 shadow-[0_6px_20px_-12px_rgba(11,37,69,0.35)] flex items-center justify-center transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_14px_28px_-14px_rgba(11,37,69,0.45)]"
+                      >
+                        {t.icon
+                          ? <img src={t.icon} alt={t.title} loading="lazy" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                          : <PlatformIcon platform={t.platform} size={30} />}
+                        {t.votes > 0 && (
+                          <span className="absolute -top-1.5 -right-1.5 min-w-[1.25rem] h-5 px-1 rounded-full bg-[#0F3460] text-white text-[10px] font-bold leading-5 tabular-nums">
+                            {t.votes}
+                          </span>
+                        )}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
+            ))}
 
-              {/* Right Visual */}
-              <div className="hidden md:block">
-                <div className="bg-white shadow-sm border border-gray-200 p-6 md:p-8 rounded-lg hover:scale-105 transition-transform duration-300">
-                  <div className="space-y-3 md:space-y-4">
-                    {[1, 2, 3].map(i => (
-                      <div key={i} className="flex items-center gap-3 p-3 md:p-4 bg-gray-50 border-2 border-[#E4E4E7] rounded">
-                        <div className="w-8 md:w-10 h-8 md:h-10 bg-[#0F3460] text-white font-black rounded flex items-center justify-center text-sm md:text-base flex-shrink-0">{`#${i}`}</div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs md:text-sm font-bold text-[#1F2937] truncate">Top Product {i}</p>
-                          <p className="text-xs text-[#1F2937]/60">Marketing</p>
-                        </div>
-                        <p className="font-black text-[#0F3460] text-base md:text-lg flex-shrink-0">{1000 - i * 200}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div className="flex items-center justify-center gap-3 pt-4 text-xs text-[#1F2937]/45">
+              <span>Websites &amp; profiles on</span>
+              {HERO_PLATFORMS.filter(p => p.key !== 'website').map(p => (
+                <span key={p.key} title={p.label} className="inline-flex opacity-70 hover:opacity-100 transition-opacity"><PlatformIcon platform={p.key} size={15} /></span>
+              ))}
             </div>
           </div>
         </section>
 
         {/* FORM SECTION */}
-        <section className="bg-gray-50 py-6 sm:py-10 md:py-12 border-b border-gray-200 fade-in">
+        <section id="submit" className="scroll-mt-28 bg-gray-50 py-6 sm:py-10 md:py-12 border-b border-gray-200 fade-in">
           <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
             {!user ? (
-              <div className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 bg-blue-50 border-2 border-blue-200 rounded-xl text-center">
-                <p className="text-base sm:text-lg font-bold text-[#1F2937] mb-2 sm:mb-4">Login Required to Submit</p>
-                <p className="text-xs sm:text-sm text-[#1F2937]/70 mb-4 sm:mb-6">You need to be logged in to submit your product and vote.</p>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
-                  <a
-                    href="/login"
-                    className="px-4 sm:px-6 py-2 sm:py-3 bg-[#0F3460] text-white font-bold text-sm rounded-lg hover:bg-[#0D2A50] transition-colors"
-                  >
-                    Sign In
-                  </a>
-                  <a
-                    href="/signup"
-                    className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-[#0F3460] font-bold border-2 border-[#0F3460] text-sm rounded-lg hover:bg-[#0F3460]/5 transition-colors"
-                  >
-                    Create Account
-                  </a>
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white p-5 sm:p-8 md:p-10 shadow-lg">
+                <div className="absolute -top-20 -right-16 w-64 h-64 bg-[#059669]/25 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+                <div className="relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
+                  <div>
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-black mb-2 sm:mb-3">Launch your product in 2 minutes</h2>
+                    <p className="text-xs sm:text-sm md:text-base text-white/75 mb-5 sm:mb-6">Create a free account to submit products and vote for your favourites.</p>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                      <a
+                        href="/signup"
+                        className="inline-flex items-center justify-center px-5 sm:px-6 py-2.5 sm:py-3 bg-white text-[#0F3460] font-black text-sm rounded-xl shadow-lg hover:-translate-y-0.5 transition-all"
+                      >
+                        Create Free Account
+                      </a>
+                      <a
+                        href="/login?next=%2F%23submit"
+                        className="inline-flex items-center justify-center px-5 sm:px-6 py-2.5 sm:py-3 bg-white/10 border border-white/25 text-white font-black text-sm rounded-xl hover:bg-white/20 transition-all"
+                      >
+                        Sign In
+                      </a>
+                    </div>
+                  </div>
+                  <ol className="space-y-2.5 sm:space-y-3">
+                    {[
+                      { title: 'Paste your link', text: 'Website or social profile' },
+                      { title: 'Pick a category', text: 'We auto-fill the details' },
+                      { title: 'Collect votes', text: 'Climb the live rankings' },
+                    ].map((step, i) => (
+                      <li key={step.title} className="flex items-center gap-3 p-3 bg-white/10 border border-white/15 rounded-xl backdrop-blur-sm">
+                        <span className="w-8 h-8 rounded-lg bg-white text-[#0F3460] font-black text-sm flex items-center justify-center flex-shrink-0">{i + 1}</span>
+                        <div>
+                          <p className="text-sm font-black">{step.title}</p>
+                          <p className="text-xs text-white/65">{step.text}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
               </div>
             ) : (
-              <>
-                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 md:mb-8">
-                  <Icons.Upload />
-                  <h2 className="text-base sm:text-lg md:text-2xl font-black text-[#1F2937]">Submit Your Product</h2>
+              <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-4 sm:p-6 md:p-8">
+                <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                  <IconTile><PremiumIcons.Rocket /></IconTile>
+                  <div>
+                    <h2 className="text-base sm:text-lg md:text-2xl font-black text-[#1F2937]">Submit Your Product</h2>
+                    <p className="text-xs sm:text-sm text-[#1F2937]/60">Free, instant, and ranked by real votes.</p>
+                  </div>
                 </div>
 
             {/* Platform Selection */}
@@ -666,8 +741,8 @@ export default function Home() {
                   onClick={() => setFormData(prev => ({ ...prev, platform: platform.id }))}
                   className={`px-2 sm:px-4 py-1.5 sm:py-2 font-bold text-xs rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-1 sm:gap-2 ${
                     formData.platform === platform.id
-                      ? 'bg-orange-100 text-[#1F2937] border border-gray-300'
-                      : 'bg-white text-[#1F2937] border border-gray-300 hover:bg-orange-100'
+                      ? 'bg-[#0F3460] text-white border border-[#0F3460] shadow-sm'
+                      : 'bg-white text-[#1F2937] border border-gray-300 hover:border-[#0F3460]/40 hover:bg-[#0F3460]/5'
                   }`}
                 >
                   <img src={platform.icon} alt={platform.label} className="w-4 h-4 sm:w-5 sm:h-5 object-contain" />
@@ -687,7 +762,7 @@ export default function Home() {
                     placeholder={formData.platform === 'website' ? 'Product URL' : 'Full profile URL'}
                     value={formData.url}
                     onChange={handleInputChange}
-                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-xs sm:text-sm rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
+                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-xs sm:text-sm rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0F3460]/30 focus:border-[#0F3460] transition-all duration-200 ${
                       formErrors.url ? 'border-red-500 shake' : ''
                     }`}
                     required
@@ -711,7 +786,7 @@ export default function Home() {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-xs sm:text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200 ${
+                    className={`w-full px-3 sm:px-4 py-2 sm:py-3 bg-white text-[#1F2937] border border-gray-300 font-semibold text-xs sm:text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F3460]/30 focus:border-[#0F3460] transition-all duration-200 ${
                       formErrors.category ? 'border-red-500 shake' : ''
                     }`}
                     required
@@ -730,7 +805,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={formLoading || metadataLoading}
-                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-[#0F3460] text-white font-semibold text-xs sm:text-sm rounded-lg hover:bg-[#0D2A50] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-[#0F3460] to-[#1a5490] text-white font-black text-sm rounded-xl shadow-lg shadow-[#0F3460]/20 hover:shadow-xl active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
               >
                 {formLoading ? (
                   <>
@@ -739,7 +814,7 @@ export default function Home() {
                 ) : (
                   <>
                     <Icons.Upload />
-                    Submit
+                    Submit Product
                   </>
                 )}
               </button>
@@ -747,9 +822,9 @@ export default function Home() {
 
             {/* Share Buttons - Show after successful submission */}
             {lastSubmittedProduct && (
-              <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-blue-50 border border-blue-200 rounded-lg fade-in">
+              <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-[#059669]/5 border border-[#059669]/25 rounded-xl fade-in">
                 <h3 className="text-base sm:text-lg font-bold text-[#1F2937] mb-2 sm:mb-4">🎉 Your product is live!</h3>
-                <p className="text-xs sm:text-sm text-[#1F2937]/70 mb-3 sm:mb-4">Share your submission link to get votes:</p>
+                <p className="text-xs sm:text-sm text-[#1F2937]/70 mb-3 sm:mb-4">Share your support link: friends can vote with just their name and email, no account needed.</p>
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-3 sm:mb-4">
                   <button
                     onClick={handleShareTwitter}
@@ -763,7 +838,7 @@ export default function Home() {
 
                   <button
                     onClick={handleShareLinkedIn}
-                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-orange-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold text-xs sm:text-sm w-full sm:w-auto"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#0A66C2] text-white rounded-lg hover:bg-[#004182] transition-colors font-bold text-xs sm:text-sm w-full sm:w-auto"
                   >
                     <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
@@ -774,7 +849,7 @@ export default function Home() {
 
                   <button
                     onClick={handleCopyLink}
-                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-bold text-xs sm:text-sm w-full sm:w-auto"
+                    className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-white text-[#0F3460] border border-[#0F3460]/30 rounded-lg hover:bg-[#0F3460]/5 transition-colors font-bold text-xs sm:text-sm w-full sm:w-auto"
                   >
                     {copied ? (
                       <>
@@ -801,7 +876,7 @@ export default function Home() {
                 </button>
               </div>
             )}
-              </>
+              </div>
             )}
           </div>
         </section>
@@ -812,7 +887,7 @@ export default function Home() {
             <div className="flex items-center justify-between mb-6 sm:mb-8 flex-wrap gap-3 sm:gap-4">
               <div className="flex items-center gap-2 sm:gap-3">
                 <Icons.Trophy />
-                <h2 className="text-xl sm:text-2xl font-black text-[#1F2937] uppercase">Top Rankings</h2>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-[#1F2937]">Top Rankings</h2>
               </div>
             </div>
 
@@ -823,7 +898,7 @@ export default function Home() {
               <div className="mb-6 sm:mb-8 space-y-3 sm:space-y-4">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <Icons.Star />
-                  <h3 className="text-base sm:text-lg font-black text-[#1F2937] uppercase">Premium Featured</h3>
+                  <h3 className="text-base sm:text-lg font-black text-[#1F2937]">Premium Featured</h3>
                 </div>
                 {listings.filter(l => l.isPremium).map((listing, idx) => (
                   <PremiumListingCard
@@ -843,12 +918,14 @@ export default function Home() {
                 <p className="text-xs sm:text-sm text-[#1F2937]/60 font-semibold mt-2 sm:mt-3">Loading rankings...</p>
               </div>
             ) : listings.length === 0 ? (
-              <div className="text-center py-8 sm:py-10 md:py-12 border-gray-300 border-2 sm:border-4 bg-gray-50 fade-in rounded-lg">
-                <Icons.Users />
+              <div className="text-center py-8 sm:py-10 md:py-12 border border-gray-200 shadow-sm bg-white fade-in rounded-lg">
+                <div className="w-12 h-12 mx-auto rounded-2xl bg-[#0F3460]/5 text-[#0F3460] flex items-center justify-center">
+                  <Icons.Users />
+                </div>
                 <p className="text-xs sm:text-sm font-bold text-[#1F2937] mb-3 sm:mb-4 mt-3 sm:mt-4">No rankings yet</p>
                 <button
-                  onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-4 sm:px-6 py-2 bg-[#0F3460] text-white font-bold text-xs border-[#0F3460] border-2 sm:border-3 hover:scale-105 transition-all duration-200 rounded-lg"
+                  onClick={() => document.getElementById('submit')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="px-4 sm:px-6 py-2 sm:py-2.5 bg-[#0F3460] text-white font-black text-xs sm:text-sm hover:bg-[#0D2A50] active:scale-95 transition-all duration-200 rounded-lg"
                 >
                   Be First to Submit
                 </button>
@@ -892,103 +969,18 @@ export default function Home() {
                     );
                   }
 
-                  // Regular listing card
-                  const baseVoteCount = activeTimeFilter === 'today' ? listing.dayVotes : listing.totalVotes;
-                  const voteCount = (optimisticVotes[listing.id] || 0) + baseVoteCount;
-
-                  const platformLabel = listing.platform || 'website';
-                  let faviconUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
-                  try {
-                    const urlObj = new URL(listing.url);
-                    faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(urlObj.hostname)}&sz=32`;
-                  } catch {
-                    // If URL parsing fails, use placeholder
-                  }
-
+                  // Regular listing row (shared with the other ranking pages)
                   return (
-                    <a
+                    <RankingRow
                       key={listing.id}
-                      href={listing.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between p-4 bg-white border border-gray-200 shadow-sm rounded-lg hover:shadow-md hover:border-[#0F3460]/20 transition-all duration-200 group cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="w-8 h-8 bg-[#0F3460] text-white font-semibold text-xs rounded-lg flex items-center justify-center flex-shrink-0">#{(currentPage - 1) * 15 + idx + 1}</div>
-                        <img src={faviconUrl} alt="favicon" className="w-6 h-6 rounded-md flex-shrink-0" onError={(e) => { e.currentTarget.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>'; }} />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="text-xs font-semibold text-[#1F2937] truncate">{listing.title}</p>
-                            <div className="w-4 h-4 flex-shrink-0" title={platformLabel}>
-                              <PlatformIcon platform={platformLabel} size={16} />
-                            </div>
-                          </div>
-                          {listing.category && (
-                            <p className="text-xs text-[#1F2937]/60 mt-0.5 flex items-center gap-1">
-                              <Icons.Tag />
-                              {getCategoryLabel(listing.category)}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      <div className="text-right flex-shrink-0 ml-3 flex flex-col items-center gap-2">
-                        <div className="text-center">
-                          <p className="text-lg font-black text-[#0F3460] group-hover:text-[#0D2A50] transition-colors">{voteCount}</p>
-                          <p className="text-xs text-[#1F2937]/60 font-semibold">Votes</p>
-                        </div>
-                        <div className="flex gap-1 w-full">
-                          {user ? (
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleVote(listing.id);
-                              }}
-                              disabled={votedListings.has(listing.id)}
-                              className={`text-xs font-semibold px-2 py-1 rounded-lg transition-all duration-200 active:scale-95 flex items-center gap-1 justify-center whitespace-nowrap ${
-                                votedListings.has(listing.id)
-                                  ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
-                                  : 'bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white'
-                              }`}
-                            >
-                              <Icons.Heart />
-                              {votedListings.has(listing.id) ? 'Voted' : 'Vote'}
-                            </button>
-                          ) : (
-                            <a
-                              href="/login"
-                              className="text-xs font-semibold px-2 py-1 rounded-lg bg-white border border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 flex items-center gap-1 justify-center whitespace-nowrap"
-                            >
-                              <Icons.Heart />
-                              Login to Vote
-                            </a>
-                          )}
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setSelectedListingForShare(listing);
-                              setShareCardOpen(true);
-                            }}
-                            title="Share this product"
-                            className="text-xs font-semibold px-2 py-1 bg-white border border-orange-300 text-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
-                          >
-                            📤 Share
-                          </button>
-                          {!listing.isPremium && (
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setSelectedListingForPremium(listing);
-                                setPremiumModalOpen(true);
-                              }}
-                              title="Make this listing premium"
-                              className="text-xs font-semibold px-2 py-1 bg-white border border-gray-300 text-[#0F3460] hover:bg-[#0F3460] hover:text-white transition-all duration-200 active:scale-95 rounded-lg flex items-center gap-1 whitespace-nowrap"
-                            >
-                              ⭐ Premium
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </a>
+                      listing={listing}
+                      rank={(currentPage - 1) * 15 + idx + 1}
+                      votes={(activeTimeFilter === 'today' ? listing.dayVotes : listing.totalVotes) || 0}
+                      onPremium={listing.isPremium ? undefined : () => {
+                        setSelectedListingForPremium(listing);
+                        setPremiumModalOpen(true);
+                      }}
+                    />
                   );
                 })}
               </div>
@@ -1003,11 +995,21 @@ export default function Home() {
                 }}
               />
             )}
+            {listings.length > 0 && (
+              <div className="text-center mt-4 sm:mt-6">
+                <a
+                  href="/leaderboard"
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#0F3460] hover:underline underline-offset-2"
+                >
+                  View full leaderboard →
+                </a>
+              </div>
+            )}
           </div>
         </section>
 
         {/* TOP RANKINGS BY SOCIAL PLATFORM */}
-        <section className="bg-gradient-to-b from-white via-blue-50 to-white py-6 sm:py-12 md:py-16 border-b border-gray-200 fade-in relative overflow-hidden">
+        <section className="bg-gray-50 py-8 sm:py-12 md:py-16 border-b border-gray-200 relative overflow-hidden">
           {/* Background decoration */}
           <div className="absolute inset-0 opacity-5 pointer-events-none">
             <div className="absolute top-0 left-10 w-40 sm:w-64 h-40 sm:h-64 bg-[#0F3460] rounded-full blur-3xl"></div>
@@ -1028,11 +1030,10 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {['instagram', 'linkedin', 'twitter'].map((platform) => {
                 const platformLabel = platform === 'twitter' ? 'X' : platform.charAt(0).toUpperCase() + platform.slice(1);
-                const platformEmoji = platform === 'instagram' ? '📸' : platform === 'linkedin' ? '💼' : '✕';
                 const platformColor = platform === 'instagram' ? '#E4405F' : platform === 'linkedin' ? '#0A66C2' : '#000000';
-                const bgGradient = platform === 'instagram' ? 'from-pink-50 to-orange-50' : platform === 'linkedin' ? 'from-blue-50 to-cyan-50' : 'from-gray-50 to-slate-50';
 
-                const platformListings = listings
+                // Use the full listing set (not just the current page) so each platform shows its real top 3.
+                const platformListings = (allListings.length ? allListings : listings)
                   .filter(l => platform === 'twitter' ? ['twitter', 'x'].includes(l.platform) : l.platform === platform)
                   .sort((a, b) => (activeTimeFilter === 'today' ? b.dayVotes - a.dayVotes : b.totalVotes - a.totalVotes))
                   .slice(0, 3);
@@ -1040,15 +1041,18 @@ export default function Home() {
                 return (
                   <div
                     key={platform}
-                    className={`bg-gradient-to-br ${bgGradient} border-2 sm:border-3 md:border-4 border-black p-3 sm:p-4 md:p-6 hover:shadow-2xl hover:border-black transition-all duration-300 group rounded-2xl backdrop-blur-sm relative overflow-hidden flex flex-col`}
+                    className="bg-white border border-gray-200 shadow-sm p-4 sm:p-5 md:p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group rounded-2xl relative overflow-hidden flex flex-col"
                   >
+                    {/* Brand-colored top accent */}
+                    <div className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: platformColor }} aria-hidden="true" />
                     {/* Header */}
-                    <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6 pr-12 sm:pr-16">
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 flex-shrink-0 rounded-lg flex items-center justify-center" style={{backgroundColor: platformColor + '15', color: platformColor}}>
-                        <PlatformIcon platform={platform} size={18} />
+                    <div className="flex items-center gap-3 mb-4 sm:mb-5">
+                      <div className="w-10 h-10 md:w-11 md:h-11 flex-shrink-0 rounded-xl flex items-center justify-center" style={{ backgroundColor: platformColor + '14' }}>
+                        <PlatformIcon platform={platform} size={22} />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs text-[#1F2937]/60">Top Rated This {activeTimeFilter === 'today' ? 'Day' : 'Week'}</p>
+                        <p className="text-sm sm:text-base font-black text-[#1F2937]">{platformLabel}</p>
+                        <p className="text-xs text-[#1F2937]/55">Top rated {activeTimeFilter === 'today' ? 'today' : 'all time'}</p>
                       </div>
                     </div>
 
@@ -1061,12 +1065,10 @@ export default function Home() {
                           return (
                             <a
                               key={item.id}
-                              href={item.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                              href={`/product/${item.id}`}
                               className={`flex items-center justify-between p-2 sm:p-2.5 md:p-3.5 rounded-xl transition-all duration-200 group/item cursor-pointer ${
                                 isTopThree
-                                  ? 'bg-white border-2 border-[#0F3460]/20 shadow-sm hover:shadow-md hover:border-[#0F3460]/40'
+                                  ? 'bg-gray-50 border border-gray-200 hover:bg-white hover:shadow-md hover:border-[#0F3460]/30'
                                   : 'bg-white/70 border border-gray-300/50 hover:bg-white hover:border-[#0F3460]/30'
                               }`}
                             >
@@ -1113,7 +1115,8 @@ export default function Home() {
 
                     <button
                       onClick={() => {
-                        document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' });
+                        setFormData(prev => ({ ...prev, platform }));
+                        document.getElementById('submit')?.scrollIntoView({ behavior: 'smooth' });
                       }}
                       className={`w-full mt-3 sm:mt-4 md:mt-6 px-2 sm:px-3 py-2 sm:py-2.5 md:py-3 font-bold text-xs md:text-sm rounded-xl transition-all duration-200 active:scale-95 border-2 border-[#0F3460] text-[#0F3460] hover:bg-[#0F3460] hover:text-white shadow-sm hover:shadow-md`}
                     >
@@ -1127,44 +1130,27 @@ export default function Home() {
         </section>
 
 
-        {/* TESTIMONIALS CAROUSEL SECTION */}
-        <section className="py-6 sm:py-12 md:py-20 bg-white border-t border-gray-200">
-          <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
-            <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4 text-center">Trusted by Builders Worldwide</h2>
-            <p className="text-center text-xs sm:text-sm md:text-base text-[#1F2937]/70 mb-6 sm:mb-10 md:mb-12 max-w-2xl mx-auto">Founders, indie hackers, and agencies ship on RankBid every day. Here is what they are saying, straight from X.</p>
-
-            <TestimonialsCarousel testimonials={[
-              {
-                name: 'Sarah Chen',
-                handle: '@sarahchen',
-                text: 'Submitted our SaaS tool on RankBid and got 1,200 votes in the first week! The community voting is so transparent and fair. No algorithms hiding our product from users.'
-              },
-              {
-                name: 'Alex Rodriguez',
-                handle: '@alexroddev',
-                text: 'Love how simple it is to submit and share. RankBid got my indie project discovered by thousands of users organically. The real-time rankings are addictive!'
-              },
-              {
-                name: 'Emma Thompson',
-                handle: '@emmathompson',
-                text: 'Our AI tool ranked #1 in Developer category. The community-driven approach means quality products actually rise to the top. This is how discovery should work.'
-              },
-              {
-                name: 'James Wilson',
-                handle: '@jameswilson',
-                text: 'Completely free to submit and compete on rankings. No gatekeepers, no algorithm black box. Just pure community voting power determining what gets seen.'
-              },
-              {
-                name: 'Lisa Park',
-                handle: '@lisapark_',
-                text: 'The category filters and real-time updates make it perfect for finding what\'s trending. RankBid transformed how we discover new tools in our niche.'
-              },
-              {
-                name: 'David Kumar',
-                handle: '@davidkumar',
-                text: 'Submitted 3 products and they all got amazing visibility. The community on RankBid actually votes on what they love. Finally a fair ranking platform!'
-              }
-            ]} />
+        {/* WHY MAKERS SECTION (replaces placeholder testimonials) */}
+        <section className="py-8 sm:py-12 md:py-20 bg-white border-t border-gray-200">
+          <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
+            <div className="text-center mb-6 sm:mb-10 md:mb-12">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4">Why makers launch on RankBid</h2>
+              <p className="text-xs sm:text-sm md:text-base text-[#1F2937]/70 max-w-2xl mx-auto">A fair, free launchpad where the community, not an algorithm, decides what rises.</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              {[
+                { icon: <PremiumIcons.Gift />, tone: 'green' as const, title: 'Free to launch', text: 'Submit unlimited products with no listing fees.' },
+                { icon: <PremiumIcons.Scale />, tone: 'navy' as const, title: 'Fair for everyone', text: 'Indie makers compete on votes, not ad budgets.' },
+                { icon: <PremiumIcons.Pulse />, tone: 'green' as const, title: 'Live feedback', text: 'Watch real votes and rankings update in real time.' },
+                { icon: <PremiumIcons.Share />, tone: 'navy' as const, title: 'Built to share', text: 'Share your rank card on X and LinkedIn to rally votes.' },
+              ].map(item => (
+                <div key={item.title} className="relative pl-4 sm:pl-0 sm:pt-5 border-l-2 sm:border-l-0 sm:border-t-2 border-[#0F3460]/15 hover:border-[#059669] transition-colors">
+                  <span className="text-[#0F3460] inline-flex">{item.icon}</span>
+                  <h3 className="text-sm sm:text-base font-black text-[#1F2937] mt-2 sm:mt-3 mb-1">{item.title}</h3>
+                  <p className="text-xs sm:text-sm text-[#1F2937]/65 leading-relaxed">{item.text}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -1178,7 +1164,7 @@ export default function Home() {
               {[
                 {
                   q: 'How does the voting system work?',
-                  a: 'Users can vote on any submission they like. Each user gets one vote per submission. Vote counts are displayed in real-time and used to rank all submissions on the leaderboard.'
+                  a: 'Log in and vote for any submission you like. Each user gets one vote per submission. Vote counts are displayed in real-time and used to rank all submissions on the leaderboard.'
                 },
                 {
                   q: 'Can I submit my product for free?',
@@ -1186,7 +1172,7 @@ export default function Home() {
                 },
                 {
                   q: 'How are rankings determined?',
-                  a: 'Rankings are determined entirely by community votes. The more votes your submission gets, the higher it ranks. We offer All-Time, Weekly, Monthly, and Today rankings.'
+                  a: 'Rankings are determined entirely by community votes. The more votes your submission gets, the higher it ranks. See the All-Time leaderboard or Today\'s rankings for the last 24 hours.'
                 },
                 {
                   q: 'Can I search for specific products?',
@@ -1198,7 +1184,7 @@ export default function Home() {
                 },
                 {
                   q: 'Is there a leaderboard I can view?',
-                  a: 'Yes! Our global leaderboard shows top-ranked submissions. You can view rankings by time period (Today, This Week, This Month, All Time) and filter by category.'
+                  a: 'Yes! Our global leaderboard shows top-ranked submissions. You can switch between All-Time and Today, browse by category or platform, and look back at past days in the Archive.'
                 },
                 {
                   q: 'What categories are available?',
@@ -1211,32 +1197,6 @@ export default function Home() {
               ].map((faq, idx) => (
                 <FAQ key={idx} question={faq.q} answer={faq.a} />
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section - After FAQ */}
-        <section className="py-6 sm:py-12 md:py-20 bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
-            <div className="p-4 sm:p-8 md:p-16 bg-gradient-to-r from-[#0F3460] to-[#1a5490] rounded-2xl text-white text-center shadow-lg border-2 border-[#0F3460]/30">
-              <h3 className="text-lg sm:text-xl md:text-2xl font-black mb-2 md:mb-3">Get Your Product Ranked</h3>
-              <p className="text-xs sm:text-sm md:text-base mb-4 md:mb-6 opacity-95 max-w-xl mx-auto">Submit across all platforms and climb the global rankings. No algorithms. Just community voting power.</p>
-              <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
-                <button
-                  onClick={() => document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3.5 bg-white text-[#0F3460] font-black text-xs md:text-sm rounded-xl hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg w-full sm:w-auto"
-                >
-                  <Icons.Upload />
-                  Start Ranking Now
-                </button>
-                <a
-                  href="/platforms"
-                  className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3.5 bg-white/20 text-white font-black text-xs md:text-sm rounded-xl hover:bg-white/30 active:scale-95 transition-all duration-200 shadow-lg border-2 border-white/40 w-full sm:w-auto"
-                >
-                  <Icons.TrendingUp />
-                  Explore Platforms
-                </a>
-              </div>
             </div>
           </div>
         </section>
@@ -1281,7 +1241,7 @@ export default function Home() {
             totalVotes: selectedListingForShare.totalVotes,
             rank: calculateRank(selectedListingForShare.totalVotes || 0),
           }}
-          productUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/product/${selectedListingForShare.id}`}
+          productUrl={supportUrl(selectedListingForShare.id)}
         />
       )}
 

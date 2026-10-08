@@ -160,8 +160,8 @@ export default function PremiumListingCard({
             disabled={hasVoted}
             className={`w-full py-2 md:py-3 px-3 md:px-4 font-black text-xs md:text-sm border-2 md:border-3 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center gap-2 ${
               hasVoted
-                ? 'bg-gray-300 text-gray-600 border-gray-300 cursor-not-allowed'
-                : 'bg-white text-[orange-600] border-[orange-600] hover:bg-[orange-600] hover:text-white'
+                ? 'bg-[#059669]/10 text-[#059669] border-[#059669]/20 cursor-default rounded-lg'
+                : 'bg-[#0F3460] text-white border-[#0F3460] hover:bg-[#0D2A50] rounded-lg shadow-sm'
             }`}
           >
             <Icons.Heart />
@@ -175,13 +175,13 @@ export default function PremiumListingCard({
 
             <div className="space-y-1 md:space-y-2 mb-2 md:mb-3 text-xs">
               {listing.founderEmail && (
-                <a href={`mailto:${listing.founderEmail}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[orange-600] transition-colors">
+                <a href={`mailto:${listing.founderEmail}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   <Icons.Mail />
                   <span className="truncate min-w-0">{listing.founderEmail}</span>
                 </a>
               )}
               {listing.founderPhone && (
-                <a href={`tel:${listing.founderPhone}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[orange-600] transition-colors">
+                <a href={`tel:${listing.founderPhone}`} className="flex items-center gap-2 text-[#1F2937] hover:text-[#0F3460] transition-colors">
                   <Icons.Phone />
                   <span>{listing.founderPhone}</span>
                 </a>
