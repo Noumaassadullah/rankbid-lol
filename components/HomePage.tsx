@@ -15,7 +15,8 @@ import { IconTile, PremiumIcons } from '@/components/PremiumIcons';
 import RankingRow from '@/components/RankingRow';
 import LivePodium from '@/components/LivePodium';
 import SelectionHeading from '@/components/SelectionHeading';
-import TrustedBy from '@/components/TrustedBy';import { getCategoryLabel as formatCategory } from '@/lib/categories';
+import TrustedBy from '@/components/TrustedBy';
+import WhyMakersIllustration from '@/components/WhyMakersIllustration';import { getCategoryLabel as formatCategory } from '@/lib/categories';
 
 // Stagger delay for the .slide-up entrance animation (see globals.css).
 const slideDelay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
@@ -1078,14 +1079,7 @@ export default function Home() {
 
             {/* Illustration */}
             <div>
-              <img
-                src="/why-makers.png"
-                alt="A maker checking live votes on their phone"
-                width={754}
-                height={706}
-                loading="lazy"
-                className="relative w-full max-w-[560px] h-auto mx-auto"
-              />
+              <WhyMakersIllustration />
             </div>
           </div>
         </section>
