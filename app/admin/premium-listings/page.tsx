@@ -24,13 +24,32 @@ export default function AdminPremiumListings() {
   const [status, setStatus] = useState('pending');
   const [message, setMessage] = useState('');
 
-  const handleLogin = () => {
-    // Accept the configured admin key
-    if (adminKey === 'rankbid-premium-admin-2026' || adminKey === process.env.NEXT_PUBLIC_ADMIN_KEY || adminKey === 'admin-secret-key') {
+  // Already signed in on /admin (admin cookie or admin account)? Skip the login form.
+  useEffect(() => {
+    fetch('/api/admin/session')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.admin) {
+          setIsAuthenticated(true);
+          fetchListings();
+        }
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleLogin = async () => {
+    // The server checks the password against ADMIN_KEY and sets the admin cookie.
+    const res = await fetch('/api/admin/session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: adminKey }),
+    }).catch(() => null);
+    if (res?.ok) {
       setIsAuthenticated(true);
       fetchListings();
     } else {
-      setMessage('Invalid admin key');
+      setMessage('Invalid password');
     }
   };
 
@@ -111,7 +130,7 @@ export default function AdminPremiumListings() {
             type="password"
             value={adminKey}
             onChange={(e) => setAdminKey(e.target.value)}
-            placeholder="Enter admin key"
+            placeholder="Admin password"
             className="w-full px-4 py-3 border-3 border-[#18181B] text-[#18181B] font-semibold mb-4 focus:outline-none focus:ring-2 focus:ring-[#FFB28F]"
           />
           <button

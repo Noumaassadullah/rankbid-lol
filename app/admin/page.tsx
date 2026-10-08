@@ -296,7 +296,7 @@ function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
     }).catch(() => null);
     setBusy(false);
     if (res?.ok) onSuccess();
-    else setError('That admin key is not valid.');
+    else setError('Wrong password.');
   };
 
   return (
@@ -304,14 +304,14 @@ function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
       <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
         <h1 className="text-3xl font-black text-[#1F2937] mb-2">Admin Access</h1>
         <p className="text-[#1F2937]/60 mb-6">
-          Enter the admin key, or <Link href="/login" className="underline font-semibold">sign in</Link> with an admin account.
+          Enter the admin password, or <Link href="/login" className="underline font-semibold">sign in</Link> with an admin account.
         </p>
         <form onSubmit={submit} className="space-y-4">
           <input
             type="password"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            placeholder="Admin key"
+            placeholder="Admin password"
             className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#0F3460] text-[#1F2937]"
             required
             autoFocus
