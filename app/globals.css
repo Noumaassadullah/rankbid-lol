@@ -189,21 +189,6 @@ body {
 .marquee:hover .marquee-track {
   animation-play-state: paused;
 }
-
-.marquee-track-reverse {
-  animation: marquee 34s linear infinite reverse;
-}
-
-.marquee:hover .marquee-track-reverse {
-  animation-play-state: paused;
-}
-
-/* Fade the slider out at both edges instead of a hard cut */
-.marquee-fade {
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
-}
-
 /* Footer wordmark: letters rise in when the footer scrolls into view (.is-visible),
    then a soft light sweeps across the gradient text. */
 @keyframes letterRise {
@@ -314,8 +299,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .slide-up,
-  .marquee-track,
-  .marquee-track-reverse {
+  .marquee-track {
     animation: none;
   }
 
