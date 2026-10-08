@@ -12,6 +12,7 @@ import StatusCardModal from '@/components/StatusCardModal';
 import { IconTile, PremiumIcons } from '@/components/PremiumIcons';
 import RankingRow from '@/components/RankingRow';
 import LivePodium from '@/components/LivePodium';
+import ScrollVideo from '@/components/ScrollVideo';
 import { getCategoryLabel as formatCategory } from '@/lib/categories';
 
 // Stagger delay for the .slide-up entrance animation (see globals.css).
@@ -555,7 +556,10 @@ export default function Home() {
       <Header />
       <div className="bg-white text-[#1F2937]">
 
-        {/* HERO: short centered copy + sliding wall of real product logos */}
+        {/* Intro video: plays forward/back with scroll, then hands off to the hero */}
+        <ScrollVideo src="/intro.mp4" />
+
+        {/* HERO: short centered copy + live top 3 podium */}
         <section className="relative overflow-hidden bg-[#FAFBFD] border-b border-gray-200">
           {/* Soft dotted backdrop */}
           <div
