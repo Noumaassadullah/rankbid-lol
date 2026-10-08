@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
-  ArrowDown, ArrowUp, ChevronDown, ChevronRight, ExternalLink, FileText, LogOut, Minus,
+  AlertTriangle, ArrowDown, ArrowUp, ChevronDown, ChevronRight, ExternalLink, FileText, LogOut, Minus,
   RefreshCw, Search, Trash2, TrendingUp, Trophy, UserPlus, Users, Zap,
 } from 'lucide-react';
 
@@ -55,6 +55,8 @@ interface Pagination { total: number; page: number; limit: number; pages: number
 type Tab = 'live' | 'submissions' | 'users';
 type ConnState = 'connecting' | 'live' | 'reconnecting';
 type Toast = { id: number; message: string; type: 'success' | 'error' | 'info' };
+type ConfirmOptions = { title: string; message: React.ReactNode; confirmLabel: string };
+type ConfirmFn = (options: ConfirmOptions) => Promise<boolean>;
 
 // ---- Helpers ----
 
@@ -167,12 +169,82 @@ function useLiveFeed(enabled: boolean, onNewSubmissions: (listings: AdminListing
   return { snapshot, conn, lastUpdate, rankDelta, freshIds, dropListings };
 }
 
+// ---- Confirm dialog ----
+
+/** Themed replacement for window.confirm(): `await confirmAction({...})` resolves true on confirm. */
+function useConfirm() {
+  const [pending, setPending] = useState<(ConfirmOptions & { resolve: (ok: boolean) => void }) | null>(null);
+
+  const confirmAction = useCallback<ConfirmFn>(
+    (options) => new Promise((resolve) => setPending({ ...options, resolve })),
+    []
+  );
+  const close = useCallback((ok: boolean) => {
+    pending?.resolve(ok);
+    setPending(null);
+  }, [pending]);
+
+  const dialog = pending ? <ConfirmDialog {...pending} onClose={close} /> : null;
+  return { confirmAction, dialog };
+}
+
+function ConfirmDialog({ title, message, confirmLabel, onClose }: ConfirmOptions & { onClose: (ok: boolean) => void }) {
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    // Focus Cancel, so pressing Enter by reflex never deletes anything.
+    cancelRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-[#0F3460]/40 backdrop-blur-sm" onClick={() => onClose(false)} />
+      <div
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="confirm-title"
+        aria-describedby="confirm-message"
+        className="relative w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden"
+      >
+        <div className="p-6 flex gap-4">
+          <div className="shrink-0 w-11 h-11 rounded-full bg-red-50 flex items-center justify-center">
+            <AlertTriangle className="w-5 h-5 text-red-600" />
+          </div>
+          <div className="min-w-0">
+            <h2 id="confirm-title" className="text-lg font-black text-[#1F2937]">{title}</h2>
+            <div id="confirm-message" className="mt-1.5 text-sm text-gray-600 break-words">{message}</div>
+          </div>
+        </div>
+        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
+          <button
+            ref={cancelRef}
+            onClick={() => onClose(false)}
+            className="px-4 py-2 rounded-lg text-sm font-bold text-[#1F2937] bg-white border border-gray-300 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#0F3460]/40"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => onClose(true)}
+            className="px-4 py-2 rounded-lg text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-red-600/40"
+          >
+            <Trash2 className="w-4 h-4" /> {confirmLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ---- Page ----
 
 export default function AdminPage() {
   const [authState, setAuthState] = useState<'checking' | 'signed-out' | 'admin'>('checking');
   const [tab, setTab] = useState<Tab>('live');
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const { confirmAction, dialog } = useConfirm();
 
   const toast = useCallback((message: string, type: Toast['type'] = 'info') => {
     const id = Date.now() + Math.random();
@@ -192,7 +264,16 @@ export default function AdminPage() {
   });
 
   const handleRemove = useCallback(async (ids: string[], label: string): Promise<boolean> => {
-    if (!confirm(`Remove ${label}? This deletes the submission and all of its votes. It cannot be undone.`)) return false;
+    const ok = await confirmAction({
+      title: ids.length === 1 ? 'Remove submission?' : `Remove ${ids.length} submissions?`,
+      message: (
+        <>
+          <span className="font-semibold text-[#1F2937]">{label}</span> will be deleted along with all of {ids.length === 1 ? 'its' : 'their'} votes. This cannot be undone.
+        </>
+      ),
+      confirmLabel: 'Remove',
+    });
+    if (!ok) return false;
     try {
       const removed = await removeListings(ids);
       live.dropListings(removed);
@@ -202,7 +283,7 @@ export default function AdminPage() {
       toast(e instanceof Error ? e.message : 'Failed to remove', 'error');
       return false;
     }
-  }, [live, toast]);
+  }, [live, toast, confirmAction]);
 
   const signOut = async () => {
     await fetch('/api/admin/session', { method: 'DELETE' });
@@ -256,8 +337,12 @@ export default function AdminPage() {
         {tab === 'submissions' && (
           <SubmissionsTab onRemove={handleRemove} liveVersion={live.snapshot?.generatedAt} toast={toast} />
         )}
-        {tab === 'users' && <UsersTab onRemove={handleRemove} liveVersion={live.snapshot?.generatedAt} toast={toast} />}
+        {tab === 'users' && (
+          <UsersTab onRemove={handleRemove} liveVersion={live.snapshot?.generatedAt} toast={toast} confirmAction={confirmAction} />
+        )}
       </main>
+
+      {dialog}
 
       <div className="fixed bottom-4 right-4 space-y-2 z-50 max-w-sm">
         {toasts.map((t) => (
@@ -441,7 +526,7 @@ function LiveTab({
                     <span className="font-black">{fmt(l.totalVotes)}</span>
                     <span className="block text-[11px] text-gray-500">+{fmt(l.dayVotes)} today</span>
                   </span>
-                  <RemoveButton label="" onClick={() => onRemove([l.id], `"${l.title}"`)} />
+                  <RemoveButton label="" onClick={() => onRemove([l.id], l.title)} />
                 </li>
               ))}
             </ol>
@@ -461,7 +546,7 @@ function LiveTab({
                   <span className="w-6 text-right font-black text-[#0F3460] tabular-nums">{i + 1}</span>
                   <div className="flex-1 min-w-0"><ListingTitle listing={l} /></div>
                   <span className="font-black tabular-nums">{fmt(l.dayVotes)}</span>
-                  <RemoveButton label="" onClick={() => onRemove([l.id], `"${l.title}"`)} />
+                  <RemoveButton label="" onClick={() => onRemove([l.id], l.title)} />
                 </li>
               ))}
             </ol>
@@ -489,7 +574,7 @@ function LiveTab({
                 <span className="hidden sm:inline text-xs text-gray-500 capitalize">{l.platform}</span>
                 <span className="text-xs text-gray-500 w-16 text-right">{timeAgo(l.createdAt)}</span>
                 <span className="font-bold tabular-nums w-10 text-right">{fmt(l.totalVotes)}</span>
-                <RemoveButton label="" onClick={() => onRemove([l.id], `"${l.title}"`)} />
+                <RemoveButton label="" onClick={() => onRemove([l.id], l.title)} />
               </li>
             ))}
           </ul>
@@ -614,7 +699,7 @@ function SubmissionsTab({
       {selected.size > 0 && (
         <div className="mb-3 flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-sm">
           <span className="font-bold">{selected.size} selected</span>
-          <RemoveButton label="Remove selected" onClick={() => remove([...selected], `${selected.size} submission(s)`)} />
+          <RemoveButton label="Remove selected" onClick={() => remove([...selected], `These ${selected.size} submissions`)} />
           <button onClick={() => setSelected(new Set())} className="text-gray-600 hover:underline">Clear</button>
         </div>
       )}
@@ -663,7 +748,7 @@ function SubmissionsTab({
                   {timeAgo(l.createdAt)}
                 </td>
                 <td className="px-3 py-2.5">
-                  <RemoveButton onClick={() => remove([l.id], `"${l.title}"`)} />
+                  <RemoveButton onClick={() => remove([l.id], l.title)} />
                 </td>
               </tr>
             ))}
@@ -694,10 +779,12 @@ function UsersTab({
   onRemove,
   liveVersion,
   toast,
+  confirmAction,
 }: {
   onRemove: (ids: string[], label: string) => Promise<boolean>;
   liveVersion: string | undefined;
   toast: (m: string, t?: Toast['type']) => void;
+  confirmAction: ConfirmFn;
 }) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -715,7 +802,17 @@ function UsersTab({
   const pagination = data?.pagination ?? null;
 
   const deleteUser = async (user: AdminUser) => {
-    if (!confirm(`Delete the account ${user.email}? Their votes and sessions are deleted; their submissions stay. This cannot be undone.`)) return;
+    const ok = await confirmAction({
+      title: 'Delete user?',
+      message: (
+        <>
+          The account <span className="font-semibold text-[#1F2937]">{user.email}</span> will be deleted along with its votes and
+          sessions. Their submissions stay. This cannot be undone.
+        </>
+      ),
+      confirmLabel: 'Delete user',
+    });
+    if (!ok) return;
     const res = await fetch('/api/admin/users', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
