@@ -849,7 +849,7 @@ export default function Home() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-2 sm:space-y-3">
+              <div className="curve-list space-y-2 sm:space-y-3">
                 {listings.map((listing, idx) => {
                   // Check if this is a verified/professional user listing
                   if (listing.userTier === 'verified' || listing.userTier === 'professional') {

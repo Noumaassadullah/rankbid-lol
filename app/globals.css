@@ -305,6 +305,35 @@ body {
   transform: none;
 }
 
+/* Curved scroll list: rows ride a drum as they scroll — tilted back as they enter from
+   the bottom, flat through the middle of the screen, tilted away again leaving at the top.
+   Pure CSS scroll-driven animation; browsers without support just show a flat list. */
+@supports (animation-timeline: view()) {
+  .curve-list > :not(.fixed) {
+    transform-origin: 50% 50%;
+    animation: curveScroll linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+    will-change: transform, opacity;
+  }
+}
+
+@keyframes curveScroll {
+  0% {
+    transform: perspective(900px) translateZ(-60px) rotateX(-32deg) scale(0.94);
+    opacity: 0.35;
+  }
+  30%,
+  70% {
+    transform: perspective(900px) translateZ(0) rotateX(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: perspective(900px) translateZ(-60px) rotateX(32deg) scale(0.94);
+    opacity: 0.35;
+  }
+}
+
 /* Thin reading-progress bar at the top of the page */
 .scroll-progress {
   position: fixed;
@@ -330,6 +359,10 @@ body {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .curve-list > :not(.fixed) {
+    animation: none;
   }
 
   .spotlight::after,
