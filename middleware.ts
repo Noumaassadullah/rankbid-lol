@@ -54,11 +54,6 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // If user has admin key cookie, allow access
-  if (adminKey) {
-    return NextResponse.next();
-  }
-
   // For authenticated users (logged in), allow access
   if (authToken) {
     return NextResponse.next();

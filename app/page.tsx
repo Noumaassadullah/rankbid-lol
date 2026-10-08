@@ -16,14 +16,8 @@ import { getCategoryLabel as formatCategory } from '@/lib/categories';
 // Stagger delay for the .slide-up entrance animation (see globals.css).
 const slideDelay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
 
-const HERO_PLATFORMS = [
-  { key: 'website', label: 'Websites' },
-  { key: 'x', label: 'X' },
-  { key: 'linkedin', label: 'LinkedIn' },
-  { key: 'instagram', label: 'Instagram' },
-  { key: 'tiktok', label: 'TikTok' },
-  { key: 'facebook', label: 'Facebook' },
-];
+// Profiles on these sites stay out of the hero logo wall
+const SOCIAL_HOSTS = ['x.com', 'twitter.com', 'linkedin.com', 'instagram.com', 'facebook.com', 'fb.com', 'tiktok.com', 'youtube.com', 'threads.net'];
 import { getPlatformIcon } from '@/lib/platformIcons';
 import { useState, useEffect, useCallback, type CSSProperties } from 'react';
 import { supportUrl } from '@/lib/site';
@@ -202,6 +196,10 @@ export default function Home() {
   const [shareCardOpen, setShareCardOpen] = useState(false);
   const [selectedListingForShare, setSelectedListingForShare] = useState<Listing | null>(null);
   const [allListings, setAllListings] = useState<Listing[]>([]);
+  const [brokenLogos, setBrokenLogos] = useState<Set<string>>(new Set());
+  const dropLogo = useCallback((id: string) => {
+    setBrokenLogos(prev => (prev.has(id) ? prev : new Set(prev).add(id)));
+  }, []);
 
   const [formData, setFormData] = useState({
     url: '',
@@ -555,32 +553,35 @@ export default function Home() {
     }
   };
 
-  // Hero logo slider: one tile per unique site, most-voted first, repeated so each row fills the screen.
+  // Hero logo slider: real websites only (no social profiles), one tile per site, most-voted first.
+  // Sites whose favicon turns out to be Google's 16px placeholder are dropped once it loads.
   const heroLogos = (() => {
     const seen = new Set<string>();
-    const tiles: { id: string; title: string; votes: number; icon: string; platform: string }[] = [];
+    const tiles: { id: string; title: string; votes: number; icon: string }[] = [];
     for (const l of [...allListings].sort((a, b) => (b.totalVotes || 0) - (a.totalVotes || 0))) {
+      if (l.platform && l.platform !== 'website') continue;
       let host = '';
       try { host = new URL(l.url).hostname.replace(/^www\./, ''); } catch {}
-      const key = host || l.id;
-      if (seen.has(key)) continue;
-      seen.add(key);
+      if (!host || SOCIAL_HOSTS.some(s => host === s || host.endsWith(`.${s}`))) continue;
+      if (seen.has(host) || brokenLogos.has(l.id)) continue;
+      seen.add(host);
       tiles.push({
         id: l.id,
         title: l.title,
         votes: l.totalVotes || 0,
-        icon: host ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=128` : '',
-        platform: l.platform,
+        icon: `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=128`,
       });
     }
-    if (!tiles.length) return [[], []] as (typeof tiles)[];
+    if (!tiles.length) return [];
     const fill = (list: typeof tiles) => {
       const out = [...list];
       while (out.length < 12) out.push(...list);
       return out;
     };
+    // One row until there are enough logos to fill two without obvious repeats.
+    if (tiles.length < 12) return [fill(tiles)];
     const half = Math.ceil(tiles.length / 2);
-    return [fill(tiles.slice(0, half)), fill(tiles.length > 1 ? tiles.slice(half) : tiles)];
+    return [fill(tiles.slice(0, half)), fill(tiles.slice(half))];
   })();
   const totalVotes = allListings.reduce((n, l) => n + (l.totalVotes || 0), 0);
 
@@ -637,46 +638,40 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Moving logos: two rows sliding in opposite directions, pause on hover */}
-          <div style={slideDelay(320)} className="slide-up relative mt-14 sm:mt-16 pb-14 sm:pb-20 space-y-4 marquee-fade">
-            {heroLogos.map((row, r) => (
-              <div key={r} className="marquee overflow-hidden">
-                <div className={`${r === 0 ? 'marquee-track' : 'marquee-track-reverse'} flex w-max gap-4`}>
+          {/* Moving logos of listed websites; rows alternate direction and pause on hover */}
+          <div style={slideDelay(320)} className="slide-up relative mt-14 sm:mt-16 pb-16 sm:pb-24 space-y-5 marquee-fade">
+            {(heroLogos.length ? heroLogos : allListings.length ? [] : [[]]).map((row, r) => (
+              <div key={r} className="marquee overflow-hidden py-2">
+                <div className={`${r === 0 ? 'marquee-track' : 'marquee-track-reverse'} flex w-max gap-5`}>
                   {(row.length ? [...row, ...row] : Array.from({ length: 24 })).map((item, i) => {
                     const t = item as (typeof row)[number] | undefined;
                     if (!t) {
-                      return <span key={i} className="w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] rounded-2xl bg-white border border-gray-100 animate-pulse flex-shrink-0" />;
+                      return <span key={i} className="w-[4.5rem] h-[4.5rem] sm:w-20 sm:h-20 rounded-[1.25rem] bg-white border border-gray-100 animate-pulse flex-shrink-0" />;
                     }
                     return (
                       <a
                         key={`${t.id}-${i}`}
                         href={`/product/${t.id}`}
-                        title={`${t.title} · ${t.votes} votes`}
+                        title={t.title}
+                        aria-label={t.title}
                         aria-hidden={i >= row.length}
                         tabIndex={i >= row.length ? -1 : undefined}
-                        className="group relative w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] flex-shrink-0 rounded-2xl bg-white border border-gray-200/80 shadow-[0_6px_20px_-12px_rgba(11,37,69,0.35)] flex items-center justify-center transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_14px_28px_-14px_rgba(11,37,69,0.45)]"
+                        className="relative w-[4.5rem] h-[4.5rem] sm:w-20 sm:h-20 flex-shrink-0 rounded-[1.25rem] bg-white ring-1 ring-gray-200/70 shadow-[0_10px_30px_-18px_rgba(11,37,69,0.45)] flex items-center justify-center grayscale-[35%] hover:grayscale-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_-18px_rgba(11,37,69,0.5)]"
                       >
-                        {t.icon
-                          ? <img src={t.icon} alt={t.title} loading="lazy" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
-                          : <PlatformIcon platform={t.platform} size={30} />}
-                        {t.votes > 0 && (
-                          <span className="absolute -top-1.5 -right-1.5 min-w-[1.25rem] h-5 px-1 rounded-full bg-[#0F3460] text-white text-[10px] font-bold leading-5 tabular-nums">
-                            {t.votes}
-                          </span>
-                        )}
+                        <img
+                          src={t.icon}
+                          alt=""
+                          loading="lazy"
+                          onLoad={e => { if (e.currentTarget.naturalWidth < 32) dropLogo(t.id); }}
+                          onError={() => dropLogo(t.id)}
+                          className="w-9 h-9 sm:w-10 sm:h-10 object-contain"
+                        />
                       </a>
                     );
                   })}
                 </div>
               </div>
             ))}
-
-            <div className="flex items-center justify-center gap-3 pt-4 text-xs text-[#1F2937]/45">
-              <span>Websites &amp; profiles on</span>
-              {HERO_PLATFORMS.filter(p => p.key !== 'website').map(p => (
-                <span key={p.key} title={p.label} className="inline-flex opacity-70 hover:opacity-100 transition-opacity"><PlatformIcon platform={p.key} size={15} /></span>
-              ))}
-            </div>
           </div>
         </section>
 
