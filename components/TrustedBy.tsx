@@ -196,22 +196,10 @@ export default function TrustedBy({ products, votes, categories }: TrustedByProp
               </span>
             </div>
           )}
-
-          {review && (
-            <p className="mt-6 text-sm text-[#1F2937]/55">
-              Launched on RankBid?{' '}
-              <a
-                href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('My RankBid review')}`}
-                className="font-bold text-[#0F3460] hover:underline underline-offset-2"
-              >
-                Share your experience →
-              </a>
-            </p>
-          )}
         </div>
 
-        {/* Orbit */}
-        <div className="relative w-full max-w-[520px] mx-auto aspect-square" aria-hidden="true">
+        {/* Orbit: left on desktop, below the copy on phones */}
+        <div className="relative w-full max-w-[520px] mx-auto aspect-square lg:order-first" aria-hidden="true">
           <Ring which="outer" turn={turn} active={activeAvatar} />
           <Ring which="inner" turn={turn} active={activeAvatar} />
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[17%] h-[17%] rounded-full bg-[#059669]/15 flex items-center justify-center">
