@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
+import { isAdminRequest } from '@/lib/server/admin';
 
-// Simple admin key check - replace with proper auth
-const ADMIN_KEY = process.env.ADMIN_KEY || 'admin-secret-key';
-
-function verifyAdminKey(req: NextRequest): boolean {
-  const adminKey = req.headers.get('x-admin-key');
-  return adminKey === ADMIN_KEY;
-}
 
 export async function GET(req: NextRequest) {
-  if (!verifyAdminKey(req)) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -52,7 +46,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  if (!verifyAdminKey(req)) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

@@ -1,99 +1,63 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { sbHeaders, sbUrl } from '@/lib/server/votes';
+import { isAdminRequest, sbSelect, submissionCountsByUser, toAdminUser } from '@/lib/server/admin';
 
-const ADMIN_KEY = process.env.ADMIN_KEY || 'admin-secret-key';
+const cleanSearch = (s: string) => s.replace(/[,()*\\]/g, ' ').trim();
 
-function verifyAdminKey(req: NextRequest): boolean {
-  const adminKey = req.headers.get('x-admin-key');
-  return adminKey === ADMIN_KEY;
-}
-
+// GET ?page&limit&search — users, newest first, with how many listings each submitted.
 export async function GET(req: NextRequest) {
-  if (!verifyAdminKey(req)) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
-    const search = searchParams.get('search');
-    const offset = (page - 1) * limit;
+    const { searchParams } = req.nextUrl;
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1') || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '20') || 20));
+    const search = cleanSearch(searchParams.get('search') || '');
 
-    let whereClause = '';
-    const params: any[] = [];
-
+    let path = `users?select=*&order=created_at.desc&limit=${limit}&offset=${(page - 1) * limit}`;
     if (search) {
-      whereClause = ` WHERE email ILIKE $1 OR name ILIKE $1`;
-      params.push(`%${search}%`);
+      const q = encodeURIComponent(`*${search}*`);
+      path += `&or=(email.ilike.${q},name.ilike.${q})`;
     }
 
-    // Get total count
-    const countResult = await query(
-      `SELECT COUNT(*) as count FROM users ${whereClause}`,
-      params
-    );
-    const total = parseInt(countResult.rows[0].count);
-
-    // Get users with vote stats
-    const usersResult = await query(
-      `SELECT u.id, u.email, u.name, u.created_at,
-              COUNT(DISTINCT v.id) as vote_count,
-              COUNT(DISTINCT s.id) as session_count
-       FROM users u
-       LEFT JOIN user_votes v ON u.id = v.user_id
-       LEFT JOIN sessions s ON u.id = s.user_id
-       ${whereClause}
-       GROUP BY u.id, u.email, u.name, u.created_at
-       ORDER BY u.created_at DESC
-       LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
-      [...params, limit, offset]
-    );
+    const [{ rows, total }, counts] = await Promise.all([
+      sbSelect<Record<string, unknown>>(path),
+      submissionCountsByUser(),
+    ]);
 
     return NextResponse.json({
-      users: usersResult.rows,
-      pagination: {
-        total,
-        page,
-        limit,
-        pages: Math.ceil(total / limit)
-      }
+      users: rows.map((row) => toAdminUser(row, counts.get(String(row.id)))),
+      pagination: { total, page, limit, pages: Math.max(1, Math.ceil(total / limit)) },
     });
   } catch (error) {
     console.error('Error fetching users:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch users' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
   }
 }
 
+// DELETE { userId } — deletes the account, its sessions and its votes. Their listings stay.
 export async function DELETE(req: NextRequest) {
-  if (!verifyAdminKey(req)) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     const { userId } = await req.json();
-
     if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
     }
 
-    // Delete related data
-    await query('DELETE FROM user_votes WHERE user_id = $1', [userId]);
-    await query('DELETE FROM sessions WHERE user_id = $1', [userId]);
-    await query('DELETE FROM users WHERE id = $1', [userId]);
+    const id = encodeURIComponent(userId);
+    const del = (path: string) => fetch(sbUrl(path), { method: 'DELETE', headers: sbHeaders() });
+    await Promise.all([del(`user_votes?user_id=eq.${id}`), del(`sessions?user_id=eq.${id}`)]);
+    const res = await del(`users?id=eq.${id}`);
+    if (!res.ok) throw new Error(await res.text());
 
     return NextResponse.json({ success: true, message: 'User deleted' });
   } catch (error) {
     console.error('Error deleting user:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete user' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
   }
 }

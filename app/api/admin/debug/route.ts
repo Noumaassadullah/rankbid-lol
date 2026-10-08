@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
+import { isAdminRequest } from '@/lib/server/admin';
 
 export async function GET(req: NextRequest) {
+  if (!(await isAdminRequest(req))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     // Test database connection
     const testResult = await query('SELECT COUNT(*) as count FROM listings');
@@ -13,9 +18,6 @@ export async function GET(req: NextRequest) {
     const votesResult = await query('SELECT COUNT(*) as count FROM user_votes');
     const voteCount = votesResult.rows[0]?.count || 0;
 
-    const adminKey = process.env.ADMIN_KEY || 'admin-secret-key';
-    const headerKey = req.headers.get('x-admin-key');
-
     return NextResponse.json({
       status: 'success',
       database: {
@@ -24,19 +26,16 @@ export async function GET(req: NextRequest) {
         votes: voteCount
       },
       adminKey: {
-        expected: adminKey,
-        received: headerKey,
-        matches: adminKey === headerKey
+        configured: Boolean(process.env.ADMIN_KEY),
       },
       debug: {
         message: 'Database connected successfully'
       }
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json({
       status: 'error',
-      error: error.message,
-      details: error.toString()
+      error: error instanceof Error ? error.message : String(error),
     }, { status: 500 });
   }
 }

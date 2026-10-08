@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { categoryFromSlug, categoryPath } from '@/lib/categories';
 
-const ADMIN_EMAILS = [
-  'assadullahnouman@gmail.com',
-  'admin@rankbid.click',
-];
-
 // Indexable content pages, open to everyone (and search/AI crawlers) before launch.
 // Matched exactly or as a path prefix ('/product' covers '/product/:id').
 const PUBLIC_PAGES = [
