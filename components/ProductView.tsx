@@ -41,9 +41,6 @@ export default function ProductView({ id, initialProduct, initialAllListings }: 
   const { voted, busy: voting, extraVotes, message: voteMessage, vote } = useVote(id);
 
   useEffect(() => {
-    // Opening a product from far down a list keeps the old scroll position (the sticky header
-    // makes Next.js think the page is already in view), which lands on the footer. Start at the top.
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     if (!initialProduct) fetchProduct();
   }, [id]);
 
