@@ -226,9 +226,6 @@ export default function AdminPage() {
             <ConnectionBadge conn={live.conn} lastUpdate={live.lastUpdate} />
           </div>
           <div className="flex items-center gap-2">
-            <Link href="/admin/premium-listings" className="px-3 py-2 rounded-lg text-sm font-bold bg-white/10 hover:bg-white/20 transition-colors">
-              Premium
-            </Link>
             <button onClick={signOut} className="px-3 py-2 rounded-lg text-sm font-bold bg-red-600 hover:bg-red-700 transition-colors flex items-center gap-1.5">
               <LogOut className="w-4 h-4" /> Sign out
             </button>
