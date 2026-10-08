@@ -11,7 +11,8 @@ import LoginModal from '@/components/LoginModal';
 import StatusCardModal from '@/components/StatusCardModal';
 import { IconTile, PremiumIcons } from '@/components/PremiumIcons';
 import RankingRow from '@/components/RankingRow';
-import LivePodium from '@/components/LivePodium';import { getCategoryLabel as formatCategory } from '@/lib/categories';
+import LivePodium from '@/components/LivePodium';
+import SelectionHeading from '@/components/SelectionHeading';import { getCategoryLabel as formatCategory } from '@/lib/categories';
 
 // Stagger delay for the .slide-up entrance animation (see globals.css).
 const slideDelay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
@@ -792,14 +793,14 @@ export default function Home() {
         </section>
 
         {/* LEADERBOARD SECTION */}
-        <section id="leaderboard" className="bg-white py-6 sm:py-10 md:py-12 border-b border-gray-200 fade-in">
+        <section id="leaderboard" className="bg-white py-12 sm:py-16 md:py-20 border-b border-gray-200 fade-in">
           <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
-            <div className="flex items-center justify-between mb-6 sm:mb-8 flex-wrap gap-3 sm:gap-4">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Icons.Trophy />
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-[#1F2937]">Top Rankings</h2>
-              </div>
-            </div>
+            <SelectionHeading
+              lead="the top"
+              highlight="rankings"
+              sub="Every product, ordered by real community votes."
+              className="mb-10 sm:mb-12"
+            />
 
             {/* Category filter moved to header navigation */}
 
@@ -928,14 +929,12 @@ export default function Home() {
 
           <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 relative z-10">
             {/* Section Header */}
-            <div className="text-center mb-6 sm:mb-10 md:mb-16">
-              <div className="inline-flex items-center gap-2 mb-2 sm:mb-3 md:mb-4 px-3 py-1.5 sm:px-4 sm:py-2 bg-[#0F3460]/10 border border-[#0F3460]/20 rounded-full">
-                <Icons.TrendingUp />
-                <span className="text-xs md:text-sm font-bold text-[#0F3460]">Real-time rankings</span>
-              </div>
-              <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4">Top by Social Platform</h2>
-              <p className="text-xs sm:text-sm md:text-base text-[#1F2937]/70 max-w-2xl mx-auto px-2">Discover trending submissions from Instagram, LinkedIn, and X. See what your community loves right now.</p>
-            </div>
+            <SelectionHeading
+              lead="top by"
+              highlight="platform"
+              sub="What's winning right now on Instagram, LinkedIn and X."
+              className="mb-10 sm:mb-14"
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {['instagram', 'linkedin', 'twitter'].map((platform) => {
@@ -1043,10 +1042,12 @@ export default function Home() {
         {/* WHY MAKERS SECTION (replaces placeholder testimonials) */}
         <section className="py-8 sm:py-12 md:py-20 bg-white border-t border-gray-200">
           <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
-            <div className="text-center mb-6 sm:mb-10 md:mb-12">
-              <h2 className="text-xl sm:text-3xl md:text-4xl font-black text-[#1F2937] mb-2 md:mb-4">Why makers launch on RankBid</h2>
-              <p className="text-xs sm:text-sm md:text-base text-[#1F2937]/70 max-w-2xl mx-auto">A fair, free launchpad where the community, not an algorithm, decides what rises.</p>
-            </div>
+            <SelectionHeading
+              lead="why makers"
+              highlight="launch here"
+              sub="A fair, free launchpad where the community, not an algorithm, decides what rises."
+              className="mb-10 sm:mb-14"
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {[
                 { icon: <PremiumIcons.Gift />, tone: 'green' as const, title: 'Free to launch', text: 'Submit unlimited products with no listing fees.' },
