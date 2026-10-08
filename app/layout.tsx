@@ -8,7 +8,8 @@ import Footer from '@/components/Footer';
 import { VisitorTracker } from '@/components/visitor-tracker';
 import InteractionEffects from '@/components/InteractionEffects';
 
-const inter = Inter({ subsets: ['latin'] });
+// One typeface for the whole site (body and headings), exposed as --font-inter for globals.css.
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'RankBid - World Ranking Platform for Products',
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <body className={`${inter.className} bg-white text-gray-900 flex flex-col min-h-screen`}>
         <VisitorTracker />
         <InteractionEffects />

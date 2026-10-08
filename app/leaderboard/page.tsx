@@ -3,7 +3,7 @@
 import Header from '@/components/Header';
 import RankingRow from '@/components/RankingRow';
 import { useState, useEffect } from 'react';
-import { Trophy } from 'lucide-react';
+import SelectionHeading from '@/components/SelectionHeading';
 
 interface Listing {
   id: string;
@@ -65,14 +65,14 @@ export default function LeaderboardPage() {
             <div className="absolute -top-24 -right-16 w-72 h-72 bg-[#1a5490] rounded-full blur-3xl"></div>
             <div className="absolute -bottom-24 -left-16 w-72 h-72 bg-[#059669] rounded-full blur-3xl"></div>
           </div>
-          <div className="relative max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-10 md:py-16">
-            <div className="flex items-center gap-3 sm:gap-4 mb-2 sm:mb-4">
-              <Trophy className="w-7 h-7 sm:w-10 sm:h-10" />
-              <h1 className="text-2xl sm:text-4xl md:text-5xl font-black">Global Leaderboard</h1>
-            </div>
-            <p className="text-sm sm:text-base md:text-lg text-white/80">
-              Top-ranked products, voted by the community
-            </p>
+          <div className="relative max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-10 sm:py-14 md:py-20">
+            <SelectionHeading
+              as="h1"
+              tone="dark"
+              lead="global"
+              highlight="leaderboard"
+              sub="Top-ranked products, voted by the community."
+            />
           </div>
         </div>
 

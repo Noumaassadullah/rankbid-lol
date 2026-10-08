@@ -2,6 +2,7 @@
 
 import Header from '@/components/Header';
 import RankingRow from '@/components/RankingRow';
+import SelectionHeading from '@/components/SelectionHeading';
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
@@ -81,8 +82,14 @@ function CategoriesContent() {
           </div>
 
           <div className="relative max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-10 md:py-12">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black mb-1 sm:mb-2">Browse Categories</h1>
-            <p className="text-sm sm:text-base text-white/70 font-medium mb-5 sm:mb-8">Explore products ranked by category</p>
+            <SelectionHeading
+              as="h1"
+              tone="dark"
+              lead="browse"
+              highlight="categories"
+              sub="Explore products ranked by category."
+              className="mb-6 sm:mb-9"
+            />
 
             <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {['All', ...CATEGORIES].map(cat => {

@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 /* dark: utilities only apply under a .dark ancestor. Tailwind v4's default is the
@@ -30,9 +29,9 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  /* Typography */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Poppins', system-ui, -apple-system, sans-serif;
+  /* Typography: Inter everywhere (loaded by next/font in app/layout.tsx) */
+  --font-sans: var(--font-inter), system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: var(--font-sans);
 
   /* Border Radius */
   --radius-none: 0px;

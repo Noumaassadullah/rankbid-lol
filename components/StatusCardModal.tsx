@@ -173,7 +173,7 @@ export default function StatusCardModal({ isOpen, onClose, product, productUrl }
                   color: C.white,
                   background: `linear-gradient(140deg, ${C.navyDeep} 0%, ${C.navy} 48%, ${C.navyLight} 100%)`,
                   border: `1px solid ${C.faint}`,
-                  fontFamily: 'Inter, system-ui, sans-serif',
+                  fontFamily: 'var(--font-inter), Inter, system-ui, sans-serif',
                 }}
               >
                 {/* Glows */}
