@@ -11,15 +11,18 @@ type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const listing = await getListing(id);
-  if (!listing) return { title: 'Support a maker on RankBid' };
+  if (!listing) return { title: { absolute: 'Support a maker on RankBid' }, robots: { index: false } };
 
   const title = `Support ${listing.title} on RankBid`;
   const description = `Vote for ${listing.title} in under 10 seconds. No account needed.`;
+  // The share card is the product's; the indexable page for this listing is /product/:id.
+  const images = [`/product/${listing.id}/opengraph-image`];
   return {
-    title,
+    title: { absolute: title },
     description,
-    openGraph: { title, description, type: 'website' },
-    twitter: { card: 'summary', title, description },
+    robots: { index: false, follow: true },
+    openGraph: { title, description, type: 'website', images },
+    twitter: { card: 'summary_large_image', title, description, images },
   };
 }
 

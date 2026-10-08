@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { SUPPORT_EMAIL, X_HANDLE, X_URL } from '@/lib/site';
+import { categoryPath, getCategoryLabel } from '@/lib/categories';
 
 function XLogo({ className = 'w-4 h-4' }: { className?: string }) {
   return (
@@ -41,10 +42,15 @@ const LINK_GROUPS = [
     ],
   },
   {
+    title: 'Top categories',
+    links: ['AIMedia', 'Marketing', 'Productivity', 'Developer', 'SEO', 'Design'].map(c => ({ href: categoryPath(c), label: getCategoryLabel(c) })),
+  },
+  {
     title: 'Company',
     links: [
       { href: '/why', label: 'Why RankBid' },
       { href: '/about', label: 'About' },
+      { href: '/faq', label: 'FAQ' },
       { href: '/rules', label: 'Rules' },
       { href: `mailto:${SUPPORT_EMAIL}`, label: 'Contact' },
     ],
@@ -106,7 +112,7 @@ export default function Footer() {
               Submit for free →
             </Link>
             <Link
-              href="/leaderboard"
+              href="/categories"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-white/20 bg-white/5 text-white text-sm font-black hover:bg-white/10 transition-all"
             >
               Explore rankings
@@ -116,7 +122,7 @@ export default function Footer() {
 
         {/* Brand + link columns */}
         <div className="grid grid-cols-2 md:grid-cols-12 gap-x-6 gap-y-10 py-10 sm:py-14">
-          <div className="col-span-2 md:col-span-5">
+          <div className="col-span-2 md:col-span-3">
             <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
               <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-white to-[#DCE7F5] text-[#0F3460] flex items-center justify-center font-black text-lg shadow-lg shadow-black/30">R</span>
               <span className="text-xl font-black tracking-tight">RankBid</span>
@@ -144,8 +150,8 @@ export default function Footer() {
           </div>
 
           {LINK_GROUPS.map(group => (
-            <nav key={group.title} aria-label={group.title} className="md:col-span-2 last:col-span-2 md:last:col-span-3">
-              <h4 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/40 mb-4">{group.title}</h4>
+            <nav key={group.title} aria-label={group.title} className="md:col-span-2 md:last:col-span-3">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/40 mb-4">{group.title}</h3>
               <ul className="space-y-1">
                 {group.links.map(link => (
                   <li key={link.label}>

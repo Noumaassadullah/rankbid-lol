@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import Header from '@/components/Header';
 import PageHero from '@/components/PageHero';
 import { PremiumIcons } from '@/components/PremiumIcons';
@@ -23,7 +24,7 @@ export default function AboutPage() {
   return (
     <>
       <Header />
-      <main className="bg-white text-[#1F2937]">
+      <div className="bg-white text-[#1F2937]">
         <PageHero
           title="About RankBid"
           subtitle="A community-driven discovery platform where makers compete fairly and real people decide what rises."
@@ -55,6 +56,11 @@ export default function AboutPage() {
                 </li>
               ))}
             </ol>
+            <p className="mt-6 text-sm text-[#1F2937]/65">
+              New here? Read the <Link href="/faq" className="font-bold text-[#0F3460] underline underline-offset-2">RankBid FAQ</Link>, the{' '}
+              <Link href="/rules" className="font-bold text-[#0F3460] underline underline-offset-2">voting rules</Link>, or{' '}
+              <Link href="/categories" className="font-bold text-[#0F3460] underline underline-offset-2">browse products by category</Link>.
+            </p>
           </div>
         </section>
 
@@ -76,7 +82,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-      </main>
+      </div>
     </>
   );
 }

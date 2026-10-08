@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect, Suspense } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { categoryPath } from '@/lib/categories';
 import { Search, Menu, X, Grid3x3, Trophy, Sparkles, LineChart, Users, Zap, Palette, Bitcoin, Code2, Compass, Activity, Eye, TrendingUp, LogOut } from 'lucide-react';
 
 // `category` must match the stored listing category values (see CATEGORIES in app/page.tsx).
@@ -20,21 +21,15 @@ const CATEGORIES = [
   { name: 'Explore', Icon: Compass, href: '/categories' }
 ];
 
-function CategoryBar({ withActive = true }: { withActive?: boolean }) {
+function CategoryBar() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const activeCategory = withActive && pathname === '/categories' ? searchParams.get('category') : null;
 
   return (
     <>
       {CATEGORIES.map((cat) => {
         const Icon = cat.Icon;
-        const href = cat.category ? `/categories?category=${encodeURIComponent(cat.category)}` : cat.href!;
-        const isActive = withActive && (cat.category
-          ? activeCategory === cat.category
-          : cat.href === '/categories'
-            ? pathname === '/categories' && !activeCategory
-            : pathname === cat.href);
+        const href = cat.category ? categoryPath(cat.category) : cat.href!;
+        const isActive = pathname === href;
 
         return (
           <Link
@@ -258,10 +253,7 @@ export default function Header() {
       {/* Category Filter - Professional */}
       <div className="bg-gray-50 text-[#1F2937] border-b border-gray-200 sticky top-12 sm:top-14 md:top-16 z-30 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-6 py-1.5 sm:py-2 md:py-3 flex gap-1 items-center">
-          {/* useSearchParams needs a Suspense boundary so pages using Header can still prerender */}
-          <Suspense fallback={<CategoryBar withActive={false} />}>
-            <CategoryBar />
-          </Suspense>
+          <CategoryBar />
         </div>
       </div>
     </>

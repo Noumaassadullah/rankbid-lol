@@ -47,7 +47,7 @@ export default function WhyRankBid() {
   return (
     <>
       <Header />
-      <main className="bg-white text-[#1F2937] overflow-x-hidden">
+      <div className="bg-white text-[#1F2937] overflow-x-hidden">
         {/* HERO */}
         <section className="spotlight relative overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white">
           <div className="absolute -top-32 -right-24 w-[28rem] h-[28rem] bg-[#1a5490] rounded-full blur-3xl opacity-40 pointer-events-none" aria-hidden="true" />
@@ -66,7 +66,7 @@ export default function WhyRankBid() {
               <Link href="/#submit" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-[#0F3460] font-black text-sm rounded-xl shadow-lg shadow-black/20 hover:-translate-y-0.5 transition-all">
                 Submit your product →
               </Link>
-              <Link href="/leaderboard" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-white/10 border border-white/25 text-white font-black text-sm rounded-xl hover:bg-white/20 transition-all">
+              <Link href="/categories" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-white/10 border border-white/25 text-white font-black text-sm rounded-xl hover:bg-white/20 transition-all">
                 See the rankings
               </Link>
             </div>
@@ -171,7 +171,7 @@ export default function WhyRankBid() {
           </div>
         </section>
 
-      </main>
+      </div>
     </>
   );
 }

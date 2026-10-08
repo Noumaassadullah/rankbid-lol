@@ -1,8 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { categoryFromSlug, categoryPath } from '@/lib/categories';
 
 const ADMIN_EMAILS = [
   'assadullahnouman@gmail.com',
   'admin@rankbid.click',
+];
+
+// Indexable content pages, open to everyone (and search/AI crawlers) before launch.
+// Matched exactly or as a path prefix ('/product' covers '/product/:id').
+const PUBLIC_PAGES = [
+  '/about',
+  '/why',
+  '/rules',
+  '/faq',
+  '/categories',
+  '/platforms',
+  '/product',
 ];
 
 const PUBLIC_ROUTES = [
@@ -18,11 +31,26 @@ const PUBLIC_ROUTES = [
   '/api/waitlist/count',
 ];
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export async function proxy(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl;
 
-  // Allow static files from /public (logos, platform icons) so public pages render correctly
-  if (/\.(png|jpe?g|gif|svg|webp|ico|txt|xml)$/i.test(pathname)) {
+  // Allow static files from /public and metadata routes (robots.txt, sitemap.xml, llms.txt, icons, OG images)
+  if (/\.(png|jpe?g|gif|svg|webp|ico|txt|xml|webmanifest)$/i.test(pathname) || /(^|\/)(opengraph-image|twitter-image|icon|apple-icon)(-\w+)?$/.test(pathname)) {
+    return NextResponse.next();
+  }
+
+  // Old category links used ?category=AIMedia; the canonical page is /categories/ai-media.
+  if (pathname === '/categories' && searchParams.get('category')) {
+    const raw = searchParams.get('category')!;
+    const category = categoryFromSlug(raw);
+    const url = request.nextUrl.clone();
+    url.pathname = category ? categoryPath(category) : '/categories';
+    url.search = '';
+    return NextResponse.redirect(url, 308);
+  }
+
+  // (An ?adminKey= visit falls through so the admin cookie still gets set below.)
+  if (!searchParams.has('adminKey') && (pathname === '/' || PUBLIC_PAGES.some(route => pathname === route || pathname.startsWith(`${route}/`)))) {
     return NextResponse.next();
   }
 
