@@ -188,6 +188,20 @@ body {
 .marquee:hover .marquee-track {
   animation-play-state: paused;
 }
+/* Gentle up-and-down drift for illustrations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
 /* Footer wordmark: letters rise in when the footer scrolls into view (.is-visible),
    then a soft light sweeps across the gradient text. */
 @keyframes letterRise {
@@ -298,7 +312,8 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .slide-up,
-  .marquee-track {
+  .marquee-track,
+  .float-slow {
     animation: none;
   }
 

@@ -1040,27 +1040,46 @@ export default function Home() {
 
 
         {/* WHY MAKERS SECTION (replaces placeholder testimonials) */}
-        <section className="py-8 sm:py-12 md:py-20 bg-white border-t border-gray-200">
-          <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6">
-            <SelectionHeading
-              lead="why makers"
-              highlight="launch here"
-              sub="A fair, free launchpad where the community, not an algorithm, decides what rises."
-              className="mb-10 sm:mb-14"
-            />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-              {[
-                { icon: <PremiumIcons.Gift />, tone: 'green' as const, title: 'Free to launch', text: 'Submit unlimited products with no listing fees.' },
-                { icon: <PremiumIcons.Scale />, tone: 'navy' as const, title: 'Fair for everyone', text: 'Indie makers compete on votes, not ad budgets.' },
-                { icon: <PremiumIcons.Pulse />, tone: 'green' as const, title: 'Live feedback', text: 'Watch real votes and rankings update in real time.' },
-                { icon: <PremiumIcons.Share />, tone: 'navy' as const, title: 'Built to share', text: 'Share your rank card on X and LinkedIn to rally votes.' },
-              ].map(item => (
-                <div key={item.title} className="relative pl-4 sm:pl-0 sm:pt-5 border-l-2 sm:border-l-0 sm:border-t-2 border-[#0F3460]/15 hover:border-[#059669] transition-colors">
-                  <span className="text-[#0F3460] inline-flex">{item.icon}</span>
-                  <h3 className="text-sm sm:text-base font-black text-[#1F2937] mt-2 sm:mt-3 mb-1">{item.title}</h3>
-                  <p className="text-xs sm:text-sm text-[#1F2937]/65 leading-relaxed">{item.text}</p>
-                </div>
-              ))}
+        <section className="py-14 sm:py-20 md:py-24 bg-white border-t border-gray-200 overflow-hidden">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Copy + four reasons, no cards */}
+            <div>
+              <SelectionHeading
+                lead="why makers"
+                highlight="launch here"
+                sub="A fair, free launchpad where the community, not an algorithm, decides what rises."
+                className="mb-10 sm:mb-12"
+              />
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-8">
+                {[
+                  { icon: <PremiumIcons.Gift />, title: 'Free to launch', text: 'Submit unlimited products with no listing fees.' },
+                  { icon: <PremiumIcons.Scale />, title: 'Fair for everyone', text: 'Indie makers compete on votes, not ad budgets.' },
+                  { icon: <PremiumIcons.Pulse />, title: 'Live feedback', text: 'Watch real votes and rankings update in real time.' },
+                  { icon: <PremiumIcons.Share />, title: 'Built to share', text: 'Share your rank card on X and LinkedIn to rally votes.' },
+                ].map(item => (
+                  <li key={item.title} className="group flex gap-4">
+                    <span className="w-11 h-11 flex-shrink-0 rounded-full bg-[#059669]/10 text-[#059669] flex items-center justify-center transition-colors group-hover:bg-[#059669] group-hover:text-white">
+                      {item.icon}
+                    </span>
+                    <div>
+                      <h3 className="text-base font-bold text-[#0B2545] tracking-[-0.01em] mb-1">{item.title}</h3>
+                      <p className="text-sm text-[#1F2937]/60 leading-relaxed">{item.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Illustration */}
+            <div>
+              <img
+                src="/why-makers.png"
+                alt="A maker checking live votes on their phone"
+                width={754}
+                height={706}
+                loading="lazy"
+                className="float-slow relative w-full max-w-[560px] h-auto mx-auto"
+              />
             </div>
           </div>
         </section>
