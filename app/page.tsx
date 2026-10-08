@@ -1065,10 +1065,26 @@ export default function Home() {
         </section>
 
         {/* FAQ SECTION */}
-        <section className="py-6 sm:py-12 md:py-20 bg-gray-50 border-t border-gray-200">
-          <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-[#1F2937] mb-2 md:mb-4 text-center">Frequently Asked Questions</h2>
-            <p className="text-xs md:text-sm font-medium text-[#1F2937]/70 mb-6 sm:mb-10 md:mb-12 text-center max-w-2xl mx-auto">Vote counts and community rankings are built into every submission, so discovery and engagement never leave the platform.</p>
+        <section className="py-12 sm:py-16 md:py-24 bg-gray-50 border-t border-gray-200">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-10 lg:gap-16 items-start">
+            {/* Heading styled like a text selection: highlight box with a handle at each end */}
+            <div className="lg:sticky lg:top-32">
+              <h2 className="text-[#0B2545] leading-[0.95] tracking-[-0.03em]">
+                <span className="block text-5xl sm:text-6xl lg:text-7xl font-light">you have</span>
+                <span className="relative inline-block mt-2 sm:mt-3 px-2 sm:px-3 py-1 bg-[#CDD0E3] text-5xl sm:text-6xl lg:text-7xl font-bold">
+                  questions?
+                  <span aria-hidden="true" className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#3B4CCA]">
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#3B4CCA]" />
+                  </span>
+                  <span aria-hidden="true" className="absolute right-0 top-0 bottom-0 w-[3px] bg-[#3B4CCA]">
+                    <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[#3B4CCA]" />
+                  </span>
+                </span>
+              </h2>
+              <p className="mt-8 sm:mt-10 text-xl sm:text-2xl text-[#0B2545]">
+                We’re <em className="font-bold">here</em> to help.
+              </p>
+            </div>
 
             <div className="space-y-2 sm:space-y-3">
               {[

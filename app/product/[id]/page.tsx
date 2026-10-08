@@ -24,6 +24,7 @@ interface Listing {
   dayVotes?: number;
   clickCount: number;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -152,13 +153,16 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
   const votes = (product.totalVotes || 0) + extraVotes;
   const isRanked = votes > 0;
 
-  // Rank = products with more votes, plus earlier-listed products on a tie, plus one.
+  // Rank = products with more votes, plus products that reached the same count more recently, plus one.
+  // A vote cast on this page just now makes this product the most recent at its new count.
+  const lastVotedAt = (l: Listing) => new Date(l.updatedAt || l.createdAt).getTime();
+  const ownLastVotedAt = extraVotes > 0 ? Date.now() : lastVotedAt(product);
   const ranksAbove = (pool: Listing[]) =>
     pool.filter(l => {
       if (l.id === product.id) return false;
       const lv = l.totalVotes || 0;
       if (lv !== votes) return lv > votes;
-      return new Date(l.createdAt).getTime() < new Date(product.createdAt).getTime();
+      return lastVotedAt(l) > ownLastVotedAt;
     }).length;
   const totalProducts = Math.max(allListings.length, 1);
   const allTimeRank = ranksAbove(allListings) + 1;

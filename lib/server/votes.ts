@@ -64,7 +64,9 @@ export async function recordVote(listingId: string, voterId: string): Promise<Re
   const updateRes = await fetch(sbUrl(`listings?id=eq.${id}`), {
     method: 'PATCH',
     headers: sbHeaders({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
-    body: JSON.stringify({ total_votes: totalVotes, day_votes: dayVotes }),
+    // updated_at doubles as "last voted at": among listings with equal votes, the one that
+    // reached that count most recently ranks first.
+    body: JSON.stringify({ total_votes: totalVotes, day_votes: dayVotes, updated_at: new Date().toISOString() }),
   });
   if (!updateRes.ok) {
     console.error('Failed to update listing vote counts:', await updateRes.text());

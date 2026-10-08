@@ -15,6 +15,8 @@ interface Listing {
   totalVotes: number;
   dayVotes: number;
   clickCount: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 
@@ -45,9 +47,11 @@ export default function LeaderboardPage() {
 
   // Ranked by community votes (the old totalPaid/dayPaid bidding fields no longer exist).
   const votesFor = (l: Listing) => (activeTab === 'today' ? l.dayVotes : l.totalVotes) || 0;
+  const lastVotedAt = (l: Listing) => new Date(l.updatedAt || l.createdAt || 0).getTime();
   const sortedListings = [...listings]
     .filter(l => activeTab === 'alltime' || (l.dayVotes || 0) > 0)
-    .sort((a, b) => votesFor(b) - votesFor(a));
+    // On equal votes, whoever reached that count most recently comes first.
+    .sort((a, b) => votesFor(b) - votesFor(a) || lastVotedAt(b) - lastVotedAt(a));
 
   const topThree = sortedListings.slice(0, 3);
 

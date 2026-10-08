@@ -9,6 +9,8 @@ interface PodiumListing {
   category: string;
   totalVotes: number;
   dayVotes: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 type Tab = 'alltime' | 'today';
@@ -49,9 +51,11 @@ export default function LivePodium() {
   }, [load]);
 
   const votesFor = (l: PodiumListing) => (tab === 'today' ? l.dayVotes : l.totalVotes) || 0;
+  // On equal votes, whoever reached that count most recently comes first.
+  const lastVotedAt = (l: PodiumListing) => new Date(l.updatedAt || l.createdAt || 0).getTime();
   const top = (listings || [])
     .filter(l => tab === 'alltime' || (l.dayVotes || 0) > 0)
-    .sort((a, b) => votesFor(b) - votesFor(a))
+    .sort((a, b) => votesFor(b) - votesFor(a) || lastVotedAt(b) - lastVotedAt(a))
     .slice(0, 3);
 
   // Podium order on desktop: 2nd, 1st, 3rd. On mobile 1st stays on top.
