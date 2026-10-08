@@ -26,13 +26,38 @@ interface PremiumData {
   paymentMethod: string;
 }
 
-// Extra link types offered behind "Add other" (all saved by the premium API).
-const OTHER_SOCIALS = [
-  { name: 'founderFacebook', label: 'Facebook', placeholder: 'facebook.com/…' },
-  { name: 'founderTiktok', label: 'TikTok', placeholder: '@handle' },
-  { name: 'founderYoutube', label: 'YouTube', placeholder: 'youtube.com/@…' },
-  { name: 'founderGithub', label: 'GitHub', placeholder: 'github.com/…' },
-];
+// Link types a founder can pick for each social link row (all saved by the premium API).
+const SOCIALS = [
+  { name: 'founderWebsite', label: 'Website', placeholder: 'https://example.com', icon: '/web.png' },
+  { name: 'founderTwitter', label: 'X / Twitter', placeholder: 'x.com/handle', icon: '/twitter.png' },
+  { name: 'founderLinkedin', label: 'LinkedIn', placeholder: 'linkedin.com/in/…', icon: '/linkedin.png' },
+  { name: 'founderInstagram', label: 'Instagram', placeholder: 'instagram.com/handle', icon: '/instagram.png' },
+  { name: 'founderFacebook', label: 'Facebook', placeholder: 'facebook.com/…', icon: '/facebook.png' },
+  { name: 'founderTiktok', label: 'TikTok', placeholder: 'tiktok.com/@handle', icon: '/tiktok.png' },
+  { name: 'founderYoutube', label: 'YouTube', placeholder: 'youtube.com/@…', icon: '' },
+  { name: 'founderGithub', label: 'GitHub', placeholder: 'github.com/…', icon: '' },
+] as const;
+
+type SocialField = (typeof SOCIALS)[number]['name'];
+
+// YouTube and GitHub have no image in /public, so they get inline marks.
+function SocialMark({ field }: { field: SocialField }) {
+  const social = SOCIALS.find(s => s.name === field)!;
+  if (social.icon) return <img src={social.icon} alt="" className="w-4 h-4 object-contain" />;
+  if (field === 'founderYoutube') {
+    return (
+      <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
+        <rect x="1.5" y="5" width="21" height="14" rx="4" fill="#FF0000" />
+        <path d="M10 9v6l5.2-3z" fill="#fff" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="#181717" aria-hidden="true">
+      <path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z" />
+    </svg>
+  );
+}
 
 const PRICES: { [key: number]: number } = {
   1: 5,
@@ -52,8 +77,8 @@ export default function PremiumListingModal({
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'rapid-gateway' | 'jazzcash' | 'easypaisa' | 'manual'>('rapid-gateway');
-  const [extraSocials, setExtraSocials] = useState<string[]>([]);
-  const [addMenuOpen, setAddMenuOpen] = useState(false);
+  // Which link type each social row holds, in order. Values live in formData.
+  const [linkRows, setLinkRows] = useState<SocialField[]>(['founderWebsite']);
   const [formData, setFormData] = useState({
     founderName: '',
     founderEmail: '',
@@ -95,17 +120,12 @@ export default function PremiumListingModal({
       setLoading(false);
       return;
     }
-    if (filledLinks > linkLimit) {
-      setError(`❌ The #${position} spot shows up to ${linkLimit} social link${linkLimit === 1 ? '' : 's'}. Clear ${filledLinks - linkLimit} to continue.`);
-      setLoading(false);
-      return;
-    }
 
     // Only send the social links that are shown for the chosen spot.
-    const shown = new Set(visibleSocials.map(s => s.name));
+    const shown = new Set<string>(visibleRows);
     const payload = { ...formData };
-    for (const s of [...SOCIALS, ...OTHER_SOCIALS]) {
-      if (!shown.has(s.name)) payload[s.name as keyof typeof payload] = '';
+    for (const s of SOCIALS) {
+      if (!shown.has(s.name)) payload[s.name] = '';
     }
 
     try {
@@ -142,7 +162,7 @@ export default function PremiumListingModal({
         });
         setPosition(1);
         setPaymentMethod('rapid-gateway');
-        setExtraSocials([]);
+        setLinkRows(['founderWebsite']);
         onClose();
       }, 1500);
     } catch (err: any) {
@@ -158,18 +178,25 @@ export default function PremiumListingModal({
   const price = PRICES[position] || 5;
 
   const PERKS: Record<number, string> = { 1: 'Top spot · 4 social links', 2: 'Featured · 1 social link', 3: 'Featured listing' };
-  const SOCIALS = [
-    { name: 'founderWebsite', label: 'Website', placeholder: 'https://example.com' },
-    { name: 'founderTwitter', label: 'X / Twitter', placeholder: '@handle' },
-    { name: 'founderLinkedin', label: 'LinkedIn', placeholder: 'linkedin.com/in/…' },
-    { name: 'founderInstagram', label: 'Instagram', placeholder: '@handle' },
-  ];
-  // #1 shows 4 social fields, #2 shows 1, #3 shows none. "Add other" can add any of OTHER_SOCIALS,
-  // but the number of filled links still can't go over the spot's limit.
+  // #1 allows 4 social links, #2 allows 1, #3 none. Each row picks its own platform.
   const linkLimit = position === 1 ? 4 : position === 2 ? 1 : 0;
-  const visibleSocials = [...SOCIALS.slice(0, linkLimit), ...OTHER_SOCIALS.filter(s => extraSocials.includes(s.name))];
-  const filledLinks = visibleSocials.filter(s => formData[s.name as keyof typeof formData].trim()).length;
-  const addableSocials = OTHER_SOCIALS.filter(s => !extraSocials.includes(s.name));
+  const visibleRows = linkRows.slice(0, linkLimit);
+  const unusedSocials = SOCIALS.filter(s => !linkRows.includes(s.name));
+
+  const changeRowPlatform = (index: number, next: SocialField) => {
+    const prevField = linkRows[index];
+    setLinkRows(rows => rows.map((r, i) => (i === index ? next : r)));
+    // Carry the typed link over to the newly picked platform.
+    setFormData(prev => ({ ...prev, [next]: prev[prevField], [prevField]: '' }));
+  };
+  const removeRow = (index: number) => {
+    const field = linkRows[index];
+    setLinkRows(rows => rows.filter((_, i) => i !== index));
+    setFormData(prev => ({ ...prev, [field]: '' }));
+  };
+  const addRow = () => {
+    if (unusedSocials[0]) setLinkRows(rows => [...rows, unusedSocials[0].name]);
+  };
   const METHODS = [
     { id: 'rapid-gateway', label: 'Card', desc: 'Rapid Gateway' },
     { id: 'jazzcash', label: 'JazzCash', desc: 'Mobile wallet' },
@@ -261,80 +288,74 @@ export default function PremiumListingModal({
           {/* Socials */}
           {linkLimit > 0 && (
             <div>
-              <p className={sectionTitle}>
-                Social links{' '}
-                <span className={`font-semibold ${filledLinks > linkLimit ? 'text-red-600' : 'text-[#1F2937]/45'}`}>
-                  · {filledLinks} of {linkLimit} used, shown on your listing
-                </span>
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {visibleSocials.map(field => {
-                  const isExtra = extraSocials.includes(field.name);
+              <div className="flex items-baseline justify-between mb-2.5">
+                <p className="text-xs font-black text-[#1F2937]">
+                  Social links <span className="font-semibold text-[#1F2937]/45">· shown on your listing</span>
+                </p>
+                <span className="text-[11px] font-bold text-[#1F2937]/45 tabular-nums">{visibleRows.length} / {linkLimit}</span>
+              </div>
+
+              <div className="space-y-2">
+                {visibleRows.map((field, index) => {
+                  const social = SOCIALS.find(s => s.name === field)!;
                   return (
-                    <label key={field.name} className="block">
-                      <span className={`${fieldLabel} flex items-center justify-between`}>
-                        {field.label}
-                        {isExtra && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setExtraSocials(prev => prev.filter(n => n !== field.name));
-                              setFormData(prev => ({ ...prev, [field.name]: '' }));
-                            }}
-                            className="text-[11px] font-semibold text-[#1F2937]/45 hover:text-red-600"
-                          >
-                            Remove
-                          </button>
-                        )}
-                      </span>
+                    <div
+                      key={field}
+                      className="flex items-stretch rounded-lg border border-gray-300 bg-white focus-within:border-[#0F3460] focus-within:ring-2 focus-within:ring-[#0F3460]/25 transition"
+                    >
+                      {/* Platform picker */}
+                      <label className="relative flex items-center gap-2 pl-3 pr-7 border-r border-gray-200 bg-gray-50 rounded-l-lg cursor-pointer flex-shrink-0">
+                        <SocialMark field={field} />
+                        <span className="text-xs font-bold text-[#1F2937] whitespace-nowrap">{social.label}</span>
+                        <svg className="absolute right-2 w-3.5 h-3.5 text-[#1F2937]/45 pointer-events-none" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.06l3.71-3.83a.75.75 0 1 1 1.08 1.04l-4.25 4.39a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z" clipRule="evenodd" />
+                        </svg>
+                        <select
+                          aria-label={`Platform for link ${index + 1}`}
+                          value={field}
+                          onChange={e => changeRowPlatform(index, e.target.value as SocialField)}
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                        >
+                          {SOCIALS.filter(s => s.name === field || !linkRows.includes(s.name)).map(s => (
+                            <option key={s.name} value={s.name}>{s.label}</option>
+                          ))}
+                        </select>
+                      </label>
+
                       <input
                         type="text"
-                        name={field.name}
-                        value={formData[field.name as keyof typeof formData]}
+                        name={field}
+                        aria-label={`${social.label} link`}
+                        value={formData[field]}
                         onChange={handleChange}
-                        placeholder={field.placeholder}
-                        className={input}
+                        placeholder={social.placeholder}
+                        className="min-w-0 flex-1 px-3 py-2 text-sm text-[#1F2937] bg-transparent placeholder-gray-400 focus:outline-none"
                       />
-                    </label>
+
+                      {visibleRows.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeRow(index)}
+                          aria-label={`Remove ${social.label} link`}
+                          className="px-2.5 text-[#1F2937]/35 hover:text-red-600 transition"
+                        >
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                        </button>
+                      )}
+                    </div>
                   );
                 })}
               </div>
 
-              {addableSocials.length > 0 && (
-                <div className="mt-2.5">
-                  {addMenuOpen ? (
-                    <div className="flex flex-wrap items-center gap-2">
-                      {addableSocials.map(s => (
-                        <button
-                          key={s.name}
-                          type="button"
-                          onClick={() => {
-                            setExtraSocials(prev => [...prev, s.name]);
-                            setAddMenuOpen(false);
-                          }}
-                          className="px-3 py-1.5 rounded-full border border-gray-200 text-xs font-bold text-[#0F3460] hover:border-[#0F3460] hover:bg-[#0F3460]/5 transition"
-                        >
-                          + {s.label}
-                        </button>
-                      ))}
-                      <button type="button" onClick={() => setAddMenuOpen(false)} className="px-2 py-1.5 text-xs font-semibold text-[#1F2937]/45 hover:text-[#1F2937]">
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setAddMenuOpen(true)}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0F3460] hover:underline underline-offset-2"
-                    >
-                      <span className="w-5 h-5 rounded-full border border-[#0F3460]/30 flex items-center justify-center leading-none">+</span>
-                      Add other (Facebook, TikTok, YouTube, GitHub)
-                    </button>
-                  )}
-                </div>
-              )}
-              {filledLinks > linkLimit && (
-                <p className="text-[11px] text-red-600 mt-2">Only {linkLimit} link{linkLimit === 1 ? '' : 's'} can be shown for #{position}. Clear {filledLinks - linkLimit} to continue.</p>
+              {visibleRows.length < linkLimit && unusedSocials.length > 0 && (
+                <button
+                  type="button"
+                  onClick={addRow}
+                  className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-gray-300 py-2 text-xs font-bold text-[#0F3460] hover:border-[#0F3460] hover:bg-[#0F3460]/[0.03] transition"
+                >
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
+                  Add link
+                </button>
               )}
             </div>
           )}
