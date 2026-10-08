@@ -11,6 +11,8 @@ export interface Review {
   href?: string;
   /** 1–5 */
   rating?: number;
+  /** Optional photo of the reviewer (with their permission); replaces an orbit face in the same slot. */
+  avatar?: string;
 }
 
 export const REVIEWS: Review[] = [];
