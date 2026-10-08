@@ -8,6 +8,11 @@ import { absoluteUrl } from '@/lib/seo';
 const STATIC_PAGES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
   { path: '/', priority: 1, changeFrequency: 'hourly' },
   { path: '/categories', priority: 0.9, changeFrequency: 'daily' },
+  { path: '/leaderboard', priority: 0.9, changeFrequency: 'hourly' },
+  { path: '/today', priority: 0.8, changeFrequency: 'hourly' },
+  { path: '/daily', priority: 0.7, changeFrequency: 'hourly' },
+  { path: '/archive', priority: 0.7, changeFrequency: 'daily' },
+  { path: '/stats', priority: 0.5, changeFrequency: 'daily' },
   { path: '/why', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/faq', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.7, changeFrequency: 'monthly' },

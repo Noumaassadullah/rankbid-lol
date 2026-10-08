@@ -16,6 +16,11 @@ const PUBLIC_PAGES = [
   '/categories',
   '/platforms',
   '/product',
+  '/leaderboard',
+  '/today',
+  '/daily',
+  '/archive',
+  '/stats',
 ];
 
 const PUBLIC_ROUTES = [
