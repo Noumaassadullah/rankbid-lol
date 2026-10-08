@@ -11,9 +11,7 @@ import LoginModal from '@/components/LoginModal';
 import StatusCardModal from '@/components/StatusCardModal';
 import { IconTile, PremiumIcons } from '@/components/PremiumIcons';
 import RankingRow from '@/components/RankingRow';
-import LivePodium from '@/components/LivePodium';
-import ScrollVideo from '@/components/ScrollVideo';
-import { getCategoryLabel as formatCategory } from '@/lib/categories';
+import LivePodium from '@/components/LivePodium';import { getCategoryLabel as formatCategory } from '@/lib/categories';
 
 // Stagger delay for the .slide-up entrance animation (see globals.css).
 const slideDelay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
@@ -214,6 +212,7 @@ export default function Home() {
   const [optimisticVotes, setOptimisticVotes] = useState<Record<string, number>>({});
   const [lastSubmittedProduct, setLastSubmittedProduct] = useState<{ id: string; title: string } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const addToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     const id = Date.now().toString();
@@ -555,9 +554,6 @@ export default function Home() {
     <>
       <Header />
       <div className="bg-white text-[#1F2937]">
-
-        {/* Intro video: plays forward/back with scroll, then hands off to the hero */}
-        <ScrollVideo src="/intro.mp4" />
 
         {/* HERO: short centered copy + live top 3 podium */}
         <section className="relative overflow-hidden bg-[#FAFBFD] border-b border-gray-200">
@@ -1090,7 +1086,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="space-y-2 sm:space-y-3">
+            <div className="border-t border-[#0B2545]/10">
               {[
                 {
                   q: 'How does the voting system work?',
@@ -1125,7 +1121,7 @@ export default function Home() {
                   a: 'Contact our support team if you need to remove a submission. We\'re here to help keep the platform clean and legitimate.'
                 }
               ].map((faq, idx) => (
-                <FAQ key={idx} question={faq.q} answer={faq.a} />
+                <FAQ key={idx} index={idx} question={faq.q} answer={faq.a} open={openFaq === idx} onToggle={() => setOpenFaq(openFaq === idx ? null : idx)} />
               ))}
             </div>
           </div>

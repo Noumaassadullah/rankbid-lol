@@ -21,8 +21,8 @@ const PUBLIC_ROUTES = [
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow static files from /public (logos, platform icons, intro video) so public pages render correctly
-  if (/\.(png|jpe?g|gif|svg|webp|ico|txt|xml|mp4|webm)$/i.test(pathname)) {
+  // Allow static files from /public (logos, platform icons) so public pages render correctly
+  if (/\.(png|jpe?g|gif|svg|webp|ico|txt|xml)$/i.test(pathname)) {
     return NextResponse.next();
   }
 
