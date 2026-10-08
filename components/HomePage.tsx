@@ -1084,7 +1084,7 @@ export default function Home() {
                 width={754}
                 height={706}
                 loading="lazy"
-                className="float-slow relative w-full max-w-[560px] h-auto mx-auto"
+                className="relative w-full max-w-[560px] h-auto mx-auto"
               />
             </div>
           </div>
