@@ -12,7 +12,8 @@ import StatusCardModal from '@/components/StatusCardModal';
 import { IconTile, PremiumIcons } from '@/components/PremiumIcons';
 import RankingRow from '@/components/RankingRow';
 import LivePodium from '@/components/LivePodium';
-import SelectionHeading from '@/components/SelectionHeading';import { getCategoryLabel as formatCategory } from '@/lib/categories';
+import SelectionHeading from '@/components/SelectionHeading';
+import TrustedBy from '@/components/TrustedBy';import { getCategoryLabel as formatCategory } from '@/lib/categories';
 
 // Stagger delay for the .slide-up entrance animation (see globals.css).
 const slideDelay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
@@ -1083,6 +1084,13 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* TRUSTED BY MAKERS: illustration, live numbers, real reviews */}
+        <TrustedBy
+          products={allListings.length}
+          votes={totalVotes}
+          categories={new Set(allListings.map(l => l.category)).size}
+        />
 
         {/* FAQ SECTION */}
         <section className="py-12 sm:py-16 md:py-24 bg-gray-50 border-t border-gray-200">
