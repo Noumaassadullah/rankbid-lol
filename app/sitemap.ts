@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { CATEGORIES, categoryPath } from '@/lib/categories';
+import { CATEGORIES, LEGACY_CATEGORIES, categoryPath } from '@/lib/categories';
 import { getRankedListings } from '@/lib/server/listings';
 import { absoluteUrl } from '@/lib/seo';
 
@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...STATIC_PAGES.map(p => ({ url: absoluteUrl(p.path), lastModified: now, changeFrequency: p.changeFrequency, priority: p.priority })),
-    ...CATEGORIES.map(c => ({ url: absoluteUrl(categoryPath(c)), lastModified: now, changeFrequency: 'daily' as const, priority: 0.8 })),
+    ...[...CATEGORIES, ...LEGACY_CATEGORIES].map(c => ({ url: absoluteUrl(categoryPath(c)), lastModified: now, changeFrequency: 'daily' as const, priority: 0.8 })),
     ...listings.map(l => ({ url: absoluteUrl(`/product/${l.id}`), lastModified: new Date(l.updatedAt), changeFrequency: 'daily' as const, priority: 0.6 })),
   ];
 }
