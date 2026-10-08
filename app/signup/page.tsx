@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { GoogleLogin } from '@react-oauth/google';
+import PasswordInput from '@/components/PasswordInput';
 
 // After sign-up: ?next=/path (same-site only), otherwise straight to the submit form.
 function nextPath(): string {
@@ -147,8 +148,7 @@ export default function SignupPage() {
               <label htmlFor="password" className="block text-sm font-semibold text-[#1F2937] mb-2">
                 Password
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -163,8 +163,7 @@ export default function SignupPage() {
               <label htmlFor="confirm-password" className="block text-sm font-semibold text-[#1F2937] mb-2">
                 Confirm Password
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 id="confirm-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

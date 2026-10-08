@@ -183,22 +183,23 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Animated giant wordmark, cropped at the bottom edge. Decorative only. */}
+      {/* Animated giant wordmark, cropped at the bottom edge. Links home. */}
       <div
         ref={wordmarkRef}
-        aria-hidden="true"
-        className={`pointer-events-none select-none relative h-[13vw] overflow-hidden ${visible ? 'is-visible' : ''}`}
+        className={`select-none relative h-[13vw] overflow-hidden ${visible ? 'is-visible' : ''}`}
       >
-        <div
-          className="absolute left-1/2 top-0 -translate-x-1/2 whitespace-nowrap font-black leading-none tracking-[-0.05em] text-[21vw] -mt-[0.06em]"
+        <Link
+          href="/"
+          aria-label="RankBid home"
+          className="absolute left-1/2 top-0 -translate-x-1/2 whitespace-nowrap font-black leading-none tracking-[-0.05em] text-[21vw] -mt-[0.06em] hover:opacity-80 transition-opacity"
           style={{ fontFamily: 'var(--font-display)' }}
         >
           {WORDMARK.map((ch, i) => (
-            <span key={i} className="wordmark-letter" style={{ '--d': `${i * 80}ms` } as CSSProperties}>
+            <span key={i} aria-hidden="true" className="wordmark-letter" style={{ '--d': `${i * 80}ms` } as CSSProperties}>
               {ch}
             </span>
           ))}
-        </div>
+        </Link>
       </div>
     </footer>
   );

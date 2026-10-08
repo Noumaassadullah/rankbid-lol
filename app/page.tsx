@@ -582,29 +582,10 @@ export default function Home() {
               <span className="block text-[#1F2937]/30">Not algorithms.</span>
             </h1>
 
-            <p style={slideDelay(160)} className="slide-up mt-5 sm:mt-6 text-base sm:text-lg text-[#1F2937]/60">
-              List free. Share your link. Let votes decide.
-            </p>
-
-            <div style={slideDelay(240)} className="slide-up mt-8 flex flex-wrap items-center justify-center gap-3">
-              <button
-                onClick={() => document.getElementById('submit')?.scrollIntoView({ behavior: 'smooth' })}
-                className="inline-flex items-center px-6 py-3 bg-[#0F3460] text-white text-sm font-bold rounded-full hover:bg-[#0B2545] transition-colors"
-              >
-                Submit your product
-              </button>
-              <button
-                onClick={() => document.getElementById('leaderboard')?.scrollIntoView({ behavior: 'smooth' })}
-                className="group inline-flex items-center gap-1.5 px-6 py-3 rounded-full border border-gray-200 bg-white text-sm font-bold text-[#0F3460] hover:border-gray-300 transition-colors"
-              >
-                See rankings
-                <span className="transition-transform group-hover:translate-x-0.5">→</span>
-              </button>
-            </div>
           </div>
 
           {/* Live top 3 podium: refreshes on its own every few seconds */}
-          <div style={slideDelay(320)} className="slide-up relative max-w-5xl mx-auto px-4 sm:px-6 mt-12 sm:mt-16 pb-14 sm:pb-20">
+          <div style={slideDelay(200)} className="slide-up relative max-w-5xl mx-auto px-4 sm:px-6 mt-10 sm:mt-12 pb-14 sm:pb-20">
             <LivePodium />
           </div>
         </section>

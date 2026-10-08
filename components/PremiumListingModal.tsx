@@ -26,6 +26,14 @@ interface PremiumData {
   paymentMethod: string;
 }
 
+// Extra link types offered behind "Add other" (all saved by the premium API).
+const OTHER_SOCIALS = [
+  { name: 'founderFacebook', label: 'Facebook', placeholder: 'facebook.com/…' },
+  { name: 'founderTiktok', label: 'TikTok', placeholder: '@handle' },
+  { name: 'founderYoutube', label: 'YouTube', placeholder: 'youtube.com/@…' },
+  { name: 'founderGithub', label: 'GitHub', placeholder: 'github.com/…' },
+];
+
 const PRICES: { [key: number]: number } = {
   1: 5,
   2: 3,
@@ -44,6 +52,8 @@ export default function PremiumListingModal({
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'rapid-gateway' | 'jazzcash' | 'easypaisa' | 'manual'>('rapid-gateway');
+  const [extraSocials, setExtraSocials] = useState<string[]>([]);
+  const [addMenuOpen, setAddMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     founderName: '',
     founderEmail: '',
@@ -85,6 +95,18 @@ export default function PremiumListingModal({
       setLoading(false);
       return;
     }
+    if (filledLinks > linkLimit) {
+      setError(`❌ The #${position} spot shows up to ${linkLimit} social link${linkLimit === 1 ? '' : 's'}. Clear ${filledLinks - linkLimit} to continue.`);
+      setLoading(false);
+      return;
+    }
+
+    // Only send the social links that are shown for the chosen spot.
+    const shown = new Set(visibleSocials.map(s => s.name));
+    const payload = { ...formData };
+    for (const s of [...SOCIALS, ...OTHER_SOCIALS]) {
+      if (!shown.has(s.name)) payload[s.name as keyof typeof payload] = '';
+    }
 
     try {
       console.log('🎯 Submitting premium listing:', {
@@ -96,7 +118,7 @@ export default function PremiumListingModal({
 
       await onSubmit({
         position,
-        ...formData,
+        ...payload,
         paymentMethod,
       });
 
@@ -120,6 +142,7 @@ export default function PremiumListingModal({
         });
         setPosition(1);
         setPaymentMethod('rapid-gateway');
+        setExtraSocials([]);
         onClose();
       }, 1500);
     } catch (err: any) {
@@ -141,8 +164,12 @@ export default function PremiumListingModal({
     { name: 'founderLinkedin', label: 'LinkedIn', placeholder: 'linkedin.com/in/…' },
     { name: 'founderInstagram', label: 'Instagram', placeholder: '@handle' },
   ];
-  // #1 shows 4 social fields, #2 shows 1, #3 shows none.
-  const visibleSocials = position === 1 ? SOCIALS : position === 2 ? SOCIALS.slice(0, 1) : [];
+  // #1 shows 4 social fields, #2 shows 1, #3 shows none. "Add other" can add any of OTHER_SOCIALS,
+  // but the number of filled links still can't go over the spot's limit.
+  const linkLimit = position === 1 ? 4 : position === 2 ? 1 : 0;
+  const visibleSocials = [...SOCIALS.slice(0, linkLimit), ...OTHER_SOCIALS.filter(s => extraSocials.includes(s.name))];
+  const filledLinks = visibleSocials.filter(s => formData[s.name as keyof typeof formData].trim()).length;
+  const addableSocials = OTHER_SOCIALS.filter(s => !extraSocials.includes(s.name));
   const METHODS = [
     { id: 'rapid-gateway', label: 'Card', desc: 'Rapid Gateway' },
     { id: 'jazzcash', label: 'JazzCash', desc: 'Mobile wallet' },
@@ -232,26 +259,83 @@ export default function PremiumListingModal({
           </div>
 
           {/* Socials */}
-          {visibleSocials.length > 0 && (
+          {linkLimit > 0 && (
             <div>
               <p className={sectionTitle}>
-                Social links <span className="font-semibold text-[#1F2937]/45">· shown on your listing ({visibleSocials.length === 1 ? '1 link' : `up to ${visibleSocials.length}`})</span>
+                Social links{' '}
+                <span className={`font-semibold ${filledLinks > linkLimit ? 'text-red-600' : 'text-[#1F2937]/45'}`}>
+                  · {filledLinks} of {linkLimit} used, shown on your listing
+                </span>
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {visibleSocials.map(field => (
-                  <label key={field.name} className="block">
-                    <span className={fieldLabel}>{field.label}</span>
-                    <input
-                      type="text"
-                      name={field.name}
-                      value={formData[field.name as keyof typeof formData]}
-                      onChange={handleChange}
-                      placeholder={field.placeholder}
-                      className={input}
-                    />
-                  </label>
-                ))}
+                {visibleSocials.map(field => {
+                  const isExtra = extraSocials.includes(field.name);
+                  return (
+                    <label key={field.name} className="block">
+                      <span className={`${fieldLabel} flex items-center justify-between`}>
+                        {field.label}
+                        {isExtra && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setExtraSocials(prev => prev.filter(n => n !== field.name));
+                              setFormData(prev => ({ ...prev, [field.name]: '' }));
+                            }}
+                            className="text-[11px] font-semibold text-[#1F2937]/45 hover:text-red-600"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </span>
+                      <input
+                        type="text"
+                        name={field.name}
+                        value={formData[field.name as keyof typeof formData]}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                        className={input}
+                      />
+                    </label>
+                  );
+                })}
               </div>
+
+              {addableSocials.length > 0 && (
+                <div className="mt-2.5">
+                  {addMenuOpen ? (
+                    <div className="flex flex-wrap items-center gap-2">
+                      {addableSocials.map(s => (
+                        <button
+                          key={s.name}
+                          type="button"
+                          onClick={() => {
+                            setExtraSocials(prev => [...prev, s.name]);
+                            setAddMenuOpen(false);
+                          }}
+                          className="px-3 py-1.5 rounded-full border border-gray-200 text-xs font-bold text-[#0F3460] hover:border-[#0F3460] hover:bg-[#0F3460]/5 transition"
+                        >
+                          + {s.label}
+                        </button>
+                      ))}
+                      <button type="button" onClick={() => setAddMenuOpen(false)} className="px-2 py-1.5 text-xs font-semibold text-[#1F2937]/45 hover:text-[#1F2937]">
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setAddMenuOpen(true)}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0F3460] hover:underline underline-offset-2"
+                    >
+                      <span className="w-5 h-5 rounded-full border border-[#0F3460]/30 flex items-center justify-center leading-none">+</span>
+                      Add other (Facebook, TikTok, YouTube, GitHub)
+                    </button>
+                  )}
+                </div>
+              )}
+              {filledLinks > linkLimit && (
+                <p className="text-[11px] text-red-600 mt-2">Only {linkLimit} link{linkLimit === 1 ? '' : 's'} can be shown for #{position}. Clear {filledLinks - linkLimit} to continue.</p>
+              )}
             </div>
           )}
 

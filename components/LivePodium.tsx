@@ -59,7 +59,7 @@ export default function LivePodium() {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8">
+      <div className="flex flex-col items-center gap-3 mb-8 sm:mb-12">
         <div className="inline-flex p-1 bg-white border border-gray-200 shadow-sm rounded-full">
           {(['alltime', 'today'] as Tab[]).map(t => (
             <button

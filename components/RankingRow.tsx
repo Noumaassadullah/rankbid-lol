@@ -30,8 +30,8 @@ function faviconFor(url: string): string {
 
 const rankBadge: Record<number, string> = {
   1: 'bg-gradient-to-br from-amber-400 to-amber-500 text-white shadow-amber-500/30',
-  2: 'bg-gradient-to-br from-slate-300 to-slate-400 text-white shadow-slate-400/30',
-  3: 'bg-gradient-to-br from-orange-300 to-orange-500 text-white shadow-orange-500/30',
+  2: 'bg-gradient-to-br from-[#A0673D] to-[#7A4A26] text-white shadow-[#7A4A26]/30',
+  3: 'bg-gradient-to-br from-slate-300 to-slate-400 text-white shadow-slate-400/30',
 };
 
 /**
