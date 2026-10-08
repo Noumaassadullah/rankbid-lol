@@ -183,15 +183,15 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Animated giant wordmark, cropped at the bottom edge. Links home. */}
+      {/* Outlined wordmark, size capped so the footer stays compact. Links home. */}
       <div
         ref={wordmarkRef}
-        className={`select-none relative h-[13vw] overflow-hidden ${visible ? 'is-visible' : ''}`}
+        className={`select-none max-w-7xl mx-auto px-4 sm:px-6 pb-6 sm:pb-8 ${visible ? 'is-visible' : ''}`}
       >
         <Link
           href="/"
           aria-label="RankBid home"
-          className="absolute left-1/2 top-0 -translate-x-1/2 whitespace-nowrap font-black leading-none tracking-[-0.05em] text-[21vw] -mt-[0.06em] hover:opacity-80 transition-opacity"
+          className="wordmark group block text-center whitespace-nowrap font-black leading-[0.85] tracking-[-0.04em] text-[clamp(3.5rem,13vw,10rem)]"
           style={{ fontFamily: 'var(--font-display)' }}
         >
           {WORDMARK.map((ch, i) => (
