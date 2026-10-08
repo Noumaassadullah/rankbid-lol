@@ -148,7 +148,14 @@ export default function TrustedBy({ products, votes, categories }: TrustedByProp
               </span>
               {/* Keyed so each new review slides in */}
               <div key={index} className="slide-up">
-                {review.rating ? <Stars rating={review.rating} /> : null}
+                <div className="flex items-center gap-3">
+                  {review.rating ? <Stars rating={review.rating} /> : null}
+                  {review.example && (
+                    <span className="px-2 py-0.5 rounded-full bg-[#0F3460]/[0.07] text-[10px] font-bold uppercase tracking-wider text-[#0F3460]/60">
+                      Example review
+                    </span>
+                  )}
+                </div>
                 <blockquote className="mt-3 text-lg sm:text-xl text-[#0B2545] leading-relaxed tracking-[-0.01em]">
                   “{review.quote}”
                 </blockquote>
@@ -188,6 +195,18 @@ export default function TrustedBy({ products, votes, categories }: TrustedByProp
                 {String(index + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
               </span>
             </div>
+          )}
+
+          {review && (
+            <p className="mt-6 text-sm text-[#1F2937]/55">
+              Launched on RankBid?{' '}
+              <a
+                href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('My RankBid review')}`}
+                className="font-bold text-[#0F3460] hover:underline underline-offset-2"
+              >
+                Share your experience →
+              </a>
+            </p>
           )}
         </div>
 
