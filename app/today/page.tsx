@@ -28,7 +28,7 @@ export default function TodayPage() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const res = await fetch('/api/listings/submit?sort=dayVotes&timeFilter=today&limit=100');
+        const res = await fetch('/api/listings/submit?sort=dayVotes&activeToday=1&limit=100');
 
         if (!res.ok) {
           console.error('API error:', res.status);

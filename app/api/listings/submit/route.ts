@@ -347,6 +347,8 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get('category') || '';
     const platforms = searchParams.getAll('platform') || [];
     const timeFilter = searchParams.get('timeFilter') || '';
+    // ?activeToday=1: any listing that got votes today, however old (the /today trending view).
+    const activeToday = searchParams.get('activeToday') === '1';
     // An explicit ?limit= returns that many rows (non-paged views); otherwise return one page of pageSize.
     const limitParam = searchParams.get('limit');
     const rowLimit = limitParam ? Math.min(1000, Math.max(1, parseInt(limitParam) || pageSize)) : pageSize;
@@ -380,6 +382,10 @@ export async function GET(req: NextRequest) {
 
       // Use AND filter syntax for multiple conditions
       queryUrl += `&created_at=gte.${encodeURIComponent(todayISO)}&created_at=lt.${encodeURIComponent(tomorrowISO)}`;
+    }
+
+    if (activeToday) {
+      queryUrl += '&day_votes=gt.0';
     }
 
     if (category && category !== 'All') {

@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
       // Fetch today's live data
       const origin = new URL(request.url).origin;
       const listingsRes = await fetch(
-        `${origin}/api/listings/submit?limit=1000&sort=dayVotes&timeFilter=today`,
+        `${origin}/api/listings/submit?limit=1000&sort=dayVotes&activeToday=1`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
               listing: {
                 id: listing.id,
                 title: listing.title,
-                url: listing.url || `https://rankbid-lol.vercel.app/listing/${listing.id}`,
+                url: listing.url || `https://www.rankbid.click/product/${listing.id}`,
               },
               votes: listing.dayVotes || 0,
             })),
