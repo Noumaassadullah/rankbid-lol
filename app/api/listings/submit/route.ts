@@ -3,6 +3,7 @@ import { extractMetadata } from '@/lib/metadata';
 import { query } from '@/lib/db';
 import { extractSocialHandle, formatSocialMediaUrl, isSocialMediaUrl } from '@/lib/social-utils';
 import { sendNewSubmissionEmail } from '@/lib/email';
+import { getActiveHolders, type PremiumHolder } from '@/lib/server/premium';
 
 async function verifySocialMediaAccount(url: string): Promise<boolean> {
   try {
@@ -427,7 +428,7 @@ export async function GET(req: NextRequest) {
 
     const listings = await response.json();
 
-    const mappedListings = listings.map((item: any) => ({
+    const mapListing = (item: any) => ({
       id: item.id,
       title: item.title,
       description: item.description,
@@ -442,8 +443,47 @@ export async function GET(req: NextRequest) {
       updatedAt: item.updated_at || item.created_at,
       imageUrl: item.image_url || null,
       isPremium: false,
-      premiumPosition: null,
-    }));
+      premiumPosition: null as number | null,
+    });
+    const mappedListings = listings.map(mapListing);
+
+    // Paid #1-#3 holders. Votes still order the main list; these also come back as `premium`
+    // so the featured strip shows every holder, whichever page they fall on.
+    const holders = await getActiveHolders();
+    const withPremium = (listing: ReturnType<typeof mapListing>, holder: PremiumHolder) => ({
+      ...listing,
+      isPremium: true,
+      premiumPosition: holder.position,
+      founderName: holder.founderName,
+      founderEmail: holder.founderEmail,
+      founderPhone: holder.founderPhone,
+      founderWebsite: holder.founderWebsite,
+      founderTwitter: holder.founderTwitter,
+      founderLinkedin: holder.founderLinkedin,
+      founderInstagram: holder.founderInstagram,
+      founderFacebook: holder.founderFacebook,
+      founderTiktok: holder.founderTiktok,
+      founderYoutube: holder.founderYoutube,
+      founderGithub: holder.founderGithub,
+    });
+    const holderByListing = new Map(holders.map(h => [h.listingId, h]));
+    const pageListings = mappedListings.map((l: ReturnType<typeof mapListing>) => {
+      const holder = holderByListing.get(l.id);
+      return holder ? withPremium(l, holder) : l;
+    });
+
+    let premium: ReturnType<typeof withPremium>[] = [];
+    if (holders.length > 0) {
+      const ids = holders.map(h => `"${h.listingId}"`).join(',');
+      const premiumRes = await fetch(`${supabaseUrl}/rest/v1/listings?id=in.(${ids})`, {
+        headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
+      });
+      const rows: any[] = premiumRes.ok ? await premiumRes.json() : [];
+      premium = holders.flatMap(h => {
+        const row = rows.find(r => r.id === h.listingId);
+        return row ? [withPremium(mapListing(row), h)] : [];
+      });
+    }
 
     // Get total from the content-range header of the main response
     let total = 0;
@@ -458,7 +498,7 @@ export async function GET(req: NextRequest) {
     const totalPages = Math.ceil(total / pageSize);
 
     return NextResponse.json(
-      { listings: mappedListings, listing: null, pagination: { page, pageSize, total, totalPages } },
+      { listings: pageListings, premium, listing: null, pagination: { page, pageSize, total, totalPages } },
       {
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',

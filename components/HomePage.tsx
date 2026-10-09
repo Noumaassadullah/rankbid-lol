@@ -188,6 +188,7 @@ const Icons = {
 export default function Home() {
   const [user, setUser] = useState<{ id: string; email: string; name?: string } | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
+  const [premiumListings, setPremiumListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeTimeFilter] = useState<'alltime' | 'today'>('alltime');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -354,6 +355,7 @@ export default function Home() {
       }
       const data = JSON.parse(text);
       setListings(data.listings || []);
+      setPremiumListings(data.premium || []);
       setTotalPages(data.pagination?.totalPages || 1);
       setCurrentPage(page);
     } catch (error) {
@@ -488,6 +490,7 @@ export default function Home() {
       const cartItem = {
         listingId: selectedListingForPremium.id,
         position: data.position,
+        bidUsd: data.bidUsd,
         founderName: data.founderName,
         founderEmail: data.founderEmail,
         founderPhone: data.founderPhone,
@@ -816,17 +819,17 @@ export default function Home() {
             {/* Category filter moved to header navigation */}
 
             {/* PREMIUM LISTINGS SECTION */}
-            {!loading && listings.filter(l => l.isPremium).length > 0 && (
+            {!loading && premiumListings.length > 0 && (
               <div className="mb-6 sm:mb-8 space-y-3 sm:space-y-4">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <Icons.Star />
                   <h3 className="text-base sm:text-lg font-black text-[#1F2937]">Premium Featured</h3>
                 </div>
-                {listings.filter(l => l.isPremium).map((listing, idx) => (
+                {premiumListings.map(listing => (
                   <PremiumListingCard
                     key={listing.id}
                     listing={listing}
-                    position={idx + 1}
+                    position={listing.premiumPosition || 1}
                     onVote={handleVote}
                     hasVoted={votedListings.has(listing.id)}
                   />

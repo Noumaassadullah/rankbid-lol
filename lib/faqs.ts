@@ -34,7 +34,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: 'What are premium listings?',
-    a: 'Premium listings are optional paid placements that pin a product to a featured #1, #2 or #3 spot on RankBid for 30 days. Free listings rank on votes alone, and premium listings follow the same content rules as everyone else.',
+    a: 'Premium listings are optional paid placements that feature a product in the #1, #2 or #3 spot on RankBid for 30 days. Spots start at $5, $3 and $1; anyone who pays at least $1 more than the current holder takes the spot, and the holder moves down one. Free listings rank on votes alone, and premium listings follow the same content rules as everyone else.',
   },
   {
     q: 'Can I buy or trade votes?',

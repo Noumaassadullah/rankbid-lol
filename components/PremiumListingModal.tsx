@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface PremiumListingModalProps {
   listingId: string;
@@ -12,6 +12,7 @@ interface PremiumListingModalProps {
 
 interface PremiumData {
   position: number;
+  bidUsd: number;
   founderName: string;
   founderEmail: string;
   founderPhone: string;
@@ -59,11 +60,21 @@ function SocialMark({ field }: { field: SocialField }) {
   );
 }
 
+// Starting prices; the live minimum for a held spot comes from /api/premium-listings/ladder.
 const PRICES: { [key: number]: number } = {
   1: 5,
   2: 3,
   3: 1,
 };
+
+interface LadderSpot {
+  position: number;
+  held: boolean;
+  heldByListingId: string | null;
+  currentBidUsd: number | null;
+  minBidUsd: number;
+  minBidPkr: number;
+}
 
 export default function PremiumListingModal({
   listingId,
@@ -73,6 +84,9 @@ export default function PremiumListingModal({
   onSubmit,
 }: PremiumListingModalProps) {
   const [position, setPosition] = useState(1);
+  const [ladder, setLadder] = useState<LadderSpot[] | null>(null);
+  // What the buyer typed; empty means "the current minimum".
+  const [bidInput, setBidInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -92,6 +106,16 @@ export default function PremiumListingModal({
     founderYoutube: '',
     founderGithub: '',
   });
+
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    fetch('/api/premium-listings/ladder', { cache: 'no-store' })
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => { if (!cancelled && data?.spots) setLadder(data.spots); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [isOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -136,8 +160,15 @@ export default function PremiumListingModal({
         phone: formData.founderPhone,
       });
 
+      if (bid < minBid) {
+        setError(`❌ #${position} needs at least $${minBid}`);
+        setLoading(false);
+        return;
+      }
+
       await onSubmit({
         position,
+        bidUsd: bid,
         ...payload,
         paymentMethod,
       });
@@ -161,6 +192,7 @@ export default function PremiumListingModal({
           founderGithub: '',
         });
         setPosition(1);
+        setBidInput('');
         setPaymentMethod('rapid-gateway');
         setLinkRows(['founderWebsite']);
         onClose();
@@ -175,7 +207,12 @@ export default function PremiumListingModal({
 
   if (!isOpen) return null;
 
-  const price = PRICES[position] || 5;
+  const spotOf = (pos: number) => ladder?.find(s => s.position === pos);
+  const minBidOf = (pos: number) => spotOf(pos)?.minBidUsd ?? PRICES[pos];
+  const minBid = minBidOf(position);
+  const ownSpot = spotOf(position)?.heldByListingId === listingId;
+  const bid = bidInput === '' ? minBid : Math.round(Number(bidInput) * 100) / 100;
+  const price = Number.isFinite(bid) ? bid : minBid;
 
   const PERKS: Record<number, string> = { 1: 'Top spot · 4 social links', 2: 'Featured · 1 social link', 3: 'Featured listing' };
   // #1 allows 4 social links, #2 allows 1, #3 none. Each row picks its own platform.
@@ -248,7 +285,7 @@ export default function PremiumListingModal({
                   <button
                     key={pos}
                     type="button"
-                    onClick={() => setPosition(pos)}
+                    onClick={() => { setPosition(pos); setBidInput(''); }}
                     aria-pressed={active}
                     className={`relative rounded-xl border p-2.5 text-left transition-all active:scale-[0.98] ${
                       active ? 'border-[#0F3460] bg-[#0F3460] text-white shadow-md' : 'border-gray-200 bg-white hover:border-[#0F3460]/40'
@@ -256,14 +293,42 @@ export default function PremiumListingModal({
                   >
                     <div className="flex items-baseline justify-between">
                       <span className="text-base font-black">#{pos}</span>
-                      <span className={`text-sm font-black ${active ? 'text-amber-300' : 'text-[#0F3460]'}`}>${PRICES[pos]}</span>
+                      <span className={`text-sm font-black ${active ? 'text-amber-300' : 'text-[#0F3460]'}`}>${minBidOf(pos)}</span>
                     </div>
                     <p className={`text-[10px] sm:text-[11px] leading-snug mt-1 ${active ? 'text-white/75' : 'text-[#1F2937]/55'}`}>{PERKS[pos]}</p>
+                    {spotOf(pos)?.held && (
+                      <p className={`text-[10px] font-bold mt-1 ${active ? 'text-amber-300' : 'text-amber-600'}`}>Taken · outbid it</p>
+                    )}
                   </button>
                 );
               })}
             </div>
-            <p className="text-[11px] text-[#1F2937]/55 mt-2">Featured at #{position} for 30 days. Votes can still move it up.</p>
+            <p className="text-[11px] text-[#1F2937]/55 mt-2">
+              {spotOf(position)?.held
+                ? `#${position} is held at $${spotOf(position)!.currentBidUsd}. Pay $${minBid} or more to take it; the current holder moves down one spot.`
+                : `#${position} is free. Featured there for 30 days unless someone pays more.`}
+            </p>
+            {ownSpot && <p className="text-[11px] font-bold text-amber-700 mt-1">This product already holds #{position}.</p>}
+
+            <label className="mt-3 flex items-center gap-2">
+              <span className={fieldLabel + ' mb-0 whitespace-nowrap'}>Your bid (USD)</span>
+              <span className="relative flex-1">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-[#1F2937]/50">$</span>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  min={minBid}
+                  step="1"
+                  value={bidInput}
+                  onChange={e => setBidInput(e.target.value)}
+                  placeholder={String(minBid)}
+                  className={input + ' pl-6'}
+                />
+              </span>
+            </label>
+            <p className="text-[11px] text-[#1F2937]/55 mt-1">
+              Minimum ${minBid}. Bidding higher makes it harder for the next person to push you down.
+            </p>
           </div>
 
           {/* Founder */}
@@ -401,7 +466,7 @@ export default function PremiumListingModal({
           </button>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || ownSpot || price < minBid}
             className="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-[#0F3460] to-[#1a5490] text-white text-sm font-black rounded-xl shadow-lg shadow-[#0F3460]/25 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:pointer-events-none transition-all whitespace-nowrap"
           >
             {loading

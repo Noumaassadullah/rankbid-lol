@@ -22,7 +22,7 @@ export async function GET() {
     '- Each person gets one vote per product; rankings are ordered by total votes, ties go to the product that reached the count most recently.',
     '- Rankings update in real time: an all-time board, a "today" board (last 24 hours) and one board per category.',
     '- Anyone can vote through a product\'s shareable support link with just a name and email, no account needed.',
-    '- Optional premium listings pin a product to a featured #1, #2 or #3 spot for 30 days; free listings rank on votes alone.',
+    '- Optional premium listings feature a product in the #1, #2 or #3 spot for 30 days (anyone paying more takes the spot and moves the holder down one); free listings rank on votes alone.',
     '- Listings can be websites or creator profiles on X (Twitter), LinkedIn, Instagram, TikTok or Facebook.',
     '',
     '## Product',

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { query } from '@/lib/db';
+import { activatePremiumBid, getPremiumListing, updatePremiumListing } from '@/lib/server/premium';
 
 /**
  * Webhook handler for Rapid Gateway payment notifications
@@ -90,77 +90,49 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, message: 'Event ignored' });
     }
 
-    // Extract premium listing ID from merchantTransactionId (BASKET_ID)
-    // Format: {premiumListingId}-{timestamp}
-    const premiumListingId = merchantTransactionId.split('-')[0];
-
-    if (eventType === 'transaction.completed' && status === 'SUCCESS') {
-      // Update premium listing status to confirmed
-      try {
-        const result = await query(
-          `UPDATE premium_listings
-           SET payment_status = 'confirmed',
-               payment_txn_ref = $1,
-               payment_amount = $2,
-               payment_verified_at = NOW(),
-               updated_at = NOW()
-           WHERE id = $3
-           RETURNING *`,
-          [gatewayTxnRef || merchantTransactionId, amount, premiumListingId]
-        );
-
-        if (result.rows.length === 0) {
-          console.error(`Premium listing not found for ID: ${premiumListingId}`);
-          return NextResponse.json(
-            { error: 'Premium listing not found' },
-            { status: 404 }
-          );
-        }
-
-        console.log('✅ Premium listing confirmed:', premiumListingId);
-
-        return NextResponse.json({
-          success: true,
-          message: 'Payment confirmed',
-          premiumListingId,
-        });
-      } catch (dbError: any) {
-        console.error('Database error updating premium listing:', dbError);
-        return NextResponse.json(
-          { error: 'Failed to update payment status' },
-          { status: 500 }
-        );
-      }
-    } else if (eventType === 'transaction.failed' || status !== 'SUCCESS') {
-      // Mark payment as failed
-      try {
-        const result = await query(
-          `UPDATE premium_listings
-           SET payment_status = 'failed',
-               payment_txn_ref = $1,
-               updated_at = NOW()
-           WHERE id = $2
-           RETURNING *`,
-          [gatewayTxnRef || merchantTransactionId, premiumListingId]
-        );
-
-        console.log('❌ Payment failed for listing:', premiumListingId);
-
-        return NextResponse.json({
-          success: true,
-          message: 'Payment failure recorded',
-          premiumListingId,
-        });
-      } catch (dbError: any) {
-        console.error('Database error recording payment failure:', dbError);
-        return NextResponse.json(
-          { error: 'Failed to record payment failure' },
-          { status: 500 }
-        );
-      }
+    // merchantTransactionId is the BASKET_ID: {premiumListingId}-{timestamp}. The id itself may contain dashes.
+    const premiumListingId = premiumIdFromBasket(merchantTransactionId);
+    const premium = await getPremiumListing(premiumListingId);
+    if (!premium) {
+      console.error(`Premium listing not found for ID: ${premiumListingId}`);
+      return NextResponse.json({ error: 'Premium listing not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true });
+    try {
+      if (eventType === 'transaction.completed' && status === 'SUCCESS') {
+        // Underpaying (e.g. a tampered amount) leaves the order pending for an admin to look at.
+        if (amount != null && Number(amount) < Number(premium.amount_pkr || 0)) {
+          console.error('Payment amount lower than the bid:', { premiumListingId, amount, expected: premium.amount_pkr });
+          await updatePremiumListing(premiumListingId, { payment_txn_ref: gatewayTxnRef || merchantTransactionId });
+          return NextResponse.json({ success: true, message: 'Amount mismatch, held for review' });
+        }
+
+        if (premium.payment_status === 'pending') {
+          await updatePremiumListing(premiumListingId, {
+            payment_txn_ref: gatewayTxnRef || merchantTransactionId,
+            payment_verified_at: new Date().toISOString(),
+          });
+        }
+
+        // Puts the bid on the ladder; if someone outbid it meanwhile it becomes 'needs_refund'.
+        const result = await activatePremiumBid(premiumListingId);
+        console.log('✅ Premium payment processed:', premiumListingId, result);
+
+        return NextResponse.json({ success: true, message: 'Payment confirmed', premiumListingId, result });
+      }
+
+      if (premium.payment_status === 'pending') {
+        await updatePremiumListing(premiumListingId, {
+          payment_status: 'failed',
+          payment_txn_ref: gatewayTxnRef || merchantTransactionId,
+        });
+      }
+      console.log('❌ Payment failed for listing:', premiumListingId);
+      return NextResponse.json({ success: true, message: 'Payment failure recorded', premiumListingId });
+    } catch (dbError: any) {
+      console.error('Database error processing premium payment:', dbError);
+      return NextResponse.json({ error: 'Failed to update payment status' }, { status: 500 });
+    }
   } catch (error: any) {
     console.error('Rapid Gateway webhook error:', error);
     return NextResponse.json(
@@ -168,6 +140,11 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+function premiumIdFromBasket(basketId: string): string {
+  const cut = basketId.lastIndexOf('-');
+  return cut > 0 ? basketId.slice(0, cut) : basketId;
 }
 
 /**
@@ -184,7 +161,7 @@ export async function GET(req: NextRequest) {
   }
 
   // Extract premium listing ID from basket_id
-  const premiumListingId = basketId.split('-')[0];
+  const premiumListingId = premiumIdFromBasket(basketId);
 
   // Redirect to success page with basket_id for client-side tracking
   // The webhook will be the authoritative source

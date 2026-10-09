@@ -11,7 +11,11 @@ interface PremiumListing {
   category: string;
   total_votes: number;
   day_votes: number;
-  premium_position: number;
+  position: number;
+  bid_usd: number | null;
+  amount_pkr: number | null;
+  payment_method: string | null;
+  expires_at?: string | null;
   founder_name: string;
   founder_email: string;
   founder_phone: string;
@@ -21,10 +25,12 @@ interface PremiumListing {
   approved_by?: string;
 }
 
-const POSITION_PRICES: Record<number, number> = {
-  1: 5,
-  2: 3,
-  3: 1
+const STATUS_STYLES: Record<string, string> = {
+  active: 'bg-green-100 text-green-700',
+  pending: 'bg-yellow-100 text-yellow-700',
+  needs_refund: 'bg-orange-100 text-orange-700',
+  outbid: 'bg-gray-100 text-gray-700',
+  replaced: 'bg-gray-100 text-gray-700',
 };
 
 export default function PremiumAdmin() {
@@ -32,7 +38,7 @@ export default function PremiumAdmin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [premiumListings, setPremiumListings] = useState<PremiumListing[]>([]);
   const [loading, setLoading] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'pending' | 'approved'>('pending');
+  const [filter, setFilter] = useState<'all' | 'pending' | 'active' | 'needs_refund' | 'outbid'>('pending');
   const [toasts, setToasts] = useState<Array<{ id: string; message: string; type: string }>>([]);
 
   const showToast = (message: string, type = 'info') => {
@@ -87,8 +93,12 @@ export default function PremiumAdmin() {
         })
       });
 
-      if (res.ok) {
-        showToast('Premium listing approved!', 'success');
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.result?.status === 'needs_refund') {
+        showToast(`Someone already holds this spot with a higher bid (needs $${data.result.required}). Marked for refund.`, 'error');
+        fetchPremiumListings(filter);
+      } else if (res.ok) {
+        showToast('Approved: listing is now live in its spot', 'success');
         fetchPremiumListings(filter);
       } else {
         showToast('Failed to approve', 'error');
@@ -191,7 +201,7 @@ export default function PremiumAdmin() {
       <div className="max-w-7xl mx-auto p-6">
         {/* Filter Buttons */}
         <div className="flex gap-4 mb-6">
-          {['pending', 'approved', 'all'].map(f => (
+          {['pending', 'active', 'needs_refund', 'outbid', 'all'].map(f => (
             <button
               key={f}
               onClick={() => {
@@ -204,7 +214,7 @@ export default function PremiumAdmin() {
                   : 'bg-white text-[#1F2937] hover:bg-gray-50 border border-gray-300'
               }`}
             >
-              {f.charAt(0).toUpperCase() + f.slice(1)}
+              {(f.charAt(0).toUpperCase() + f.slice(1)).replace('_', ' ')}
             </button>
           ))}
         </div>
@@ -229,7 +239,7 @@ export default function PremiumAdmin() {
                   <div className="md:col-span-2">
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-[#0F3460] to-[#1a5490] rounded-lg flex items-center justify-center text-white font-black">
-                        #{listing.premium_position}
+                        #{listing.position}
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-[#1F2937]">{listing.listing_title}</h3>
@@ -264,23 +274,24 @@ export default function PremiumAdmin() {
                     <div className="mb-4">
                       <p className="text-xs font-bold text-gray-600 uppercase mb-2">Price</p>
                       <p className="text-3xl font-black text-[#0F3460]">
-                        ${POSITION_PRICES[listing.premium_position] || 'N/A'}
+                        ${listing.bid_usd ?? 'N/A'}
                       </p>
                       <p className="text-xs text-gray-600 mt-1">
-                        Position #{listing.premium_position}
+                        Position #{listing.position}
+                        {listing.amount_pkr ? ` · PKR ${listing.amount_pkr.toLocaleString()}` : ''}
+                        {listing.payment_method ? ` · ${listing.payment_method}` : ''}
                       </p>
+                      {listing.payment_status === 'active' && listing.expires_at && (
+                        <p className="text-xs text-gray-600 mt-1">Until {new Date(listing.expires_at).toLocaleDateString()}</p>
+                      )}
                     </div>
 
                     <div className="mb-4">
                       <p className="text-xs font-bold text-gray-600 uppercase mb-2">Status</p>
                       <span className={`inline-block px-3 py-1 rounded-lg font-bold text-xs ${
-                        listing.payment_status === 'approved'
-                          ? 'bg-green-100 text-green-700'
-                          : listing.payment_status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : 'bg-red-100 text-red-700'
+                        STATUS_STYLES[listing.payment_status] || 'bg-red-100 text-red-700'
                       }`}>
-                        {listing.payment_status.toUpperCase()}
+                        {listing.payment_status.replace('_', ' ').toUpperCase()}
                       </span>
                     </div>
 

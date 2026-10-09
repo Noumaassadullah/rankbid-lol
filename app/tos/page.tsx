@@ -54,7 +54,7 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
     title: 'Premium Listings & Payments',
     body: (
       <ul>
-        <li>Premium listings are optional. They feature your product in a chosen position (#1, #2 or #3) for 30 days; votes still apply on top.</li>
+        <li>Premium listings are optional. They feature your product in a chosen position (#1, #2 or #3) for 30 days; votes still apply on top. A held spot can be taken by someone who pays at least $1 more; the holder then moves down one spot, and a holder pushed below #3 loses the placement without a refund.</li>
         <li>Payments are processed by our payment providers (card gateway, JazzCash, EasyPaisa). Prices are shown before you pay.</li>
         <li>Once a premium listing is active, payment is final and non-refundable, except where required by law.</li>
         <li>You are responsible for any taxes or fees in your jurisdiction.</li>

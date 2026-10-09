@@ -80,7 +80,8 @@ export default function RulesPage() {
           <RuleCard icon={<PremiumIcons.Trophy />} title="Premium Listings (Optional)">
             <List items={[
               'Premium is optional: free listings rank on votes alone',
-              'Premium pins your product to a featured spot (#1, #2 or #3) for 30 days',
+              'Premium features your product at #1, #2 or #3 for 30 days',
+              'Pay $1 more than the current holder to take a spot; they move down one',
               'Premium listings follow the same content rules as everyone else',
             ]} />
           </RuleCard>

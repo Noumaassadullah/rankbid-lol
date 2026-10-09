@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getPremiumListing } from '@/lib/server/premium';
 
 interface PaymentRequest {
   premiumListingId: string;
-  amount: number;
   email: string;
   phone: string;
   name: string;
@@ -10,15 +10,25 @@ interface PaymentRequest {
 
 export async function POST(req: NextRequest) {
   try {
-    const { premiumListingId, amount, email, phone, name } = await req.json() as PaymentRequest;
+    const { premiumListingId, email, phone, name } = await req.json() as PaymentRequest;
 
     // Validate required fields
-    if (!premiumListingId || !amount || !email || !phone || !name) {
+    if (!premiumListingId || !email || !phone || !name) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
+
+    // The amount comes from the bid saved at checkout, never from the browser.
+    const premium = await getPremiumListing(premiumListingId);
+    if (!premium || premium.payment_status !== 'pending' || !premium.amount_pkr) {
+      return NextResponse.json(
+        { error: 'Premium order not found or already paid' },
+        { status: 404 }
+      );
+    }
+    const amount: number = premium.amount_pkr;
 
     // Get Rapid Gateway credentials
     const merchantId = process.env.RAPID_GATEWAY_MERCHANT_ID;
@@ -83,7 +93,7 @@ export async function POST(req: NextRequest) {
       CUSTOMER_MOBILE_NO: phone,
       CUSTOMER_EMAIL_ADDRESS: email,
       BASKET_ID: basketId,
-      TXNDESC: `Premium listing boost - Position #1`,
+      TXNDESC: `Premium listing boost - Position #${premium.position}`,
       ORDER_DATE: new Date().toISOString().split('T')[0],
       SUCCESS_URL: `${appUrl}/payment-success?basket_id=${basketId}`,
       FAILURE_URL: `${appUrl}/payment-failure?basket_id=${basketId}`,
