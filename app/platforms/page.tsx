@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import PageHero from '@/components/PageHero';
 import RankingRow from '@/components/RankingRow';
 import Pagination from '@/components/Pagination';
+import PlatformsCta from '@/components/PlatformsCta';
 import { useState, useEffect, useCallback, type CSSProperties } from 'react';
 
 interface Listing {
@@ -195,6 +196,8 @@ export default function PlatformsPage() {
             )}
           </div>
         </section>
+
+        <PlatformsCta />
       </div>
     </>
   );
