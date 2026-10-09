@@ -3,6 +3,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
+import WhyHero from '@/components/WhyHero';
 import { PremiumIcons } from '@/components/PremiumIcons';
 
 const d = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
@@ -48,40 +49,8 @@ export default function WhyRankBid() {
     <>
       <Header />
       <div className="bg-white text-[#1F2937] overflow-x-hidden">
-        {/* HERO */}
-        <section className="spotlight relative overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white">
-          <div className="absolute -top-32 -right-24 w-[28rem] h-[28rem] bg-[#1a5490] rounded-full blur-3xl opacity-40 pointer-events-none" aria-hidden="true" />
-          <div className="absolute -bottom-40 -left-24 w-[28rem] h-[28rem] bg-[#059669] rounded-full blur-3xl opacity-25 pointer-events-none" aria-hidden="true" />
-
-          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 pt-12 sm:pt-20 md:pt-24 pb-12 sm:pb-16 md:pb-20 text-center">
-            <p style={d(0)} className="slide-up inline-block text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-white/60 mb-4 sm:mb-5">Why RankBid</p>
-            <h1 style={d(100)} className="slide-up text-3xl sm:text-5xl md:text-6xl font-black leading-[1.08] tracking-tight mb-4 sm:mb-6">
-              Votes, not budgets,
-              <span className="block text-emerald-300">decide who rises.</span>
-            </h1>
-            <p style={d(220)} className="slide-up text-sm sm:text-base md:text-lg text-white/75 leading-relaxed max-w-2xl mx-auto mb-7 sm:mb-9">
-              RankBid is a free, community-driven launchpad. Real people vote, and the best products climb. No algorithms, no gatekeepers, no paid shortcuts to the top.
-            </p>
-            <div style={d(340)} className="slide-up flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3">
-              <Link href="/#submit" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-[#0F3460] font-black text-sm rounded-xl shadow-lg shadow-black/20 hover:-translate-y-0.5 transition-all">
-                Submit your product →
-              </Link>
-              <Link href="/categories" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-white/10 border border-white/25 text-white font-black text-sm rounded-xl hover:bg-white/20 transition-all">
-                See the rankings
-              </Link>
-            </div>
-
-            {/* Inline facts (text, not boxes) */}
-            <div style={d(460)} className="slide-up mt-10 sm:mt-14 flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-10 gap-y-3 text-xs sm:text-sm text-white/70">
-              {['100% free to submit', 'Ranked by real votes', 'Live, real-time rankings', '25+ categories'].map(fact => (
-                <span key={fact} className="inline-flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-300" />
-                  {fact}
-                </span>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* HERO: photo banner with live numbers */}
+        <WhyHero />
 
         {/* HOW IT WORKS: timeline, no cards */}
         <section className="py-14 sm:py-20 md:py-24">
