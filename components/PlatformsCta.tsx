@@ -16,8 +16,9 @@ const START_ROWS: Row[] = [
 ];
 
 // Vertical distance between ranking rows in the phone (row height + gap), in px.
-const ROW_STEP = 46;
+const ROW_STEP = 48;
 const TICK_MS = 2200;
+const MEDALS = ['🥇', '🥈', '🥉'];
 
 const fmt = (n: number) => n.toLocaleString('en-US');
 
@@ -56,7 +57,7 @@ function useLiveRanking(active: boolean) {
 }
 
 // Closing call-to-action for the platforms page: copy on the left, a phone
-// mockup of a live ranking on the right.
+// mockup of RankBid's mobile view with a live ranking on the right.
 export default function PlatformsCta() {
   const mockupRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
@@ -71,6 +72,7 @@ export default function PlatformsCta() {
   }, []);
 
   const { rows, bumped } = useLiveRanking(active);
+  const totalVotes = rows.reduce((sum, r) => sum + r.votes, 0);
 
   return (
     <section className="bg-gray-50 pt-10 sm:pt-16 md:pt-24 pb-10 sm:pb-14 md:pb-20">
@@ -96,8 +98,8 @@ export default function PlatformsCta() {
 
             {/* MOCKUP */}
             <div ref={mockupRef} className="relative hidden md:block h-full min-h-[320px]" aria-hidden="true">
-              {/* Phone tilted to the right, overflowing the top and bottom of the panel */}
-              <div className="absolute left-1/2 -top-20 -bottom-10 z-10 w-[236px] -translate-x-1/2 rotate-[8deg]">
+              {/* Phone on the right, tilted, overflowing the top and bottom of the panel */}
+              <div className="absolute right-8 lg:right-16 -top-20 -bottom-10 z-10 w-[236px] rotate-[8deg]">
                 {/* Side buttons: action, volume up/down, power */}
                 <span className="absolute -left-[3px] top-24 h-6 w-[3px] rounded-l bg-[#3a3a3f]" />
                 <span className="absolute -left-[3px] top-36 h-11 w-[3px] rounded-l bg-[#3a3a3f]" />
@@ -136,36 +138,76 @@ export default function PlatformsCta() {
                         </span>
                       </div>
 
-                      <div className="flex-1 px-4 pt-1 text-[#1F2937]">
-                        <p className="text-[10px] text-gray-400">Welcome back</p>
-                        <p className="text-sm font-bold">Top on Instagram</p>
-                        <div className="relative mt-3" style={{ height: rows.length * ROW_STEP - 8 }}>
+                      {/* RankBid's mobile home view */}
+                      <div className="flex-1 bg-gray-50 text-[#1F2937]">
+                        <div className="flex items-center justify-between border-b border-gray-100 bg-white px-3 py-2">
+                          <svg viewBox="0 0 16 12" className="h-2.5 w-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                            <path d="M1 1h14M1 6h14M1 11h14" />
+                          </svg>
+                          <span className="flex items-center gap-1.5">
+                            <span className="flex h-5 w-5 items-center justify-center rounded-md bg-gradient-to-br from-[#0F3460] to-[#1a5490] text-[9px] font-black text-white">R</span>
+                            <span className="text-xs font-black tracking-tight text-[#0F3460]">RankBid</span>
+                          </span>
+                          <svg viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                            <circle cx="7" cy="7" r="5" />
+                            <path d="M11 11l4 4" />
+                          </svg>
+                        </div>
+
+                        <div className="px-3 pt-3 text-center">
+                          <span className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white px-2 py-0.5 text-[8px] text-gray-500">
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                            {rows.length} profiles · <span className="tabular-nums">{fmt(totalVotes)}</span> votes
+                          </span>
+                          <p className="mt-2 text-[17px] font-black leading-[1.1] tracking-tight text-[#0F3460]">
+                            Ranked by people.
+                            <span className="block text-gray-300">Not algorithms.</span>
+                          </p>
+                          <div className="mt-2 inline-flex rounded-full border border-gray-200 bg-white p-0.5 text-[8px] font-bold">
+                            <span className="rounded-full bg-[#0F3460] px-2.5 py-1 text-white">All Time</span>
+                            <span className="px-2.5 py-1 text-gray-500">Today</span>
+                          </div>
+                          <p className="mt-1.5 flex items-center justify-center gap-1 text-[8px] font-semibold text-gray-500">
+                            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                            Live
+                          </p>
+                        </div>
+
+                        <div className="relative mx-3 mt-2" style={{ height: rows.length * ROW_STEP - 6 }}>
                           {rows.map((row, i) => {
+                            const leader = i === 0;
                             const isBumped = bumped?.name === row.name;
                             const climbed = isBumped && bumped.climbed;
                             return (
                               <div
                                 key={row.name}
-                                className={`absolute inset-x-0 top-0 flex items-center gap-2 rounded-lg border px-2 py-1.5 transition-[transform,background-color,border-color] duration-700 ease-out ${
-                                  climbed ? 'z-10 border-emerald-200 bg-emerald-50' : 'border-gray-100 bg-gray-50'
+                                className={`absolute inset-x-0 top-0 flex h-[42px] items-center gap-2 rounded-xl border px-2.5 shadow-sm transition-[transform,background-color,border-color,color] duration-700 ease-out ${
+                                  leader
+                                    ? `border-transparent bg-[#0F3460] text-white ${climbed ? 'ring-2 ring-emerald-300' : ''}`
+                                    : climbed
+                                      ? 'z-10 border-emerald-200 bg-emerald-50'
+                                      : 'border-gray-100 bg-white'
                                 }`}
                                 style={{ transform: `translateY(${i * ROW_STEP}px)` }}
                               >
-                                <span className="w-4 text-[10px] font-black text-gray-400">#{i + 1}</span>
-                                <span className="h-6 w-6 rounded-full bg-gradient-to-br from-[#E4405F] to-[#F77737]" />
-                                <span className="flex-1 truncate text-[11px] font-semibold">{row.name}</span>
-                                <span className={`text-[10px] font-bold tabular-nums transition-colors duration-700 ${isBumped ? 'text-emerald-600' : 'text-[#0F3460]'}`}>
-                                  ▲ {fmt(row.votes)}
+                                <span className="w-5 text-center text-sm leading-none">
+                                  {MEDALS[i] ?? <span className="text-[9px] font-black text-gray-400">#{i + 1}</span>}
+                                </span>
+                                <span className="min-w-0 flex-1">
+                                  <span className="block truncate text-[10px] font-bold">{row.name}</span>
+                                  <span className={`block text-[8px] ${leader ? 'text-white/60' : 'text-gray-400'}`}>Instagram</span>
+                                </span>
+                                <span className="text-right leading-none">
+                                  <span className={`block text-xs font-black tabular-nums transition-colors duration-700 ${
+                                    leader ? 'text-white' : isBumped ? 'text-emerald-600' : 'text-[#0F3460]'
+                                  }`}>
+                                    {fmt(row.votes)}
+                                  </span>
+                                  <span className={`text-[7px] ${leader ? 'text-white/60' : 'text-gray-400'}`}>votes</span>
                                 </span>
                               </div>
                             );
                           })}
-                        </div>
-                        <div className="mt-3 rounded-lg border border-gray-100 p-2">
-                          <p className="text-[10px] text-gray-400">Votes this week</p>
-                          <svg viewBox="0 0 160 40" className="mt-1 w-full">
-                            <path d="M0 32 C20 30 30 12 50 16 S80 34 100 22 S135 6 160 10" fill="none" stroke="#0F3460" strokeWidth="2" />
-                          </svg>
                         </div>
                       </div>
                       <div className="mx-auto mb-2 h-1 w-24 rounded-full bg-[#111]" />
