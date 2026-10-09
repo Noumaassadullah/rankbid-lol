@@ -18,7 +18,7 @@ import SelectionHeading from '@/components/SelectionHeading';
 import RankingsSignpost from '@/components/RankingsSignpost';
 import TrustedBy from '@/components/TrustedBy';
 import HomeCta from '@/components/HomeCta';
-import WhyMakersIllustration from '@/components/WhyMakersIllustration';import { getCategoryLabel as formatCategory } from '@/lib/categories';
+import { getCategoryLabel as formatCategory } from '@/lib/categories';
 
 // Stagger delay for the .slide-up entrance animation (see globals.css).
 const slideDelay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
@@ -1054,15 +1054,52 @@ export default function Home() {
         </section>
 
 
-        {/* WHY MAKERS SECTION (replaces placeholder testimonials) */}
-        <section className="py-14 sm:py-20 md:py-24 bg-white border-t border-gray-200 overflow-hidden">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* WHY MAKERS SECTION: navy gradient with a photo blended in on the right */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white">
+          {/* Desktop: photo at its own aspect ratio, anchored right and fading into the navy.
+              Keeping the ratio lets the RankBid notification sit exactly over the one in the photo. */}
+          <div
+            className="absolute inset-y-0 right-0 hidden lg:block h-full aspect-[2198/1396]"
+            aria-hidden="true"
+          >
+            <img
+              src="/why-makers-person.jpg"
+              alt=""
+              className="h-full w-full"
+              style={{ maskImage: 'linear-gradient(to right, transparent 30%, black 62%)', WebkitMaskImage: 'linear-gradient(to right, transparent 30%, black 62%)' }}
+            />
+            {/* Covers the photo's original notification (another brand's) */}
+            <div className="absolute left-[35.5%] top-[52%] h-[22%] w-[29.5%] flex flex-col justify-center rounded-2xl bg-white p-4 text-[#1F2937] shadow-2xl backdrop-blur">
+              <div className="flex items-center justify-between text-[10px] font-semibold text-gray-400">
+                <span>Notification Center</span>
+                <span>now</span>
+              </div>
+              <div className="mt-2 flex items-start gap-2.5">
+                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#0F3460] to-[#1a5490] text-sm font-black text-white">R</span>
+                <div className="min-w-0">
+                  <p className="text-sm font-black text-[#0F3460]">RankBid</p>
+                  <p className="text-xs leading-snug text-gray-600">Your product just hit <span className="font-bold text-[#059669]">#1 today</span> 🏆</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Mobile/tablet: top half of the photo as a banner above the copy */}
+          <img
+            src="/why-makers-person.jpg"
+            alt=""
+            aria-hidden="true"
+            className="lg:hidden w-full aspect-[2198/720] object-cover object-top"
+            style={{ maskImage: 'linear-gradient(to bottom, black 55%, transparent)', WebkitMaskImage: 'linear-gradient(to bottom, black 55%, transparent)' }}
+          />
+
+          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pb-14 sm:pb-20 lg:py-28 -mt-8 lg:mt-0">
             {/* Copy + four reasons, no cards */}
-            <div>
+            <div className="lg:max-w-[50%]">
               <SelectionHeading
                 lead="why makers"
                 highlight="launch here"
                 sub="A fair, free launchpad where the community, not an algorithm, decides what rises."
+                tone="dark"
                 className="mb-10 sm:mb-12"
               />
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-8">
@@ -1073,21 +1110,16 @@ export default function Home() {
                   { icon: <PremiumIcons.Share />, title: 'Built to share', text: 'Share your rank card on X and LinkedIn to rally votes.' },
                 ].map(item => (
                   <li key={item.title} className="group flex gap-4">
-                    <span className="w-11 h-11 flex-shrink-0 rounded-full bg-[#059669]/10 text-[#059669] flex items-center justify-center transition-colors group-hover:bg-[#059669] group-hover:text-white">
+                    <span className="w-11 h-11 flex-shrink-0 rounded-full bg-emerald-300/15 text-emerald-300 flex items-center justify-center transition-colors group-hover:bg-emerald-300 group-hover:text-[#0B2545]">
                       {item.icon}
                     </span>
                     <div>
-                      <h3 className="text-base font-bold text-[#0B2545] tracking-[-0.01em] mb-1">{item.title}</h3>
-                      <p className="text-sm text-[#1F2937]/60 leading-relaxed">{item.text}</p>
+                      <h3 className="text-base font-bold text-white tracking-[-0.01em] mb-1">{item.title}</h3>
+                      <p className="text-sm text-white/65 leading-relaxed">{item.text}</p>
                     </div>
                   </li>
                 ))}
               </ul>
-            </div>
-
-            {/* Illustration */}
-            <div>
-              <WhyMakersIllustration />
             </div>
           </div>
         </section>
