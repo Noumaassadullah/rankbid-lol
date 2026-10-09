@@ -12,6 +12,62 @@ const PHOTO_SRC = '/cta-person.jpg';
 const FADE_LEFT = 'linear-gradient(to right, transparent, black 40%)';
 const FADE_BOTTOM = 'linear-gradient(to bottom, black 55%, transparent)';
 
+// Words the heading cycles through, one at a time.
+const WORDS = ['product', 'brand', 'profile', 'startup', 'store'];
+const WORD_MS = 2200;
+
+// "Give your ___ the reach…": each word slides up out of the way as the next
+// one slides in, and the slot eases to the new word's width.
+function RotatingWord() {
+  const [index, setIndex] = useState(0);
+  const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [widths, setWidths] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = setInterval(() => setIndex(i => (i + 1) % WORDS.length), WORD_MS);
+    return () => clearInterval(id);
+  }, []);
+
+  // Measure every word; the heading's font size changes across breakpoints.
+  useEffect(() => {
+    const measure = () => setWidths(wordRefs.current.map(el => el?.offsetWidth ?? 0));
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+
+  const prev = (index - 1 + WORDS.length) % WORDS.length;
+
+  return (
+    // No overflow-hidden here: on an inline-block it moves the baseline to the
+    // bottom edge and lifts the word off the line. clip-path hides the sliding
+    // words instead, with room below for descenders and the underline.
+    <span
+      className="relative inline-block whitespace-nowrap transition-[width] duration-500 ease-out"
+      style={{ width: widths[index] || undefined, clipPath: 'inset(0 -0.1em -0.25em)' }}
+    >
+      {/* Invisible copy of the current word sets the baseline and height */}
+      <span className="invisible">{WORDS[index]}</span>
+      {WORDS.map((word, i) => {
+        const state = i === index ? 'translate-y-0 opacity-100' : i === prev ? '-translate-y-full opacity-0' : 'translate-y-full opacity-0';
+        return (
+          <span
+            key={word}
+            ref={el => { wordRefs.current[i] = el; }}
+            aria-hidden={i !== index}
+            className={`absolute left-0 top-0 transition-[transform,opacity] duration-500 ease-out ${state}`}
+          >
+            {word}
+          </span>
+        );
+      })}
+      {/* Underline in the brand green */}
+      <span className="absolute inset-x-0 -bottom-[0.06em] h-[0.08em] rounded-full bg-emerald-300" aria-hidden="true" />
+    </span>
+  );
+}
+
 // Closing call-to-action for the home page: copy on the left, a photo
 // filling the right of the panel.
 export default function HomeCta() {
@@ -58,7 +114,7 @@ export default function HomeCta() {
           {/* COPY */}
           <div className={`relative z-10 px-6 pb-10 sm:px-10 sm:pb-14 md:py-24 md:max-w-[55%] ${hasPhoto ? '-mt-10 md:mt-0' : 'pt-10 sm:pt-14'}`}>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.05] tracking-tight">
-              Give your product the reach it deserves
+              Give your <RotatingWord /> the reach it deserves
               <span className="block text-emerald-300">with RankBid</span>
             </h2>
             <Link
