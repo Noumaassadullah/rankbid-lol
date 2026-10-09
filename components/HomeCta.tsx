@@ -41,7 +41,7 @@ export default function HomeCta() {
                 alt=""
                 aria-hidden="true"
                 onError={() => setHasPhoto(false)}
-                className="absolute inset-y-0 right-0 hidden md:block h-full w-[58%] object-cover object-[65%_center]"
+                className="absolute inset-y-0 right-0 hidden md:block h-full w-[58%] object-cover object-[45%_center]"
                 style={{ maskImage: FADE_LEFT, WebkitMaskImage: FADE_LEFT }}
               />
               {/* Mobile: photo as a banner above the copy */}
@@ -49,7 +49,7 @@ export default function HomeCta() {
                 src={PHOTO_SRC}
                 alt=""
                 aria-hidden="true"
-                className="md:hidden h-56 w-full object-cover object-[65%_30%]"
+                className="md:hidden h-56 w-full object-cover object-[50%_35%]"
                 style={{ maskImage: FADE_BOTTOM, WebkitMaskImage: FADE_BOTTOM }}
               />
             </>
