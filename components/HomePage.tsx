@@ -1061,8 +1061,7 @@ export default function Home() {
         <section className="relative overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white">
           {/* Desktop: photo covers the full height of the section, starting 40% across so the
               phone and hand show beside the copy; whatever is wider than the screen runs off
-              the right edge. Keeping the aspect ratio lets the RankBid notification sit
-              exactly over the one in the photo. */}
+              the right edge. Keeping the aspect ratio keeps the notification on her sweater. */}
           <div
             className="absolute inset-y-0 left-[40%] hidden lg:block h-full aspect-[2198/1396]"
             aria-hidden="true"
@@ -1073,17 +1072,25 @@ export default function Home() {
               className="h-full w-full"
               style={{ maskImage: PHOTO_FADE, WebkitMaskImage: PHOTO_FADE }}
             />
-            {/* Covers the photo's original notification (another brand's) */}
-            <div className="absolute left-[35.5%] top-[52%] h-[22%] w-[29.5%] flex flex-col justify-center rounded-2xl bg-white p-4 text-[#1F2937] shadow-2xl">
-              <div className="flex items-center justify-between text-[10px] font-semibold text-gray-400">
-                <span>Notification Center</span>
-                <span>now</span>
+            {/* Frosted RankBid notification over her sweater: label + close button, then a card
+                with two fainter cards stacked beneath it */}
+            <div className="absolute left-[34%] top-[51%] w-[31%]">
+              <div className="flex items-center justify-between pl-3 pr-1">
+                <span className="text-sm font-medium text-white drop-shadow">Notification Center</span>
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs text-gray-500 shadow">✕</span>
               </div>
-              <div className="mt-2 flex items-center gap-2.5">
-                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#0F3460] to-[#1a5490] text-sm font-black text-white">R</span>
-                <div className="min-w-0">
-                  <p className="text-sm font-black text-[#0F3460]">RankBid</p>
-                  <p className="text-xs leading-snug text-gray-600">Your product hit <span className="font-bold text-[#059669]">#1 today</span> 🏆</p>
+              <div className="relative mt-2.5">
+                <div className="absolute inset-x-[9%] -bottom-[22px] top-4 rounded-2xl bg-white/30 backdrop-blur-sm" />
+                <div className="absolute inset-x-[4%] -bottom-[11px] top-2 rounded-2xl bg-white/50 backdrop-blur-sm" />
+                <div className="relative flex items-center gap-3 rounded-2xl bg-white/85 p-3 shadow-xl backdrop-blur-md">
+                  <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#0B2545] to-[#1a5490] text-lg font-black text-white">R</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <p className="text-sm font-bold text-[#0B2545]">RankBid</p>
+                      <p className="text-[11px] text-gray-400">2 min ago</p>
+                    </div>
+                    <p className="mt-0.5 text-xs leading-snug text-gray-500">Your product just hit <span className="font-semibold text-[#059669]">#1 today</span> 🏆</p>
+                  </div>
                 </div>
               </div>
             </div>
