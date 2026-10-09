@@ -18,8 +18,6 @@ const START_ROWS: Row[] = [
 // Vertical distance between ranking rows in the phone (row height + gap), in px.
 const ROW_STEP = 46;
 const TICK_MS = 2200;
-const START_TOTAL = 2352;
-const START_SUM = START_ROWS.reduce((sum, r) => sum + r.votes, 0);
 
 const fmt = (n: number) => n.toLocaleString('en-US');
 
@@ -58,7 +56,7 @@ function useLiveRanking(active: boolean) {
 }
 
 // Closing call-to-action for the platforms page: copy on the left, a phone
-// mockup of a live ranking with floating stat cards on the right.
+// mockup of a live ranking on the right.
 export default function PlatformsCta() {
   const mockupRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
@@ -73,8 +71,6 @@ export default function PlatformsCta() {
   }, []);
 
   const { rows, bumped } = useLiveRanking(active);
-  // The stat card starts at its own figure and grows with every vote cast below.
-  const total = START_TOTAL + rows.reduce((sum, r) => sum + r.votes, 0) - START_SUM;
 
   return (
     <section className="bg-gray-50 pt-10 sm:pt-16 md:pt-24 pb-10 sm:pb-14 md:pb-20">
@@ -100,8 +96,8 @@ export default function PlatformsCta() {
 
             {/* MOCKUP */}
             <div ref={mockupRef} className="relative hidden md:block h-full min-h-[320px]" aria-hidden="true">
-              {/* Phone on the right, overflowing the top and bottom of the panel */}
-              <div className="absolute right-4 lg:right-12 -top-20 -bottom-10 z-10 w-[236px]">
+              {/* Phone tilted to the right, overflowing the top and bottom of the panel */}
+              <div className="absolute left-1/2 -top-20 -bottom-10 z-10 w-[236px] -translate-x-1/2 rotate-[8deg]">
                 {/* Side buttons: action, volume up/down, power */}
                 <span className="absolute -left-[3px] top-24 h-6 w-[3px] rounded-l bg-[#3a3a3f]" />
                 <span className="absolute -left-[3px] top-36 h-11 w-[3px] rounded-l bg-[#3a3a3f]" />
@@ -175,24 +171,6 @@ export default function PlatformsCta() {
                       <div className="mx-auto mb-2 h-1 w-24 rounded-full bg-[#111]" />
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Floating cards, stacked left of the phone. Hidden below lg, where there's no room beside it. */}
-              <div className="absolute left-0 top-6 hidden lg:block w-40 rounded-2xl bg-white p-3 text-[#1F2937] shadow-xl">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-xs text-emerald-600">↗</span>
-                <p className="mt-2 text-[10px] text-gray-500">Total Votes</p>
-                <p className="text-xl font-black tabular-nums">{fmt(total)}</p>
-                <p className="text-[10px] text-gray-400">#1 for 3 days running</p>
-              </div>
-
-              <div className="absolute left-0 bottom-8 hidden lg:flex items-center gap-2 rounded-2xl bg-white px-3 py-2 text-[#1F2937] shadow-xl">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50">
-                  <img src="/tiktok.png" alt="" className="h-5 w-5 object-contain" />
-                </span>
-                <div>
-                  <p className="text-[10px] text-gray-500">New on TikTok</p>
-                  <p className="text-sm font-bold">+128 votes</p>
                 </div>
               </div>
             </div>
