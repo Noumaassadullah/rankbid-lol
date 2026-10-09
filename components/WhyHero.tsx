@@ -11,6 +11,8 @@ import { CATEGORIES } from '@/lib/categories';
 // Two friends laughing at a phone, from the design reference; the reference's own card and wave are
 // whited out of the file and hidden under the wave below.
 const PHOTO_SRC = '/why-hero-people.webp';
+// Top edge of the white wave (viewBox 1440x320); the shape and its shadow both follow it.
+const WAVE_EDGE = 'M0,6 C420,-30 640,120 900,250 C1110,318 1300,290 1440,170';
 const PLATFORM_ICONS = ['/instagram.png', '/linkedin.png', '/twitter.png', '/tiktok.png'];
 
 const slideDelay = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
@@ -52,14 +54,26 @@ export default function WhyHero() {
           unoptimized
           className="object-cover object-[56%_30%]"
         />
-        {/* White wave: rises on the left, dips under the phone, lifts again on the right */}
+        {/* White wave: rises on the left, dips under the phone, lifts again on the right. The photo
+            casts a soft navy shadow onto the white just below the curve. */}
         <svg
           className="absolute inset-x-0 bottom-[-1px] h-[48%] w-full text-white"
           viewBox="0 0 1440 320"
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          <path fill="currentColor" d="M0,6 C420,-30 640,120 900,250 C1110,318 1300,290 1440,170 L1440,320 L0,320 Z" />
+          <defs>
+            <clipPath id="why-wave-clip">
+              <path d={`${WAVE_EDGE} L1440,320 L0,320 Z`} />
+            </clipPath>
+            <filter id="why-wave-shadow" x="-5%" y="-50%" width="110%" height="200%">
+              <feGaussianBlur stdDeviation="9" />
+            </filter>
+          </defs>
+          <path fill="currentColor" d={`${WAVE_EDGE} L1440,320 L0,320 Z`} />
+          <g clipPath="url(#why-wave-clip)">
+            <path d={WAVE_EDGE} fill="none" stroke="#0F3460" strokeOpacity="0.32" strokeWidth="22" transform="translate(0 4)" filter="url(#why-wave-shadow)" />
+          </g>
         </svg>
       </div>
 
