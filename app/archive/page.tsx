@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import PageHero from '@/components/PageHero';
+import ArchiveCta from '@/components/ArchiveCta';
 import { useState, useEffect } from 'react';
 
 interface SnapshotListing {
@@ -190,6 +191,8 @@ export default function ArchivePage() {
             )}
           </div>
         </section>
+
+        <ArchiveCta />
       </div>
     </>
   );
