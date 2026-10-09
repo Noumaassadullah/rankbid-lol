@@ -23,6 +23,11 @@ interface DailySnapshot {
   frozen: boolean;
 }
 
+// The archive starts with RankBid's first rankings (September 2026); there is nothing to show before it.
+const ARCHIVE_START = new Date(2026, 8, 1);
+
+/** Days from ARCHIVE_START to today, so every saved day back to the start is loaded. */
+const daysSinceStart = () => Math.ceil((Date.now() - ARCHIVE_START.getTime()) / 86_400_000) + 1;
 
 export default function ArchivePage() {
   const [snapshots, setSnapshots] = useState<DailySnapshot[]>([]);
@@ -35,7 +40,7 @@ export default function ArchivePage() {
 
   const fetchArchives = async () => {
     try {
-      const res = await fetch('/api/daily-snapshots?daysBack=90');
+      const res = await fetch(`/api/daily-snapshots?daysBack=${daysSinceStart()}`);
       if (res.ok) {
         const data = await res.json();
         const fetchedSnapshots = data.snapshots || [];
@@ -78,7 +83,7 @@ export default function ArchivePage() {
 
     return snapshots.filter(s => {
       const snapshotDate = new Date(s.date + 'T00:00:00Z');
-      return snapshotDate.getFullYear() === year && snapshotDate.getMonth() === month;
+      return snapshotDate.getUTCFullYear() === year && snapshotDate.getUTCMonth() === month;
     }).sort((a, b) => {
       return new Date(b.date + 'T00:00:00Z').getTime() - new Date(a.date + 'T00:00:00Z').getTime();
     });
@@ -87,6 +92,7 @@ export default function ArchivePage() {
   const monthSnapshots = getSnapshotsForMonth(selectedMonth);
   const now = new Date();
   const isCurrentMonth = selectedMonth.getFullYear() === now.getFullYear() && selectedMonth.getMonth() === now.getMonth();
+  const isFirstMonth = selectedMonth.getFullYear() === ARCHIVE_START.getFullYear() && selectedMonth.getMonth() === ARCHIVE_START.getMonth();
   const shiftMonth = (delta: number) => {
     const d = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + delta, 1);
     setSelectedMonth(d);
@@ -105,7 +111,7 @@ export default function ArchivePage() {
           <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
             {/* Month Navigation */}
             <div className="flex items-center justify-between gap-2 mb-5 sm:mb-8 p-2 sm:p-3 bg-white border border-gray-200 shadow-sm rounded-xl">
-              <button onClick={() => shiftMonth(-1)} className={navBtn} aria-label="Previous month">
+              <button onClick={() => shiftMonth(-1)} disabled={isFirstMonth} className={navBtn} aria-label="Previous month">
                 ← <span className="hidden sm:inline">Previous</span>
               </button>
               <h2 className="text-base sm:text-xl font-black text-[#1F2937] text-center">

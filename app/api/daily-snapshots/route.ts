@@ -11,7 +11,7 @@ export const revalidate = 0; // Don't cache
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const daysBack = Math.min(365, Math.max(1, parseInt(searchParams.get('daysBack') || '30') || 30));
+    const daysBack = Math.min(3650, Math.max(1, parseInt(searchParams.get('daysBack') || '30') || 30));
 
     let snapshots: any[] = [];
 
