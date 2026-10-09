@@ -8,6 +8,30 @@ const supabase = createClient(
 
 export const revalidate = 0; // Don't cache
 
+type SnapshotEntry = { rank: number; listing: { id: string; title: string; url: string }; votes: number };
+
+/**
+ * Saved days keep a copy of that day's rankings, so a listing deleted later would still show.
+ * Keep only entries whose listing still exists and renumber the ranks; the stored copy is untouched.
+ */
+function withoutDeletedListings(entries: SnapshotEntry[], existing: Set<string>): SnapshotEntry[] {
+  return entries
+    .filter(e => existing.has(String(e.listing?.id)))
+    .sort((a, b) => a.rank - b.rank)
+    .map((e, i) => ({ ...e, rank: i + 1 }));
+}
+
+/** Which of these listing ids still exist. */
+async function existingListingIds(ids: string[]): Promise<Set<string>> {
+  const found = new Set<string>();
+  const unique = [...new Set(ids)];
+  for (let i = 0; i < unique.length; i += 200) {
+    const { data } = await supabase.from('listings').select('id').in('id', unique.slice(i, i + 200));
+    for (const row of data || []) found.add(String(row.id));
+  }
+  return found;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -33,12 +57,16 @@ export async function GET(request: NextRequest) {
         .order('date', { ascending: false });
 
       if (!dbError && historicalSnapshots) {
-        snapshots = historicalSnapshots.map((snapshot: any) => ({
+        const allEntries: SnapshotEntry[] = historicalSnapshots.flatMap((snapshot: any) => snapshot.snapshot_data || []);
+        const existing = await existingListingIds(allEntries.map(e => String(e.listing?.id)));
+        const cleaned = historicalSnapshots.map((snapshot: any) => ({
           id: snapshot.id,
           date: snapshot.date,
-          data: snapshot.snapshot_data || [],
+          data: withoutDeletedListings(snapshot.snapshot_data || [], existing),
           frozen: true,
         }));
+        // Days whose every listing was deleted have nothing left to show.
+        snapshots = cleaned.filter(s => s.data.length > 0);
       }
 
       // Fetch today's live data
