@@ -54,6 +54,11 @@ export default function WhyHero() {
           unoptimized
           className="object-cover object-[56%_30%]"
         />
+        {/* Navy colour layer over the photo, in the site's theme blues; under the wave, so the copy is untouched */}
+        <div
+          className="absolute inset-0 bg-gradient-to-br from-[#0B2545]/45 via-[#0F3460]/25 to-[#1a5490]/10"
+          aria-hidden="true"
+        />
         {/* White wave: rises on the left, dips under the phone, lifts again on the right. The photo
             casts a soft navy shadow onto the white just below the curve. */}
         <svg
