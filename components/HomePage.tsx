@@ -17,6 +17,7 @@ import LivePodium from '@/components/LivePodium';
 import SelectionHeading from '@/components/SelectionHeading';
 import RankingsSignpost from '@/components/RankingsSignpost';
 import TrustedBy from '@/components/TrustedBy';
+import HomeCta from '@/components/HomeCta';
 import WhyMakersIllustration from '@/components/WhyMakersIllustration';import { getCategoryLabel as formatCategory } from '@/lib/categories';
 
 // Stagger delay for the .slide-up entrance animation (see globals.css).
@@ -1131,6 +1132,8 @@ export default function Home() {
           </div>
         </section>
 
+        {/* CLOSING CTA */}
+        <HomeCta />
       </div>
 
       {/* PREMIUM LISTING MODAL */}
