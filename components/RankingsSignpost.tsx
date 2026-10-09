@@ -1,5 +1,13 @@
+'use client';
+
 // Signpost shown beside "the top rankings" heading: three arrow signs on a pole, drawn in the
 // site's navy theme. Each sign is a face plus a darker copy offset behind it for depth.
+//
+// The sway animates SVG groups under a drop-shadow filter, which the browser can't hand to the
+// GPU: every frame re-runs layout and the shadow. So it only runs while the signpost is on
+// screen and the page is not being scrolled; otherwise scrolling the home page stutters.
+
+import { useEffect, useRef } from 'react';
 
 const NAVY = '#0F3460';
 const NAVY_EDGE = '#0B2545';
@@ -42,12 +50,49 @@ function Sign({ points, dx, face, edge, rotate, cx, cy, pivotX, sway, children }
 }
 
 export default function RankingsSignpost({ className = '' }: { className?: string }) {
+  const ref = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    const svg = ref.current;
+    if (!svg) return;
+    let visible = false;
+    let scrolling = false;
+    let timer = 0;
+    const update = () => svg.classList.toggle('signpost-paused', !visible || scrolling);
+
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      update();
+    });
+    io.observe(svg);
+
+    const onScroll = () => {
+      if (!scrolling) {
+        scrolling = true;
+        update();
+      }
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        scrolling = false;
+        update();
+      }, 200);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    return () => {
+      io.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      window.clearTimeout(timer);
+    };
+  }, []);
+
   const label = { fontWeight: 800, fontSize: 24, letterSpacing: '-0.01em', textAnchor: 'middle' } as const;
 
   return (
-    <svg viewBox="0 0 420 390" className={className} role="img" aria-label="Signpost: more reach, strong brand, more sales">
+    <svg ref={ref} viewBox="0 0 420 390" className={`signpost-paused ${className}`} role="img" aria-label="Signpost: more reach, strong brand, more sales">
       <style>{`
         .signpost-sway { animation: signpost-sway ease-in-out infinite alternate; }
+        .signpost-paused .signpost-sway { animation-play-state: paused; }
         @keyframes signpost-sway { from { transform: rotate(-2.5deg); } to { transform: rotate(2.5deg); } }
         @media (prefers-reduced-motion: reduce) { .signpost-sway { animation: none; } }
       `}</style>

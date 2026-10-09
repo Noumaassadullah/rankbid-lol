@@ -31,20 +31,38 @@ export default function InteractionEffects() {
       });
     };
 
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+    // The page height is cached (refreshed when the page resizes) and the bar is updated at most once
+    // per frame: reading scrollHeight on every scroll event forced a full layout each time.
+    let maxScroll = 0;
+    let scrollFrame = 0;
+    const measure = () => {
+      maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    };
+    const paint = () => {
+      scrollFrame = 0;
+      const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
       barRef.current?.style.setProperty('--progress', String(progress));
     };
+    const onScroll = () => {
+      if (!scrollFrame) scrollFrame = requestAnimationFrame(paint);
+    };
+    const resizeObserver = new ResizeObserver(() => {
+      measure();
+      onScroll();
+    });
+    resizeObserver.observe(document.documentElement);
 
     if (finePointer && !reduced) document.addEventListener('pointermove', onPointerMove, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+    measure();
+    paint();
 
     return () => {
       document.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('scroll', onScroll);
+      resizeObserver.disconnect();
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(scrollFrame);
     };
   }, []);
 
