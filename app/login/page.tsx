@@ -39,7 +39,6 @@ export default function LoginPage() {
 
       // Store user info in localStorage
       localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('auth_token', data.token);
 
       router.push(nextPath());
     } catch (err) {
@@ -69,7 +68,6 @@ export default function LoginPage() {
 
       // Store user info in localStorage
       localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('auth_token', data.token);
 
       router.push(nextPath());
     } catch (err) {

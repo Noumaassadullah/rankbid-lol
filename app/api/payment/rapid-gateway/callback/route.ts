@@ -27,7 +27,12 @@ export async function POST(req: NextRequest) {
 
     // Get the raw body for signature verification
     const rawBody = await req.text();
-    const body = JSON.parse(rawBody);
+    let body: any;
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ error: 'Invalid webhook payload' }, { status: 400 });
+    }
 
     // Validate required payload fields
     const { eventType: payloadEventType, merchantTransactionId, status, amount, gatewayTxnRef } = body;
@@ -58,11 +63,11 @@ export async function POST(req: NextRequest) {
       .digest('hex')
       .toUpperCase();
 
-    if (signature.toUpperCase() !== expectedSignature) {
-      console.error('Webhook signature verification failed', {
-        expected: expectedSignature,
-        received: signature.toUpperCase(),
-      });
+    const received = Buffer.from(signature.toUpperCase());
+    const expected = Buffer.from(expectedSignature);
+    if (received.length !== expected.length || !crypto.timingSafeEqual(received, expected)) {
+      // Never log the expected signature: it would be a valid signature for this payload.
+      console.error('Webhook signature verification failed');
       return NextResponse.json(
         { error: 'Signature verification failed' },
         { status: 403 }
@@ -74,7 +79,7 @@ export async function POST(req: NextRequest) {
     const currentTime = Math.floor(Date.now() / 1000);
     const timeDiff = Math.abs(currentTime - webhookTime);
 
-    if (timeDiff > 300) {
+    if (!Number.isFinite(timeDiff) || timeDiff > 300) {
       console.error('Webhook timestamp too old:', timeDiff, 'seconds');
       return NextResponse.json(
         { error: 'Webhook timestamp expired' },
@@ -136,7 +141,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('Rapid Gateway webhook error:', error);
     return NextResponse.json(
-      { error: error.message || 'Webhook processing failed' },
+      { error: 'Webhook processing failed' },
       { status: 500 }
     );
   }

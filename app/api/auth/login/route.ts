@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcryptjs from 'bcryptjs';
-import { createSessionToken } from '@/app/utils/auth';
+import { createSessionToken } from '@/lib/server/session';
+import { ipHash, rateLimit } from '@/lib/server/rate-limit';
 import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
@@ -9,10 +10,19 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       return NextResponse.json(
         { error: 'Email and password are required' },
         { status: 400 }
+      );
+    }
+
+    const ip = ipHash(request);
+    const emailKey = email.toLowerCase().slice(0, 254);
+    if (!(await rateLimit(`login-ip:${ip}`, 20, 15 * 60)) || !(await rateLimit(`login-email:${emailKey}`, 10, 15 * 60))) {
+      return NextResponse.json(
+        { error: 'Too many login attempts. Please wait 15 minutes and try again.' },
+        { status: 429 }
       );
     }
 
@@ -54,8 +64,7 @@ export async function POST(request: NextRequest) {
           id: user.id,
           email: user.email,
           name: user.name
-        },
-        token
+        }
       },
       { status: 200 }
     );

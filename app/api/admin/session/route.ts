@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ADMIN_COOKIE, isAdminRequest, isValidAdminKey } from '@/lib/server/admin';
+import { ADMIN_COOKIE, adminCookieValue, isAdminRequest, isValidAdminKey } from '@/lib/server/admin';
+import { ipHash, rateLimit } from '@/lib/server/rate-limit';
 
 // GET: is this browser an admin (admin key cookie, or signed in with an admin email)?
 export async function GET(req: NextRequest) {
@@ -8,15 +9,18 @@ export async function GET(req: NextRequest) {
 
 // POST { key }: exchange the admin key for an httpOnly cookie.
 export async function POST(req: NextRequest) {
+  if (!(await rateLimit(`admin-login:${ipHash(req)}`, 10, 15 * 60))) {
+    return NextResponse.json({ error: 'Too many attempts. Try again later.' }, { status: 429 });
+  }
   const { key } = await req.json().catch(() => ({ key: null }));
   if (!isValidAdminKey(key)) {
     return NextResponse.json({ error: 'Invalid admin key' }, { status: 401 });
   }
   const res = NextResponse.json({ admin: true });
-  res.cookies.set(ADMIN_COOKIE, key, {
+  res.cookies.set(ADMIN_COOKIE, adminCookieValue()!, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     maxAge: 30 * 24 * 60 * 60,
     path: '/',
   });

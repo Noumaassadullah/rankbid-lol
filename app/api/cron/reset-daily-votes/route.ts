@@ -1,7 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { timingSafeEqual } from 'crypto';
+import { pruneRateLimits } from '@/lib/server/rate-limit';
+
+/** Vercel Cron sends `Authorization: Bearer $CRON_SECRET`. Without the secret set, the route stays locked. */
+function isCronRequest(req: NextRequest): boolean {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return false;
+  const expected = Buffer.from(`Bearer ${secret}`);
+  const got = Buffer.from(req.headers.get('authorization') || '');
+  return got.length === expected.length && timingSafeEqual(got, expected);
+}
 
 export async function GET(req: NextRequest) {
+  if (!isCronRequest(req)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -99,6 +114,8 @@ export async function GET(req: NextRequest) {
 
     const result = await response.json();
     const updatedCount = Array.isArray(result) ? result.length : 0;
+
+    await pruneRateLimits();
 
     console.log(`Cron job: Reset day_votes for ${updatedCount} listings at ${new Date().toISOString()}`);
 

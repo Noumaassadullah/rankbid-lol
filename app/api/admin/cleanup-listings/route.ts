@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isAdminRequest } from '@/lib/server/admin';
+import { safeFetch } from '@/lib/server/safe-fetch';
 
 async function checkUrlAccessible(url: string): Promise<boolean> {
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
-
-    const response = await fetch(url, {
+    const response = await safeFetch(url, {
       method: 'HEAD',
-      redirect: 'follow',
-      signal: controller.signal,
       headers: { 'User-Agent': 'Mozilla/5.0' },
     });
-
-    clearTimeout(timeout);
     return response.status >= 200 && response.status < 400;
   } catch {
     return false;
@@ -69,7 +63,7 @@ export async function POST(req: NextRequest) {
     let deletedCount = 0;
     for (const id of invalidListings) {
       try {
-        await fetch(`${supabaseUrl}/rest/v1/listings?id=eq.${id}`, {
+        await fetch(`${supabaseUrl}/rest/v1/listings?id=eq.${encodeURIComponent(id)}`, {
           method: 'DELETE',
           headers: {
             'apikey': supabaseKey,

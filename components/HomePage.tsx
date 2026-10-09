@@ -219,7 +219,6 @@ export default function Home() {
   const [detectedPlatform, setDetectedPlatform] = useState('website');
   const [detectedCategory, setDetectedCategory] = useState('');
   const [votedListings, setVotedListings] = useState<Set<string>>(new Set());
-  const [voterId, setVoterId] = useState<string>('');
   const [optimisticVotes, setOptimisticVotes] = useState<Record<string, number>>({});
   const [lastSubmittedProduct, setLastSubmittedProduct] = useState<{ id: string; title: string } | null>(null);
   const [copied, setCopied] = useState(false);
@@ -234,15 +233,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const stored = localStorage.getItem('rankbid_voter_id');
-    if (stored) {
-      setVoterId(stored);
-    } else {
-      const newId = 'voter_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('rankbid_voter_id', newId);
-      setVoterId(newId);
-    }
-
     // Check if user is logged in
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
@@ -280,11 +270,6 @@ export default function Home() {
       return;
     }
 
-    if (!voterId) {
-      addToast('Please wait for the page to load', 'error');
-      return;
-    }
-
     setVotedListings(prev => new Set([...prev, listingId]));
     setOptimisticVotes(prev => ({
       ...prev,
@@ -295,7 +280,7 @@ export default function Home() {
       const res = await fetch('/api/votes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ listingId, voterId, userId: user.id }),
+        body: JSON.stringify({ listingId }),
       });
 
       const data = await res.json();
@@ -339,7 +324,7 @@ export default function Home() {
       });
       addToast('Voting failed, please try again', 'error');
     }
-  }, [voterId, activeTimeFilter, selectedCategory, user]);
+  }, [activeTimeFilter, selectedCategory, user]);
 
   const fetchListings = useCallback(async (page: number = 1) => {
     setLoading(true);
@@ -422,16 +407,12 @@ export default function Home() {
         description: formData.description,
         category: formData.category,
         platform: formData.platform,
-        userId: user.id,
       };
 
-      const authToken = localStorage.getItem('auth_token');
+      // The server reads who is submitting from the httpOnly session cookie.
       const res = await fetch('/api/listings/submit', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(authToken && { 'Authorization': `Bearer ${authToken}` }),
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submitData),
       });
 

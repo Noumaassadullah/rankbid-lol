@@ -1,6 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sbHeaders, sbUrl, supabaseConfigured } from '@/lib/server/votes';
 import { getLadder, usdToPkr } from '@/lib/server/premium';
+import { ipHash, rateLimit } from '@/lib/server/rate-limit';
+import { httpUrlOrNull, staticUrlProblem } from '@/lib/server/url-safety';
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_RE = /^\+?[0-9][0-9 ()-]{6,19}$/;
+const HANDLE_RE = /^@?[A-Za-z0-9_.-]{1,50}$/;
+const URL_FIELDS = ['founderWebsite', 'founderLinkedin', 'founderFacebook', 'founderYoutube'] as const;
+const HANDLE_FIELDS = ['founderTwitter', 'founderInstagram', 'founderTiktok', 'founderGithub'] as const;
+
+const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+
+/** Validated founder fields, or an error message. Links shown on the homepage must be safe http(s) URLs. */
+function validateFounder(item: CartItem): { error: string } | { links: Record<string, string | null> } {
+  const name = str(item.founderName);
+  if (name.length < 2 || name.length > 80) return { error: 'Please enter your name (2–80 characters)' };
+  const email = str(item.founderEmail);
+  if (!EMAIL_RE.test(email) || email.length > 254) return { error: 'Please enter a valid email address' };
+  if (!PHONE_RE.test(str(item.founderPhone))) return { error: 'Please enter a valid phone number' };
+
+  const links: Record<string, string | null> = {};
+  for (const field of URL_FIELDS) {
+    const raw = str(item[field]);
+    if (!raw) { links[field] = null; continue; }
+    const url = httpUrlOrNull(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`, 300);
+    if (!url || staticUrlProblem(url)) return { error: `That ${field.replace('founder', '')} link isn't allowed` };
+    links[field] = url;
+  }
+  for (const field of HANDLE_FIELDS) {
+    // Accept a pasted profile URL ("x.com/handle") and keep just the handle.
+    const raw = str(item[field]).replace(/^https?:\/\//i, '').replace(/^(www\.)?[a-z]+\.com\/@?/i, '').replace(/\/+$/, '');
+    if (!raw) { links[field] = null; continue; }
+    if (!HANDLE_RE.test(raw)) return { error: `Enter just the ${field.replace('founder', '')} username, e.g. @handle` };
+    links[field] = raw;
+  }
+  return { links };
+}
 
 interface CartItem {
   listingId: string;
@@ -31,7 +67,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 500 });
     }
 
+    if (!(await rateLimit(`checkout-ip:${ipHash(req)}`, 10, 60 * 60))) {
+      return NextResponse.json({ error: 'Too many checkout attempts. Please try again later.' }, { status: 429 });
+    }
+
     const { items, paymentMethod = 'manual' } = await req.json() as CheckoutRequest;
+    if (!['rapid-gateway', 'jazzcash', 'easypaisa', 'stripe', 'manual'].includes(paymentMethod)) {
+      return NextResponse.json({ error: 'Invalid payment method' }, { status: 400 });
+    }
 
     // One spot per checkout: the gateway charges a single amount for a single bid.
     if (!Array.isArray(items) || items.length !== 1) {
@@ -40,11 +83,15 @@ export async function POST(req: NextRequest) {
 
     const item = items[0];
     const position = Number(item.position);
-    if (!item.listingId || !item.founderName || !item.founderEmail || !item.founderPhone) {
+    if (typeof item?.listingId !== 'string' || !item.listingId || !item.founderName || !item.founderEmail || !item.founderPhone) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
     if (![1, 2, 3].includes(position)) {
       return NextResponse.json({ error: 'Invalid position. Must be 1, 2, or 3' }, { status: 400 });
+    }
+    const founder = validateFounder(item);
+    if ('error' in founder) {
+      return NextResponse.json({ error: founder.error }, { status: 400 });
     }
 
     const listingRes = await fetch(sbUrl(`listings?id=eq.${encodeURIComponent(item.listingId)}&select=id`), {
@@ -76,17 +123,17 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         listing_id: item.listingId,
         position,
-        founder_name: item.founderName,
-        founder_email: item.founderEmail,
-        founder_phone: item.founderPhone,
-        founder_website: item.founderWebsite || null,
-        founder_twitter: item.founderTwitter || null,
-        founder_linkedin: item.founderLinkedin || null,
-        founder_instagram: item.founderInstagram || null,
-        founder_facebook: item.founderFacebook || null,
-        founder_tiktok: item.founderTiktok || null,
-        founder_youtube: item.founderYoutube || null,
-        founder_github: item.founderGithub || null,
+        founder_name: str(item.founderName),
+        founder_email: str(item.founderEmail).toLowerCase(),
+        founder_phone: str(item.founderPhone),
+        founder_website: founder.links.founderWebsite,
+        founder_twitter: founder.links.founderTwitter,
+        founder_linkedin: founder.links.founderLinkedin,
+        founder_instagram: founder.links.founderInstagram,
+        founder_facebook: founder.links.founderFacebook,
+        founder_tiktok: founder.links.founderTiktok,
+        founder_youtube: founder.links.founderYoutube,
+        founder_github: founder.links.founderGithub,
         payment_method: paymentMethod,
         payment_status: 'pending',
         bid_usd: bidUsd,
@@ -110,9 +157,9 @@ export async function POST(req: NextRequest) {
         // The initiate route reads the amount from the database; only the id matters here.
         paymentData: {
           premiumListingId: premiumListing.id,
-          email: item.founderEmail,
-          phone: item.founderPhone,
-          name: item.founderName,
+          email: str(item.founderEmail).toLowerCase(),
+          phone: str(item.founderPhone),
+          name: str(item.founderName),
         },
         premiumListings: [premiumListing],
         totalPrice: bidUsd,
@@ -133,6 +180,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     console.error('Checkout error:', error);
-    return NextResponse.json({ error: error.message || 'Checkout failed' }, { status: 500 });
+    return NextResponse.json({ error: 'Checkout failed. Please try again.' }, { status: 500 });
   }
 }

@@ -44,12 +44,16 @@ export async function recordVote(listingId: string, voterId: string): Promise<Re
     method: 'POST',
     headers: sbHeaders({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
     body: JSON.stringify({
-      id: `vote_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
+      id: `vote_${crypto.randomUUID()}`,
       listing_id: listingId,
       voter_id: voterId,
       voted_at: new Date().toISOString(),
     }),
   });
+  // 409: a concurrent request already recorded this voter (unique index on listing_id, voter_id).
+  if (insertRes.status === 409) {
+    return { status: 'duplicate' };
+  }
   if (!insertRes.ok) {
     throw new Error(`Failed to insert vote: ${await insertRes.text()}`);
   }

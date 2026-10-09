@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/site';
 
 // Private and utility paths; everything else is open to crawlers.
-const DISALLOW = ['/api/', '/admin', '/profile', '/login', '/signup', '/payment-success', '/debug-stats', '/analytics-test', '/search'];
+const DISALLOW = ['/api/', '/admin', '/profile', '/login', '/signup', '/payment-success', '/search'];
 
 // AI search, answer-engine and user-triggered fetchers are allowed explicitly so a stale
 // default never blocks them. A bot that matches its own group ignores the '*' group,

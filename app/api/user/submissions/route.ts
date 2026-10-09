@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { getSessionUser } from '@/lib/server/session';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'userId is required' },
-        { status: 400 }
-      );
+    // Only ever the signed-in user's own data.
+    const user = await getSessionUser(request);
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const userId = encodeURIComponent(user.id);
 
     // Query Supabase listings table for user's submissions
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

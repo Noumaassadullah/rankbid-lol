@@ -1,5 +1,6 @@
 'use client';
 
+import { safeExternalUrl } from '@/lib/utils';
 import VerifiedBadge from './VerifiedBadge';
 
 interface VerifiedListingCardProps {
@@ -97,14 +98,14 @@ export default function VerifiedListingCard({
     const links: SocialLink[] = [];
 
     // Professional users show all socials, Verified users show limited socials
-    if (user.website) links.push({ icon: 'globe', label: 'Website', url: user.website });
-    if (user.twitter) links.push({ icon: 'twitter', label: 'Twitter', url: `https://twitter.com/${user.twitter.replace('@', '')}` });
-    if (user.linkedin) links.push({ icon: 'linkedin', label: 'LinkedIn', url: user.linkedin });
-    if (user.instagram) links.push({ icon: 'instagram', label: 'Instagram', url: `https://instagram.com/${user.instagram.replace('@', '')}` });
-    if (user.facebook) links.push({ icon: 'facebook', label: 'Facebook', url: user.facebook });
-    if (user.tiktok) links.push({ icon: 'tiktok', label: 'TikTok', url: `https://tiktok.com/@${user.tiktok.replace('@', '')}` });
-    if (user.youtube) links.push({ icon: 'youtube', label: 'YouTube', url: user.youtube });
-    if (user.github) links.push({ icon: 'github', label: 'GitHub', url: `https://github.com/${user.github.replace('@', '')}` });
+    if (safeExternalUrl(user.website)) links.push({ icon: 'globe', label: 'Website', url: safeExternalUrl(user.website)! });
+    if (user.twitter) links.push({ icon: 'twitter', label: 'Twitter', url: `https://twitter.com/${encodeURIComponent(user.twitter.replace('@', ''))}` });
+    if (safeExternalUrl(user.linkedin)) links.push({ icon: 'linkedin', label: 'LinkedIn', url: safeExternalUrl(user.linkedin)! });
+    if (user.instagram) links.push({ icon: 'instagram', label: 'Instagram', url: `https://instagram.com/${encodeURIComponent(user.instagram.replace('@', ''))}` });
+    if (safeExternalUrl(user.facebook)) links.push({ icon: 'facebook', label: 'Facebook', url: safeExternalUrl(user.facebook)! });
+    if (user.tiktok) links.push({ icon: 'tiktok', label: 'TikTok', url: `https://tiktok.com/@${encodeURIComponent(user.tiktok.replace('@', ''))}` });
+    if (safeExternalUrl(user.youtube)) links.push({ icon: 'youtube', label: 'YouTube', url: safeExternalUrl(user.youtube)! });
+    if (user.github) links.push({ icon: 'github', label: 'GitHub', url: `https://github.com/${encodeURIComponent(user.github.replace('@', ''))}` });
 
     // Professional: show all socials, Verified: show first 4
     if (user.tier === 'verified' && links.length > 4) {
@@ -136,7 +137,7 @@ export default function VerifiedListingCard({
 
   return (
     <a
-      href={listing.url}
+      href={safeExternalUrl(listing.url) ?? '#'}
       target="_blank"
       rel="noopener noreferrer"
       className={`block bg-gradient-to-br ${colors.gradient} ${colors.border} shadow-2xl hover:shadow-2xl border-2 p-4 md:p-6 hover:scale-102 transition-all duration-300 group relative overflow-hidden rounded-xl backdrop-blur-sm`}

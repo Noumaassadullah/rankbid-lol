@@ -23,15 +23,6 @@ function subscribe(listener: () => void) {
   };
 }
 
-function getVoterId(): string {
-  let id = localStorage.getItem('rankbid_voter_id');
-  if (!id) {
-    id = 'voter_' + Math.random().toString(36).slice(2, 11);
-    localStorage.setItem('rankbid_voter_id', id);
-  }
-  return id;
-}
-
 function getUser(): { id: string } | null {
   try {
     return JSON.parse(localStorage.getItem('user') || 'null');
@@ -76,12 +67,15 @@ export function useVote(listingId: string) {
       const res = await fetch('/api/votes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ listingId, voterId: getVoterId(), userId: user.id }),
+        body: JSON.stringify({ listingId }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.success) {
         rememberVoted();
         flash('Vote recorded!');
+      } else if (res.status === 401) {
+        setExtraVotes(0);
+        window.location.href = `/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`;
       } else if (data.error === 'Already voted') {
         setExtraVotes(0);
         rememberVoted();

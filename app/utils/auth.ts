@@ -1,8 +1,6 @@
 import { cookies } from 'next/headers';
 
-export function createSessionToken() {
-  return 'session_' + Math.random().toString(36).substr(2, 32);
-}
+export { createSessionToken } from '@/lib/server/session';
 
 export async function setAuthCookie(token: string) {
   const cookieStore = await cookies();

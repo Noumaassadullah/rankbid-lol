@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('Rapid Gateway initiate payment error:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to initiate payment' },
+      { error: 'Failed to initiate payment. Please try again.' },
       { status: 500 }
     );
   }

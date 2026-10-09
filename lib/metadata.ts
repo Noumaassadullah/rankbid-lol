@@ -1,3 +1,5 @@
+import { readTextLimited, safeFetch } from '@/lib/server/safe-fetch';
+
 export interface URLMetadata {
   title: string;
   description: string;
@@ -72,14 +74,14 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
 
     if (!isBlockingPlatform) {
       try {
-        const response = await fetch(url, {
+        const response = await safeFetch(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
           }
         });
 
         if (response.ok) {
-          const html = await response.text();
+          const html = await readTextLimited(response);
 
           const ogTitleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i);
           const ogDescMatch = html.match(/<meta\s+property=["']og:description["']\s+content=["']([^"']+)["']/i);
@@ -106,10 +108,14 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
             if (postsMatch?.[1]) posts = postsMatch[1];
           }
 
-          if (image && !image.startsWith('http')) {
-            const protocol = urlObj.protocol;
-            const host = urlObj.host;
-            image = image.startsWith('/') ? `${protocol}//${host}${image}` : `${protocol}//${host}/${image}`;
+          // Resolve relative images, and only keep https images (no data:, javascript: or plain http).
+          if (image) {
+            try {
+              const resolved = new URL(image, url);
+              image = resolved.protocol === 'https:' && image.length <= 1000 ? resolved.toString() : null;
+            } catch {
+              image = null;
+            }
           }
         }
       } catch (fetchError) {
@@ -118,7 +124,7 @@ export async function extractMetadata(url: string): Promise<URLMetadata> {
     }
 
     if (!image) {
-      image = `https://www.google.com/s2/favicons?domain=${hostname}&sz=256`;
+      image = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostname)}&sz=256`;
     }
 
     title = title.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').substring(0, 100);

@@ -11,7 +11,7 @@ export const revalidate = 0; // Don't cache
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const daysBack = parseInt(searchParams.get('daysBack') || '30');
+    const daysBack = Math.min(365, Math.max(1, parseInt(searchParams.get('daysBack') || '30') || 30));
 
     let snapshots: any[] = [];
 
@@ -106,8 +106,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         snapshots: [],
-        error: 'Failed to fetch daily snapshots',
-        details: error instanceof Error ? error.message : String(error)
+        error: 'Failed to fetch daily snapshots'
       },
       { status: 200 }
     );

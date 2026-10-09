@@ -8,6 +8,7 @@ import StatusCardModal from '@/components/StatusCardModal';
 import { getCategoryLabel } from '@/lib/categories';
 import { useVote } from '@/lib/useVote';
 import { supportUrl } from '@/lib/site';
+import { safeExternalUrl } from '@/lib/utils';
 
 export interface RankingListing {
   id: string;
@@ -141,7 +142,7 @@ export default function RankingRow({
             </button>
           )}
           <a
-            href={listing.url}
+            href={safeExternalUrl(listing.url) ?? '#'}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Visit ${listing.title}`}

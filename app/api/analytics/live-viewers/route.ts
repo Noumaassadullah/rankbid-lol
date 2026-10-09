@@ -34,7 +34,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching live viewers:', error);
     return NextResponse.json(
-      { liveViewers: 0, error: String(error) },
+      { liveViewers: 0 },
       { status: 500 }
     );
   }

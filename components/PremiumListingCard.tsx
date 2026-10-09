@@ -1,5 +1,6 @@
 'use client';
 
+import { safeExternalUrl } from '@/lib/utils';
 import { ReactNode } from 'react';
 import PlatformIcon from '@/components/PlatformIcon';
 
@@ -88,14 +89,14 @@ export default function PremiumListingCard({
       return []; // Plan #3: No social accounts
     }
 
-    if (listing.founderWebsite) links.push({ icon: 'globe', label: 'Website', url: listing.founderWebsite });
-    if (listing.founderTwitter) links.push({ icon: 'twitter', label: 'Twitter', url: `https://twitter.com/${listing.founderTwitter.replace('@', '')}` });
-    if (listing.founderLinkedin) links.push({ icon: 'linkedin', label: 'LinkedIn', url: listing.founderLinkedin });
-    if (listing.founderInstagram) links.push({ icon: 'instagram', label: 'Instagram', url: `https://instagram.com/${listing.founderInstagram.replace('@', '')}` });
-    if (listing.founderFacebook) links.push({ icon: 'facebook', label: 'Facebook', url: listing.founderFacebook });
-    if (listing.founderTiktok) links.push({ icon: 'tiktok', label: 'TikTok', url: `https://tiktok.com/@${listing.founderTiktok.replace('@', '')}` });
-    if (listing.founderYoutube) links.push({ icon: 'youtube', label: 'YouTube', url: listing.founderYoutube });
-    if (listing.founderGithub) links.push({ icon: 'github', label: 'GitHub', url: `https://github.com/${listing.founderGithub.replace('@', '')}` });
+    if (safeExternalUrl(listing.founderWebsite)) links.push({ icon: 'globe', label: 'Website', url: safeExternalUrl(listing.founderWebsite)! });
+    if (listing.founderTwitter) links.push({ icon: 'twitter', label: 'Twitter', url: `https://twitter.com/${encodeURIComponent(listing.founderTwitter.replace('@', ''))}` });
+    if (safeExternalUrl(listing.founderLinkedin)) links.push({ icon: 'linkedin', label: 'LinkedIn', url: safeExternalUrl(listing.founderLinkedin)! });
+    if (listing.founderInstagram) links.push({ icon: 'instagram', label: 'Instagram', url: `https://instagram.com/${encodeURIComponent(listing.founderInstagram.replace('@', ''))}` });
+    if (safeExternalUrl(listing.founderFacebook)) links.push({ icon: 'facebook', label: 'Facebook', url: safeExternalUrl(listing.founderFacebook)! });
+    if (listing.founderTiktok) links.push({ icon: 'tiktok', label: 'TikTok', url: `https://tiktok.com/@${encodeURIComponent(listing.founderTiktok.replace('@', ''))}` });
+    if (safeExternalUrl(listing.founderYoutube)) links.push({ icon: 'youtube', label: 'YouTube', url: safeExternalUrl(listing.founderYoutube)! });
+    if (listing.founderGithub) links.push({ icon: 'github', label: 'GitHub', url: `https://github.com/${encodeURIComponent(listing.founderGithub.replace('@', ''))}` });
 
     // Plan #1: Only show first 4 socials
     if (position === 1 && links.length > 4) {
@@ -114,7 +115,7 @@ export default function PremiumListingCard({
 
   return (
     <a
-      href={listing.url}
+      href={safeExternalUrl(listing.url) ?? '#'}
       target="_blank"
       rel="noopener noreferrer"
       className="block bg-gradient-to-br from-[#FFB28F] to-[#D97706] shadow-sm border border-gray-200 p-4 md:p-6 hover:shadow-xl transition-all duration-200 group relative overflow-hidden"
@@ -122,7 +123,7 @@ export default function PremiumListingCard({
       {/* Premium Badge */}
       <div className="absolute top-3 right-3 bg-[#18181B] text-[#FFB28F] px-3 py-1 border-2 border-[#FFB28F] font-black text-xs flex items-center gap-1">
         <Icons.Star />
-        PREMIUM #{listing.premiumPosition}
+        PREMIUM #{listing.premiumPosition} · SPONSORED
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">

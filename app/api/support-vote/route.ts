@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getListing, recordVote, sbHeaders, sbUrl, supabaseConfigured } from '@/lib/server/votes';
+import { ipHash, rateLimit } from '@/lib/server/rate-limit';
 
 // Guest voting from a shared /support/<id> link: name + email + how they support the maker.
 // One vote per email per listing (voter_id = "email:<email>").
@@ -27,11 +28,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true }, { status: 201 });
     }
 
-    if (!listingId) return NextResponse.json({ error: 'Missing product' }, { status: 400 });
+    if (!listingId || listingId.length > 100) return NextResponse.json({ error: 'Missing product' }, { status: 400 });
     if (name.length < 2 || name.length > 60) return NextResponse.json({ error: 'Please enter your name (2–60 characters)' }, { status: 400 });
     if (!EMAIL_RE.test(email) || email.length > 254) return NextResponse.json({ error: 'Please enter a valid email address' }, { status: 400 });
     if (!SUPPORT_TYPES.includes(supportType)) return NextResponse.json({ error: 'Please choose how you support this maker' }, { status: 400 });
     if (!supabaseConfigured()) return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+
+    // Emails aren't verified, so cap how many guest votes one network can cast: a few per product
+    // (households and offices share an IP) and a modest total per hour.
+    const ip = ipHash(req);
+    if (
+      !(await rateLimit(`support-ip:${ip}`, 20, 60 * 60)) ||
+      !(await rateLimit(`support-ip-listing:${ip}:${listingId}`, 5, 24 * 60 * 60))
+    ) {
+      return NextResponse.json({ error: 'Too many votes from your network. Please try again later.' }, { status: 429 });
+    }
 
     const listing = await getListing(listingId);
     if (!listing) return NextResponse.json({ error: 'Product not found' }, { status: 404 });

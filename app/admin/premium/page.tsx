@@ -49,20 +49,27 @@ export default function PremiumAdmin() {
     }, 3000);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  // Exchanges the key for the httpOnly admin cookie; the key itself is never stored in the browser.
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('admin_key', adminKey);
-    setIsAuthenticated(true);
-    fetchPremiumListings('pending');
+    const res = await fetch('/api/admin/session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: adminKey }),
+    }).catch(() => null);
+    setAdminKey('');
+    if (res?.ok) {
+      setIsAuthenticated(true);
+      fetchPremiumListings('pending');
+    } else {
+      showToast(res?.status === 429 ? 'Too many attempts, try later' : 'Wrong admin key', 'error');
+    }
   };
 
   const fetchPremiumListings = async (status: string) => {
     setLoading(true);
     try {
-      const key = localStorage.getItem('admin_key') || adminKey;
-      const res = await fetch(`/api/admin/premium-listings?status=${status}`, {
-        headers: { 'x-admin-key': key }
-      });
+      const res = await fetch(`/api/admin/premium-listings?status=${encodeURIComponent(status)}`);
 
       if (res.ok) {
         const data = await res.json();
@@ -79,13 +86,9 @@ export default function PremiumAdmin() {
 
   const handleApprove = async (premiumListingId: string) => {
     try {
-      const key = localStorage.getItem('admin_key') || adminKey;
       const res = await fetch('/api/admin/premium-listings', {
         method: 'PATCH',
-        headers: {
-          'x-admin-key': key,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           premiumListingId,
           status: 'approved',
@@ -112,13 +115,9 @@ export default function PremiumAdmin() {
     if (!confirm('Are you sure you want to reject this request?')) return;
 
     try {
-      const key = localStorage.getItem('admin_key') || adminKey;
       const res = await fetch('/api/admin/premium-listings', {
         method: 'PATCH',
-        headers: {
-          'x-admin-key': key,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           premiumListingId,
           status: 'rejected',
@@ -138,16 +137,21 @@ export default function PremiumAdmin() {
   };
 
   useEffect(() => {
-    const key = localStorage.getItem('admin_key');
-    if (key) {
-      setAdminKey(key);
-      setIsAuthenticated(true);
-      fetchPremiumListings('pending');
-    }
+    // Older versions kept the raw key here; remove it.
+    localStorage.removeItem('admin_key');
+    fetch('/api/admin/session')
+      .then(res => res.json())
+      .then(data => {
+        if (data.admin) {
+          setIsAuthenticated(true);
+          fetchPremiumListings('pending');
+        }
+      })
+      .catch(() => {});
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('admin_key');
+  const handleLogout = async () => {
+    await fetch('/api/admin/session', { method: 'DELETE' }).catch(() => {});
     setIsAuthenticated(false);
     setAdminKey('');
   };

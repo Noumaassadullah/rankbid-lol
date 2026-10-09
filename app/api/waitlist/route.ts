@@ -1,6 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import type { NextRequest } from 'next/server';
+import { ipHash, rateLimit } from '@/lib/server/rate-limit';
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -9,12 +15,16 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Only create the client when a key is set; constructing it without one throws and breaks builds.
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const email = body.email?.trim().toLowerCase();
+    if (!(await rateLimit(`waitlist-ip:${ipHash(request)}`, 5, 60 * 60))) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+    }
 
-    if (!email || !email.includes('@')) {
+    const body = await request.json().catch(() => ({}));
+    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+
+    if (!EMAIL_RE.test(email) || email.length > 254) {
       return NextResponse.json(
         { error: 'Please provide a valid email address' },
         { status: 400 }
@@ -31,7 +41,7 @@ export async function POST(request: Request) {
     if (checkError && checkError.code !== 'PGRST116') {
       console.error('Check error:', checkError);
       return NextResponse.json(
-        { error: `Database error: ${checkError.message}` },
+        { error: 'Could not join the waitlist. Please try again.' },
         { status: 500 }
       );
     }
@@ -55,7 +65,7 @@ export async function POST(request: Request) {
     if (error) {
       console.error('Insert error:', error);
       return NextResponse.json(
-        { error: error.message || 'Failed to join waitlist', details: error.details },
+        { error: 'Could not join the waitlist. Please try again.' },
         { status: 500 }
       );
     }
@@ -77,7 +87,7 @@ export async function POST(request: Request) {
           subject: '🎉 New Waitlist Signup',
           html: `
             <h2>New waitlist member!</h2>
-            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Email:</strong> ${escapeHtml(email)}</p>
             <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
             <p><a href="https://www.rankbid.click/admin">View waitlist →</a></p>
           `,
@@ -89,7 +99,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { success: true, data },
+      { success: true },
       { status: 201 }
     );
   } catch (error) {

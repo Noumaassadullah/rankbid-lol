@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { categoryFromSlug, categoryPath } from '@/lib/categories';
+import { ADMIN_COOKIE, adminCookieValue, isValidAdminCookie, isValidAdminKey } from '@/lib/server/admin';
 
 // Indexable content pages, open to everyone (and search/AI crawlers) before launch.
 // Matched exactly or as a path prefix ('/product' covers '/product/:id').
@@ -64,23 +65,28 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for admin key in query or cookie
-  const adminKey = request.nextUrl.searchParams.get('adminKey') || request.cookies.get('adminKey')?.value;
-
-  // Check for auth token (user logged in)
-  const authToken = request.cookies.get('auth_token')?.value;
-
-  // If user has valid admin key, allow access to full website
-  if (adminKey && (adminKey === process.env.NEXT_PUBLIC_ADMIN_KEY || adminKey === process.env.ADMIN_KEY)) {
-    const response = NextResponse.next();
-    response.cookies.set('adminKey', adminKey, {
+  // ?adminKey=<ADMIN_KEY> signs this browser in as admin, then the key is dropped from the URL.
+  const queryKey = searchParams.get('adminKey');
+  if (queryKey && isValidAdminKey(queryKey)) {
+    const clean = request.nextUrl.clone();
+    clean.searchParams.delete('adminKey');
+    const response = NextResponse.redirect(clean);
+    response.cookies.set(ADMIN_COOKIE, adminCookieValue()!, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       maxAge: 30 * 24 * 60 * 60,
+      path: '/',
     });
     return response;
   }
+
+  if (isValidAdminCookie(request.cookies.get(ADMIN_COOKIE)?.value)) {
+    return NextResponse.next();
+  }
+
+  // Check for auth token (user logged in)
+  const authToken = request.cookies.get('auth_token')?.value;
 
   // For authenticated users (logged in), allow access
   if (authToken) {

@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getSessionUser } from '@/lib/server/session';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'userId is required' },
-        { status: 400 }
-      );
+    // Only ever the signed-in user's own data.
+    const user = await getSessionUser(request);
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const userId = encodeURIComponent(user.id);
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -23,9 +21,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch user votes from Supabase
-    console.log('Fetching votes for userId:', userId);
     const queryUrl = `${supabaseUrl}/rest/v1/user_votes?user_id=eq.${userId}&order=voted_at.desc`;
-    console.log('Query URL:', queryUrl);
 
     const votesRes = await fetch(queryUrl, {
       headers: {
@@ -43,10 +39,6 @@ export async function GET(request: NextRequest) {
     }
 
     const userVotes = await votesRes.json();
-    console.log('Found user votes:', userVotes.length);
-    if (userVotes.length > 0) {
-      console.log('First vote:', userVotes[0]);
-    }
 
     // Get listing details for each vote
     const formattedVotes = await Promise.all(
@@ -55,7 +47,7 @@ export async function GET(request: NextRequest) {
 
         try {
           const response = await fetch(
-            `${supabaseUrl}/rest/v1/listings?id=eq.${vote.listing_id}`,
+            `${supabaseUrl}/rest/v1/listings?id=eq.${encodeURIComponent(vote.listing_id)}`,
             {
               headers: {
                 'apikey': supabaseKey,

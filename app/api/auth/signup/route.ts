@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcryptjs from 'bcryptjs';
-import { createSessionToken } from '@/app/utils/auth';
+import { createSessionToken } from '@/lib/server/session';
+import { ipHash, rateLimit } from '@/lib/server/rate-limit';
 import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
@@ -9,17 +10,33 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password, name } = await request.json();
 
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       return NextResponse.json(
         { error: 'Email and password are required' },
         { status: 400 }
       );
     }
 
-    if (password.length < 6) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 254) {
+      return NextResponse.json({ error: 'Please enter a valid email address' }, { status: 400 });
+    }
+
+    if (password.length < 8 || password.length > 200) {
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters' },
+        { error: 'Password must be at least 8 characters' },
         { status: 400 }
+      );
+    }
+
+    if (name !== undefined && (typeof name !== 'string' || name.length > 80)) {
+      return NextResponse.json({ error: 'Name must be 80 characters or fewer' }, { status: 400 });
+    }
+
+    const ip = ipHash(request);
+    if (!(await rateLimit(`signup-ip:${ip}`, 5, 60 * 60)) || !(await rateLimit(`signup-ip-day:${ip}`, 15, 24 * 60 * 60))) {
+      return NextResponse.json(
+        { error: 'Too many accounts created from this network. Please try again later.' },
+        { status: 429 }
       );
     }
 
@@ -62,8 +79,7 @@ export async function POST(request: NextRequest) {
           id: user.id,
           email: user.email,
           name: user.name
-        },
-        token
+        }
       },
       { status: 201 }
     );

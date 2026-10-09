@@ -59,22 +59,22 @@ export default function ProfilePage() {
     try {
       const userData = JSON.parse(savedUser);
       setUser(userData);
-      fetchUserData(userData.id);
+      fetchUserData();
     } catch {
       localStorage.removeItem('user');
       router.push('/login');
     }
   }, [router]);
 
-  const fetchUserData = async (userId: string) => {
+  const fetchUserData = async () => {
     try {
-      const submissionsRes = await fetch(`/api/user/submissions?userId=${userId}`);
+      const submissionsRes = await fetch('/api/user/submissions');
       if (submissionsRes.ok) {
         const data = await submissionsRes.json();
         setSubmissions(data.listings || []);
       }
 
-      const votesRes = await fetch(`/api/user/votes?userId=${userId}`);
+      const votesRes = await fetch('/api/user/votes');
       if (votesRes.ok) {
         const data = await votesRes.json();
         setVotes(data.votes || []);

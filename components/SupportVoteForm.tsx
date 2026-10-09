@@ -7,6 +7,7 @@ import { IconTile, PremiumIcons } from '@/components/PremiumIcons';
 import { getCategoryLabel } from '@/lib/categories';
 import type { PublicListing } from '@/lib/server/votes';
 import { supportUrl } from '@/lib/site';
+import { safeExternalUrl } from '@/lib/utils';
 
 type SupportType = 'founder' | 'friend' | 'supporter';
 
@@ -143,7 +144,7 @@ export default function SupportVoteForm({ listing }: { listing: PublicListing })
           <p className="relative text-xs sm:text-sm text-white/75 leading-relaxed mt-4 line-clamp-3">{listing.description}</p>
         )}
         {listing.url && (
-          <a href={listing.url} target="_blank" rel="noopener noreferrer" className="relative inline-flex items-center gap-1 mt-3 text-xs sm:text-sm font-bold text-white/90 hover:text-white underline underline-offset-2">
+          <a href={safeExternalUrl(listing.url) ?? '#'} target="_blank" rel="noopener noreferrer" className="relative inline-flex items-center gap-1 mt-3 text-xs sm:text-sm font-bold text-white/90 hover:text-white underline underline-offset-2">
             Visit {listing.platform === 'website' ? 'website' : 'profile'} ↗
           </a>
         )}

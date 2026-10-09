@@ -4,85 +4,63 @@ import { query } from '@/lib/db';
 import { extractSocialHandle, formatSocialMediaUrl, isSocialMediaUrl } from '@/lib/social-utils';
 import { sendNewSubmissionEmail } from '@/lib/email';
 import { getActiveHolders, type PremiumHolder } from '@/lib/server/premium';
+import { CATEGORIES, LEGACY_CATEGORIES } from '@/lib/categories';
+import { getSessionUser } from '@/lib/server/session';
+import { ipHash, rateLimit } from '@/lib/server/rate-limit';
+import { safeFetch, UnsafeUrlError } from '@/lib/server/safe-fetch';
+import { isDownloadResponse, isFlaggedBySafeBrowsing, staticUrlProblem } from '@/lib/server/url-safety';
 
-async function verifySocialMediaAccount(url: string): Promise<boolean> {
+const UA = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' };
+
+/** null if the URL can be listed, otherwise the reason it can't. */
+async function accessibilityProblem(url: string): Promise<string | null> {
+  const social = isSocialMediaUrl(url);
+  let res: Response;
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-
-    const response = await fetch(url, {
-      method: 'HEAD',
-      redirect: 'follow',
-      signal: controller.signal,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      },
-    });
-
-    clearTimeout(timeout);
-    // Accept 200-399 range as valid, skip 429 (rate limit) for now
-    if (response.status >= 200 && response.status < 400) {
-      return true;
-    }
-
-    // If 429 (rate limited) or 403 (forbidden), assume profile exists but is protected
-    if (response.status === 429 || response.status === 403) {
-      return true;
-    }
-
-    // Only reject clear 404s
-    return response.status !== 404 && response.status !== 410;
+    res = await safeFetch(url, { method: 'HEAD', headers: UA });
+    if (res.status === 405 || res.status === 501) res = await safeFetch(url, { method: 'GET', headers: UA });
   } catch (error) {
-    console.warn(`Social media verification failed for ${url}:`, error);
-    // If fetch fails, assume the profile might exist (network issues)
-    return true;
+    if (error instanceof UnsafeUrlError) return 'This URL is not allowed.';
+    // Network hiccups and timeouts: allow, as before, rather than reject real sites.
+    console.warn(`URL accessibility check failed for ${url}:`, error);
+    return null;
   }
-}
-
-async function isURLAccessible(url: string, platform?: string): Promise<boolean> {
-  if (isSocialMediaUrl(url)) {
-    return verifySocialMediaAccount(url);
-  }
-
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-
-    const response = await fetch(url, {
-      method: 'HEAD',
-      redirect: 'follow',
-      signal: controller.signal,
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-    });
-
-    clearTimeout(timeout);
-    return response.status >= 200 && response.status < 400;
-  } catch {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-
-      const response = await fetch(url, {
-        method: 'GET',
-        redirect: 'follow',
-        signal: controller.signal,
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-      });
-
-      clearTimeout(timeout);
-      return response.status >= 200 && response.status < 400;
-    } catch (error) {
-      console.warn(`URL accessibility check failed for ${url}:`, error);
-      // If timeout or network error occurs, allow the submission but log it
-      // This prevents legitimate submissions from being rejected due to temporary network issues
-      return true;
-    }
-  }
+  if (isDownloadResponse(res)) return 'Direct download links are not allowed. Link to a web page instead.';
+  if (res.status >= 200 && res.status < 400) return null;
+  // Social networks often answer bots with 403/429 for profiles that do exist.
+  if (social && res.status !== 404 && res.status !== 410) return null;
+  return 'URL is not accessible or does not exist. Please verify the URL is correct and accessible.';
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { url, handle, description, category, platform, userId } = await req.json();
+    // Submissions are tied to the signed-in account (never to a user id sent by the browser).
+    const user = await getSessionUser(req);
+    if (!user) {
+      return NextResponse.json({ error: 'Please sign in to submit', listings: [] }, { status: 401 });
+    }
+
+    if (
+      !(await rateLimit(`submit-user:${user.id}`, 5, 60 * 60)) ||
+      !(await rateLimit(`submit-user-day:${user.id}`, 20, 24 * 60 * 60)) ||
+      !(await rateLimit(`submit-ip:${ipHash(req)}`, 10, 60 * 60))
+    ) {
+      return NextResponse.json(
+        { error: 'Too many submissions. Please try again later.', listings: [] },
+        { status: 429 }
+      );
+    }
+
+    const { url, handle, description, category, platform } = await req.json();
+
+    if (
+      (url !== undefined && typeof url !== 'string') ||
+      (handle !== undefined && typeof handle !== 'string') ||
+      (description !== undefined && typeof description !== 'string') ||
+      (platform !== undefined && typeof platform !== 'string')
+    ) {
+      return NextResponse.json({ error: 'Invalid submission', listings: [] }, { status: 400 });
+    }
 
     if (!url && !handle) {
       return NextResponse.json(
@@ -98,11 +76,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!category) {
+    if (!category || ![...CATEGORIES, ...LEGACY_CATEGORIES].includes(category)) {
       return NextResponse.json(
         { error: 'Category required', listings: [] },
         { status: 400 }
       );
+    }
+
+    if ((description || '').length > 500 || (handle || '').length > 200) {
+      return NextResponse.json({ error: 'Description is too long (500 characters max)', listings: [] }, { status: 400 });
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -120,6 +102,19 @@ export async function POST(req: NextRequest) {
 
     if (normalizedUrl && !normalizedUrl.startsWith('http')) {
       normalizedUrl = `https://${normalizedUrl}`;
+    }
+
+    // Malware, phishing, adult, gambling, shorteners, downloads.
+    const urlProblem = staticUrlProblem(normalizedUrl);
+    if (urlProblem) {
+      return NextResponse.json({ error: urlProblem, listings: [] }, { status: 400 });
+    }
+    if (await isFlaggedBySafeBrowsing(normalizedUrl)) {
+      console.warn('Submission blocked by Safe Browsing:', normalizedUrl, 'user', user.id);
+      return NextResponse.json(
+        { error: 'This site is flagged as unsafe (malware or phishing) and cannot be listed.', listings: [] },
+        { status: 400 }
+      );
     }
 
     if (['facebook', 'instagram', 'tiktok', 'twitter', 'x'].includes(platform)) {
@@ -149,23 +144,12 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const isAccessible = await isURLAccessible(normalizedUrl);
-    if (!isAccessible) {
-      return NextResponse.json(
-        { error: 'URL is not accessible or does not exist. Please verify the URL is correct and accessible.' },
-        { status: 400 }
-      );
+    const accessProblem = await accessibilityProblem(normalizedUrl);
+    if (accessProblem) {
+      return NextResponse.json({ error: accessProblem }, { status: 400 });
     }
 
-    const generateUUID = () => {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
-    };
-
-    const id = generateUUID();
+    const id = crypto.randomUUID();
     const now = new Date().toISOString();
 
     let imageUrl: string | null = null;
@@ -219,7 +203,10 @@ export async function POST(req: NextRequest) {
 
     const titleLower = metaTitle.toLowerCase();
     const descLower = metaDescription.toLowerCase();
-    const spamKeywords = ['viagra', 'casino', 'lottery', 'prize', 'click here', 'buy now'];
+    const spamKeywords = [
+      'viagra', 'cialis', 'casino', 'lottery', 'prize', 'click here', 'buy now', 'porn', 'xxx', 'escort',
+      'betting', 'jackpot', 'free money', 'crack download', 'keygen', 'giveaway', 'airdrop', 'seed phrase',
+    ];
     if (spamKeywords.some(keyword => titleLower.includes(keyword) || descLower.includes(keyword))) {
       return NextResponse.json(
         { error: 'Submission rejected: Content appears to be spam or promotional.' },
@@ -271,7 +258,7 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         id,
-        user_id: userId || '550e8400-e29b-41d4-a716-446655440000',
+        user_id: user.id,
         title: metaTitle,
         description: metaDescription,
         category: category || 'Other',
@@ -354,15 +341,15 @@ function getPlatformUrl(platform: string, handle: string | undefined): string {
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const pageSize = parseInt(searchParams.get('pageSize') || '15');
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1') || 1);
+    const pageSize = Math.min(100, Math.max(1, parseInt(searchParams.get('pageSize') || '15') || 15));
     const sort = searchParams.get('sort') || 'totalVotes';
     const category = searchParams.get('category') || '';
     const platforms = searchParams.getAll('platform') || [];
     const timeFilter = searchParams.get('timeFilter') || '';
     // An explicit ?limit= returns that many rows (non-paged views); otherwise return one page of pageSize.
     const limitParam = searchParams.get('limit');
-    const rowLimit = limitParam ? parseInt(limitParam) : pageSize;
+    const rowLimit = limitParam ? Math.min(1000, Math.max(1, parseInt(limitParam) || pageSize)) : pageSize;
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -414,12 +401,7 @@ export async function GET(req: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Supabase fetch failed:', {
-        status: response.status,
-        statusText: response.statusText,
-        url: queryUrl,
-        error: errorText,
-      });
+      console.error('Supabase fetch failed:', response.status, errorText);
       return NextResponse.json(
         { listings: [], listing: null, error: 'Failed to fetch listings' },
         { status: 500 }
@@ -474,7 +456,7 @@ export async function GET(req: NextRequest) {
 
     let premium: ReturnType<typeof withPremium>[] = [];
     if (holders.length > 0) {
-      const ids = holders.map(h => `"${h.listingId}"`).join(',');
+      const ids = encodeURIComponent(holders.map(h => `"${h.listingId.replace(/"/g, '')}"`).join(','));
       const premiumRes = await fetch(`${supabaseUrl}/rest/v1/listings?id=in.(${ids})`, {
         headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
       });

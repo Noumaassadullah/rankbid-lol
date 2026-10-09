@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { OAuth2Client } from 'google-auth-library';
-import { createSessionToken } from '@/app/utils/auth';
+import { createSessionToken } from '@/lib/server/session';
 import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
@@ -32,7 +32,8 @@ export async function POST(request: NextRequest) {
 
     const payload = ticket.getPayload();
 
-    if (!payload || !payload.email) {
+    // Only trust addresses Google has verified; otherwise anyone could claim an existing account's email.
+    if (!payload || !payload.email || payload.email_verified !== true) {
       return NextResponse.json(
         { error: 'Invalid token' },
         { status: 401 }
@@ -41,14 +42,14 @@ export async function POST(request: NextRequest) {
 
     // Find or create user
     let user = await prisma.user.findUnique({
-      where: { email: payload.email },
+      where: { email: payload.email.toLowerCase() },
     });
 
     if (!user) {
       // Create new user with Google profile info
       user = await prisma.user.create({
         data: {
-          email: payload.email,
+          email: payload.email.toLowerCase(),
           name: payload.name || undefined,
           password: 'google_oauth', // Placeholder for OAuth users
         },
@@ -74,8 +75,7 @@ export async function POST(request: NextRequest) {
           id: user.id,
           email: user.email,
           name: user.name
-        },
-        token: sessionToken
+        }
       },
       { status: 200 }
     );

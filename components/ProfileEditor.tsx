@@ -49,23 +49,12 @@ export default function ProfileEditor({ onClose }: ProfileEditorProps) {
 
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId');
+      // Authenticated by the httpOnly session cookie.
+      const res = await fetch('/api/user/profile');
 
-      if (!token || !userId) {
+      if (res.status === 401) {
         setError('Not authenticated');
-        setLoading(false);
-        return;
-      }
-
-      const res = await fetch('/api/user/profile', {
-        headers: {
-          'x-user-id': userId,
-          'authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (res.ok) {
+      } else if (res.ok) {
         const data = await res.json();
         setProfile(data);
         setFormData({
@@ -103,21 +92,9 @@ export default function ProfileEditor({ onClose }: ProfileEditorProps) {
     setSuccess(false);
 
     try {
-      const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId');
-
-      if (!token || !userId) {
-        setError('Not authenticated');
-        return;
-      }
-
       const res = await fetch('/api/user/profile', {
         method: 'PUT',
-        headers: {
-          'x-user-id': userId,
-          'authorization': `Bearer ${token}`,
-          'content-type': 'application/json',
-        },
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify(formData),
       });
 

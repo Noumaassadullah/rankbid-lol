@@ -115,7 +115,7 @@ export default function ComingSoon() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [waitlistCount, setWaitlistCount] = useState(1182);
+  const [waitlistCount, setWaitlistCount] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCount = async () => {
@@ -123,7 +123,7 @@ export default function ComingSoon() {
         const res = await fetch('/api/waitlist/count');
         if (res.ok) {
           const data = await res.json();
-          setWaitlistCount(data.count || 1182);
+          if (typeof data.count === 'number') setWaitlistCount(data.count);
         }
       } catch (error) {
         console.error('Failed to fetch waitlist count:', error);
@@ -154,12 +154,9 @@ export default function ComingSoon() {
         fetch('/api/waitlist/count')
           .then(r => r.json())
           .then(d => {
-            setWaitlistCount(d.count || 1182);
+            if (typeof d.count === 'number') setWaitlistCount(d.count);
           })
-          .catch(() => {
-            // If fetch fails, increment optimistically
-            setWaitlistCount(prev => prev + 1);
-          });
+          .catch(() => {});
 
         setTimeout(() => setSubmitted(false), 5000);
       } else {
@@ -230,7 +227,8 @@ export default function ComingSoon() {
             )}
           </div>
 
-          {/* Social Proof */}
+          {/* Social Proof: the real count, shown only once it's loaded */}
+          {waitlistCount !== null && waitlistCount > 0 && (
           <div className="animate-fade-in-up delay-4">
             <p className="text-sm md:text-base text-[#1F2937]/60 font-medium">
               First come, first serve. There are{' '}
@@ -240,6 +238,7 @@ export default function ComingSoon() {
               {waitlistCount === 1 ? 'person' : 'people'} on the waitlist already.
             </p>
           </div>
+          )}
         </div>
       </div>
     </>

@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
+import { ipHash } from '@/lib/server/rate-limit';
 
 let supabase: ReturnType<typeof createClient> | null = null;
 
@@ -77,7 +78,6 @@ export async function GET() {
         onlineNow: 0,
         todayVisitors: 0,
         allTimeVisitors: 0,
-        details: error.message
       },
       { status: 500 }
     );
@@ -87,11 +87,14 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const sb = getSupabase();
-    const { sessionId, pageUrl } = await request.json();
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
-    const userAgent = request.headers.get('user-agent') || 'unknown';
-
-    console.log('[STATS POST] Tracking:', { sessionId, pageUrl, ip });
+    const body = await request.json().catch(() => ({}));
+    const sessionId = typeof body.sessionId === 'string' ? body.sessionId.slice(0, 100) : '';
+    const pageUrl = typeof body.pageUrl === 'string' ? body.pageUrl.slice(0, 500) : '';
+    if (!sessionId) {
+      return NextResponse.json({ success: false }, { status: 400 });
+    }
+    const ip = ipHash(request);
+    const userAgent = (request.headers.get('user-agent') || 'unknown').slice(0, 300);
 
     // Try to insert or update session
     const { data, error } = await sb
@@ -112,14 +115,9 @@ export async function POST(request: NextRequest) {
       throw error;
     }
 
-    console.log('[STATS POST] Success:', data);
-    return NextResponse.json({ success: true, session: data });
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error('[STATS POST] Catch error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error.message || 'Failed to track visitor',
-      details: error
-    }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Failed to track visitor' }, { status: 500 });
   }
 }

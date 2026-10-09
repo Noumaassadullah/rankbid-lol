@@ -1,11 +1,13 @@
 // Server-only admin helpers: who counts as an admin, and the data the admin dashboard reads.
-import { timingSafeEqual } from 'crypto';
+import { createHmac, timingSafeEqual } from 'crypto';
 import type { NextRequest } from 'next/server';
-import { sbHeaders, sbUrl, supabaseConfigured } from '@/lib/server/votes';
+import { sbHeaders, sbUrl } from '@/lib/server/votes';
+import { getSessionUser } from '@/lib/server/session';
 
+// Only list addresses that already have an account: signups aren't email-verified, so an unregistered
+// address here would let anyone register it and become admin.
 export const ADMIN_EMAILS = [
   'assadullahnouman@gmail.com',
-  'admin@rankbid.click',
 ];
 
 export const ADMIN_COOKIE = 'adminKey';
@@ -25,41 +27,30 @@ export function isValidAdminKey(key: string | null | undefined): boolean {
   return Boolean(expected && key && safeEqual(key, expected));
 }
 
-/** Email of the signed-in user behind an auth_token session, or null. */
-async function sessionEmail(token: string): Promise<string | null> {
-  const sessionRes = await fetch(
-    sbUrl(`sessions?token=eq.${encodeURIComponent(token)}&select=user_id,expires_at`),
-    { headers: sbHeaders(), cache: 'no-store' }
-  );
-  if (!sessionRes.ok) return null;
-  const [session] = await sessionRes.json();
-  if (!session || new Date(session.expires_at) < new Date()) return null;
+/**
+ * Value stored in the adminKey cookie: derived from ADMIN_KEY so the cookie never holds the key itself.
+ * Changing ADMIN_KEY signs every admin browser out.
+ */
+export function adminCookieValue(): string | null {
+  const key = process.env.ADMIN_KEY;
+  return key ? createHmac('sha256', key).update('rankbid-admin-session').digest('hex') : null;
+}
 
-  const userRes = await fetch(
-    sbUrl(`users?id=eq.${encodeURIComponent(session.user_id)}&select=email`),
-    { headers: sbHeaders(), cache: 'no-store' }
-  );
-  if (!userRes.ok) return null;
-  const [user] = await userRes.json();
-  return user?.email?.toLowerCase() ?? null;
+export function isValidAdminCookie(value: string | null | undefined): boolean {
+  const expected = adminCookieValue();
+  return Boolean(expected && value && safeEqual(value, expected));
 }
 
 /**
- * An admin request carries the admin key (x-admin-key header or the adminKey cookie set by
- * /api/admin/session), or comes from a signed-in user whose email is in ADMIN_EMAILS.
+ * An admin request carries the admin key (x-admin-key header), the adminKey cookie set by
+ * /api/admin/session, or comes from a signed-in user whose email is in ADMIN_EMAILS.
  */
 export async function isAdminRequest(req: NextRequest): Promise<boolean> {
-  if (isValidAdminKey(req.headers.get('x-admin-key')) || isValidAdminKey(req.cookies.get(ADMIN_COOKIE)?.value)) {
+  if (isValidAdminKey(req.headers.get('x-admin-key')) || isValidAdminCookie(req.cookies.get(ADMIN_COOKIE)?.value)) {
     return true;
   }
-  const token = req.cookies.get('auth_token')?.value;
-  if (!token || !supabaseConfigured()) return false;
-  try {
-    const email = await sessionEmail(token);
-    return Boolean(email && ADMIN_EMAILS.includes(email));
-  } catch {
-    return false;
-  }
+  const user = await getSessionUser(req);
+  return Boolean(user && ADMIN_EMAILS.includes(user.email));
 }
 
 // ---- Data ----

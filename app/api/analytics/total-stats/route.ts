@@ -61,7 +61,6 @@ export async function GET() {
       totalPageViews: 0,
       todayVisitors: 0,
       todayPageViews: 0,
-      error: String(error),
     }, { status: 500 });
   }
 }
