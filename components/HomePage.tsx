@@ -186,6 +186,9 @@ const Icons = {
   ),
 };
 
+// Soft left, top and bottom edges for the why-makers photo (intersected, so both apply).
+const PHOTO_EDGES = 'linear-gradient(to right, transparent, black 22%), linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)';
+
 export default function Home() {
   const [user, setUser] = useState<{ id: string; email: string; name?: string } | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
@@ -1056,29 +1059,35 @@ export default function Home() {
 
         {/* WHY MAKERS SECTION: navy gradient with a photo blended in on the right */}
         <section className="relative overflow-hidden bg-gradient-to-br from-[#0B2545] via-[#0F3460] to-[#1a5490] text-white">
-          {/* Desktop: photo at its own aspect ratio, anchored right and fading into the navy.
-              Keeping the ratio lets the RankBid notification sit exactly over the one in the photo. */}
+          {/* Desktop: the complete photo at its own aspect ratio, centred on the right with soft
+              edges so it melts into the navy. Keeping the ratio lets the RankBid notification sit
+              exactly over the one in the photo. */}
           <div
-            className="absolute inset-y-0 right-0 hidden lg:block h-full aspect-[2198/1396]"
+            className="absolute right-0 top-1/2 -translate-y-1/2 hidden lg:block w-[55%] aspect-[2198/1396]"
             aria-hidden="true"
           >
             <img
               src="/why-makers-person.jpg"
               alt=""
               className="h-full w-full"
-              style={{ maskImage: 'linear-gradient(to right, transparent 30%, black 62%)', WebkitMaskImage: 'linear-gradient(to right, transparent 30%, black 62%)' }}
+              style={{
+                maskImage: PHOTO_EDGES,
+                WebkitMaskImage: PHOTO_EDGES,
+                maskComposite: 'intersect',
+                WebkitMaskComposite: 'source-in',
+              }}
             />
             {/* Covers the photo's original notification (another brand's) */}
-            <div className="absolute left-[35.5%] top-[52%] h-[22%] w-[29.5%] flex flex-col justify-center rounded-2xl bg-white p-4 text-[#1F2937] shadow-2xl backdrop-blur">
-              <div className="flex items-center justify-between text-[10px] font-semibold text-gray-400">
+            <div className="absolute left-[35.5%] top-[52%] h-[22%] w-[29.5%] flex flex-col justify-center rounded-xl bg-white px-3 py-2 text-[#1F2937] shadow-2xl">
+              <div className="flex items-center justify-between text-[9px] font-semibold text-gray-400">
                 <span>Notification Center</span>
                 <span>now</span>
               </div>
-              <div className="mt-2 flex items-start gap-2.5">
-                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#0F3460] to-[#1a5490] text-sm font-black text-white">R</span>
+              <div className="mt-1 flex items-center gap-2">
+                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#0F3460] to-[#1a5490] text-xs font-black text-white">R</span>
                 <div className="min-w-0">
-                  <p className="text-sm font-black text-[#0F3460]">RankBid</p>
-                  <p className="text-xs leading-snug text-gray-600">Your product just hit <span className="font-bold text-[#059669]">#1 today</span> 🏆</p>
+                  <p className="text-xs font-black text-[#0F3460]">RankBid</p>
+                  <p className="text-[10px] leading-snug text-gray-600">Your product hit <span className="font-bold text-[#059669]">#1 today</span> 🏆</p>
                 </div>
               </div>
             </div>
@@ -1092,7 +1101,7 @@ export default function Home() {
             style={{ maskImage: 'linear-gradient(to bottom, black 55%, transparent)', WebkitMaskImage: 'linear-gradient(to bottom, black 55%, transparent)' }}
           />
 
-          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pb-14 sm:pb-20 lg:py-28 -mt-8 lg:mt-0">
+          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pb-14 sm:pb-20 lg:py-20 -mt-8 lg:mt-0">
             {/* Copy + four reasons, no cards */}
             <div className="lg:max-w-[50%]">
               <SelectionHeading
